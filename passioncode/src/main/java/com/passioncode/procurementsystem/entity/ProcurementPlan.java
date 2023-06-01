@@ -25,33 +25,41 @@ import lombok.ToString;
 @ToString(exclude = {"material","purchaseOrder"})
 public class ProcurementPlan {		//조달계획
 	
+	//조달계획코드
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 5, columnDefinition = "INT(5)")
-	private Integer code;	//조달계획코드
+	private Integer code;	
 	
+	//필요수량
 	@Column(length = 10, columnDefinition = "INT(10)", nullable = false)
-	private Integer amount;		//필요수량
+	private Integer amount;		
 	
+	//조달납기 예정일
 	@Column(columnDefinition = "DATE", nullable = false)
-	private Date dueDate;		//조달납기 예정일
+	private Date dueDate;	
 	
+	//최소발주일
 	@Column(columnDefinition = "DATE", nullable = false)
-	private Date minimumOrderDate;		//최소발주일
+	private Date minimumOrderDate;		
 	
+	//조달계획 등록일
 	@Column(columnDefinition = "DATETIME", nullable = false)
-	private LocalDateTime registerDate;			//조달계획 등록일
+	private LocalDateTime registerDate;			
 	
+	//조달계획 완료일
 	@Column(columnDefinition = "DATETIME", nullable = false)
-	private LocalDateTime completionDate;		//조달계획 완료일
+	private LocalDateTime completionDate;		
 	
+	//품목코드(외래키)(품목)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private Material material;		//품목코드
+	private Material material;		
 	
+	//발주서번호(외래키)(구매발주서)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private PurchaseOrder purchaseOrder;		//발주서번호
+	private PurchaseOrder purchaseOrder;		
 
 	
 

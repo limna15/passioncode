@@ -47,12 +47,12 @@ public class MaterialIn {	//입고
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
 	private Integer transactionStatus;
 	
-	//발주서번호(외래키)
+	//발주서번호(외래키)(구매발주서)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private PurchaseOrder purchaseOrder;
 	
-	//거래명세서번호(외래키)
+	//거래명세서번호(외래키)(거래명세서)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private TransactionDetail transactionDetail;

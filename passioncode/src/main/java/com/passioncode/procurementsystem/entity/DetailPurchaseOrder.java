@@ -24,19 +24,23 @@ import lombok.ToString;
 @ToString(exclude = "purchaseOrder")
 public class DetailPurchaseOrder {	//세부 구매 발주서
 	
+	//발주 코드
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 5, columnDefinition = "INT(5)")
-	private Integer code;	//발주 코드
+	private Integer code;	
 	
+	//발주 수량
 	@Column(length = 10, columnDefinition = "INT(10)", nullable = false)
-	private Integer amount;	//발주 수량
+	private Integer amount;	
 	
+	//발주일
 	@Column(columnDefinition = "DATE", nullable = false)
-	private LocalDateTime date;	//발주일
+	private LocalDateTime date;	
 	
+	//발주서 번호(외래키)(구매발주서)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private PurchaseOrder purchaseOrder;	//발주서 번호
+	private PurchaseOrder purchaseOrder;	
 
 }

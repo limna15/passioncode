@@ -18,12 +18,14 @@ import lombok.ToString;
 @ToString
 public class LargeCategory {	//대분류
 	
+	//대분류코드
 	@Id
 	@Column(length = 6, columnDefinition = "CHAR(6)")
-	private String code;	//대분류코드
+	private String code;	
 	
+	//종류
 	@Column(length = 255, nullable = false) 
-	private String category;	//종류
+	private String category;	
 	
 	
 	
