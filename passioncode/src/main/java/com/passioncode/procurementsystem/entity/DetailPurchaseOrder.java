@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.entity;
 
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,16 +21,22 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = "detailPurchaseOrder")
-public class PurchaseOrder {
+@ToString(exclude = "purchaseOrder")
+public class DetailPurchaseOrder {	//세부 구매 발주서
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(length = 8, columnDefinition = "INT(8)")
-	private Integer no;
+	@Column(length = 5, columnDefinition = "INT(5)")
+	private Integer code;	//발주 코드
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@Column(length = 10, columnDefinition = "INT(10)", nullable = false)
+	private Integer amount;	//발주 수량
+	
+	@Column(columnDefinition = "DATE", nullable = false)
+	private LocalDateTime date;	//발주일
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private DetailPurchaseOrder detailPurchaseOrder;	//발주 상세
-	
+	private PurchaseOrder purchaseOrder;	//발주서 번호
+
 }
