@@ -1,7 +1,9 @@
 package com.passioncode.procurementsystem.entity;
 
+
 import java.time.LocalDateTime;
-import java.util.Date;
+
+import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,37 +24,41 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"material","purchaseOrder"})
-public class ProcurementPlan {		//조달계획
+@ToString(exclude = {"purchaseOrder", "transactionDetail"})
+public class MaterialIn {	//입고
 	
+	//입고코드
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 5, columnDefinition = "INT(5)")
-	private Integer code;	//조달계획코드
+	private Integer code;
 	
+	//입고수량
 	@Column(length = 10, columnDefinition = "INT(10)", nullable = false)
-	private Integer amount;		//필요수량
+	private Integer amount;
 	
-	@Column(columnDefinition = "DATE", nullable = false)
-	private Date dueDate;		//조달납기 예정일
+	//입고상태
+	@ColumnDefault(value="0") //0: 미완료, 1: 완료
+	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
+	private Integer status;
 	
-	@Column(columnDefinition = "DATE", nullable = false)
-	private Date minimumOrderDate;		//최소발주일
-	
+	//입고일
 	@Column(columnDefinition = "DATETIME", nullable = false)
-	private LocalDateTime registerDate;			//조달계획 등록일
+	private LocalDateTime date;
 	
-	@Column(columnDefinition = "DATETIME", nullable = false)
-	private LocalDateTime completionDate;		//조달계획 완료일
+	//발행상태
+	@ColumnDefault(value="0") //0: 미완료, 1: 완료
+	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
+	private Integer transactionStatus;
 	
+	//발주서번호(외래키)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private Material material;		//품목코드
+	private PurchaseOrder purchaseOrder;
 	
+	//거래명세서번호(외래키)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private PurchaseOrder purchaseOrder;		//발주서번호
-
+	private TransactionDetail transactionDetail;
 	
-
 }
