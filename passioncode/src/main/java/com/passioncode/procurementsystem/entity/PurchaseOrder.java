@@ -26,5 +26,4 @@ public class PurchaseOrder {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 8, columnDefinition = "INT(8)")
 	private Integer no;
-
 }

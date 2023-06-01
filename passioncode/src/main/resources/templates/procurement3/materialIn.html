@@ -17,7 +17,7 @@
 						<option value="">품목 코드</option>
 					</select>
 					<input type="text" style="width:150px; height:25px;">
-                      <button type="submit" class="btn btn-primary" style="height:25px; ">검색</button>
+                      <button type="submit" class="btn btn-primary" style="height:25px;">검색</button>
 					</form>
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
@@ -35,16 +35,16 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>Jeremy Ortega</td>
-									<td>Levelled up</td>
-									<td>Catalinaborough</td>
-									<td>$790</td>
-									<td>06 Jan 2018</td>
-									<td>$2274253</td>
+								<tr th:each="dto: ${list}">
+									<td>[[${dto.purchaseOrder.no}]]</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
 									<td><button type="submit" class="btn btn-primary" style="height:25px;">완료</button>
 										<button type="submit" class="btn btn-primary" style="height:25px;">취소</button></td>
-									<td>dd</td>
+									<td>[[${dto.transactionStatus}]]</td>
 								</tr>
 							</tbody>
 						</table>

@@ -33,10 +33,6 @@ public class MaterialIn {	//입고
 	@Column(length = 5, columnDefinition = "INT(5)")
 	private Integer code;
 	
-	//입고수량
-	@Column(length = 10, columnDefinition = "INT(10)", nullable = false)
-	private Integer amount;
-	
 	//입고상태
 	@ColumnDefault(value="0") //0: 미완료, 1: 완료
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
