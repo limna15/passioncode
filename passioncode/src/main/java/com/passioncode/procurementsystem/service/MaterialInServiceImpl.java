@@ -1,9 +1,12 @@
 package com.passioncode.procurementsystem.service;
 
-import org.springframework.stereotype.Service;
-import com.passioncode.procurementsystem.dto.MaterialInDTO;
-import com.passioncode.procurementsystem.repository.MaterialInRepository;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+import com.passioncode.procurementsystem.dto.MaterialInMapperDTO;
+import com.passioncode.procurementsystem.mapper.MaterialInMapper;
+
+import io.micrometer.common.lang.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -11,8 +14,15 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 @Log4j2
 public class MaterialInServiceImpl implements MaterailInService {
-	
-	private final MaterialInRepository repository;
+
+	@NonNull
+	MaterialInMapper mapper;
+
+	@Override
+	public List<MaterialInMapperDTO> getList() {
+		log.info("Service getList......");
+		return mapper.getList();
+	}
 
 
 
