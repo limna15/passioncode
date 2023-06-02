@@ -15,6 +15,9 @@ public class MiddleCategoryRepositoryTests {
 	@Autowired
 	MiddleCategoryRepository middleCategoryRepository;
 	
+	@Autowired
+	LargeCategoryRepository largeCategoryRepository;
+	
 	@Test
 	public void InsertTest() {
 //		LargeCategory largeCategory=new LargeCategory("CC0001", "철");
@@ -24,5 +27,18 @@ public class MiddleCategoryRepositoryTests {
 //		MiddleCategory middleCategory=new MiddleCategory("NN0001", "나사", largeCategory);
 		MiddleCategory middleCategory=new MiddleCategory("PP0001", "PCB", largeCategory);
 		middleCategoryRepository.save(middleCategory);
+	}
+	
+	
+	@Test
+	public void Insert2Test() {
+		Optional<LargeCategory> result = largeCategoryRepository.findById("PP0001");
+		
+		LargeCategory largeCategory = result.get();
+		
+		System.out.println("어디 어떻게 찍히나 보자 : "+largeCategory);
+		MiddleCategory middleCategory=new MiddleCategory("CC0001", "케이스", largeCategory);
+		middleCategoryRepository.save(middleCategory);
+		
 	}
 }

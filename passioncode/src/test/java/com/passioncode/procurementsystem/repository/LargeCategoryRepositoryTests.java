@@ -15,7 +15,8 @@ public class LargeCategoryRepositoryTests {
 	@Test
 	public void InsertTest() {
 //		LargeCategory largeCategory=new LargeCategory("CC0001", "철");
-		LargeCategory largeCategory=new LargeCategory("BB0001", "보드");
+//		LargeCategory largeCategory=new LargeCategory("BB0001", "보드");
+		LargeCategory largeCategory=new LargeCategory("PP0001", "플라스틱");
 		largeCategoryRepository.save(largeCategory);
 	}
 
