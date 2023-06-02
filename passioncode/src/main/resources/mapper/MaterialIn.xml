@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper.xml을 사용하기 위해서 위의 3줄을 넣어야함 -->
+
+<mapper namespace="com.passioncode.procurementsystem.mapper.MaterialInMapper">
+
+	<select id="getTime" resultType="String">
+		select now()
+	</select>
+	
+		<!-- 여기서 id는 메소드에 대응하는 이름, resultType은 select에서만 필요 -->
+	<select id="getList" resultType="com.passioncode.procurementsystem.dto.MaterialInMapperDTO">
+		<![CDATA[
+		SELECT po.no, dpo.code, pp.due_date, pp.material_code, dpo.amount, mi.status, mi.transaction_status FROM purchase_order AS po JOIN detail_purchase_order AS dpo ON po.no=dpo.purchase_order_no JOIN procurement_plan AS pp ON po.no=pp.purchase_order_no JOIN material_in AS mi ON po.no=mi.purchase_order_no
+		]]>
+	</select>
+
+</mapper>
