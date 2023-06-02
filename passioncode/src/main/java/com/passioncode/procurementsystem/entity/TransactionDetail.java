@@ -23,6 +23,7 @@ import lombok.ToString;
 @ToString
 public class TransactionDetail {	//거래명세서
 	
+	//거래명세서번호
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 8, columnDefinition = "INT(8)")

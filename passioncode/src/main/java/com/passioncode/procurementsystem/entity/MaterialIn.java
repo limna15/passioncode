@@ -33,10 +33,6 @@ public class MaterialIn {	//입고
 	@Column(length = 5, columnDefinition = "INT(5)")
 	private Integer code;
 	
-	//입고수량
-	@Column(length = 10, columnDefinition = "INT(10)", nullable = false)
-	private Integer amount;
-	
 	//입고상태
 	@ColumnDefault(value="0") //0: 미완료, 1: 완료
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
@@ -51,12 +47,12 @@ public class MaterialIn {	//입고
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
 	private Integer transactionStatus;
 	
-	//발주서번호(외래키)
+	//발주서번호(외래키)(구매발주서)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private PurchaseOrder purchaseOrder;
 	
-	//거래명세서번호(외래키)
+	//거래명세서번호(외래키)(거래명세서)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private TransactionDetail transactionDetail;
