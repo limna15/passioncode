@@ -28,7 +28,7 @@ public class DetailPurchaseOrderRepositoryTests {
 		
 		log.info(">>>>>>>>>>"+detail);
 		log.info(">>>>>>>>>>"+list);
-		log.info(">>>>>>>>>>"+list2);
+		log.info("여러개>>>>>>>>>>"+list2);
 		
 	}
 	
