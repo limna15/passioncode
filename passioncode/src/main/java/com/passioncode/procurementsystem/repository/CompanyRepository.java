@@ -9,6 +9,6 @@ import com.passioncode.procurementsystem.entity.Company;
 
 public interface CompanyRepository extends JpaRepository<Company, String> {
 	
-	public Collection<Company> findByName(String name);
+	public Collection<Company> findByNameContaining(String name);
 
 }
