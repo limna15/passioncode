@@ -26,5 +26,12 @@ public class PurchaseOrderRepositoryTests {
 		log.info("글 번호 가져오기>>"+list2);
 		
 	}
+	
+	@Test
+	public void InsertTest() {	//발주서 번호 생성 
+		PurchaseOrder purchaseOrder = new PurchaseOrder(null);
+		purchaseOrderRepository.save(purchaseOrder);
+		
+	}
 
 }

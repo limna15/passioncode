@@ -35,7 +35,7 @@ public class DetailPurchaseOrder {	//세부 구매 발주서
 	private Integer amount;	
 	
 	//발주일
-	@Column(columnDefinition = "DATE", nullable = false)
+	@Column(columnDefinition = "DATETIME", nullable = false)
 	private LocalDateTime date;	
 	
 	//발주서 번호(외래키)(구매발주서)
