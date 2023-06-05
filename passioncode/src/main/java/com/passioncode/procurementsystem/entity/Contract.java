@@ -40,7 +40,7 @@ public class Contract {			//계약서
 	private Integer unitPrice;				
 	
 	//거래조건
-	@Column(length = 255, nullable = false) 
+	@Column(length = 255) 
 	private String dealCondition;			
 	
 	//계약서	

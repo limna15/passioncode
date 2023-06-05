@@ -48,7 +48,7 @@ public class ProcurementPlan {		//조달계획
 	private LocalDateTime registerDate;			
 	
 	//조달계획 완료일
-	@Column(columnDefinition = "DATETIME", nullable = false)
+	@Column(columnDefinition = "DATETIME")
 	private LocalDateTime completionDate;		
 	
 	//품목코드(외래키)(품목)
