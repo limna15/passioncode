@@ -58,7 +58,6 @@ public class ProcurementPlan {		//조달계획
 	
 	//발주서번호(외래키)(구매발주서)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
 	private PurchaseOrder purchaseOrder;		
 
 	

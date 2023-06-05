@@ -18,7 +18,7 @@ public class MaterialInDTO {
 	private Integer status;
 	private LocalDateTime date;
 	private Integer transactionStatus;
-	private Integer purchaseOrderNo;
+	private Integer detailPurchaseCode;
 	private Integer transactionDetailNo;
 
 }

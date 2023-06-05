@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+
+	<!-- 여기 부분이 값을 바꿔서 대체해서 들어가는 부분! 나머지형식은 basic.html을 이용해서 하는것! 
+		그래서 basic.html이 header와 footer 가 들어가 있다고 보면됨! -->
+	<th:block th:fragment="content">
+
+<style>
+.search-box {
+    position: relative;        
+    float: right;
+}
+.search-box input {
+    height: 34px;
+    border-radius: 20px;
+    padding-left: 35px;
+    border-color: #ddd;
+    box-shadow: none;
+}
+.search-box input:focus {
+    border-color: #3FBAE4;
+}
+.search-box i {
+    color: #a0a5b1;
+    position: absolute;
+    font-size: 19px;
+    top: 8px;
+    left: 10px;
+}
+
+   
+.pagination {
+    float: right;
+    margin: 0 0 5px;
+}
+.pagination li a {
+    border: none;
+    font-size: 95%;
+    width: 30px;
+    height: 30px;
+    color: #999;
+    margin: 0 2px;
+    line-height: 30px;
+    border-radius: 30px !important;
+    text-align: center;
+    padding: 0;
+}
+.pagination li a:hover {
+    color: #666;
+}	
+.pagination li.active a {
+    background: #03A9F4;
+}
+.pagination li.active a:hover {        
+    background: #0397d6;
+}
+.pagination li.disabled i {
+    color: #ccc;
+}
+.pagination li i {
+    font-size: 16px;
+    padding-top: 6pxrow
+}
+.hint-text {
+    float: left;
+    margin-top: 6px;
+    font-size: 95%;
+}    
+</style>
+
+		<div class="col-md-12 stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title">자재 입고</p>
+                  <form>
+                    <div class="form-row align-items-center">
+                    <div class="col-auto my-1">
+                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                        <option selected>검색 조건 선택</option>
+                        <option value="1">발주서 번호</option>
+                        <option value="2">발주코드</option>
+                        <option value="3">품목코드</option>
+                        </select>
+                    </div>
+                    
+                    <input type="text" style="width:150px;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+                    <div class="col-auto my-1">
+                      <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+					<!-- <button type="submit" class="btn btn-primary" style="height:25px; float:right;"> -->
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;">거래명세서 발행</a><!-- </button> -->
+					<div class="table-responsive">
+						<table id="recent-purchases-listing" class="table"
+							style="text-align: center;">
+							<thead>
+								<tr>
+									<th><input type="checkbox"></th>
+									<th>발주서 번호</th>
+									<th>발주 코드</th>
+									<th>조달납기<br>예정일</th>
+									<th>품목코드</th>
+									<th>품목명</th>
+									<th>발주 수량</th>
+									<th>입고 상태</th>
+									<th>발행 상태</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="list: ${list}">
+									<td><input type="checkbox"></td>
+									<td>[[${list.no}]]</td>
+									<td>[[${list.code}]]</td>
+									<td>[[${list.due_date}]]</td>
+									<td>[[${list.material_code}]]</td>
+									<td>[[${list.name}]]</td>
+									<td>[[${list.amount}]]</td>
+									<td><button type="submit" class="btn btn-primary" style="height:25px;">완료</button>
+										<button type="submit" class="btn btn-primary" style="height:25px;">취소</button></td>
+									<td th:if="${list.transaction_status}==0">미완료</td>
+								</tr>
+							</tbody>
+						</table>
+						<!--페이지 번호 시작-->
+                    <div class="clearfix">
+                      <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                      <ul class="pagination">
+                          <li class="page-item disabled"><a href="#"> << <i class="fa fa-angle-double-left"></i></a></li>
+                          <li class="page-item"><a href="#" class="page-link">1</a></li>
+                          <li class="page-item"><a href="#" class="page-link">2</a></li>
+                          <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                          <li class="page-item"><a href="#" class="page-link">4</a></li>
+                          <li class="page-item"><a href="#" class="page-link">5</a></li>
+                          <li class="page-item"><a href="#" class="page-link">>><i class="fa fa-angle-double-right"></i></a></li>
+                      </ul>
+                  </div>
+                  <!--페이지 번호 끝-->
+					</div>
+				</div>
+			</div>
+		</div>
+
+<div class="modal fade" id="modal" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+		
+            <!-- header title -->
+				<h4 class="modal-title">거래명세서 발행</h4>
+             <!-- 닫기(x) 버튼 -->
+					<button type="button" class="close" data-dismiss="modal">×</button>
+			
+			</div>
+						
+			<!-- body -->
+			<div class="modal-body"><!--여기에 외부에서 작성한 테이블 들어옴--></div>
+						
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+		
+<script type="text/javascript">
+	 $('.ls-modal').on('click', function(e){
+		  e.preventDefault();
+		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
+		});
+</script>
+	</th:block>
+
+</th:block>
+</html>
