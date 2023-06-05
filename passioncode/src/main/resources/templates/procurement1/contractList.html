@@ -78,16 +78,17 @@ $(document).ready(function(){
               <div class="card">
               
                 <div class="card-body">
-                  <p class="card-title">조달 예정 품목</p>
+                  <p class="card-title">계약 목록</p>
                   <!--목록 내려보기 시작-->
                   <form>
                     <div class="form-row align-items-center">
                     <div class="col-auto my-1">
                         <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
                         <option selected>검색 조건 선택</option>
-                        <option value="1">협력 회사</option>
-                        <option value="2">품목 코드</option>
-                        <option value="3">품목명</option>
+                        <option value="1">계약 번호</option>
+                        <option value="2">협력 회사</option>
+                        <option value="3">품목 코드</option>
+                        <option value="4">품목명</option>
                         </select>
                     </div>
                     
@@ -95,12 +96,9 @@ $(document).ready(function(){
                     <div class="col-auto my-1">
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
-                    <div>
-                      <button type="submit" class="btn btn-primary" style="float:right;">발행</button>
-                    </div>&nbsp;
-                    <div class="space">
-                    </div>
-                      <button type="submit" class="btn btn-primary" style="float:right;">인쇄</button>
+                      <button type="submit" class="btn btn-primary" style="float:right;">등록</button>&nbsp;
+                      <button type="submit" class="btn btn-primary" style="float:right;">수정</button>&nbsp;
+                      <button type="submit" class="btn btn-primary" style="float:right;">삭제</button>
                     
                   </div>
                     </div>
@@ -111,20 +109,17 @@ $(document).ready(function(){
                       <thead>
                         <tr>
                             <th>ch</th>
-                            <th>No</th>
-                            <th>협력<br> 회사</th>
-                            <th>발주일</th>
-                            <th>조달납기<br>  예정일</th>
-                            <th>품목 공급<br> L/T</th>
-                            <th>최소<br> 발주일</th>
-                            <th>품목 코드</th>
+                            <th>계약번호</th>
+                            <th>품목코드</th>
                             <th>품목명</th>
-                            <th>기존 재고<br> 수량</th>
-                            <th>필요 수량</th>
-                            <th>발주 수량</th>
+                            <th>협력회사</th>
+                            <th>담당자</th>
+                            <th>담당자<br>연락처</th>
+                            <th>품목 공급 L/T</th>
                             <th>단가</th>
-                            <th>공급<br>가격</th>
-                            <th>발주서<br>발행 상태</th>
+                            <th>거래조건</th>
+                            <th>계약서</th>
+                            <th>계약 상태</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -134,79 +129,67 @@ $(document).ready(function(){
                               <label class="custom-control-label" for="mycheck"></label>
                           </div></td>
                             <td>1</td>
-                            <td>대명</td>
+                            <td>CGa0001</td>
+                            <td>Gear</td>
+                            <td>(유)길승산업</td>
+                            <td>박서준</td>
+                            <td>010-1111-1111</td>
+                            <td>10</td>
+                            <td>500</td>
                             <td></td>
-                            <td>23/08/12</td>
-                            <td>10일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
-                            <td>1200</td>
-                            <td>1150</td>
-                            <td>100,000</td>
-                            <td>115,000,000</td>
-                            <td>미완료</td>
+                            <td><button type="submit" class="btn btn-primary">보기</button></td>
+                            <td>완료</td>
                         </tr>
                         <tr>
                           <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck2">
-                            <label class="custom-control-label" for="mycheck2"></label>
-                        </div></td>
+                              <input type="checkbox" class="custom-control-input" id="mycheck">
+                              <label class="custom-control-label" for="mycheck"></label>
+                          </div></td>
                             <td>2</td>
-                            <td>니즈원</td>
+                            <td>CGa0001</td>
+                            <td>Gear</td>
+                            <td>(유)길승산업</td>
+                            <td>박서준</td>
+                            <td>010-1111-1111</td>
+                            <td>10</td>
+                            <td>500</td>
                             <td></td>
-                            <td>23/08/12</td>
-                            <td>10일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
-                            <td>1200</td>
-                            <td>1150</td>
-                            <td>100,000</td>
-                            <td>115,000,000</td>
-                            <td>미완료</td>
+                            <td><button type="submit" class="btn btn-primary">보기</button></td>
+                            <td>완료</td>
                         </tr>
                         <tr>
                           <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck3">
-                            <label class="custom-control-label" for="mycheck3"></label>
-                        </div></td>
+                              <input type="checkbox" class="custom-control-input" id="mycheck">
+                              <label class="custom-control-label" for="mycheck"></label>
+                          </div></td>
                             <td>3</td>
-                            <td>대명</td>
+                            <td>CGa0001</td>
+                            <td>Gear</td>
+                            <td>(유)길승산업</td>
+                            <td>박서준</td>
+                            <td>010-1111-1111</td>
+                            <td>10</td>
+                            <td>500</td>
                             <td></td>
-                            <td>23/08/12</td>
-                            <td>15일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
-                            <td>1200</td>
-                            <td>1150</td>
-                            <td>100,000</td>
-                            <td>115,000,000</td>
-                            <td>미완료</td>
+                            <td><button type="submit" class="btn btn-primary">보기</button></td>
+                            <td>완료</td>
                         </tr>
                         <tr>
                           <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck4">
-                            <label class="custom-control-label" for="mycheck4"></label>
-                        </div></td>
+                              <input type="checkbox" class="custom-control-input" id="mycheck">
+                              <label class="custom-control-label" for="mycheck"></label>
+                          </div></td>
                             <td>4</td>
-                            <td>렉스큐브</td>
+                            <td>CGa0001</td>
+                            <td>Gear</td>
+                            <td>(유)길승산업</td>
+                            <td>박서준</td>
+                            <td>010-1111-1111</td>
+                            <td>10</td>
+                            <td>500</td>
                             <td></td>
-                            <td>23/08/12</td>
-                            <td>10일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
-                            <td>1200</td>
-                            <td>1150</td>
-                            <td>100,000</td>
-                            <td>115,000,000</td>
-                            <td>미완료</td>
+                            <td><button type="submit" class="btn btn-primary">보기</button></td>
+                            <td>완료</td>
                         </tr>
                       </tbody>
                     </table>

@@ -6,4 +6,5 @@ import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 
 public interface DetailPurchaseOrderRepository extends JpaRepository<DetailPurchaseOrder, Integer>{
 
+
 }
