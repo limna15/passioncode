@@ -6,7 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.passioncode.procurementsystem.entity.LargeCategory;
 
+import lombok.extern.log4j.Log4j2;
+
 @SpringBootTest
+@Log4j2
 public class LargeCategoryRepositoryTests {
 	
 	@Autowired

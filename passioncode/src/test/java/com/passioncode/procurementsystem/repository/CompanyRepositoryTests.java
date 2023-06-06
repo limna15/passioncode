@@ -6,7 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.passioncode.procurementsystem.entity.Company;
 
+import lombok.extern.log4j.Log4j2;
+
 @SpringBootTest
+@Log4j2
 public class CompanyRepositoryTests {
 	
 	@Autowired

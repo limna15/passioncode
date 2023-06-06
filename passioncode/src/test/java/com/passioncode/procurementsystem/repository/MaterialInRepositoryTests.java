@@ -9,7 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.passioncode.procurementsystem.entity.MaterialIn;
 
+import lombok.extern.log4j.Log4j2;
+
 @SpringBootTest
+@Log4j2
 public class MaterialInRepositoryTests {
 
 	@Autowired
@@ -23,7 +26,7 @@ public class MaterialInRepositoryTests {
 		
 		List<MaterialIn> list2= materialInRepository.findAll();
 		
-		System.out.println("이렇게 읽는게 맞는건가....."+in);
-		System.out.println("리스트로 읽을수 있냐구"+list2);
+		log.info("이렇게 읽는게 맞는건가....."+in);
+		log.info("리스트로 읽을수 있냐구"+list2);
 	}
 }

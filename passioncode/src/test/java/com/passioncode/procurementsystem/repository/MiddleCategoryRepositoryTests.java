@@ -9,7 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 
+import lombok.extern.log4j.Log4j2;
+
 @SpringBootTest
+@Log4j2
 public class MiddleCategoryRepositoryTests {
 
 	@Autowired
@@ -36,7 +39,7 @@ public class MiddleCategoryRepositoryTests {
 		
 		LargeCategory largeCategory = result.get();
 		
-		System.out.println("어디 어떻게 찍히나 보자 : "+largeCategory);
+		log.info("어디 어떻게 찍히나 보자 : "+largeCategory);
 		MiddleCategory middleCategory=new MiddleCategory("CC0001", "케이스", largeCategory);
 		middleCategoryRepository.save(middleCategory);
 		

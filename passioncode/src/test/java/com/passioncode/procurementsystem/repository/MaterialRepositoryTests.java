@@ -9,7 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 
+import lombok.extern.log4j.Log4j2;
+
 @SpringBootTest
+@Log4j2
 public class MaterialRepositoryTests {
 	
 	@Autowired
