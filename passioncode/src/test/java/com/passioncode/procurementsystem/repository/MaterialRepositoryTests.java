@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
@@ -34,6 +35,18 @@ public class MaterialRepositoryTests {
 				.drawingNo("N34").drawingFile("테스트중").middleCategory(middleCategory).build();
 		
 		materialRepository.save(material);
+		
+	}
+	
+	@Transactional
+	@Test
+	public void readCategoryTest() {
+		Optional<Material> result = materialRepository.findById("BPa0001");
+		Material material = result.get();
+		log.info("읽어온 material 한번 보자 : "+material);
+		log.info("모야모야 바로 읽을 수 있는건가??? : "+materialRepository.findById("BPa0001").get());
+		log.info("품목에서 외래키 중분류 보자 : "+material.getMiddleCategory());
+		log.info("품목에서 외래키 중분류타고 대분류도 봐보자 : "+material.getMiddleCategory().getLargeCategory());
 		
 	}
 	

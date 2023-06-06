@@ -1,7 +1,9 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,4 +49,15 @@ public class ContractRepositoryTests {
 		contractRepository.save(contract);
 		
 	}
+	
+	
+	@Test
+	public void contractStatusTest() {
+		log.info("기존의 존재여부 체크 값 보자: "+contractRepository.existsById(2));
+//		Optional<Material> result = materialRepository.findById("BPa0001");
+		Optional<Material> result = materialRepository.findById("CGa0002");
+		Material material = result.get();
+		log.info("어디 만들어놓은 존재여부 체크 보자 : "+contractRepository.existsByMaterial(material));
+	}
+	
 }

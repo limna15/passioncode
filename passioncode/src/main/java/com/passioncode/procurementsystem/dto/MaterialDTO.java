@@ -1,8 +1,5 @@
 package com.passioncode.procurementsystem.dto;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class MaterialDTO { 
-	
+		
 	/**
 	 * 품목코드
 	 */
@@ -72,10 +69,9 @@ public class MaterialDTO {
 	
 	/**
 	 * 계약상태,
-	 * 0 : 미완료, 1 : 완료
+	 * False : 미완료, True : 완료
 	 */
-	private Integer contractStatus;
-	
+	private Boolean contractStatus;
 	
 
 }

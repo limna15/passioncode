@@ -15,4 +15,11 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
 	 * @return
 	 */
 	public Collection<Contract> findByMaterial(Material material);
+	
+	/**
+	 * 품목을 이용하여 계약상태(미완료,완료) 체크하는 메소드, 존재여부=계약상태, false=미완료, true=완료
+	 * @param material
+	 * @return
+	 */
+	public boolean existsByMaterial(Material material);
 }
