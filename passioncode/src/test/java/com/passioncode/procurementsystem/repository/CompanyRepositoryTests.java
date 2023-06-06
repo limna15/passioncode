@@ -26,7 +26,7 @@ public class CompanyRepositoryTests {
 //				.managerEmail("JeonJu@gmail.com").managerTel("010-6666-6666").name("(주)경신이티엠").tel("063-666-6666").build();
 		Company company = Company.builder().no("124-87-31644").address("서울시 강북구").ceo("김신영").dealStatus(0).manager("브로니")
 				.managerEmail("browny@gmail.com").managerTel("010-9999-9999").name("(주)브로우맥스").tel("02-999-9999").build();
-
+		
 		companyRepository.save(company);
 		
 	};
