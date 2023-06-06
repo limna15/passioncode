@@ -1,129 +1,97 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{::content})}">
-
 	<th:block th:fragment="content">
 
-
-		<style>
+<style>
 .search-box {
-	position: relative;
-	float: right;
+    position: relative;        
+    float: right;
 }
-
 .search-box input {
-	height: 34px;
-	border-radius: 20px;
-	padding-left: 35px;
-	border-color: #ddd;
-	box-shadow: none;
+    height: 34px;
+    border-radius: 20px;
+    padding-left: 35px;
+    border-color: #ddd;
+    box-shadow: none;
 }
-
 .search-box input:focus {
-	border-color: #3FBAE4;
+    border-color: #3FBAE4;
 }
-
 .search-box i {
-	color: #a0a5b1;
-	position: absolute;
-	font-size: 19px;
-	top: 8px;
-	left: 10px;
+    color: #a0a5b1;
+    position: absolute;
+    font-size: 19px;
+    top: 8px;
+    left: 10px;
 }
 
+   
 .pagination {
-	float: right;
-	margin: 0 0 5px;
+    float: right;
+    margin: 0 0 5px;
 }
-
 .pagination li a {
-	border: none;
-	font-size: 95%;
-	width: 30px;
-	height: 30px;
-	color: #999;
-	margin: 0 2px;
-	line-height: 30px;
-	border-radius: 30px !important;
-	text-align: center;
-	padding: 0;
+    border: none;
+    font-size: 95%;
+    width: 30px;
+    height: 30px;
+    color: #999;
+    margin: 0 2px;
+    line-height: 30px;
+    border-radius: 30px !important;
+    text-align: center;
+    padding: 0;
 }
-
 .pagination li a:hover {
-	color: #666;
-}
-
+    color: #666;
+}	
 .pagination li.active a {
-	background: #03A9F4;
+    background: #03A9F4;
 }
-
-.pagination li.active a:hover {
-	background: #0397d6;
+.pagination li.active a:hover {        
+    background: #0397d6;
 }
-
 .pagination li.disabled i {
-	color: #ccc;
+    color: #ccc;
 }
-
 .pagination li i {
-	font-size: 16px;
-	padding-top: 6pxrow
+    font-size: 16px;
+    padding-top: 6pxrow
 }
-
 .hint-text {
-	float: left;
-	margin-top: 6px;
-	font-size: 95%;
-}
+    float: left;
+    margin-top: 6px;
+    font-size: 95%;
+}    
 </style>
-		<script>
-			$(document).ready(function() {
-				$('[data-toggle="tooltip"]').tooltip();
-			});
-		</script>
 
 		<div class="col-md-12 stretch-card">
-			<!--수정 부분 시작 -->
 			<div class="card">
-
 				<div class="card-body">
 					<p class="card-title">조달 예정 품목</p>
-					<!--목록 내려보기 시작-->
-					<form>
-						<div class="form-row align-items-center">
-							<div class="col-auto my-1">
-								<select class="custom-select mr-sm-2"
-									id="inlineFormCustomSelect">
-									<option selected>검색 조건 선택</option>
-									<option value="1">협력 회사</option>
-									<option value="2">품목 코드</option>
-									<option value="3">품목명</option>
-								</select>
-							</div>
-
-							<input type="text" style="width: 150px;" class="form-control"
-								placeholder="Search now" aria-label="search"
-								aria-describedby="search">
-							<div class="col-auto my-1">
-								<button type="submit" class="btn btn-primary">검색</button>
-							</div>
-							<div>
-								<button type="submit" class="btn btn-primary"
-									style="float: right;">발행</button>
-							</div>
-							&nbsp;
-							<div class="space"></div>
-							<button type="submit" class="btn btn-primary"
-								style="float: right;">인쇄</button>
-
-						</div>
-				</div>
-				</form>
-				<!--목록 내려보기 끝-->
-				<div class="table-responsive">
-					<table id="recent-purchases-listing" class="table">
-						<thead>
-							<tr>
+                  <form>
+                    <div class="form-row align-items-center">
+                    <div class="col-auto my-1">
+                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                        <option selected>검색 조건 선택</option>
+                        <option value="1">발주서 번호</option>
+                        <option value="2">발주코드</option>
+                        <option value="3">품목코드</option>
+                        </select>
+                    </div>
+                    
+                    <input type="text" style="width:150px;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+                    <div class="col-auto my-1">
+                      <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;">발행</a>&nbsp;
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal2" style="float:right;">인쇄</a>&nbsp;
+					<div class="table-responsive">
+						<table id="recent-purchases-listing" class="table"
+							style="text-align: center;">
+							<thead>
+								<tr>
 								<th>ch</th>
 								<th>No</th>
 								<th>협력<br> 회사
@@ -146,15 +114,16 @@
 								</th>
 								<th>발주서<br>발행 상태
 								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="dto: ${list}">
-								<td><div class="custom-control custom-checkbox mr-sm-2">
-										<input type="checkbox" class="custom-control-input"
-											id="mycheck4"> <label class="custom-control-label"
-											for="mycheck4"></label>
-									</div></td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="dto: ${list}">
+								<td>
+									<div class="custom-control custom-checkbox mr-sm-2">
+										<input type="checkbox" class="custom-control-input" id="mycheck4"> <label
+											class="custom-control-label" for="mycheck4"></label>
+									</div>
+								</td>
 								<td>1</td>
 								<td>[[${dto.purchaseOrder.no}]]</td>
 								<td>[[${#temporals.format(dto.date, 'yyyy/MM/dd')}]]</td>
@@ -170,33 +139,89 @@
 								<td>d</td>
 								<td>N</td>
 							</tr>
-						</tbody>
-					</table>
-					<!--페이지 번호 시작-->
-					<div class="clearfix">
-						<div class="hint-text">
-							Showing <b>5</b> out of <b>25</b> entries
-						</div>
-						<ul class="pagination">
-							<li class="page-item disabled"><a href="#"> << <i
-									class="fa fa-angle-double-left"></i></a></li>
-							<li class="page-item"><a href="#" class="page-link">1</a></li>
-							<li class="page-item"><a href="#" class="page-link">2</a></li>
-							<li class="page-item active"><a href="#" class="page-link">3</a></li>
-							<li class="page-item"><a href="#" class="page-link">4</a></li>
-							<li class="page-item"><a href="#" class="page-link">5</a></li>
-							<li class="page-item"><a href="#" class="page-link">>><i
-									class="fa fa-angle-double-right"></i></a></li>
-						</ul>
+							</tbody>
+						</table>
+						<!--페이지 번호 시작-->
+                    <div class="clearfix">
+                      <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                      <ul class="pagination">
+                          <li class="page-item disabled"><a href="#"> << <i class="fa fa-angle-double-left"></i></a></li>
+                          <li class="page-item"><a href="#" class="page-link">1</a></li>
+                          <li class="page-item"><a href="#" class="page-link">2</a></li>
+                          <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                          <li class="page-item"><a href="#" class="page-link">4</a></li>
+                          <li class="page-item"><a href="#" class="page-link">5</a></li>
+                          <li class="page-item"><a href="#" class="page-link">>><i class="fa fa-angle-double-right"></i></a></li>
+                      </ul>
+                  </div>
+                  <!--페이지 번호 끝-->
 					</div>
-					<!--페이지 번호 끝-->
 				</div>
 			</div>
 		</div>
-		<!-- Modal -->
 
-
+<div class="modal fade" id="modal" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+		
+            <!-- header title -->
+				<h4 class="modal-title">구매발주서 발행</h4>
+             <!-- 닫기(x) 버튼 -->
+					<button type="button" class="close" data-dismiss="modal">×</button>
+			
+			</div>
+						
+			<!-- body -->
+			<div class="modal-body">
+				<div class="modal-body">
+      <th:block th:replace="~{/procurement2/modalTest :: setLogin(~{this::login} )}"></th:block>
+     </div>
+				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
+						
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="modal2" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+		
+            <!-- header title -->
+				<h4 class="modal-title">인쇄 미리보기</h4>
+             <!-- 닫기(x) 버튼 -->
+					<button type="button" class="close" data-dismiss="modal">×</button>
+			
+			</div>
+						
+			<!-- body -->
+			<div class="modal-body"><!--여기에 외부에서 작성한 테이블 들어옴--></div>
+						
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+		
+<script type="text/javascript">
+	 $('.ls-modal').on('click', function(e){
+		  e.preventDefault();
+		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
+		});
+</script>
+<script type="text/javascript">
+	 $('.ls-modal').on('click', function(e){
+		  e.preventDefault();
+		  $('#modal2').modal('show').find('.modal-body').load($(this).attr('href'));
+		});
+</script>
 	</th:block>
+
 </th:block>
 </html>
-
