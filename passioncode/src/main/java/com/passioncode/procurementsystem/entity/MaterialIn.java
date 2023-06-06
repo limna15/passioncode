@@ -35,12 +35,12 @@ public class MaterialIn {	//입고
 	private Integer code;
 	
 	//입고상태
-	@ColumnDefault(value="0") //0: 미완료, 1: 완료
-	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
+	@ColumnDefault(value="0") //null: 완료/취소 버튼, 0: 미완료, 1: 완료
+	@Column(length = 10, columnDefinition = "TINYINT(1)")
 	private Integer status;
 	
 	//입고일
-	@Column(columnDefinition = "DATETIME", nullable = false)
+	@Column(columnDefinition = "DATETIME")
 	private LocalDateTime date;
 	
 	//발행상태
