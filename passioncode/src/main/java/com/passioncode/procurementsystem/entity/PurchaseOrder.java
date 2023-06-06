@@ -11,7 +11,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
+/**
+ * 구매발주서 테이블을 위한 엔티티 클래스
+ * @author MSJ
+ * 
+ */ 
 @Entity
 @Builder
 @AllArgsConstructor
@@ -20,7 +24,9 @@ import lombok.ToString;
 @ToString
 public class PurchaseOrder {	//구매발주서
 	
-	//발주서번호
+	/**
+	 * 발주서번호
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 8, columnDefinition = "INT(8)")

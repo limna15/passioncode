@@ -17,38 +17,52 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
+/**
+ * 진척검수 테이블을 위한 엔티티 클래스
+ * @author MSJ
+ * 
+ */ 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = "purchaseOrder")
+@ToString(exclude = "detailPurchaseOrder")
 public class ProgressCheck {	//진척검수
 	
-	//진척검수코드
+	/**
+	 * 진척검수코드
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 5, columnDefinition = "INT(5)")
 	private Integer code;	
 	
-	//진척검수 일정
+	/**
+	 * 진척검수 일정
+	 */
 	@Column(columnDefinition = "DATE", nullable = false)
 	private LocalDateTime date;	
 	
-	//납기 진도율
+	/**
+	 * 납기 진도율
+	 */
 	@ColumnDefault(value = "0")
 	@Column(length = 3, columnDefinition = "INT(3)")
 	private Integer rate;	
 	
-	//기타사항
+	/**
+	 * 기타사항
+	 */
 	@Column(length = 1000)
 	private String etc;
 	
-	//발주서 번호(외래키)(구매발주서)
+	/**
+	 * 발주코드(외래키)(세부구매발주서)
+	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private PurchaseOrder purchaseOrder;	
+	private DetailPurchaseOrder detailPurchaseOrder;	
 	
 
 }

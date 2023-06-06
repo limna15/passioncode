@@ -1,8 +1,5 @@
 package com.passioncode.procurementsystem.entity;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
