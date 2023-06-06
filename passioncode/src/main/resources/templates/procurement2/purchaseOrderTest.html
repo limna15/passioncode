@@ -28,7 +28,7 @@
     left: 10px;
 }
 
-
+   
 .pagination {
     float: right;
     margin: 0 0 5px;
@@ -76,9 +76,9 @@ $(document).ready(function(){
             <div class="col-md-12 stretch-card">
               <!--수정 부분 시작 -->
               <div class="card">
-
+              
                 <div class="card-body">
-                  <p class="card-title">품목 정보 목록</p>
+                  <p class="card-title">발주서 목록</p>
                   <!--목록 내려보기 시작-->
                   <form>
                     <div class="form-row align-items-center">
@@ -90,15 +90,12 @@ $(document).ready(function(){
                         <option value="3">품목명</option>
                         </select>
                     </div>
-
+                    
                     <input type="text" style="width:150px;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
                     <div class="col-auto my-1">
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
-                      <button type="submit" class="btn btn-primary" style="float:right;">등록</button>&nbsp;
-                      <button type="submit" class="btn btn-primary" style="float:right;">수정</button>&nbsp;
-                      <button type="submit" class="btn btn-primary" style="float:right;">삭제</button>
-
+                    
                   </div>
                     </div>
                 </form>                
@@ -107,89 +104,85 @@ $(document).ready(function(){
                     <table id="recent-purchases-listing" class="table">
                       <thead>
                         <tr>
-                            <th>ch</th>
-                            <th>품목코드</th>
-                            <th>품목명</th>
-                            <th>대</th>
-                            <th>중</th>
-                            <th>규격</th>
-                            <th>재질</th>
-                            <th>제작 사양</th>
-                            <th>도면 번호</th>
-                            <th>도면 <br>image</th>
-                            <th>공용여부</th>
-                            <th>계약 상태</th>
+                            <th>발주<br>코드</th>
+                            <th>협력<br> 회사</th>
+                            <th>조달납기<br>  예정일</th>
+                            <th>품목</th>
+                            <th>발주 수량</th>
+                            <th>단가</th>
+                            <th>납기 현황</th>
+                            <th>다음 진척<br>검수 일정</th>
+                            <th>진척 검수일정<br> 등록</th>
+                            <th>진척 평가</th>
+                            <th>납기 <br>진도율</th>
+                            <th>검수 완료</th>
+                            <th>발주서<br>마감<br> 상태</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                            <td><div class="custom-control custom-checkbox mr-sm-2">
-                              <input type="checkbox" class="custom-control-input" id="mycheck">
-                              <label class="custom-control-label" for="mycheck"></label>
-                          </div></td>
-                            <td>CGa0001</td>
-                            <td>Gear</td>
-                            <td>철</td>
-                            <td>기어</td>
-                            <td>G1</td>
-                            <td>B</td>
-                            <td>12mm</td>
-                            <td>B23</td>
-                            <td>썸네일</td>
-                            <td>공용</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr>
-                          <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck2">
-                            <label class="custom-control-label" for="mycheck2"></label>
-                        </div></td>
-                            <td>2</td>
-                            <td>니즈원</td>
-                            <td></td>
+                      <tr>
+                            <td>1</td>
+                            <td>대명</td>
                             <td>23/08/12</td>
                             <td>10일</td>
                             <td>23/08/12</td>
                             <td>B11</td>
                             <td>배터리</td>
                             <td>50</td>
-                            <td>1200</td>
-                            <td>1200</td>
+                            <td> <button type="submit" class="btn btn-primary">일정등록</button></td>
+                            <td> <button type="submit" class="btn btn-primary">평가</button></td>
+                            <td>100,000</td>
+                            <td>115,000,000</td>
+                            <td>미완료</td>
+                        </tr>
+                        
+                            <td>2</td>
+                            <td>니즈원</td>
+                            <td>23/08/12</td>
+                            <td>10일</td>
+                            <td>23/08/12</td>
+                            <td>B11</td>
+                            <td>배터리</td>
+                            <td>50</td>
+                            <td> <button type="submit" class="btn btn-primary">일정등록</button></td>
+                            <td> <button type="submit" class="btn btn-primary">평가</button></td>
+                            <td>100,000</td>
+                            <td>115,000,000</td>
+                            <td>미완료</td>
                         </tr>
                         <tr>
-                          <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck3">
-                            <label class="custom-control-label" for="mycheck3"></label>
-                        </div></td>
+                          
                             <td>3</td>
                             <td>대명</td>
-                            <td></td>
                             <td>23/08/12</td>
                             <td>15일</td>
                             <td>23/08/12</td>
                             <td>B11</td>
                             <td>배터리</td>
                             <td>50</td>
-                            <td>1200</td>
-                            <td>1200</td>
+                            <td> <button type="submit" class="btn btn-primary">일정등록</button></td>
+                            <td> <button type="submit" class="btn btn-primary">평가</button></td>
+                            <td>100,000</td>
+                            <td>115,000,000</td>
+                            <td>미완료</td>
                         </tr>
                         <tr>
-                          <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck4">
-                            <label class="custom-control-label" for="mycheck4"></label>
-                        </div></td>
+                          
                             <td>4</td>
                             <td>렉스큐브</td>
-                            <td></td>
                             <td>23/08/12</td>
                             <td>10일</td>
                             <td>23/08/12</td>
                             <td>B11</td>
                             <td>배터리</td>
                             <td>50</td>
-                            <td>1200</td>
-                            <td>1200</td>
+                            <td> <button type="submit" class="btn btn-primary">일정등록</button></td>
+                            <td> <button type="submit" class="btn btn-primary">평가</button></td>
+                            <td>100,000</td>
+                            <td>115,000,000</td>
+                            <td>미완료</td>
                         </tr>
+                       
                       </tbody>
                     </table>
                     <!--페이지 번호 시작-->
@@ -208,8 +201,15 @@ $(document).ready(function(){
                   <!--페이지 번호 끝-->
                   </div>
                 </div>
+                <!--여기가 수정 부분 끝-->
               </div>
+
+        <!-- content-wrapper ends -->
+        <!-- partial -->
+
+</body>
 
 </th:block>
 </th:block>
 </html>
+

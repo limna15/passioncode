@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+
+	<!-- 여기 부분이 값을 바꿔서 대체해서 들어가는 부분! 나머지형식은 basic.html을 이용해서 하는것! 
+		그래서 basic.html이 header와 footer 가 들어가 있다고 보면됨! -->
 	<th:block th:fragment="content">
 
 <style>
@@ -69,7 +72,7 @@
 		<div class="col-md-12 stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title">조달 예정 품목</p>
+					<p class="card-title">자재 입고</p>
                   <form>
                     <div class="form-row align-items-center">
                     <div class="col-auto my-1">
@@ -85,60 +88,37 @@
                     <div class="col-auto my-1">
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
-					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;">발행</a>&nbsp;
-					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal2" style="float:right;">인쇄</a>&nbsp;
+					<!-- <button type="submit" class="btn btn-primary" style="height:25px; float:right;"> -->
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;">거래명세서 발행</a><!-- </button> -->
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
 							style="text-align: center;">
 							<thead>
 								<tr>
-								<th>ch</th>
-								<th>No</th>
-								<th>협력<br> 회사
-								</th>
-								<th>발주일</th>
-								<th>조달납기<br> 예정일
-								</th>
-								<th>품목 공급<br> L/T
-								</th>
-								<th>최소<br> 발주일
-								</th>
-								<th>품목 코드</th>
-								<th>품목명</th>
-								<th>기존 재고<br> 수량
-								</th>
-								<th>필요 수량</th>
-								<th>발주 수량</th>
-								<th>단가</th>
-								<th>공급<br>가격
-								</th>
-								<th>발주서<br>발행 상태
-								</th>
+									<th><input type="checkbox"></th>
+									<th>발주서 번호</th>
+									<th>발주 코드</th>
+									<th>조달납기<br>예정일</th>
+									<th>품목코드</th>
+									<th>품목명</th>
+									<th>발주 수량</th>
+									<th>입고 상태</th>
+									<th>발행 상태</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="dto: ${list}">
-								<td>
-									<div class="custom-control custom-checkbox mr-sm-2">
-										<input type="checkbox" class="custom-control-input" id="mycheck4"> <label
-											class="custom-control-label" for="mycheck4"></label>
-									</div>
-								</td>
-								<td>1</td>
-								<td>[[${dto.purchaseOrder.no}]]</td>
-								<td>[[${#temporals.format(dto.date, 'yyyy/MM/dd')}]]</td>
-								<td>[[${dto.code}]]</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>[[${dto.amount}]]</td>
-								<td>d</td>
-								<td>d</td>
-								<td>N</td>
-							</tr>
+								<tr th:each="list: ${list}">
+									<td><input type="checkbox"></td>
+									<td>[[${list.no}]]</td>
+									<td>[[${list.code}]]</td>
+									<td>[[${list.due_date}]]</td>
+									<td>[[${list.material_code}]]</td>
+									<td>[[${list.name}]]</td>
+									<td>[[${list.amount}]]</td>
+									<td><button type="submit" class="btn btn-primary" style="height:25px;">완료</button>
+										<button type="submit" class="btn btn-primary" style="height:25px;">취소</button></td>
+									<td th:if="${list.transaction_status}==0">미완료</td>
+								</tr>
 							</tbody>
 						</table>
 						<!--페이지 번호 시작-->
@@ -166,7 +146,7 @@
 			<div class="modal-header">
 		
             <!-- header title -->
-				<h4 class="modal-title">구매발주서 발행</h4>
+				<h4 class="modal-title">거래명세서 발행</h4>
              <!-- 닫기(x) 버튼 -->
 					<button type="button" class="close" data-dismiss="modal">×</button>
 			
@@ -175,31 +155,9 @@
 			<!-- body -->
 			<div class="modal-body">
 				<div class="modal-body">
-      <th:block th:replace="~{/procurement2/modalTest :: setLogin(~{this::login} )}"></th:block>
+      <th:block th:replace="~{/procurement3/modalTest :: setLogin(~{this::login} )}"></th:block>
      </div>
 				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
-						
-			<!-- Footer -->
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="modal fade" id="modal2" >
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-		
-            <!-- header title -->
-				<h4 class="modal-title">인쇄 미리보기</h4>
-             <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal">×</button>
-			
-			</div>
-						
-			<!-- body -->
-			<div class="modal-body"><!--여기에 외부에서 작성한 테이블 들어옴--></div>
 						
 			<!-- Footer -->
 			<div class="modal-footer">
@@ -213,12 +171,6 @@
 	 $('.ls-modal').on('click', function(e){
 		  e.preventDefault();
 		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
-		});
-</script>
-<script type="text/javascript">
-	 $('.ls-modal').on('click', function(e){
-		  e.preventDefault();
-		  $('#modal2').modal('show').find('.modal-body').load($(this).attr('href'));
 		});
 </script>
 	</th:block>

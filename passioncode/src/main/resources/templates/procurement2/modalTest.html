@@ -1,0 +1,76 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="setLogin(login)">
+
+	<body>
+		<div class="publish">
+			<form th:action="@{/procurement2/purchaseOrder}" th:method="POST">
+				<div class="col-md-12 stretch-card">
+
+					<div class="card">
+
+						<div class="card-body">
+							<p class="card-title">발주서 번호 발행</p>
+
+							<form>
+								<div class="form-row align-items-center">
+									발주서 번호: (여기서 생성)<br>
+									협력 회사: 대명<br>
+									발주일자: 23/05/15(오늘 날짜)<br>
+									납기 예정일: 23/08/12<br>
+								</div>
+						</div>
+			</form>
+			<!--목록 내려보기 끝-->
+			<div class="table-responsive">
+				<table id="recent-purchases-listing" class="table">
+					<thead>
+						<tr>
+							<th>ch</th>
+							<th>발주코드</th>
+							<th>품목<br>코드</th>
+							<th>품목</th>
+							<th>발주 수량</th>
+							<th>단가</th>
+							<th>공급<br>가격</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>11</td>
+							<td></td>
+							<td>23/08/12</td>
+							<td>10일</td>
+							<td>23/08/12</td>
+							<td>B11</td>
+
+						</tr>
+						<tr>
+
+							<td>2</td>
+							<td>22</td>
+							<td></td>
+							<td>23/08/12</td>
+							<td>10일</td>
+							<td>23/08/12</td>
+							<td>B11</td>
+
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+			위의 내용으로 발주서를 발행 하시겠습니까?<br>
+			<div class="col-auto my-1">
+				<h6>1/2</h6>&nbsp;
+				<button type="submit" class="btn btn-primary">발행</button>&nbsp;
+				<button type="submit" class="btn btn-primary">취소</button>
+			</div>
+		</div>
+
+		</form>
+		</div>
+	</body>
+</th:block>

@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"purchaseOrder", "transactionDetail"})
+@ToString(exclude = {"detailPurchaseOrder", "transactionDetail"})
 public class MaterialIn {	//입고
 	
 	//입고코드
@@ -34,12 +35,12 @@ public class MaterialIn {	//입고
 	private Integer code;
 	
 	//입고상태
-	@ColumnDefault(value="0") //0: 미완료, 1: 완료
-	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
+	@ColumnDefault(value="0") //null: 완료/취소 버튼, 0: 미완료, 1: 완료
+	@Column(length = 10, columnDefinition = "TINYINT(1)")
 	private Integer status;
 	
 	//입고일
-	@Column(columnDefinition = "DATETIME", nullable = false)
+	@Column(columnDefinition = "DATETIME")
 	private LocalDateTime date;
 	
 	//발행상태
@@ -48,9 +49,9 @@ public class MaterialIn {	//입고
 	private Integer transactionStatus;
 	
 	//발주서번호(외래키)(구매발주서)
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private PurchaseOrder purchaseOrder;
+	private DetailPurchaseOrder detailPurchaseOrder;
 	
 	//거래명세서번호(외래키)(거래명세서)
 	@ManyToOne(fetch = FetchType.LAZY)
