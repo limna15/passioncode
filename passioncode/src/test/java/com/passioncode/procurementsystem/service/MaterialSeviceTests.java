@@ -14,11 +14,18 @@ public class MaterialSeviceTests {
 	@Autowired
 	MaterialService materialService;
 	
-//	@Transactional
+	@Test
+	public void MaterialFindByIdTest() {
+		log.info("material 값 보자~ : "+materialService.get("BPa0001"));
+	}
+	
+	
+	@Transactional
 	@Test
 	public void entityToDTOTest() {
-//		log.info("어디 materialDTO 잘가져오는지 결과좀 봐보자 : "+materialService.entityToDTO(materialService.get("BPa0001")));
-		log.info("material 결과좀 봐보자 : "+(materialService.get("BPa0001")));
+		log.info("어디 materialDTO 잘가져오는지 결과좀 봐보자 : "+materialService.entityToDTO(materialService.get("BPa0001")));
+		log.info("어디 materialDTO 잘가져오는지 결과좀 봐보자 : "+materialService.entityToDTO(materialService.get("CGa0002")));
 	}
+
 
 }

@@ -10,7 +10,7 @@ import com.passioncode.procurementsystem.entity.Company;
 public interface CompanyRepository extends JpaRepository<Company, String> {
 	
 	/**
-	 * 협력회사명을 포함한 name을 이용하여 협력회사 찾는 메소드
+	 * 협력회사명을 포함한 name을 이용하여 협력회사 찾기
 	 * @param name
 	 * @return
 	 */
