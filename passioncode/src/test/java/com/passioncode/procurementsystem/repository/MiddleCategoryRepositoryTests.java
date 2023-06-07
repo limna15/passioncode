@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -44,4 +46,14 @@ public class MiddleCategoryRepositoryTests {
 		middleCategoryRepository.save(middleCategory);
 		
 	}
+	
+	@Test
+	public void findByCategoryTest() {
+		Collection<MiddleCategory> test = middleCategoryRepository.findByCategory("브라켓");
+		log.info("잘 읽어오나 보자 : "+test);
+		ArrayList<MiddleCategory> test2 = (ArrayList<MiddleCategory>) test;
+		log.info("잘 읽어오나 보자 : "+test2.get(0));
+	}
+	
+	
 }
