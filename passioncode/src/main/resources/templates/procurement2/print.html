@@ -1,0 +1,145 @@
+<style>
+html,body {
+	margin:0px;
+	padding:0px;
+}
+body, h1, h2, h3, h5, h6, li, p { 
+	font-family: sans-serif, '맑은고딕', 'MalgunGothic' !important;
+}
+ul,li {
+	margin:0px;
+	padding:0px;
+	list-style:none;
+}
+#wrap {
+	margin:0 auto;
+	text-align:center;
+}
+.container {
+	overflow:hidden;
+	margin:0 auto;
+	width:220px;
+	text-align:left;
+	font-size:11px;
+}
+.order {
+	padding-top:20px;
+	font-weight:900;
+	font-size:13px
+}
+.adress {
+	letter-spacing:2.8px;
+}
+.info {
+	margin-bottom:2px;
+}
+.info2 {
+	line-height:2;
+}
+.info2:last-child {
+	font-size:13px;
+	font-weight:700
+}
+.pay {
+	margin-bottom:-7px
+}
+.price {
+	display:inline-block;
+	float:right;
+	padding-right:4px;
+}
+.title > li{
+	display:inline-block;
+	padding-right:25px;
+}
+.orders > li {
+	display:inline-block;
+	padding-right:23px;
+}
+.title > li:last-child, .orders > li:last-child {
+	float:right;
+	padding-right:4px;
+}
+.vat {
+	display:inline-block;
+	margin:3px 0px;
+	line-height:1.5;
+}
+.vat:first-child {
+	padding-left:30px;
+}
+.vat:last-child {
+	float:right;
+	padding-right:4px;
+	text-align:right;
+}
+#noprint {
+	margin-top:20px;
+	padding:12px 20px;
+	border:0px;
+	background-color:#44a8ff;
+	color:#fff;
+	font-size:20px;
+	font-weight:bold
+}
+@media print {
+  #noprint { 
+	display:none;
+	}
+}
+</style>
+<div id="wrap">
+	<div class="order">[영 수 증]</div><br>
+	<div class="container">
+		<div class="info">
+			[매 장 명] <br><br>
+			<span class="adress">[주 소]</span><br><br>
+		[대 표 자] 최종일 [TEL] <br><br>
+		</div>
+		============================
+		<div class="info2">
+			<ul class="title">
+				<li>메 뉴 명</li>
+				<li>단 가</li>
+				<li>수 량</li>
+				<li>금 액</li>
+			</ul>
+		</div>
+		------------------------------------------------
+		<div class="info2">
+			<div class="pay">음식명</div>
+			<ul class="orders">
+				<li>000046</li>
+				<li>9,900</li>
+				<li>1</li>
+				<li>9,900</li>
+			</ul>
+		</div>
+		------------------------------------------------
+		<div class="info2">합 계 금 액
+			<div class="price">9,900</div>
+		</div>
+		------------------------------------------------
+		<div class="info2">
+			<ul class="vat">
+				<li>부가세 과세물품가액</li>
+				<li>부가세</li>
+			</ul>
+			<ul class="vat">
+				<li>------</li>
+				<li>------</li>
+			</ul>
+		</div>
+		------------------------------------------------
+		<div class="info2">받 을 금 액
+			<div class="price">9,900</div>
+		</div>
+	</div>
+	<button id="noprint" onclick="pops();">인쇄하기</button>
+</div>
+<script>
+function pops(){
+	window.print();
+	return false;
+}
+</script>

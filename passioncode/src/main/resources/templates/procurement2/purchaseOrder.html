@@ -86,7 +86,7 @@
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
 					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;">발행</a>&nbsp;
-					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal2" style="float:right;">인쇄</a>&nbsp;
+					 <button class="btn btn-primary" onclick="print();">인쇄</button>&nbsp;
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
 							style="text-align: center;">
@@ -175,39 +175,13 @@
 			<!-- body -->
 			<div class="modal-body">
 				<div class="modal-body">
-      <th:block th:replace="~{/procurement2/modalTest :: setLogin(~{this::login} )}"></th:block>
+      <th:block th:replace="~{/procurement2/purchaseOrderPublish :: purchaseOrder(~{this::publish} )}"></th:block>
      </div>
 				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
-						
-			<!-- Footer -->
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-			</div>
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="modal2" >
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-		
-            <!-- header title -->
-				<h4 class="modal-title">인쇄 미리보기</h4>
-             <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal">×</button>
-			
-			</div>
-						
-			<!-- body -->
-			<div class="modal-body"><!--여기에 외부에서 작성한 테이블 들어옴--></div>
-						
-			<!-- Footer -->
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-			</div>
-		</div>
-	</div>
-</div>
+
 		
 <script type="text/javascript">
 	 $('.ls-modal').on('click', function(e){
@@ -216,10 +190,10 @@
 		});
 </script>
 <script type="text/javascript">
-	 $('.ls-modal').on('click', function(e){
-		  e.preventDefault();
-		  $('#modal2').modal('show').find('.modal-body').load($(this).attr('href'));
-		});
+let printPurchaseOrder;
+function print(){
+	printPurchaseOrder = window.open('/procurement2/print','thePopup','width=722,height=600')
+};
 </script>
 	</th:block>
 

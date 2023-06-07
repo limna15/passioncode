@@ -45,5 +45,13 @@ public class PS2Controller {
 		
 		
 	}
+	
+	@GetMapping("/print")
+	public void PS2TestPrint(PurchaseOrderDTO purchaseOrderDTO) {
+		log.info("인쇄합니다>>>>>>>");
+		
+		
+		
+	}
 
 }

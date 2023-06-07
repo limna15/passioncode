@@ -3,7 +3,7 @@
 
 	<body>
 		<div class="publish">
-			<form th:action="@{/procurement2/purchaseOrder}" th:method="POST">
+			<form th:action="@{/procurement2/progressCheck}" th:method="POST">
 				<div class="col-md-12 stretch-card">
 
 					<div class="card">
@@ -62,15 +62,6 @@
 				</table>
 
 			</div>
-			위의 내용으로 발주서를 발행 하시겠습니까?<br>
-			<div class="col-auto my-1">
-				<h6>1/2</h6>&nbsp;
-				<button type="submit" class="btn btn-primary">발행</button>&nbsp;
-				<button type="submit" class="btn btn-primary">취소</button>
-			</div>
-		</div>
-
-		</form>
 		</div>
 	</body>
 </th:block>
