@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 
@@ -21,6 +22,9 @@ public class MaterialRepositoryTests {
 	
 	@Autowired
 	MiddleCategoryRepository middleCategoryRepository;
+	
+	@Autowired
+	ContractRepository contractRepository;
 	
 	@Test
 	public void InsertTest() {
@@ -48,6 +52,17 @@ public class MaterialRepositoryTests {
 		log.info("품목에서 외래키 중분류 보자 : "+material.getMiddleCategory());
 		log.info("품목에서 외래키 중분류타고 대분류도 봐보자 : "+material.getMiddleCategory().getLargeCategory());
 		
+	}
+	
+	@Transactional
+	@Test
+	public void materialDTOTest() {
+		Material material = materialRepository.findById("BPa0001").get();
+		MaterialDTO materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
+				.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile()).shareStatus(material.getShareStatus())
+				.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory()).middleCategoryName(material.getMiddleCategory().getCategory())
+				.contractStatus(contractRepository.existsByMaterial(material)).build();
+		log.info("DTO 테스트 결과 확인해보자 : "+materialDTO);
 	}
 	
 	
