@@ -18,7 +18,7 @@ public class MaterialSeviceTests {
 	MaterialService materialService;
 	
 	@Test
-	public void MaterialFindByIdTest() {
+	public void materialFindByIdTest() {
 		log.info("material 값 보자~ : "+materialService.get("BPa0001"));
 	}
 	
@@ -37,5 +37,11 @@ public class MaterialSeviceTests {
 		log.info("엔티티로 잘 바꾸나 봐보자 : "+materialService.dtoToEntity(materialDTO));
 	}
 	
+	@Transactional
+	@Test
+	public void materialDTOListTest() {
+		log.info("어디 DTO 리스트 봐보자 : "+materialService.getDTOList());
+		log.info("리스트 크기 봐보자 : "+materialService.getDTOList().size());
+	}
 
 }

@@ -45,8 +45,8 @@ public class MaterialServiceImpl implements MaterialService {
 		Collection<MiddleCategory> middleCategoryResult1 = middleCategoryRepository.findByCategory(materialDTO.getMiddleCategoryName());
 		ArrayList<MiddleCategory> middleCategoryResult2 = (ArrayList<MiddleCategory>) middleCategoryResult1;
 		MiddleCategory middleCategory = middleCategoryResult2.get(0);
-		log.info("이거 찾아온 리스트 목록좀 보자 : "+middleCategoryResult2);
-		log.info("리스트 사이즈도 봐보자 : "+middleCategoryResult2.size());
+		log.info("ArrayList<MiddleCategory> 리스트 목록좀 보자 : "+middleCategoryResult2);
+		log.info("ArrayList<MiddleCategory> 리스트 사이즈도 봐보자 : "+middleCategoryResult2.size());
 		
 		//품목코드, 품목명, 공용여부, 규격, 재질, 제작사양, 도면번호, 도면, 중분류
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(materialDTO.getShareStatus()).size(materialDTO.getSize())
@@ -57,8 +57,13 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Override
 	public List<MaterialDTO> getDTOList() {
-		
-		return null;
+		List<Material> materialList = materialRepository.findAll();
+		List<MaterialDTO> materialDTOList = new ArrayList<>();
+		for(int i=0;i<materialList.size();i++) {
+			materialDTOList.add(entityToDTO(materialList.get(i)));
+		}
+		log.info("materialDTO 리스트 제대로 되었나 봐보자! : "+materialDTOList);
+		return materialDTOList;
 	}
 
 

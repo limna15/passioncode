@@ -15,5 +15,7 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
 	 * @return
 	 */
 	public Collection<Company> findByNameContaining(String name);
+	
+	
 
 }
