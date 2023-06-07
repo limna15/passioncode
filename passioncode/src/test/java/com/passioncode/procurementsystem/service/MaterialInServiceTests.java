@@ -14,9 +14,4 @@ public class MaterialInServiceTests {
 	@Autowired
 	MaterailInService service;
 	
-	@Test
-	public void testGetList() {
-		service.getList().forEach(vo -> log.info("리스트다--------"+vo));
-	}
-
 }

@@ -1,12 +1,15 @@
 package com.passioncode.procurementsystem.service;
 
-import java.util.List;
-
-import com.passioncode.procurementsystem.dto.MaterialInMapperDTO;
+import com.passioncode.procurementsystem.dto.MaterialInDTO;
+import com.passioncode.procurementsystem.entity.MaterialIn;
 
 public interface MaterailInService {
-	
-	//1. 입고 리스트 보여주기
-	List<MaterialInMapperDTO> getList();
+
+	/**
+	 * materialInDTO 이용해 자재입고 엔티티 만들기(materialInDTO -> materialIn)
+	 * @param materialInDTO
+	 * @return
+	 */
+	MaterialInDTO materialInToDTO(MaterialIn materialIn);
 
 }

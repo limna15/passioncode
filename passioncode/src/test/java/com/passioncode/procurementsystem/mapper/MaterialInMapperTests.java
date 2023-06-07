@@ -20,8 +20,4 @@ public class MaterialInMapperTests {
 		log.info("시간 불러오기! "+materialInMapper.getTime());
 	}
 	
-	@Test
-	public void testGetList() {
-		materialInMapper.getList().forEach(vo -> log.info(vo));
-	}
 }

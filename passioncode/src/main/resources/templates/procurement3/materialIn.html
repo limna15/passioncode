@@ -89,7 +89,7 @@
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
 					<!-- <button type="submit" class="btn btn-primary" style="height:25px; float:right;"> -->
-					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;">거래명세서 발행</a><!-- </button> -->
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal">거래명세서 발행</a><!-- </button> -->
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
 							style="text-align: center;">
@@ -153,9 +153,10 @@
 			</div>
 						
 			<!-- body -->
+			<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
 			<div class="modal-body">
 				<div class="modal-body">
-      <th:block th:replace="~{/procurement3/modalTest :: setLogin(~{this::login} )}"></th:block>
+      <th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
      </div>
 				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
 						
