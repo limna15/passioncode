@@ -29,7 +29,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"detailPurchaseOrder", "transactionDetail"})
+@ToString(exclude = {"detailPurchaseOrder"})
 public class MaterialIn {	//입고
 	
 	/**
@@ -43,14 +43,14 @@ public class MaterialIn {	//입고
 	/**
 	 * 입고상태
 	 */
-	@ColumnDefault(value="0") //null: 완료/취소 버튼, 0: 미완료, 1: 완료
-	@Column(length = 10, columnDefinition = "TINYINT(1)")
+	@ColumnDefault(value="1") //0: 미완료, 1: 완료
+	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
 	private Integer status;
 	
 	/**
 	 * 입고일
 	 */
-	@Column(columnDefinition = "DATETIME")
+	@Column(columnDefinition = "DATETIME", nullable = false)
 	private LocalDateTime date;
 	
 	/**
@@ -66,11 +66,5 @@ public class MaterialIn {	//입고
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
 	private DetailPurchaseOrder detailPurchaseOrder;
-	
-	//거래명세서번호(외래키)(거래명세서)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
-	private TransactionDetail transactionDetail;
-	//나영아 여기에 연결할게 아니라.. 이거 거래명세서는 구매발주서랑 일대일로 연결하기로 한거 아니야???
-	
+
 }

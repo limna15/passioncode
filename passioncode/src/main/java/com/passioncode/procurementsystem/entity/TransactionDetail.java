@@ -25,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = {"purchaseOrder"})
 public class TransactionDetail {	//거래명세서
 	
 	/**
@@ -36,10 +36,11 @@ public class TransactionDetail {	//거래명세서
 	@Column(length = 8, columnDefinition = "INT(8)")
 	private Integer no;
 	
-//	//발주서번호(외래키)(구매발주서)
-//	@OneToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(nullable = false)
-//	private PurchaseOrder purchaseOrder;	
-//	그래서 이렇게 추가하기로 한거 아니였나아아..???
+	/**
+	 * 발주서번호(외래키)(구매발주서)
+	 */
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	private PurchaseOrder purchaseOrder;
 	
 }
