@@ -1,6 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,6 +14,6 @@ public interface MaterialRepository extends JpaRepository<Material, String> {
 	 * @param name
 	 * @return
 	 */
-	public Collection<Material> findByNameContainingIgnoreCase(String name);
+	public List<Material> findByNameContainingIgnoreCase(String name);
 
 }

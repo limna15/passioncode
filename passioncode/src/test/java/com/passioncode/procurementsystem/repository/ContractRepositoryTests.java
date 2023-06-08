@@ -87,8 +87,9 @@ public class ContractRepositoryTests {
 //		Material material2 = materialRepository.findById("CGa0002").get();  //계약 미완료인 품목
 		Material material2 = materialRepository.findById("CGa0001").get();  //계약 완료된 품목
 //		log.info("material2 봐보자! : "+material2);
-		Collection<Contract> collectionContract = contractRepository.findByMaterial(material2);
-		List<Contract> contractList = (ArrayList<Contract>) collectionContract;
+//		Collection<Contract> collectionContract = contractRepository.findByMaterial(material2);
+//		List<Contract> contractList = (ArrayList<Contract>) collectionContract;
+		List<Contract> contractList = contractRepository.findByMaterial(material2);
 //		log.info("contractList 봐보자 : "+contractList);
 		
 		List<ContractDTO> contractDTOList = new ArrayList<>();

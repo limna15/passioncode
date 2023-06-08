@@ -42,11 +42,10 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Override
 	public Material dtoToEntity(MaterialDTO materialDTO) {
-		Collection<MiddleCategory> middleCategoryResult1 = middleCategoryRepository.findByCategory(materialDTO.getMiddleCategoryName());
-		ArrayList<MiddleCategory> middleCategoryResult2 = (ArrayList<MiddleCategory>) middleCategoryResult1;
-		MiddleCategory middleCategory = middleCategoryResult2.get(0);
-		log.info("ArrayList<MiddleCategory> 리스트 목록좀 보자 : "+middleCategoryResult2);
-		log.info("ArrayList<MiddleCategory> 리스트 사이즈도 봐보자 : "+middleCategoryResult2.size());
+		List<MiddleCategory> middleCategoryList = middleCategoryRepository.findByCategory(materialDTO.getMiddleCategoryName());
+		MiddleCategory middleCategory = middleCategoryList.get(0);
+		log.info("List<MiddleCategory> 리스트 목록좀 보자 : "+middleCategoryList);
+		log.info("List<MiddleCategory> 리스트 사이즈도 봐보자 : "+middleCategoryList.size());
 		
 		//품목코드, 품목명, 공용여부, 규격, 재질, 제작사양, 도면번호, 도면, 중분류
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(materialDTO.getShareStatus()).size(materialDTO.getSize())

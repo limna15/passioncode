@@ -36,8 +36,7 @@ public class ContractServiceImpl implements ContractService {
 	public List<ContractDTO> materialEntityToDTO(Material material) {
 		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약 상태
 		
-		Collection<Contract> collectionContract = contractRepository.findByMaterial(material);
-		List<Contract> contractList = (ArrayList<Contract>) collectionContract;
+		List<Contract> contractList = contractRepository.findByMaterial(material);
 		
 		List<ContractDTO> contractDTOList = new ArrayList<>();
 		ContractDTO contractDTO = null;
@@ -74,8 +73,7 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public Contract dtoToEntity(ContractDTO contractDTO) {		
 		//계약서번호, 품목코드(품목), 사업자등록번호(협력회사), 품목공급LT, 단가, 거래조건, 계약서
-		Collection<Company> collectionCompany = companyRepository.findByNameContaining(contractDTO.getCompanyName());
-		List<Company> companyList = (List<Company>) collectionCompany;
+		List<Company> companyList = companyRepository.findByNameContaining(contractDTO.getCompanyName());
 		log.info("품목명으로 찾은 companyList 봐보자 : "+companyList);
 		Company company = companyList.get(0);
 		
@@ -94,8 +92,7 @@ public class ContractServiceImpl implements ContractService {
 		ContractDTO contractDTO = null;
 		
 		for(int j=0;j<materialList.size();j++) {
-			Collection<Contract> collectionContract = contractRepository.findByMaterial(materialList.get(j));
-			List<Contract> contractList = (ArrayList<Contract>) collectionContract;		
+			List<Contract> contractList = contractRepository.findByMaterial(materialList.get(j));	
 			
 			//contractList에 값이 존재할때 = 계약상태가 완료인 상태
 			if(contractList.size()!=0) {
