@@ -1,6 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,6 @@ public interface MiddleCategoryRepository extends JpaRepository<MiddleCategory, 
 	 * @param category
 	 * @return
 	 */
-	Collection<MiddleCategory> findByCategory(String category);	
+	List<MiddleCategory> findByCategory(String category);	
 //	Optional<MiddleCategory> findByCategory(String category);
-
 }

@@ -22,8 +22,8 @@ public class MaterialOutRepositoryTests {
 	@Transactional
 	@Test
 	public void findByMRPTest() {
-//		MRP mrp = mrpRepository.findById(1).get();
-//		log.info("출고 찍히는거 보자 : "+materialOutRepository.findByMRP(mrp));
+		MRP mrp = mrpRepository.findById(1).get();
+		log.info("출고 찍히는거 보자 : "+materialOutRepository.findByMrp(mrp));
 	}
 	
 }
