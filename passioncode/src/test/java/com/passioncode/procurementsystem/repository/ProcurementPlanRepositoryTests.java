@@ -193,13 +193,15 @@ public class ProcurementPlanRepositoryTests {
 		
 		//조달계획 등록 완료인 조달계획DTO 만들기 (사실상 조달계획 엔티티를 이용해서 만들면 등록완료된 DTO)
 		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();		
-		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode())
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
 												.materialName(procurementPlan.getMrp().getMaterial().getName()).process(procurementPlan.getMrp().getProcess())
 												.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
 												.companyName(procurementPlan.getContract().getCompany().getName()).supplyLt(procurementPlan.getContract().getSupplyLt())
 												.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
 												.ppAmount(procurementPlan.getAmount()).contractStatus(contractRepository.existsByMaterial(procurementPlan.getMrp().getMaterial()))
-												.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan)).build();
+												.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan))
+												.mrpCode(procurementPlan.getMrp().getCode()).companyNo(procurementPlan.getContract().getCompany().getNo())
+												.contractNo(procurementPlan.getContract().getNo()).build();
 		
 		log.info("조달계획 DTO 결과 값 : "+procurementPlanDTO);
 		
@@ -209,7 +211,8 @@ public class ProcurementPlanRepositoryTests {
 		
 		ProcurementPlanDTO procurementPlanDTO2 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
 													.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
-													.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false).build();				
+													.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false)
+													.mrpCode(mrp.getCode()).build();				
 
 		log.info("조달계획 DTO 결과 값 : "+procurementPlanDTO2);
 		
@@ -225,18 +228,21 @@ public class ProcurementPlanRepositoryTests {
 		
 		//procurementPlan2 가 존재할때, 조달계획 등록 완료된 상태
 		if(procurementPlan2!=null) {
-			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(procurementPlan2.getMrp().getMaterial().getCode())
+			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(procurementPlan2.getMrp().getMaterial().getCode()).ppcode(procurementPlan2.getCode())
 									.materialName(procurementPlan2.getMrp().getMaterial().getName()).process(procurementPlan2.getMrp().getProcess())
 									.mrpdate(procurementPlan2.getMrp().getDate()).mrpAmount(procurementPlan2.getMrp().getAmount())
 									.companyName(procurementPlan2.getContract().getCompany().getName()).supplyLt(procurementPlan2.getContract().getSupplyLt())
 									.dueDate(procurementPlan2.getDueDate()).minimumOrderDate(procurementPlan2.getMinimumOrderDate())
 									.ppAmount(procurementPlan2.getAmount()).contractStatus(contractRepository.existsByMaterial(procurementPlan2.getMrp().getMaterial()))
-									.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan2)).build();
+									.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan2))
+									.mrpCode(procurementPlan2.getMrp().getCode()).companyNo(procurementPlan2.getContract().getCompany().getNo())
+									.contractNo(procurementPlan2.getContract().getNo()).build();
 			ppDTOList.add(procurementPlanDTO3);
 		}else {  ////procurementPlan2 가 존재X, 조달계획 등록 미완료된 상태
 			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
 									.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
-									.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false).build();	
+									.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false)
+									.mrpCode(mrp.getCode()).build();	
 			ppDTOList.add(procurementPlanDTO3);
 		}
 		

@@ -6,8 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 계약등록 화면을 위한 계약DTO 클래스, (11개)
- * 계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태
+ * 계약등록 화면을 위한 계약DTO 클래스, (11개+1개)
+ * 계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태,
+ * 사업자등록번호
  * @author KSH
  * 
  */ 
@@ -31,6 +32,11 @@ public class ContractDTO {
 	 * 품목명 (품목)
 	 */
 	private String materialName;
+	
+	/**
+	 * 사업자등록번호 (협력회사)
+	 */
+	private String companyNo;
 	
 	/**
 	 * 협력회사명 (협력회사)

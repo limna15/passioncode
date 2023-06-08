@@ -90,6 +90,5 @@ public class ProcurementPlan {		//조달계획
 	private DetailPurchaseOrder detailPurchaseOrder;	
 	
 	
-	
 
 }

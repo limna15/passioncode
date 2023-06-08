@@ -70,9 +70,9 @@ public class ContractRepositoryTests {
 		//계약이 완료가 된 계약DTO 불로오기 (사실상 계약서테이블에 있는 값들 이용하면 계약완료된 DTO)
 		Contract contract = contractRepository.findById(1).get();
 		ContractDTO contractDTO = ContractDTO.builder().contractNo(contract.getNo()).materialCode(contract.getMaterial().getCode()).materialName(contract.getMaterial().getName())
-									.companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager()).managerTel(contract.getCompany().getManagerTel())
-									.supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice()).dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile())
-									.contractStatus(true).build();
+									.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
+									.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
+									.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus(true).build();
 		log.info("계약 완료된 DTO(사실상 계약서테이블의 내용!) : "+contractDTO);
 		
 		//계약이 미완료인 계약DTO 만들기 (계약테이블에 없는건 다 null로 해서 만들기)
@@ -99,11 +99,11 @@ public class ContractRepositoryTests {
 		if(contractList.size()!=0) {
 			for(int i=0;i<contractList.size();i++) {
 				contractDTO3 = ContractDTO.builder().contractNo(contractList.get(i).getNo()).materialCode(contractList.get(i).getMaterial().getCode())
-						.materialName(contractList.get(i).getMaterial().getName()).companyName(contractList.get(i).getCompany().getName())
-						.manager(contractList.get(i).getCompany().getManager()).managerTel(contractList.get(i).getCompany().getManagerTel())
-						.supplyLt(contractList.get(i).getSupplyLt()).unitPrice(contractList.get(i).getUnitPrice())
-						.dealCondition(contractList.get(i).getDealCondition()).contractFile(contractList.get(i).getContractFile())
-						.contractStatus(true).build();
+								.materialName(contractList.get(i).getMaterial().getName()).companyNo(contractList.get(i).getCompany().getNo())
+								.companyName(contractList.get(i).getCompany().getName()).manager(contractList.get(i).getCompany().getManager())
+								.managerTel(contractList.get(i).getCompany().getManagerTel()).supplyLt(contractList.get(i).getSupplyLt())
+								.unitPrice(contractList.get(i).getUnitPrice()).dealCondition(contractList.get(i).getDealCondition())
+								.contractFile(contractList.get(i).getContractFile()).contractStatus(true).build();
 				contractDTOList.add(contractDTO3);
 			}
 		}else { //contractList에 비어있을때 = 계약상태가 미완료인 상태
