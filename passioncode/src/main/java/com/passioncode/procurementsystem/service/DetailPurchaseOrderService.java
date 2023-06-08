@@ -1,10 +1,26 @@
 package com.passioncode.procurementsystem.service;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
+import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
+import com.passioncode.procurementsystem.entity.MaterialOut;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 public interface DetailPurchaseOrderService {
 	
-	//PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO requestDTO);
-	//GuestbookDTO read(Long gno);
 	DetailPurchaseOrderDTO read(Integer no);
 
+	/**
+	 * 조달계획 엔티티를 이용해 PurchaseOrderDTO로 만들기(ProcurementPlan -> PurchaseOrderDTO)
+	 * @param detailPurchaseOrder
+	 * @return
+	 */
+	DetailPurchaseOrderDTO entityToDTO(DetailPurchaseOrder detailPurchaseOrder, MaterialOut materialOut);
+
+	/**
+	 * MaterialDTO를 이용해서 품목 엔티티 만들기(MaterialDTO -> Material)
+	 * @param materialDTO
+	 * @return
+	 */
+	//Material dtoToEntity(MaterialDTO materialDTO);
+	
+	
 }
