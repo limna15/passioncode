@@ -1,6 +1,6 @@
 package com.passioncode.procurementsystem.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,17 +32,17 @@ public class MaterialInDTO {
 	/**
 	 * 조달납기예정일
 	 */
-	private LocalDateTime dueDate;
+	private Date dueDate;
 	
 	/**
 	 * 품목코드
 	 */
-	private Integer materialCode;
+	private String materialCode;
 
 	/**
 	 * 품목명
 	 */
-	private Integer materialName;
+	private String materialName;
 	
 	/**
 	 * 발주수량
@@ -51,13 +51,13 @@ public class MaterialInDTO {
 	
 	/**
 	 * 입고상태
-	 * False(0): 미완료, True(1): 완료(기본값)
+	 * False(0): 미완료, True(1): 완료
 	 */
 	private Boolean status;
 	
 	/**
 	 * 거래명세서 발행상태
-	 * False(0): 미완료(기본값), True(1): 완료
+	 * False(0): 미완료, True(1): 완료
 	 */
 	private Boolean transactionStatus;
 
