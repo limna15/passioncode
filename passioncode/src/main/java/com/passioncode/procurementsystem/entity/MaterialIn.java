@@ -42,6 +42,7 @@ public class MaterialIn {	//입고
 	
 	/**
 	 * 입고상태
+	 * False(0): 미완료, True(1): 완료(기본값)
 	 */
 	@ColumnDefault(value="1") //0: 미완료, 1: 완료
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
@@ -61,7 +62,8 @@ public class MaterialIn {	//입고
 	private Integer transactionStatus;
 	
 	/**
-	 * 발주코드(외래키)(세부구매발주서)
+	 * 거래명세서 발행상태
+	 * False(0): 미완료(기본값), True(1): 완료
 	 */
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
