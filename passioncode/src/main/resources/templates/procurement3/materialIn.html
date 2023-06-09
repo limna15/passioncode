@@ -91,8 +91,8 @@
 					<!-- <button type="submit" class="btn btn-primary" style="height:25px; float:right;"> -->
 					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal">거래명세서 발행</a><!-- </button> -->
 					<div class="table-responsive">
-						<table id="recent-purchases-listing" class="table"
-							style="text-align: center;">
+					<form method="post">
+						<table id="recent-purchases-listing" class="table" style="text-align: center;">
 							<thead>
 								<tr>
 									<th><input type="checkbox"></th>
@@ -107,21 +107,23 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="list: ${list}">
+								<tr th:each="list: ${DTOList}">
 									<td><input type="checkbox"></td>
 									<td>[[${list.no}]]</td>
 									<td>[[${list.code}]]</td>
-									<td>[[${list.due_date}]]</td>
-									<td>[[${list.material_code}]]</td>
-									<td>[[${list.name}]]</td>
+									<td>[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
+									<td>[[${list.materialCode}]]</td>
+									<td>[[${list.materialName}]]</td>
 									<td>[[${list.amount}]]</td>
-									<td><button type="submit" class="btn btn-primary" style="height:25px;">완료</button>
-										<button type="submit" class="btn btn-primary" style="height:25px;">취소</button></td>
-									<td th:if="${list.transaction_status}==0">미완료</td>
+									<td><button type="submit" class="btn btn-primary" value="done" style="height:25px;">완료</button>
+										<button type="submit" class="btn btn-primary" value="cancle" style="height:25px;">취소</button></td>
+									<!-- <td>[[${list.transactionStatus}]]</td> -->
+									<td th:text="${list.transactionStatus} ? '완료' : '미완료' "></td>
 								</tr>
 							</tbody>
 						</table>
-						<!--페이지 번호 시작-->
+					</form>	
+					<!--페이지 번호 시작-->
                     <div class="clearfix">
                       <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                       <ul class="pagination">
@@ -173,6 +175,8 @@
 		  e.preventDefault();
 		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
 		});
+	 
+	 
 </script>
 	</th:block>
 

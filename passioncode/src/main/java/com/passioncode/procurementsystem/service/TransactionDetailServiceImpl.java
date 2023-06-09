@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.passioncode.procurementsystem.dto.TransactionDetailDTO;
@@ -27,21 +29,28 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 	private final CompanyRepository companyRepository;
 	
 	@Override
-	public TransactionDetailDTO transactionDetailDTO(DetailPurchaseOrder detailPurchaseOrder) {
-		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+	public TransactionDetailDTO transactionDetailToDTO(DetailPurchaseOrder detailPurchaseOrder) {
+		List<ProcurementPlan> pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		
 		Company ourCompany= companyRepository.findById("777-77-77777").get();
 		
 		TransactionDetail transactionDetail= transactionDetailRepository.findById(1).get();
-		TransactionDetailDTO transactionDetailDTO= TransactionDetailDTO.builder().no(transactionDetail.getNo()).company(ourCompany.getName()).purchaseOrderNo(transactionDetail.getPurchaseOrder().getNo())
-												.date(materialIn.getDate()).companyNo(pp.getContract().getCompany().getNo())
-												.companyName(pp.getContract().getCompany().getName()).CEO(pp.getContract().getCompany().getCeo())
-												.companyAddress(pp.getContract().getCompany().getAddress()).manager(pp.getContract().getCompany().getManager())
-												.managerTel(pp.getContract().getCompany().getManagerTel())
-												.materialCode(pp.getContract().getMaterial().getCode()).materialName(pp.getContract().getMaterial().getName())
-												.amount(pp.getDetailPurchaseOrder().getAmount()).unitPrice(pp.getContract().getUnitPrice()).build();
-		return transactionDetailDTO;
+//		TransactionDetailDTO transactionDetailDTO= TransactionDetailDTO.builder().no(transactionDetail.getNo()).company(ourCompany.getName()).purchaseOrderNo(transactionDetail.getPurchaseOrder().getNo())
+//												.date(materialIn.getDate()).companyNo(pp.getContract().getCompany().getNo())
+//												.companyName(pp.getContract().getCompany().getName()).CEO(pp.getContract().getCompany().getCeo())
+//												.companyAddress(pp.getContract().getCompany().getAddress()).manager(pp.getContract().getCompany().getManager())
+//												.managerTel(pp.getContract().getCompany().getManagerTel())
+//												.materialCode(pp.getContract().getMaterial().getCode()).materialName(pp.getContract().getMaterial().getName())
+//												.amount(pp.getDetailPurchaseOrder().getAmount()).unitPrice(pp.getContract().getUnitPrice()).build();
+//		return transactionDetailDTO;
+		return null;
+	}
+
+	@Override
+	public TransactionDetail DTOToEntity(TransactionDetailDTO transactionDetailDTO) {
+		TransactionDetail transactionDetail= TransactionDetail.builder().no(transactionDetailDTO.getNo()).build();
+		return transactionDetail;
 	}
 
 }

@@ -5,9 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
-import com.passioncode.procurementsystem.repository.MaterialInRepository;
-import com.passioncode.procurementsystem.service.MaterailInService;
+import com.passioncode.procurementsystem.dto.MaterialInDTO;
+import com.passioncode.procurementsystem.service.MateriallInService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,12 +17,15 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class PS3Controller {
 	
-	private final MaterialInRepository repository;
+	private final MateriallInService materiallInService;
 	
 
 	@GetMapping("/materialIn")
-	public void materialIn(Model model) {
+	public void materialIn(Model model, MaterialInDTO materialInDTO) {
 		
+		log.info("list............." + materialInDTO);
+
+		model.addAttribute("DTOList",materiallInService.getMaterialInDTOLsit());
 	}
 	
 	@GetMapping("/transactionList")
