@@ -12,7 +12,7 @@ public interface MaterialService {
 	 * @param code
 	 * @return
 	 */
-	Material get(String code);
+	Material getMaterial(String code);
 	
 	/**
 	 * 품목 엔티티를 이용해서 MaterialDTO로 만들기(Material -> MaterialDTO)
@@ -33,5 +33,32 @@ public interface MaterialService {
 	 * @return
 	 */
 	List<MaterialDTO> getDTOList();
+	
+	/**
+	 * 품목 엔티티를 이용하여 계약상태 체크하기, 
+	 * True : 계약상태 O, False : 계약상태 X
+	 * @param material
+	 * @return
+	 */
+	Boolean contractStatusCheck(Material material);
+	
+	/**
+	 * 품목정보 등록 (MaterialDTO 이용해서)
+	 * @param materialDTO
+	 * @return
+	 */
+	String register(MaterialDTO materialDTO);
+	
+	/**
+	 * 품목정보 수정 (MaterialDTO 이용해서)
+	 * @param materialDTO
+	 */
+	void modify(MaterialDTO materialDTO);
+	
+	
+	
+	
+	
+	
 
 }

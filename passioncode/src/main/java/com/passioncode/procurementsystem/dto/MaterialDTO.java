@@ -6,8 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 /**
- * 품목정보등록 화면을 위한 품목DTO 클래스, (11개)
+ * 품목정보등록 화면을 위한 품목DTO 클래스, (11개+2개)
  * 품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부, 계약상태
+ * 대분류코드, 중분류코드
  * @author KSH
  * 
  */ 
@@ -31,7 +32,7 @@ public class MaterialDTO {
 	 * 공용여부 (품목), 
 	 * 기본값 = 1, 0 : 공용, 1 : 전용
 	 */
-	private Integer shareStatus;		
+	private String shareStatus;		
 	
 	/**
 	 * 규격 (품목)
@@ -67,12 +68,22 @@ public class MaterialDTO {
 	 * 중분류 종류 (중분류)
 	 */
 	private String middleCategoryName;
-	
+		
 	/**
 	 * 계약상태 (추가된 변수)
 	 * False : 미완료, True : 완료
 	 */
 	private Boolean contractStatus;
+	
+	/**
+	 * 대분류 코드 (대분류)
+	 */
+	private String largeCategoryCode;
+	
+	/**
+	 * 중분류 코드 (중분류)
+	 */
+	private String middleCategoryCode;
 	
 
 }
