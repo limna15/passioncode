@@ -38,13 +38,7 @@ public class MaterialOut {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(length = 5, columnDefinition = "INT(5)")
 	private Integer code;
-	
-	/**
-	 * 기존재고수량
-	 */
-	@Column(length = 10, columnDefinition = "INT(10)")
-	private Integer stockAmount;
-	
+			
 	/**
 	 * 출고상태
 	 */

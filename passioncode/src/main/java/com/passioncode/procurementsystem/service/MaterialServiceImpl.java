@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
@@ -96,10 +98,13 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return material.getCode();
 	}
-
+	
+	@Transactional
 	@Override
 	public void modify(MaterialDTO materialDTO) {
-		
+		Material material = dtoToEntity(materialDTO);
+		materialRepository.save(material);
+		log.info("수정된 품목(material) 정보 : "+material);
 		
 	}
 	

@@ -58,7 +58,7 @@ public class MaterialSeviceTests {
 //	@Commit
 //	트랙젹션 어노테이션 쓰려면 쓰고, 커밋 어노테이션 추가해줘야지! 제대로 커밋됨!
 	@Test
-	public void materialRegisterTest() {
+	public void registerTest() {
 		//현재 등록화면에서 계약상태는 없음, 애초에 처음 등록하는 화면이라 당연히 계약상태는 미완료라서
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드").size("PC001").quality("ABC")
 									.spec("10*10cm").drawingNo("PC3333").drawingFile("서비스로 입력 테스트중").shareStatus("공용")
@@ -70,6 +70,18 @@ public class MaterialSeviceTests {
 //		Material material = materialService.dtoToEntity(materialDTO);
 //		log.info("dto에서 엔티티로 바뀐거 보자 : "+material);
 		log.info("등록이 되었는지 보자(등록된 품목코드) : "+materialService.register(materialDTO));
+	}
+	
+	@Test
+	public void modifyTest() {
+		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드수정").size("PC001수정").quality("ABC수정")
+									.spec("10*10cm수정").drawingNo("PC3333수정").drawingFile("서비스로 입력 테스트중 수정").shareStatus("공용")
+									.largeCategoryName("플라스틱").middleCategoryName("케이스")
+									.contractStatus(materialService.contractStatusCheck(materialService.getMaterial("PCa0001")))
+									.largeCategoryCode("PP0001")
+									.middleCategoryCode("CC0001").build();
+		log.info("만들어진 materialDTO 보자 : "+materialDTO);
+		materialService.modify(materialDTO);
 	}
 	
 

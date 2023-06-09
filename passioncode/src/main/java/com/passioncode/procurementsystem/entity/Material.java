@@ -48,6 +48,13 @@ public class Material {		//품목
 	private Integer shareStatus;	
 	
 	/**
+	 * 기존재고수량
+	 */
+	@ColumnDefault(value = "0")
+	@Column(length = 10, columnDefinition = "INT(10)")
+	private Integer stockAmount;
+	
+	/**
 	 * 규격
 	 */
 	@Column(length = 255)
