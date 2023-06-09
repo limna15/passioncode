@@ -19,7 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 자재출고 테이블을 위한 엔티티 클래스
+ * 자재출고 테이블을 위한 엔티티 클래스 (4개) 
+ * 출고코드, 출고상태, 출고일, 자재소요계획코드(외래키)(MRP)
  * @author KSH
  * 
  */ 

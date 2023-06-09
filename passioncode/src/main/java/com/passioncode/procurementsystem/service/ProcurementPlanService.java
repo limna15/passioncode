@@ -23,8 +23,8 @@ public interface ProcurementPlanService {
 	MRP getMRP(Integer code);	
 		
 	/**
-	 * MRP 엔티티를 이용해서 ProcurementPlanDTO로 만들기(ProcurementPlan -> ProcurementPlanDTO), 
-	 * MRP와 조달계획이 일대일 관계라서 한개만 나옴
+	 * MRP 엔티티를 이용해서 ProcurementPlanDTO로 만들기(ProcurementPlan -> ProcurementPlanDTO) <br> 
+	 * MRP와 조달계획이 일대일 관계라서 한개만 나옴 <br>
 	 * MRP 기준으로 ProcurementPlanDTO를 뽑는 거라서, 조달계획 등록상태가 미완료인 것도 나옴
 	 * @param mrp
 	 * @return
@@ -32,7 +32,7 @@ public interface ProcurementPlanService {
 	ProcurementPlanDTO mrpEntityToDTO(MRP mrp);
 	
 	/**
-	 * 조달계획 엔티티를 이용해서 ProcurementPlanDTO로 만들기(ProcurementPlan -> ProcurementPlanDTO), 
+	 * 조달계획 엔티티를 이용해서 ProcurementPlanDTO로 만들기(ProcurementPlan -> ProcurementPlanDTO) <br>
 	 * 조달계획 기준으로 ProcurementPlanDTO를 뽑는 거라서, 조달계획 등록상태가 완료인 것만 나옴
 	 * @param procurementPlan
 	 * @return

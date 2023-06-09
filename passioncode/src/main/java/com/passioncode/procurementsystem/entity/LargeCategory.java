@@ -10,7 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 /**
- * 대분류 테이블을 위한 엔티티 클래스
+ * 대분류 테이블을 위한 엔티티 클래스 (2개) <br>
+ * 대분류코드, 종류
  * @author KSH
  * 
  */ 

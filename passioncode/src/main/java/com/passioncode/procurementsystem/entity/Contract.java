@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 계약서 테이블을 위한 엔티티 클래스
+ * 계약서 테이블을 위한 엔티티 클래스 (7개) <br>
+ * 계약서번호, 품목공급LT, 단가, 거래조건, 계약서, 품목코드(외래키)(품목), 사업자등록번호(외래키)(협력회사)
  * @author KSH
  * 
  */ 

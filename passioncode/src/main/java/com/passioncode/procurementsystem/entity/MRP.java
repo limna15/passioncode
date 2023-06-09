@@ -19,7 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 /**
- * MRP 테이블을 위한 엔티티 클래스
+ * MRP 테이블을 위한 엔티티 클래스 (5개) <br>
+ * 자재소요계획코드, 소요공정, 소요량, 소요일, 품목코드(외래키)(품목)
  * @author KSH
  * 
  */ 

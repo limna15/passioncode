@@ -16,7 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 /**
- * 세부구매발주서 테이블을 위한 엔티티 클래스
+ * 세부구매발주서 테이블을 위한 엔티티 클래스 (4개) <br>
+ * 발주코드, 발주수량, 발주일, 발주서번호(외래키)(구매발주서)
  * @author MSJ
  * 
  */ 

@@ -20,7 +20,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 /**
- * 자재입고 테이블을 위한 엔티티 클래스
+ * 자재입고 테이블을 위한 엔티티 클래스 (5개) <br>
+ * 입고코드, 입고상태, 입고일, 발행상태, 발주코드(외래키)(세부구매발주서)
  * @author LNY
  * 
  */ 
@@ -62,8 +63,7 @@ public class MaterialIn {	//입고
 	private Boolean transactionStatus;
 	
 	/**
-	 * 거래명세서 발행상태
-	 * False(0): 미완료(기본값), True(1): 완료
+	 * 발주코드(외래키)(세부구매발주서)
 	 */
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)

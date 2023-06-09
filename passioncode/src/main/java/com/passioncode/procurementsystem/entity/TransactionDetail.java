@@ -16,7 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 /**
- * 거래명세서 테이블을 위한 엔티티 클래스
+ * 거래명세서 테이블을 위한 엔티티 클래스 (2개) <br>
+ * 거래명세서번호, 발주서번호(외래키)(구매발주서)
  * @author LNY
  * 
  */ 

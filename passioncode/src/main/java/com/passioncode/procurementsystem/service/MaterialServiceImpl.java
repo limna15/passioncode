@@ -53,9 +53,9 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public MaterialDTO entityToDTO(Material material) {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부, 계약상태
-		MaterialDTO materialDTO = MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
+		MaterialDTO materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
 									.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
-									.shareStatus(shareStatusChangeToString(material.getShareStatus()))
+									.shareStatus(shareStatusChangeToString(material.getShareStatus())).stockAmount(material.getStockAmount())
 									.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
 									.middleCategoryName(material.getMiddleCategory().getCategory())
 									.contractStatus(contractRepository.existsByMaterial(material))
@@ -68,8 +68,9 @@ public class MaterialServiceImpl implements MaterialService {
 	public Material dtoToEntity(MaterialDTO materialDTO) {		
 		//품목코드, 품목명, 공용여부, 규격, 재질, 제작사양, 도면번호, 도면, 중분류
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(shareStatusChangeToInteger(materialDTO.getShareStatus()))
-							.size(materialDTO.getSize()).quality(materialDTO.getQuality()).spec(materialDTO.getSpec()).drawingNo(materialDTO.getDrawingNo())
-							.drawingFile(materialDTO.getDrawingFile()).middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
+							.stockAmount(materialDTO.getStockAmount()).size(materialDTO.getSize()).quality(materialDTO.getQuality()).spec(materialDTO.getSpec())
+							.drawingNo(materialDTO.getDrawingNo()).drawingFile(materialDTO.getDrawingFile())
+							.middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
 		return material;
 	}
 

@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 협력회사 테이블을 위한 엔티티 클래스
+ * 협력회사 테이블을 위한 엔티티 클래스 (10개)<br>
+ * 사업자등록번호, 협력회사명, 대표자, 전화번호, 주소, 담당자, 담당자연락처, 담당자Email, 거래가능여부, 기타사항
  * @author KSH
  * 
  */

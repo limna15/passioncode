@@ -84,7 +84,7 @@ public class MaterialRepositoryTests {
 		Material material = materialRepository.findById("CBa0001").get();
 		MaterialDTO materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
 									.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
-									.shareStatus(shareStatusChangeToString(material.getShareStatus()))
+									.shareStatus(shareStatusChangeToString(material.getShareStatus())).stockAmount(material.getStockAmount())
 									.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
 									.middleCategoryName(material.getMiddleCategory().getCategory())
 									.contractStatus(contractRepository.existsByMaterial(material))
@@ -108,15 +108,15 @@ public class MaterialRepositoryTests {
 	public void InsertByDTOTest() {
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드").size("PC001").quality("ABC")
 				.spec("10*10cm").drawingNo("PC3333").drawingFile("서비스로 입력 테스트중").shareStatus("공용")
-				.largeCategoryName("플라스틱").middleCategoryName("케이스")
+				.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
 				.contractStatus(contractRepository.existsByMaterial((materialRepository.findById("PCa0001").orElse(null))))
-				.largeCategoryCode("PP0001")
-				.middleCategoryCode("CC0001").build();
+				.largeCategoryCode("PP0001").middleCategoryCode("CC0001").build();
 		log.info("만들어진 materialDTO 보자 : "+materialDTO);
 		
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(shareStatusChangeToInteger(materialDTO.getShareStatus()))
-							.size(materialDTO.getSize()).quality(materialDTO.getQuality()).spec(materialDTO.getSpec()).drawingNo(materialDTO.getDrawingNo())
-							.drawingFile(materialDTO.getDrawingFile()).middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
+												.stockAmount(materialDTO.getStockAmount()).size(materialDTO.getSize()).quality(materialDTO.getQuality()).spec(materialDTO.getSpec())
+												.drawingNo(materialDTO.getDrawingNo()).drawingFile(materialDTO.getDrawingFile())
+												.middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
 		log.info("dto에서 엔티티로 바뀐거 보자 : "+material);
 		
 		materialRepository.save(material);		
@@ -127,15 +127,17 @@ public class MaterialRepositoryTests {
 	public void ModifyTest() {
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드수정중").size("PC001수정").quality("ABC수정")
 				.spec("10*10cm수정").drawingNo("PC3333수정").drawingFile("서비스로 입력 테스트중 수정").shareStatus("공용")
-				.largeCategoryName("플라스틱").middleCategoryName("케이스")
+				.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
 				.contractStatus(contractRepository.existsByMaterial((materialRepository.findById("PCa0001").orElse(null))))
 				.largeCategoryCode("PP0001")
 				.middleCategoryCode("CC0001").build();
 		log.info("만들어진 materialDTO 보자 : "+materialDTO);
 		
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(shareStatusChangeToInteger(materialDTO.getShareStatus()))
-							.size(materialDTO.getSize()).quality(materialDTO.getQuality()).spec(materialDTO.getSpec()).drawingNo(materialDTO.getDrawingNo())
-							.drawingFile(materialDTO.getDrawingFile()).middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
+											.stockAmount(materialDTO.getStockAmount()).size(materialDTO.getSize()).quality(materialDTO.getQuality()).spec(materialDTO.getSpec())
+											.drawingNo(materialDTO.getDrawingNo()).drawingFile(materialDTO.getDrawingFile())
+											.middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
+
 		log.info("dto에서 엔티티로 바뀐거 보자 : "+material);
 		
 		materialRepository.save(material);	

@@ -6,9 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 /**
- * 품목정보등록 화면을 위한 품목DTO 클래스, (11개+2개)
- * 품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부, 계약상태
- * 대분류코드, 중분류코드
+ * 품목정보등록 화면을 위한 품목DTO 클래스, (11개+3개) <br>
+ * 품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부, 계약상태 <br>
+ * 대분류코드, 중분류코드, 기존재고수량 
  * @author KSH
  * 
  */ 
@@ -84,6 +84,11 @@ public class MaterialDTO {
 	 * 중분류 코드 (중분류)
 	 */
 	private String middleCategoryCode;
+	
+	/**
+	 * 기존재고수량 (품목)
+	 */
+	private Integer stockAmount;
 	
 
 }

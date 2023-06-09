@@ -35,7 +35,7 @@ public interface MaterialService {
 	List<MaterialDTO> getDTOList();
 	
 	/**
-	 * 품목 엔티티를 이용하여 계약상태 체크하기, 
+	 * 품목 엔티티를 이용하여 계약상태 체크하기 <br> 
 	 * True : 계약상태 O, False : 계약상태 X
 	 * @param material
 	 * @return

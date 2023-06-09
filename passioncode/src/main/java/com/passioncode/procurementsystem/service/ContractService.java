@@ -17,8 +17,8 @@ public interface ContractService {
 	Contract get(Integer no);
 	
 	/**
-	 * 품목 엔티티를 이용해서 List<ContractDTO>로 만들기(Material -> List<ContractDTO>), 
-	 * 품목에 해당하는 계약이 여러개일수도 있어 리스트로 나옴, 
+	 * 품목 엔티티를 이용해서 List<ContractDTO>로 만들기(Material -> List<ContractDTO>) <br> 
+	 * 품목에 해당하는 계약이 여러개일수도 있어 리스트로 나옴 <br> 
 	 * 품목 기준으로 ContractDTO를 뽑는 거라서, 계약상태가 미완료인 것도 나옴
 	 * @param material
 	 * @return
@@ -26,8 +26,8 @@ public interface ContractService {
 	List<ContractDTO> materialEntityToDTO(Material material);
 	
 	/**
-	 * 계약서 엔티티를 이용해서 ContractDTO로 만들기(Contract -> ContractDTO)
-	 * 계약서 기준으로 ContractDTO 뽑는 거라서, 계약상태가 완료인 것만 나옴
+	 * 계약서 엔티티를 이용해서 ContractDTO로 만들기(Contract -> ContractDTO) <br>
+	 * 계약서 기준으로 ContractDTO 뽑는 거라서, 계약상태가 완료인 것만 나옴 
 	 * @param contract
 	 * @return
 	 */

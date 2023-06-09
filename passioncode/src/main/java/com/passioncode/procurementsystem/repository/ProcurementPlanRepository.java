@@ -17,7 +17,8 @@ public interface ProcurementPlanRepository extends JpaRepository<ProcurementPlan
 	public ProcurementPlan findByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
 
 	/**
-	 * MRP을 이용하여 조달계획등록상태(미완료,완료) 체크하기 , 존재여부=등록상태, False=미완료, True=완료
+	 * MRP을 이용하여 조달계획등록상태(미완료,완료) 체크하기 <br>
+	 * 존재여부=등록상태, False=미완료, True=완료
 	 * @param mrp
 	 * @return
 	 */	
