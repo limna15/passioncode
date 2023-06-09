@@ -58,7 +58,6 @@ public class MaterialInServiceImpl implements MateriallInService {
 	public List<MaterialInDTO> getMaterialInDTOLsit() {
 		
 		List<DetailPurchaseOrder> dpoList= detailPurchaseOrderRepository.findAll();
-		//log.info("dpoList 한번 볼게요 " + dpoList);
 		
 		List<MaterialInDTO> materialInDTOList= new ArrayList<>();
 		MaterialInDTO materialInDTO= null;
@@ -68,13 +67,6 @@ public class MaterialInServiceImpl implements MateriallInService {
 			ppList.add(procurementPlanRepository.findByDetailPurchaseOrder(dpoList.get(i)));
 		}
 		
-		log.info("pp 리스트 보기 >>> " + ppList);
-		log.info("dpo 리스트 보기 >>> " + dpoList);
-		log.info("pp date 보기 >>> " + ppList.get(0).getDueDate());
-		log.info("dpo 리스트 사이즈 >>> " + dpoList.size());
-		log.info("pp 리스트 사이즈 >>> " + ppList.size());
-		
-
 		for(int i=0; i<ppList.size(); i++) {
 			log.info(i+ "번째 데이트값 " + ppList.get(i).getDueDate());
 			if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태 완료
