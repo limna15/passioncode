@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.Material;
@@ -108,10 +110,150 @@ public class ProcurementPlanRepositoryTests {
 		//필요수량, 조달납기예정일, 최소발주일, 조달계획 등록일, 조달계획 완료일, 발주코드(외래키)		
 		ProcurementPlan procurementPlan=ProcurementPlan.builder().mrp(mrp).contract(contractTest2.get(0)).amount(mrp.getAmount())
 										.dueDate(duedate).minimumOrderDate(minimumOrderDate).registerDate(LocalDateTime.now()).build();
-		log.info("몬데... 왜 안돼...?? "+procurementPlan);
-		procurementPlanRepository.save(procurementPlan);
+//		log.info("몬데... 왜 안돼...?? "+procurementPlan);
+		procurementPlanRepository.save(procurementPlan);	
+	}
+	
+	@Transactional
+	@Test
+	public void ppRegisterStatusTest() {
+		//1번 mrp = 조달계획 등록 완료된 mrp
+		//2번 mrp = 조달계획 등록 미완료된 mrp
+		MRP mrp = mrpRepository.findById(1).get(); 
+		log.info("MRP로 존재여부 체크해보자! : "+procurementPlanRepository.existsByMrp(mrp));
+		MRP mrp2 = mrpRepository.findById(2).get(); 
+		log.info("MRP로 존재여부 체크해보자! : "+procurementPlanRepository.existsByMrp(mrp2));
+	}
+	
+	
+	@Test
+	public void ppProgressTest() {
+		/*
+		 * 등록 후 발주코드 존재X : 발주 예정, 
+		 * 등록 후 발주코드 존재O, 조달완료일 존재X : 조달 진행 중, 
+		 * 등록 후 조달완료일 존재O : 조달 완료 
+		 */
+		
+//		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();	//발주예정
+//		ProcurementPlan procurementPlan = procurementPlanRepository.findById(2).get();	//조달 완료
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(3).get();	//조달 진행 중
+		String ppProgress = null;
+		
+		if(procurementPlan.getCompletionDate()==null) {				//조달완료일 존재X
+			if(procurementPlan.getDetailPurchaseOrder()==null) {	//발주코드 존재X
+				ppProgress="발주 예정";
+			}else {													//발주코드 존재O
+				ppProgress="조달 진행 중";
+			}
+		}else {														//조달완료일 존재O
+			ppProgress="조달 완료";
+		}
+		
+		log.info("조달계획 진행사항 좀 봐보자 : "+ppProgress);
+	}
+	
+//	@Test
+//	public void ppProgressCheckTest() {
+//		ProcurementPlan procurementPlan = procurementPlanRepository.findById(3).get();	//조달 진행 중
+//		ProcurementPlanDTO procurementPlanDTO = new ProcurementPlanDTO();
+//		log.info("이렇게 테스트하면 되겠지? 조달계획 진행사항 보자! : "+procurementPlanDTO.ppProgressCheck(procurementPlan));		
+//	}
+	
+	public String ppProgressCheck(ProcurementPlan procurementPlan) {
+		String ppProgress = null;
+		
+		if(procurementPlan.getCompletionDate()==null) {				//조달완료일 존재X
+			if(procurementPlan.getDetailPurchaseOrder()==null) {	//발주코드 존재X
+				ppProgress="발주 예정";
+			}else {													//발주코드 존재O
+				ppProgress="조달 진행 중";
+			}
+		}else {														//조달완료일 존재O
+			ppProgress="조달 완료";
+		}
+		return ppProgress;
+	}
+	
+	@Test
+	public void ppProgressCheckTest2() {
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(3).get();	//조달 진행 중
+		log.info("조달계획 진행사항 결과 보자 : "+ppProgressCheck(procurementPlan));	
+			}
+	
+	@Transactional
+	@Test
+	public void ProcurementPlanDTOTest() {
+		//화면
+		//품목코드, 품목명, 소요공정, 소요일, 소요량 
+		//협력회사, 품목공급LT
+		//조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항
+		
+		//조달계획코드, 자재소요계획코드(외래키), 계약서번호(외래키),
+		//필요수량, 조달납기예정일, 최소발주일, 조달계획 등록일, 조달계획 완료일, 발주코드(외래키)	
+		
+		//조달계획 등록 완료인 조달계획DTO 만들기 (사실상 조달계획 엔티티를 이용해서 만들면 등록완료된 DTO)
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();		
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
+												.materialName(procurementPlan.getMrp().getMaterial().getName()).process(procurementPlan.getMrp().getProcess())
+												.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
+												.companyName(procurementPlan.getContract().getCompany().getName()).supplyLt(procurementPlan.getContract().getSupplyLt())
+												.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
+												.ppAmount(procurementPlan.getAmount()).contractStatus(contractRepository.existsByMaterial(procurementPlan.getMrp().getMaterial()))
+												.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan))
+												.mrpCode(procurementPlan.getMrp().getCode()).companyNo(procurementPlan.getContract().getCompany().getNo())
+												.contractNo(procurementPlan.getContract().getNo()).build();
+		
+		log.info("조달계획 DTO 결과 값 : "+procurementPlanDTO);
+		
+		//조달계획 등록 미완료인 조달계획DTO 만들기 (조달계획 테이블에 없는건 다 null로 해서 만들기)
+		//mrp 2번 조달계획 등록 안된 상태
+		MRP mrp = mrpRepository.findById(2).get();
+		
+		ProcurementPlanDTO procurementPlanDTO2 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+													.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+													.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false)
+													.mrpCode(mrp.getCode()).build();				
+
+		log.info("조달계획 DTO 결과 값 : "+procurementPlanDTO2);
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		//MRP 기준으로 조달계획을 찾아서 DTO 만들기
+//		MRP mrp2 = mrpRepository.findById(1).get();	//조달계획 등록 완료인 mrp
+		MRP mrp2 = mrpRepository.findById(2).get();	//조달계획 등록 미완료인 mrp
+		ProcurementPlan procurementPlan2 = procurementPlanRepository.findByMrp(mrp2);
+		
+		List<ProcurementPlanDTO> ppDTOList = new ArrayList<>();
+		ProcurementPlanDTO procurementPlanDTO3 = null;
+		
+		//procurementPlan2 가 존재할때, 조달계획 등록 완료된 상태
+		if(procurementPlan2!=null) {
+			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(procurementPlan2.getMrp().getMaterial().getCode()).ppcode(procurementPlan2.getCode())
+									.materialName(procurementPlan2.getMrp().getMaterial().getName()).process(procurementPlan2.getMrp().getProcess())
+									.mrpdate(procurementPlan2.getMrp().getDate()).mrpAmount(procurementPlan2.getMrp().getAmount())
+									.companyName(procurementPlan2.getContract().getCompany().getName()).supplyLt(procurementPlan2.getContract().getSupplyLt())
+									.dueDate(procurementPlan2.getDueDate()).minimumOrderDate(procurementPlan2.getMinimumOrderDate())
+									.ppAmount(procurementPlan2.getAmount()).contractStatus(contractRepository.existsByMaterial(procurementPlan2.getMrp().getMaterial()))
+									.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan2))
+									.mrpCode(procurementPlan2.getMrp().getCode()).companyNo(procurementPlan2.getContract().getCompany().getNo())
+									.contractNo(procurementPlan2.getContract().getNo()).build();
+			ppDTOList.add(procurementPlanDTO3);
+		}else {  ////procurementPlan2 가 존재X, 조달계획 등록 미완료된 상태
+			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+									.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+									.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false)
+									.mrpCode(mrp.getCode()).build();	
+			ppDTOList.add(procurementPlanDTO3);
+		}
+		
+		log.info("리스트까지 이건 볼필요 없겠다! 바로 값 보자 : "+procurementPlanDTO3);
+		log.info("리스트까지 그래도 봐보자 : "+ppDTOList);
 		
 		
 	}
+	
+	
+	
+	
 
 }

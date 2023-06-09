@@ -1,7 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.util.Collection;
-
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,6 +14,6 @@ public interface MRPRepository extends JpaRepository<MRP, Integer> {
 	 * @param materialCode
 	 * @return
 	 */
-	public Collection<MRP> findBymaterialCode(String materialCode);
+	public List<MRP> findBymaterialCode(String materialCode);
 
 }

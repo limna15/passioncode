@@ -23,8 +23,7 @@ public class MaterialOutRepositoryTests {
 	@Test
 	public void findByMRPTest() {
 		MRP mrp = mrpRepository.findById(1).get();
-		log.info("mrp가 뭐임"+mrp);
-//		log.info("출고 찍히는거 보자 : "+materialOutRepository.findByMRP(mrp));
+		log.info("출고 찍히는거 보자 : "+materialOutRepository.findByMrp(mrp));
 	}
 	
 }

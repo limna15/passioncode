@@ -89,7 +89,6 @@ public class ProcurementPlan {		//조달계획
 	@OneToOne(fetch = FetchType.LAZY)
 	private DetailPurchaseOrder detailPurchaseOrder;	
 	
-
 	
 
 }

@@ -3,7 +3,9 @@ package com.passioncode.procurementsystem.repository;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
+import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -67,17 +70,46 @@ public class MaterialInRepositoryTests {
 		materialInRepository.save(materialIn);
 	}
 	
+	@Transactional
 	@Test
-	public void readTest() {
+	public void materialInDTOTest() {
+		
 		//읽어와야하는 내용
 		//발주서번호, 발주코드(세부구매발주서테이블), 조달납기예정일(조달계획테이블), 품목코드, 품목명, 입고상태, 발행상태
+		MaterialIn materialIn= materialInRepository.findById(1).get();
 		
-		Optional<DetailPurchaseOrder> result= detailPurchaseOrderRepository.findById(3);
-		DetailPurchaseOrder dpo= result.get();
-		log.info("세부구매발주서의 구매발주서번호 읽기 " + dpo.getPurchaseOrder().getNo());
+		Optional<DetailPurchaseOrder> dpo= detailPurchaseOrderRepository.findById(materialIn.getDetailPurchaseOrder().getCode());
+		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(dpo.get());
+		log.info("세부구매발주서로 procurementPlan 찾기! " + pp.getDueDate());
 		
-		List<DetailPurchaseOrder> list= detailPurchaseOrderRepository.findAll();
-		log.info("세부구매발주서 리스트 " + list);
+		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(dpo.get().getPurchaseOrder().getNo()).code(dpo.get().getCode())
+				.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
+				.materialName(pp.getMrp().getMaterial().getName()).amount(pp.getDetailPurchaseOrder().getAmount())
+				.status(false).transactionStatus(false).build();
 		
+		log.info("materialInDTO 어떻게 찍히니 " + materialInDTO);	
 	}
+
+//	@Transactional
+//	@Test
+//	public void materialInDTOTest2() {
+//		//읽어와야하는 내용
+//		//발주서번호, 발주코드(세부구매발주서테이블), 조달납기예정일(조달계획테이블), 품목코드, 품목명, 입고상태, 발행상태
+//		DetailPurchaseOrder dpo= detailPurchaseOrderRepository.findById(1).get();		
+//		Optional<ProcurementPlan> optionalPP= procurementPlanRepository.findByDetailPurchaseOrder2(dpo);
+//		ProcurementPlan procurementPlan = procurementPlanRepository.findByDetailPurchaseOrder2(dpo).get();
+//		
+//		log.info("optionalPP: 발주코드(1)로 조달계획 읽기 " + optionalPP);
+//		log.info("발주코드(1) 조달계획의 조달납기예정일 " + optionalPP.get().getDueDate());
+//		
+//		MaterialIn materialIn= materialInRepository.findById(1).get();
+//		MaterialInDTO materialInDTO = MaterialInDTO.builder().no(materialIn.getDetailPurchaseOrder().getPurchaseOrder().getNo())
+//				.code(materialIn.getDetailPurchaseOrder().getCode()).dueDate(optionalPP.get().getDueDate())
+//				.materialCode(optionalPP.get().getMrp().getMaterial().getCode()).materialName(optionalPP.get().getMrp().getMaterial().getName())
+//				.amount(materialIn.getDetailPurchaseOrder().getAmount())
+//				.status(false).transactionStatus(false).build();
+//		
+//		log.info("materialInDTO 어떻게 읽히니 " + materialInDTO);
+//	}
+
 }
