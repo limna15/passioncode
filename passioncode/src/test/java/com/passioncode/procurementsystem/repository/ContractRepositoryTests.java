@@ -115,6 +115,15 @@ public class ContractRepositoryTests {
 		
 	}
 	
+	@Transactional
+	@Test
+	public void contractDTOTest2() {
+		Material material2 = materialRepository.findById("CGa0001").get();  //계약 완료된 품목
+//		log.info("material2 봐보자! : "+material2);
+		Collection<Contract> collectionContract = contractRepository.findByMaterial(material2);
+		log.info(">>>>>>>>>>>"+collectionContract);;
+	}
+	
 	
 	
 	

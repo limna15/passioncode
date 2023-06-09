@@ -31,9 +31,11 @@ public class PS2Controller {
 	}
 	
 	@GetMapping("/progressCheck")
-	public String PS2Test2(PurchaseOrderDTO purchaseOrderDTO) {
+	public void PS2Test2(Model model ,PurchaseOrderDTO purchaseOrderDTO) {
 		log.info(">>>>>>>"+purchaseOrderDTO);
-		return "/procurement2/progressCheck";
+		
+		
+		model.addAttribute("list",100);
 		
 		
 	}

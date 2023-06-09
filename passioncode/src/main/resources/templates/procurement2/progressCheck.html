@@ -115,13 +115,14 @@
                             <td>B11</td>
                             <td>배터리</td>
                             <td>50</td>
-                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal">일정등록	</a></td>
-                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal2">평가</a></td>
+                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="schedule">일정등록</a></td>
+                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="avg">평가</a></td>
                             <td>100,000</td>
                             <td>115,000,000</td>
                             <td>미완료</td>
                         </tr>
-                        
+                     	<!-- 
+                     	 <tr>
                             <td>2</td>
                             <td>니즈원</td>
                             <td>23/08/12</td>
@@ -131,11 +132,12 @@
                             <td>배터리</td>
                             <td>50</td>
                             <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal">일정등록	</a></td>
-                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal2">평가</a></td>
+                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal">평가</a></td>
                             <td>100,000</td>
                             <td>115,000,000</td>
                             <td>미완료</td>
                         </tr>
+                     	 -->
                        
                       </tbody>
 						</table>
@@ -171,54 +173,32 @@
 			</div>
 						
 			<!-- body -->
-			<div class="modal-body">
-				<div class="modal-body">
-     
-     </div>
-				<!-- <th:block th:replace="~{/procurement2/modalTest :: setLogin(~{this::login} )}"></th:block> 
-				여기에 외부에서 작성한 테이블 들어옴--></div>
-						
-			<!-- Footer -->
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="modal fade" id="modal2" >
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-		
-            <!-- header title -->
-				<h4 class="modal-title">평가하기</h4>
-             <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal2">×</button>
 			
-			</div>
-						
-			<!-- body -->
-			<div class="modal-body2"><!--여기에 외부에서 작성한 테이블 들어옴--></div>
-						
-			<!-- Footer -->
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal2">닫기</button>
-			</div>
+				<div class="modal-body">
+				  <th:block th:if="${list == 101}">
+				  	<th:block th:replace="~{/procurement2/progressCheckAvg :: setLogin(~{this::login} )}"></th:block>
+				  </th:block>
+				  
+				  <th:block th:if="${list == 100}">
+				  	<th:block th:replace="~{/procurement2/progressCheckAvg :: setLogin2(~{this::login2} )}"></th:block>
+				  </th:block>
+  
+  
+     			</div>
+			
 		</div>
 	</div>
 </div>
 		
 <script type="text/javascript">
+	//var companyname=document.getElementByID('');
+	//var cc = tr.getElementsByTagName('a');
+	//document.getElementById("schedule2")
 	 $('.ls-modal').on('click', function(e){
 		  e.preventDefault();
 		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
 		});
-</script>
-<script type="text/javascript">
-	 $('.ls-modal').on('click', function(e){
-		  e.preventDefault();
-		  $('#modal2').modal('show').find('.modal-body2').load($(this).attr('href'));
-		});
+	
 </script>
 	</th:block>
 
