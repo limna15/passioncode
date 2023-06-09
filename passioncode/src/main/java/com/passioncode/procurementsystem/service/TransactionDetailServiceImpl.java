@@ -30,7 +30,7 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 	
 	@Override
 	public TransactionDetailDTO transactionDetailToDTO(DetailPurchaseOrder detailPurchaseOrder) {
-		List<ProcurementPlan> pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		
 		Company ourCompany= companyRepository.findById("777-77-77777").get();

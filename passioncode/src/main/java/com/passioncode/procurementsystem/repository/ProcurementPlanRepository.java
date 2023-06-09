@@ -1,9 +1,6 @@
 package com.passioncode.procurementsystem.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
@@ -16,7 +13,7 @@ public interface ProcurementPlanRepository extends JpaRepository<ProcurementPlan
 	 * @param detailPurchaseOrder
 	 * @return
 	 */
-	public List<ProcurementPlan> findByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
+	public ProcurementPlan findByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
 
 	/**
 	 * MRP을 이용하여 조달계획등록상태(미완료,완료) 체크하기 <br>
