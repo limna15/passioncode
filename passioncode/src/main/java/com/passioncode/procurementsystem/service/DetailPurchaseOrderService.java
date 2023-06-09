@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.service;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
+import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialOut;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
@@ -22,5 +23,10 @@ public interface DetailPurchaseOrderService {
 	 */
 	//Material dtoToEntity(MaterialDTO materialDTO);
 	
-	
+	/**
+	 * 발주코드를 이용해서 세부구매발주서 엔티티 가져오기
+	 * @param no
+	 * @return
+	 */
+	DetailPurchaseOrder get(Integer code);
 }

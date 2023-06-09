@@ -1,0 +1,138 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="setLogin(login)">
+
+	<body>
+		<div class="publish">
+			<form th:action="@{/procurement2/progressCheck}" th:method="POST">
+				<style>
+html,body {
+	margin:5px;
+	padding:5px;
+}
+
+table {
+  width: 100%;
+  border: 1px solid #444444;
+  border-collapse : collapse;
+  font-size: 13px;
+
+}
+
+th, td {
+  border: 1px solid #444444;
+  padding: 10px;
+  text-align: center;
+}
+</style>
+<div id="avg2">
+						<br>
+						<p class="card-title"><b>진척 평가</b></p>
+						지난 검사 기록
+						<br>
+						
+						<!--거래명세서 품목 정보-->
+						<div class="table-responsive">
+							<table id="transactionDetail">
+								<thead>
+									<tr>
+										<th>-</th>
+										<th>날짜</th>
+										<th>납기 진도율</th>
+										<th>기타사항</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+								</tbody>
+							</table>
+							<br>
+						***** 회사의 *****  제작 진척도를 입력합니다.
+							<br>
+								<input type="text"><input type="text">
+							<br>
+							<button>등록</button>
+						</div>
+						<br>
+						<br>
+						</div>
+
+		</form>
+</div>
+
+</body>
+<script> 
+function add() {
+    var btn = document.createElement("button");
+
+    btn.innerHTML = "Click me";
+
+    document.body.appendChild(btn);
+  }  
+
+//getElementById의 element는 단수형입니다. class와 name은 복수형이고요. 주의
+//var aa= document.getElementById("");
+	/* var div = document.getElementById('div');
+	if(div=='schedule2'){
+		
+	} 
+	function getShow(){
+		alert("display : 공백");
+		document.getElementById("schedule2").style.display = "";
+		
+	}
+
+	function getHide(){
+		alert("display : none");
+		document.getElementById("avg2").style.display = "none";
+		
+	}*/
+	/* 
+
+ 	<input type ="button" onclick="getShow()" value="보이기">
+ 	<input type ="button" onclick="getHide()" value="숨기기">
+ 	
+ */	
+	
+</script>
+</th:block>
+<th:block th:fragment="setLogin2(login2)">
+<style>
+
+</style>
+<body>
+***** 회사의 ***** 일정 등록입니다.<br>
+<input type="date">&nbsp;
+<input type="button" value="추가하기" onclick="addSchedule()"/><br>
+</body>
+<form action="" method='POST'>
+    <div class='addInput'>
+
+    </div>
+
+    <button type='button' class="btnAdd">tag추가하기</button>
+    <input type="submit">
+</form>
+
+<script type="text/javascript">
+    $(document).ready (function () {                
+        $('.btnAdd').click (function () {                                        
+            $('.addInput').append (                        
+                '<input type="type" name="test" value="">\
+                <button type="button" class="btnRemove">tag삭제하기</button><br>'                    
+            );    // input taf 추가                     
+            $('.btnRemove').on('click', function () { 
+                                                                          // 여기서 this는 '.btnRemove'
+                $(this).prev().remove();        // .prev()로 input tag를 가리키고 remove()한다.
+                $(this).next().remove();        // <br> 삭제
+                $(this).remove();                        // 버튼삭제
+            });
+        });                                      
+    });
+</script>
+</th:block>

@@ -46,7 +46,7 @@ public class MaterialIn {	//입고
 	 */
 	@ColumnDefault(value="1") //0: 미완료, 1: 완료
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
-	private Integer status;
+	private Boolean status;
 	
 	/**
 	 * 입고일
@@ -59,7 +59,7 @@ public class MaterialIn {	//입고
 	 */
 	@ColumnDefault(value="0") //0: 미완료, 1: 완료
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
-	private Integer transactionStatus;
+	private Boolean transactionStatus;
 	
 	/**
 	 * 거래명세서 발행상태
