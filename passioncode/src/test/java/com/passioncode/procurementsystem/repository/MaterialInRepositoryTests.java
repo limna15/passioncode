@@ -91,33 +91,42 @@ public class MaterialInRepositoryTests {
 		//log.info("dpoList 한번 볼게요 " + dpoList);
 		
 		List<MaterialInDTO> materialInDTOList= new ArrayList<>();
-		MaterialInDTO materialInDTO3= null;
+		MaterialInDTO materialInDTO= null;
+		List<ProcurementPlan> ppList= new ArrayList<>();
 		
 		for(int i=0; i<dpoList.size(); i++) {
-			List<ProcurementPlan> pp= procurementPlanRepository.findByDetailPurchaseOrder(dpoList.get(i));
-			//log.info("pp 리스트 보기 >> " + pp);
-			for(int j=0; j<pp.size(); j++) {
-				if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(j))){ //입고상태 완료
-					if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //발행상태 완료
-						materialInDTO3= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
-								.dueDate(pp.get(j).getDueDate()).materialCode(pp.get(j).getMrp().getMaterial().getCode())
-								.materialName(pp.get(j).getMrp().getMaterial().getName()).amount(pp.get(j).getDetailPurchaseOrder().getAmount())
-								.status(true).transactionStatus(true).build();
-						materialInDTOList.add(materialInDTO3);
-					}else { //발행상태 미완료
-						materialInDTO3= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
-								.dueDate(pp.get(j).getDueDate()).materialCode(pp.get(j).getMrp().getMaterial().getCode())
-								.materialName(pp.get(j).getMrp().getMaterial().getName()).amount(pp.get(j).getDetailPurchaseOrder().getAmount())
-								.status(true).transactionStatus(false).build();
-						materialInDTOList.add(materialInDTO3);
-					}
-				}else { //입고상태 미완료
-					materialInDTO3=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
-							.dueDate(pp.get(j).getDueDate()).materialCode(pp.get(j).getMrp().getMaterial().getCode())
-							.materialName(pp.get(j).getMrp().getMaterial().getName()).amount(pp.get(j).getDetailPurchaseOrder().getAmount())
-							.status(false).transactionStatus(false).build();
-					materialInDTOList.add(materialInDTO3);
+			ppList.add(procurementPlanRepository.findByDetailPurchaseOrder(dpoList.get(i)));
+		}
+		
+		log.info("pp 리스트 보기 >>> " + ppList);
+		log.info("dpo 리스트 보기 >>> " + dpoList);
+		log.info("pp date 보기 >>> " + ppList.get(0).getDueDate());
+		log.info("dpo 리스트 사이즈 >>> " + dpoList.size());
+		log.info("pp 리스트 사이즈 >>> " + ppList.size());
+		
+
+		for(int i=0; i<ppList.size(); i++) {
+			log.info(i+ "번째 데이트값 " + ppList.get(i).getDueDate());
+			if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태 완료
+				if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //발행상태 완료
+					materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+							.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+							.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
+							.status(true).transactionStatus(true).build();
+					materialInDTOList.add(materialInDTO);
+				}else { //발행상태 미완료
+					materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+							.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+							.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
+							.status(true).transactionStatus(false).build();
+					materialInDTOList.add(materialInDTO);
 				}
+			}else { //입고상태 미완료
+				materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
+						.status(false).transactionStatus(false).build();
+				materialInDTOList.add(materialInDTO);
 			}
 		}
 		log.info("materialDTOList 한번 보자! " + materialInDTOList);
@@ -127,9 +136,24 @@ public class MaterialInRepositoryTests {
 	@Test
 	public void TransactionDetailStatusTest() {
 		//발주서 번호 101: 발행상태 완료
-		DetailPurchaseOrder dpo= detailPurchaseOrderRepository.findById(1).get();
+		DetailPurchaseOrder dpo= detailPurchaseOrderRepository.findById(1).orElse(null);
 		log.info("존재여부 확인해보자! 너는 True가 나오겠지 " + transactionDetailRepository.existsByPurchaseOrder(dpo.getPurchaseOrder()));
 		
+	}
+	
+	@Transactional
+	@Test
+	public void DTOTest() {
+		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		log.info("pp는 어케 찍히나 " + pp);
+		
+		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder.getPurchaseOrder().getNo()).code(detailPurchaseOrder.getCode())
+									.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
+									.materialName(pp.getMrp().getMaterial().getName())
+									.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false).build();
+		
+		log.info("DTO 하나는 어케 가져오는거죠 " + materialInDTO);
 	}
 
 //	@Transactional

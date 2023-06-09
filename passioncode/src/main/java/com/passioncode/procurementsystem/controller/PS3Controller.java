@@ -3,6 +3,7 @@ package com.passioncode.procurementsystem.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
@@ -24,6 +25,14 @@ public class PS3Controller {
 	public void materialIn(Model model, MaterialInDTO materialInDTO) {
 		
 		log.info("list............." + materialInDTO);
+
+		model.addAttribute("DTOList",materiallInService.getMaterialInDTOLsit());
+	}
+	
+	@PostMapping("/materialIn")
+	public void materialInPost(Model model, MaterialInDTO materialInDTO) {
+		
+		log.info("list............. 거래명세서 인쇄할 때 화면" + materialInDTO);
 
 		model.addAttribute("DTOList",materiallInService.getMaterialInDTOLsit());
 	}
