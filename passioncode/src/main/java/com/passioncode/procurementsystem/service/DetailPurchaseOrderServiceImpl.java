@@ -34,6 +34,11 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public DetailPurchaseOrder get(Integer code) {
+		return detailPurchaseOrderRepository.findById(code).get();
+	}
 	
 
 }
