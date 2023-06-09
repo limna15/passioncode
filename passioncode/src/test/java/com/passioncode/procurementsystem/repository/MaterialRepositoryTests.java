@@ -144,6 +144,16 @@ public class MaterialRepositoryTests {
 		
 	}
 	
+	@Test
+	public void DeleteTest() {
+		MaterialDTO materialDTO = MaterialDTO.builder().code("PCa0001").build();
+				
+		materialRepository.deleteById(materialDTO.getCode());
+		
+		
+		
+	}
+	
 	
 	
 	

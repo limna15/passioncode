@@ -106,8 +106,14 @@ public class MaterialServiceImpl implements MaterialService {
 		Material material = dtoToEntity(materialDTO);
 		materialRepository.save(material);
 		log.info("수정된 품목(material) 정보 : "+material);
+	}
+
+	@Override
+	public void delete(MaterialDTO materialDTO) {
+		// TODO Auto-generated method stub
 		
 	}
+	
 	
 
 

@@ -55,7 +55,11 @@ public interface MaterialService {
 	 */
 	void modify(MaterialDTO materialDTO);
 	
-	
+	/**
+	 * 품목정보 삭제 (MaterialDTO 이용해서)
+	 * @param materialDTO
+	 */
+	void delete(MaterialDTO materialDTO);
 	
 	
 	
