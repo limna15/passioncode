@@ -3,9 +3,12 @@ package com.passioncode.procurementsystem.entity;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +27,7 @@ import lombok.ToString;
  * @author KSH
  * 
  */ 
+@EntityListeners(value= {AuditingEntityListener.class})
 @Entity
 @Builder
 @AllArgsConstructor
@@ -50,7 +54,8 @@ public class MaterialOut {
 	/**
 	 * 출고일
 	 */
-	@Column(columnDefinition = "DATETIME")
+	@CreatedDate
+	@Column(columnDefinition = "DATETIME", updatable = false)
 	private LocalDateTime date;
 	
 	/**

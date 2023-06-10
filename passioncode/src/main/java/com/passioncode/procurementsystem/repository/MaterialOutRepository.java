@@ -14,5 +14,5 @@ public interface MaterialOutRepository extends JpaRepository<MaterialOut, Intege
 	 * @param mrp
 	 * @return
 	 */
-	public List<MaterialOut> findByMrp(MRP mrp);
+	public MaterialOut findByMrp(MRP mrp);
 }
