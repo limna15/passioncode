@@ -21,7 +21,7 @@ public class PS2Controller {
 	
 	private final DetailPurchaseOrderRepository repository;
 	
-	@GetMapping("/purchaseOrder")
+	@GetMapping("/purchaseOrder")	//발주서 발행
 	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO) {
 		log.info(">>>>>>>"+purchaseOrderDTO);
 		log.info("세부사항 >>>>>>>"+detailDTO);

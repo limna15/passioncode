@@ -1,5 +1,5 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="setPlan(newPlan)">
+<th:block th:fragment="setLogin(login)">
 
 	<body>
 		<div class="publish">
@@ -67,11 +67,11 @@ th, td {
 
 </body>
 </th:block>
-<th:block th:fragment="setAvg(newAvg)">
+<th:block th:fragment="setLogin2(login2)">
 <body>
-***** (여기에 회사 이름이 들어감)회사의 ***** 일정 등록입니다.<br>
-&nbsp;<br>
-<div id="myplan"></div>
+***** 회사의 ***** 일정 등록입니다.<br>
+<input type="date">&nbsp;<br>
+<div id="parah"></div>
 <script>
 var arrInput = new Array(0);
   var arrInputValue = new Array(0);
@@ -83,9 +83,9 @@ function addInput() {
 }
  
 function display() {
-  document.getElementById('myplan').innerHTML="";
+  document.getElementById('parah').innerHTML="";
   for (intI=0;intI<arrInput.length;intI++) {
-    document.getElementById('myplan').innerHTML+=createInput(arrInput[intI], arrInputValue[intI]);
+    document.getElementById('parah').innerHTML+=createInput(arrInput[intI], arrInputValue[intI]);
   }
 }
  
@@ -96,8 +96,7 @@ function saveValue(intId,strValue) {
 function createInput(id,value) {
   return "<input type='date' id='test "+ id +"' onChange='javascript:saveValue("+ id +",this.value)' value='"+ 
  
-value +"'>"+"&nbsp;"+"<input type='button' id='test2' value='삭제' onclick='deleteInput(this);'>"+"<br>"+"<br>";
-//value +"'><br>"; ->이게 원본
+value +"'><br>";
 }
  
 function deleteInput() {
@@ -110,6 +109,7 @@ function deleteInput() {
 </script>
 <form method="post" action="test.jsp">
 <input type="button" value="추가" onclick="addInput();" />
+<input type="button" value="삭제" onclick="deleteInput();"/>
 <input type="submit" value="전송"/>
 </form>
 </body>

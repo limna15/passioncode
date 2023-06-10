@@ -7,6 +7,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 import lombok.extern.log4j.Log4j2;
@@ -38,15 +42,21 @@ public class PurchaseOrderRepositoryTests {
 		
 	}
 	
+	@Transactional
 	@Test
-	public void purchaseOrderDTOTest() {
-//		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
-//		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder().companyName(procurementPlan.getContract().getCompany().getName())
-//				.purchaseOrderDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())
-//				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getContract().getMaterial().getCode())
-//				.materialName(procurementPlan.getContract().getMaterial().getName()).stockAmount(procurementPlan.getMrp().get)
-//				.needAmount(procurementPlan.getAmount()).orderAmount(procurementPlan.getAmount()).unitPrice(procurementPlan.getMrp().getMaterial().get)
-//				;
+	public void purchaseOrderDTOTest() {//조달 계획 가져오기
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
+		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder().companyName(procurementPlan.getContract().getCompany().getName())
+				.purchaseOrderDate(procurementPlan.getDueDate()).dueDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())
+				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getMrp().getMaterial().getName())
+				.materialName(procurementPlan.getContract().getMaterial().getName()).stockAmount(procurementPlan.getMrp().getMaterial().getStockAmount())
+				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
+				.unitPrice(procurementPlan.getContract().getUnitPrice())
+				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(true).build();
+				//purchaseOrderDate발주일 고치기
+				//발주서 발행 상태 고치기
+				
+				log.info(">>>>>>>>>>>"+purchaseOrderDTO);
 	}
 
 }
