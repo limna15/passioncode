@@ -92,19 +92,14 @@ public class MaterialInServiceImpl implements MateriallInService {
 			}
 		}
 		return materialInDTOList;
+	}
+
+
+	@Override
+	public Integer register(MaterialInDTO materialInDTO) {
+		MaterialIn materialIn= DTOToEntity(materialInDTO);
+		materialInRepository.save(materialIn);
+		
+		return materialIn.getCode();
 	}	
 }
-
-//	@Override
-//	public MaterialInDTO materialInToDTO(MaterialIn materialIn) {		
-//		//발주서번호, 발주코드(세부구매발주서테이블), 조달납기예정일(조달계획테이블), 품목코드, 품목명, 입고상태, 발행상태
-//		Optional<DetailPurchaseOrder> dpo= detailPurchaseOrderRepository.findById(materialIn.getDetailPurchaseOrder().getCode());
-//		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(dpo.get());
-//		
-//		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(dpo.get().getPurchaseOrder().getNo()).code(dpo.get().getCode())
-//				.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
-//				.materialName(pp.getMrp().getMaterial().getName()).amount(pp.getDetailPurchaseOrder().getAmount())
-//				.status(false).transactionStatus(false).build();
-//
-//		return materialInDTO;
-//	}

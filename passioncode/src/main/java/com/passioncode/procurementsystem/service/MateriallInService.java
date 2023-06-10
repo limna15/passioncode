@@ -37,4 +37,10 @@ public interface MateriallInService {
 	 */
 	List<MaterialInDTO> getMaterialInDTOLsit();
 	
+	/**
+	 * MaterialInDTO를 이용해서 자재입고 등록
+	 * @param MaterialInDTO
+	 */
+	Integer register(MaterialInDTO materialInDTO);
+	
 }

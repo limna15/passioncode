@@ -7,7 +7,7 @@ import com.passioncode.procurementsystem.entity.TransactionDetail;
 public interface TransactionDetailService {
 	
 	/**
-	 * 세부구매발주서 엔티티를 이용해 transactionDetailDTO 만들기(transactionDetail -> transactionDetailDTO)
+	 * 세부구매발주서 엔티티를 이용해 transactionDetailDTO 만들기(detailPurchaseOrder -> transactionDetailDTO)
 	 * @param detailPurchaseOrder
 	 * @return
 	 */
@@ -20,4 +20,11 @@ public interface TransactionDetailService {
 	 * @return
 	 */
 	TransactionDetail DTOToEntity(TransactionDetailDTO transactionDetailDTO);
+	
+	/**
+	 * transactionDetailDTO를 이용해서 거래명세서 등록
+	 * @param transactionDetailDTO
+	 * @return
+	 */
+	Integer register(TransactionDetailDTO transactionDetailDTO);
 }

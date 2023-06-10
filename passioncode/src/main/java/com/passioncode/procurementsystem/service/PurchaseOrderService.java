@@ -2,7 +2,9 @@ package com.passioncode.procurementsystem.service;
 
 import java.util.List;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
+import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 public interface PurchaseOrderService {
 	
@@ -25,6 +27,4 @@ public interface PurchaseOrderService {
 	
 	List<PurchaseOrderDTO> getList(ProcurementPlan procurementPlan);
 
-	
-	
 }

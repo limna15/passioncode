@@ -29,5 +29,11 @@ public interface ProcurementPlanRepository extends JpaRepository<ProcurementPlan
 	 * @return
 	 */
 	public ProcurementPlan findByMrp(MRP mrp);
-
+	
+	/**
+	 * 조달계획 총개수 세기
+	 * count 조회 시 Long으로 리턴 -> 쓰려면 리턴 데이터타입이 Long이어야함
+	 * @return
+	 */
+	Long countBy();
 }
