@@ -7,6 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 구매발주서 등록 화면을 위한 구매발주서DTO 클래스, (13개+) 
+ * 협력회사, 발주일, 조달납기 예정일, 품목공급LT, 최소발주일, 품목코드, 품목명, 기존재고수량, 필요수량, 발주수량, 단가, 공급가격, 발주서 발행상태
+ * 조달계획코드, 자재소요계획코드, 출고코드 , 사업자등록번호, 계약서번호, 발주코드
+ * @author Soojin
+ *
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

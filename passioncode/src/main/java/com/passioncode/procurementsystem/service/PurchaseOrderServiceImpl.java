@@ -46,7 +46,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 						.supplyPrice((procurementPlan.getAmount()-100)*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(true).build();
 		return purchaseOrderDTO;
 	}
-
+	
 	@Override
 	public List<PurchaseOrderDTO> getList() {
 		// TODO Auto-generated method stub
