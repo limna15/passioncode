@@ -68,15 +68,15 @@ public class ContractRepositoryTests {
 		//계약이 완료가 된 계약DTO 불로오기 (사실상 계약서테이블에 있는 값들 이용하면 계약완료된 DTO)
 		Contract contract = contractRepository.findById(1).get();
 		ContractDTO contractDTO = ContractDTO.builder().contractNo(contract.getNo()).materialCode(contract.getMaterial().getCode()).materialName(contract.getMaterial().getName())
-									.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
-									.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
-									.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus(true).build();
+														.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
+														.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
+														.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus("완료").build();
 		log.info("계약 완료된 DTO(사실상 계약서테이블의 내용!) : "+contractDTO);
 		
 		//계약이 미완료인 계약DTO 만들기 (계약테이블에 없는건 다 null로 해서 만들기)
 		//CGa0002 품목 계약서 없는 상태
 		Material material = materialRepository.findById("CGa0002").get();
-		ContractDTO contractDTO2 = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractStatus(false).build();
+		ContractDTO contractDTO2 = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractStatus("미완료").build();
 		log.info("계약 미완료된 DTO : "+contractDTO2);
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,15 +97,15 @@ public class ContractRepositoryTests {
 		if(contractList.size()!=0) {
 			for(int i=0;i<contractList.size();i++) {
 				contractDTO3 = ContractDTO.builder().contractNo(contractList.get(i).getNo()).materialCode(contractList.get(i).getMaterial().getCode())
-								.materialName(contractList.get(i).getMaterial().getName()).companyNo(contractList.get(i).getCompany().getNo())
-								.companyName(contractList.get(i).getCompany().getName()).manager(contractList.get(i).getCompany().getManager())
-								.managerTel(contractList.get(i).getCompany().getManagerTel()).supplyLt(contractList.get(i).getSupplyLt())
-								.unitPrice(contractList.get(i).getUnitPrice()).dealCondition(contractList.get(i).getDealCondition())
-								.contractFile(contractList.get(i).getContractFile()).contractStatus(true).build();
+													.materialName(contractList.get(i).getMaterial().getName()).companyNo(contractList.get(i).getCompany().getNo())
+													.companyName(contractList.get(i).getCompany().getName()).manager(contractList.get(i).getCompany().getManager())
+													.managerTel(contractList.get(i).getCompany().getManagerTel()).supplyLt(contractList.get(i).getSupplyLt())
+													.unitPrice(contractList.get(i).getUnitPrice()).dealCondition(contractList.get(i).getDealCondition())
+													.contractFile(contractList.get(i).getContractFile()).contractStatus("완료").build();
 				contractDTOList.add(contractDTO3);
 			}
 		}else { //contractList에 비어있을때 = 계약상태가 미완료인 상태
-			contractDTO3 = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractStatus(false).build();
+			contractDTO3 = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractStatus("미완료").build();
 			contractDTOList.add(contractDTO3);
 		}				
 		
@@ -137,7 +137,7 @@ public class ContractRepositoryTests {
 		ContractDTO contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName())
 														.companyNo(company.getNo()).companyName(company.getName()).manager(company.getManager())
 														.managerTel(company.getManagerTel()).supplyLt(20).unitPrice(500).contractFile("DTO넣는거로 테스트중")
-														.contractStatus(true).build();
+														.contractStatus("완료").build();
 		log.info("contractDTO 봐보자 : "+contractDTO);
 		
 		//계약서번호, 품목공급LT, 단가, 거래조건, 계약서, 품목코드(외래키)(품목), 사업자등록번호(외래키)(협력회사)
@@ -159,7 +159,7 @@ public class ContractRepositoryTests {
 		ContractDTO contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractNo(9)
 														.companyNo(company.getNo()).companyName(company.getName()).manager(company.getManager())
 														.managerTel(company.getManagerTel()).supplyLt(11).unitPrice(2500).contractFile("DTO넣는거로 테스트중 수정")
-														.contractStatus(true).build();
+														.contractStatus("완료").build();
 		log.info("contractDTO 봐보자 : "+contractDTO);
 		
 		Contract contract = Contract.builder().supplyLt(contractDTO.getSupplyLt()).unitPrice(contractDTO.getUnitPrice()).contractFile(contractDTO.getContractFile())

@@ -199,6 +199,17 @@ public class ProcurementPlanRepositoryTests {
 		return differentToInteger;
 	}
 	
+	/**
+	 * 품목 엔티티를 이용하여 계약상태 체크하기 <br> 
+	 * 완료 : 계약상태 O, 미완료 : 계약상태 X
+	 * @param material
+	 * @return
+	 */
+	public String contractStatusCheck(Material material) {		
+		//완료 : 계약상태 O, 미완료 : 계약상태 X
+		return contractRepository.existsByMaterial(material) ? "완료" : "미완료";
+	}
+	
 	@Transactional
 	@Test
 	public void ppRegisterStatusTest() {
@@ -287,8 +298,8 @@ public class ProcurementPlanRepositoryTests {
 																			.supplyLt(procurementPlan.getContract().getSupplyLt())
 																			.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
 																			.ppAmount(procurementPlan.getAmount())
-																			.contractStatus(contractRepository.existsByMaterial(procurementPlan.getMrp().getMaterial()))
-																			.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan))
+																			.contractStatus(contractStatusCheck(procurementPlan.getMrp().getMaterial()))
+																			.ppRegisterStatus("완료").ppProgress(ppProgressCheck(procurementPlan))
 																			.mrpCode(procurementPlan.getMrp().getCode())
 																			.companyNo(procurementPlan.getContract().getCompany().getNo())
 																			.contractNo(procurementPlan.getContract().getNo()).build();
@@ -301,7 +312,7 @@ public class ProcurementPlanRepositoryTests {
 		
 		ProcurementPlanDTO procurementPlanDTO2 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
 													.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
-													.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false)
+													.contractStatus(contractStatusCheck(mrp.getMaterial())).ppRegisterStatus("미완료")
 													.mrpCode(mrp.getCode()).build();				
 
 		log.info("조달계획 DTO 결과 값 : "+procurementPlanDTO2);
@@ -326,15 +337,15 @@ public class ProcurementPlanRepositoryTests {
 																.supplyLt(procurementPlan2.getContract().getSupplyLt())
 																.dueDate(procurementPlan2.getDueDate()).minimumOrderDate(procurementPlan2.getMinimumOrderDate())
 																.ppAmount(procurementPlan2.getAmount())
-																.contractStatus(contractRepository.existsByMaterial(procurementPlan2.getMrp().getMaterial()))
-																.ppRegisterStatus(true).ppProgress(ppProgressCheck(procurementPlan2))
+																.contractStatus(contractStatusCheck(procurementPlan2.getMrp().getMaterial()))
+																.ppRegisterStatus("완료").ppProgress(ppProgressCheck(procurementPlan2))
 																.mrpCode(procurementPlan2.getMrp().getCode()).companyNo(procurementPlan2.getContract().getCompany().getNo())
 																.contractNo(procurementPlan2.getContract().getNo()).build();
 			ppDTOList.add(procurementPlanDTO3);
 		}else {  ////procurementPlan2 가 존재X, 조달계획 등록 미완료된 상태
 			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
 									.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
-									.contractStatus(contractRepository.existsByMaterial(mrp.getMaterial())).ppRegisterStatus(false)
+									.contractStatus(contractStatusCheck(mrp.getMaterial())).ppRegisterStatus("미완료")
 									.mrpCode(mrp.getCode()).build();	
 			ppDTOList.add(procurementPlanDTO3);
 		}
@@ -359,7 +370,7 @@ public class ProcurementPlanRepositoryTests {
 //		log.info("제대로 최소발주일 계산 되는건가? : "+makeMinimumOrderDate(duedate, contract.getSupplyLt()));
 		
 		//조달계획을 등록한다는건! 계약상태 = 완료, 조달계획 등록상태 = 완료, 조달계획 진행사항 =  발주 예정
-		//화면에서 계약상태, 조달계획 등록상태 숨겨서 true로 보내주고, 조달계획 진행사항 발주 예정 으로 숨겨서 보내주자!
+		//화면에서 계약상태, 조달계획 등록상태 숨겨서 완료 로 보내주고, 조달계획 진행사항 발주 예정 으로 숨겨서 보내주자!
 		
 		//조달계획 등록하는 상황이라 조달계획코드는 모른다! 없이 만들고 엔티티로 만들어주면, save에서 자동으로 만들어준다!
 		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
@@ -367,7 +378,7 @@ public class ProcurementPlanRepositoryTests {
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))
-																			.ppAmount(mrp.getAmount()).contractStatus(true).ppRegisterStatus(true).ppProgress("발주 예정")
+																			.ppAmount(mrp.getAmount()).contractStatus("완료").ppRegisterStatus("완료").ppProgress("발주 예정")
 																			.mrpCode(mrp.getCode()).companyNo(contract.getCompany().getNo()).contractNo(contract.getNo())
 																			.freePeriod(freePeriod).build();
 		log.info("제대로 만들어 진건가? : "+procurementPlanDTO);
@@ -416,7 +427,7 @@ public class ProcurementPlanRepositoryTests {
 		//수정을 발주예정인것만 !! 가능하게!!!
 		
 		//조달계획을 수정한다는건! 계약상태 = 완료, 조달계획 등록상태 = 완료, 조달계획 진행사항 = "발주 예정"
-		//화면에서 계약상태, 조달계획 등록상태 숨겨서 true로 보내주자, 조달계획 진행사항 발주 예정 으로 보내주자
+		//화면에서 계약상태, 조달계획 등록상태 숨겨서 완료 로 보내주자, 조달계획 진행사항 발주 예정 으로 보내주자
 		
 		//조달계획 수정하는 상황이라, 조달계획 코드값이 들어간다!
 		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(15).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
@@ -424,7 +435,7 @@ public class ProcurementPlanRepositoryTests {
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))
-																			.ppAmount(mrp.getAmount()).contractStatus(true).ppRegisterStatus(true).ppProgress("발주 예정")
+																			.ppAmount(mrp.getAmount()).contractStatus("완료").ppRegisterStatus("완료").ppProgress("발주 예정")
 																			.mrpCode(mrp.getCode()).companyNo(contract.getCompany().getNo()).contractNo(contract.getNo())
 																			.freePeriod(freePeriod).build();
 		log.info("제대로 만들어 진건가? : "+procurementPlanDTO);

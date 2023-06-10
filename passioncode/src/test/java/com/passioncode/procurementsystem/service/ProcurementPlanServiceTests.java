@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
+import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 import lombok.extern.log4j.Log4j2;
@@ -119,6 +120,7 @@ public class ProcurementPlanServiceTests {
 		return minimumOrderDate;
 	}
 	
+	
 	@Transactional
 	@Commit
 	@Test
@@ -132,7 +134,7 @@ public class ProcurementPlanServiceTests {
 		Integer freePeriod = 2;
 		
 		//조달계획을 등록한다는건! 계약상태 = 완료, 조달계획 등록상태 = 완료, 조달계획 진행사항 =  발주 예정
-		//화면에서 계약상태, 조달계획 등록상태 숨겨서 true로 보내주고, 조달계획 진행사항 발주 예정 으로 숨겨서 보내주자!
+		//화면에서 계약상태, 조달계획 등록상태 숨겨서 완료 로 보내주고, 조달계획 진행사항 발주 예정 으로 숨겨서 보내주자!
 		
 		//조달계획 등록하는 상황이라 조달계획코드는 모른다! 없이 만들고 엔티티로 만들어주면, save에서 자동으로 만들어준다!
 		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
@@ -140,7 +142,7 @@ public class ProcurementPlanServiceTests {
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))
-																			.ppAmount(mrp.getAmount()).contractStatus(true).ppRegisterStatus(true).ppProgress("발주 예정")
+																			.ppAmount(mrp.getAmount()).contractStatus("완료").ppRegisterStatus("완료").ppProgress("발주 예정")
 																			.mrpCode(mrp.getCode()).companyNo(contract.getCompany().getNo()).contractNo(contract.getNo())
 																			.freePeriod(freePeriod).build();
 		log.info("제대로 만들어 진건가? : "+procurementPlanDTO);
@@ -172,7 +174,7 @@ public class ProcurementPlanServiceTests {
 		//수정을 발주예정인것만 !! 가능하게!!!
 		
 		//조달계획을 수정한다는건! 계약상태 = 완료, 조달계획 등록상태 = 완료, 조달계획 진행사항 = "발주 예정"
-		//화면에서 계약상태, 조달계획 등록상태 숨겨서 true로 보내주자, 조달계획 진행사항 발주 예정 으로 보내주자
+		//화면에서 계약상태, 조달계획 등록상태 숨겨서 완료 로 보내주자, 조달계획 진행사항 발주 예정 으로 보내주자
 		
 		//조달계획 수정하는 상황이라, 조달계획 코드값이 들어간다!
 		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(15).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
@@ -180,7 +182,7 @@ public class ProcurementPlanServiceTests {
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))
-																			.ppAmount(mrp.getAmount()).contractStatus(true).ppRegisterStatus(true).ppProgress("발주 예정")
+																			.ppAmount(mrp.getAmount()).contractStatus("완료").ppRegisterStatus("완료").ppProgress("발주 예정")
 																			.mrpCode(mrp.getCode()).companyNo(contract.getCompany().getNo()).contractNo(contract.getNo())
 																			.freePeriod(freePeriod).build();
 		log.info("제대로 만들어 진건가? : "+procurementPlanDTO);

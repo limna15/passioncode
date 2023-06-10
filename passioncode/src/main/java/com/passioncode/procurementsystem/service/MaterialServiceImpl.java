@@ -40,11 +40,7 @@ public class MaterialServiceImpl implements MaterialService {
 	 */
 	public String shareStatusChangeToString(Integer shareStatus) {
 		// 0 : 공용, 1 : 전용
-		String shareStatusKor = "공용";
-		if(shareStatus==1) {
-			shareStatusKor = "전용";
-		}
-		return shareStatusKor;
+		return shareStatus==0 ? "공용" : "전용";
 	}
 	
 	/**
@@ -55,24 +51,20 @@ public class MaterialServiceImpl implements MaterialService {
 	 */
 	public Integer shareStatusChangeToInteger(String shareStatus) {
 		// 공용 : 0 , 전용 : 1
-		Integer shareStatusInteger = 0;
-		if(shareStatus.equals("전용")) {
-			shareStatusInteger = 1;
-		}
-		return shareStatusInteger;
+		return shareStatus.equals("공용") ? 0 : 1;
 	}
 
 	@Override
 	public MaterialDTO entityToDTO(Material material) {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부, 계약상태
 		MaterialDTO materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
-									.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
-									.shareStatus(shareStatusChangeToString(material.getShareStatus())).stockAmount(material.getStockAmount())
-									.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
-									.middleCategoryName(material.getMiddleCategory().getCategory())
-									.contractStatus(contractRepository.existsByMaterial(material))
-									.largeCategoryCode(material.getMiddleCategory().getLargeCategory().getCode())
-									.middleCategoryCode(material.getMiddleCategory().getCode()).build();						
+														.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
+														.shareStatus(shareStatusChangeToString(material.getShareStatus())).stockAmount(material.getStockAmount())
+														.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
+														.middleCategoryName(material.getMiddleCategory().getCategory())
+														.contractStatus(contractStatusCheck(material))
+														.largeCategoryCode(material.getMiddleCategory().getLargeCategory().getCode())
+														.middleCategoryCode(material.getMiddleCategory().getCode()).build();						
 		return materialDTO;
 	}
 
@@ -80,9 +72,9 @@ public class MaterialServiceImpl implements MaterialService {
 	public Material dtoToEntity(MaterialDTO materialDTO) {		
 		//품목코드, 품목명, 공용여부, 규격, 재질, 제작사양, 도면번호, 도면, 중분류
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(shareStatusChangeToInteger(materialDTO.getShareStatus()))
-							.stockAmount(materialDTO.getStockAmount()).size(materialDTO.getSize()).quality(materialDTO.getQuality()).spec(materialDTO.getSpec())
-							.drawingNo(materialDTO.getDrawingNo()).drawingFile(materialDTO.getDrawingFile())
-							.middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
+												.stockAmount(materialDTO.getStockAmount()).size(materialDTO.getSize()).quality(materialDTO.getQuality())
+												.spec(materialDTO.getSpec()).drawingNo(materialDTO.getDrawingNo()).drawingFile(materialDTO.getDrawingFile())
+												.middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
 		return material;
 	}
 
@@ -98,8 +90,9 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 
 	@Override
-	public Boolean contractStatusCheck(Material material) {		
-		return contractRepository.existsByMaterial(material);
+	public String contractStatusCheck(Material material) {		
+		//완료 : 계약상태 O, 미완료 : 계약상태 X
+		return contractRepository.existsByMaterial(material) ? "완료" : "미완료";
 	}
 	
 	

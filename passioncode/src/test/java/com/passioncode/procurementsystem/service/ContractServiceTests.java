@@ -61,12 +61,12 @@ public class ContractServiceTests {
 		Material material = contractService.getMaterial("CNa0001");
 		Company company = contractService.getCompany("104-84-55123");
 		
-		//계약상태는, 계약을 등록하는 상황이기때문에 무조건 true -> 화면에서 계약상태 숨겨서 값을 true로 보내주자!
+		//계약상태는, 계약을 등록하는 상황이기때문에 무조건 true -> 화면에서 계약상태 숨겨서 값을 완료로 보내주자!
 		//입력하는 상황이라서 계약서번호도 숨겨서 null값으로 보내주자!!!
 		ContractDTO contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName())
 														.companyNo(company.getNo()).companyName(company.getName()).manager(company.getManager())
 														.managerTel(company.getManagerTel()).supplyLt(20).unitPrice(500).contractFile("DTO넣는거로 테스트중")
-														.contractStatus(true).build();
+														.contractStatus("완료").build();
 		log.info("contractDTO 봐보자 : "+contractDTO);
 		
 		//계약서번호, 품목공급LT, 단가, 거래조건, 계약서, 품목코드(외래키)(품목), 사업자등록번호(외래키)(협력회사)
@@ -87,12 +87,12 @@ public class ContractServiceTests {
 		Material material = contractService.getMaterial("CNa0001");
 		Company company = contractService.getCompany("104-84-55123");
 		
-		//계약상태는, 계약을 수정하는 상황이기때문에 무조건 true -> 화면에서 계약상태 숨겨서 값을 true로 보내주자!
+		//계약상태는, 계약을 수정하는 상황이기때문에 무조건 true -> 화면에서 계약상태 숨겨서 값을 완료 로 보내주자!
 		//수정하는 거기때문에, 계약서 번호 추가해서 테스트!
 		ContractDTO contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractNo(9)
 														.companyNo(company.getNo()).companyName(company.getName()).manager(company.getManager())
 														.managerTel(company.getManagerTel()).supplyLt(20).unitPrice(500).contractFile("DTO넣는거로 테스트중 수정2")
-														.contractStatus(true).build();
+														.contractStatus("완료").build();
 		log.info("contractDTO 봐보자 : "+contractDTO);
 		contractService.modify(contractDTO);		
 	}

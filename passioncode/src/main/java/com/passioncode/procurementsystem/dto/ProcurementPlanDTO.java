@@ -95,15 +95,15 @@ public class ProcurementPlanDTO {
 	
 	/**
 	 * 계약상태 (추가된 변수) <br>
-	 * False : 미완료, True : 완료
+	 * 완료 : 계약상태 O, 미완료 : 계약상태 X 
 	 */
-	private Boolean contractStatus;
+	private String contractStatus;
 	
 	/**
 	 * 조달계획 등록상태 (추가된 변수) <br>
-	 * False : 미완료, True : 완료
+	 * 완료 : 등록상태 O, 미완료 : 등록상태 X 
 	 */
-	private Boolean ppRegisterStatus;
+	private String ppRegisterStatus;
 	
 	/**
 	 * 조달계획 진행사항 (추가된 변수) <br>

@@ -36,11 +36,11 @@ public interface MaterialService {
 	
 	/**
 	 * 품목 엔티티를 이용하여 계약상태 체크하기 <br> 
-	 * True : 계약상태 O, False : 계약상태 X
+	 * 완료 : 계약상태 O, 미완료 : 계약상태 X
 	 * @param material
 	 * @return
 	 */
-	Boolean contractStatusCheck(Material material);
+	String contractStatusCheck(Material material);
 	
 	/**
 	 * 품목정보 등록 (MaterialDTO 이용해서)

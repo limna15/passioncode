@@ -74,9 +74,9 @@ public class ContractDTO {
 	private String contractFile;	
 	
 	/**
-	 * 계약상태 (추가된 변수)
-	 * False : 미완료, True : 완료
+	 * 계약상태 (추가된 변수) <br>
+	 * 완료 : 계약상태 O, 미완료 : 계약상태 X 
 	 */
-	private Boolean contractStatus;
+	private String contractStatus;
 	
 }

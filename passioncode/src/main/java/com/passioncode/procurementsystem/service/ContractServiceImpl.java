@@ -41,8 +41,7 @@ public class ContractServiceImpl implements ContractService {
 	public Company getCompany(String no) {
 		return companyRepository.findById(no).get();
 	}
-	
-	
+		
 	@Override
 	public List<ContractDTO> materialEntityToDTO(Material material) {
 		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약 상태 / 사업자등록번호
@@ -56,15 +55,15 @@ public class ContractServiceImpl implements ContractService {
 		if(contractList.size()!=0) {
 			for(int i=0;i<contractList.size();i++) {
 				contractDTO = ContractDTO.builder().contractNo(contractList.get(i).getNo()).materialCode(contractList.get(i).getMaterial().getCode())
-								.materialName(contractList.get(i).getMaterial().getName()).companyNo(contractList.get(i).getCompany().getNo())
-								.companyName(contractList.get(i).getCompany().getName()).manager(contractList.get(i).getCompany().getManager())
-								.managerTel(contractList.get(i).getCompany().getManagerTel()).supplyLt(contractList.get(i).getSupplyLt())
-								.unitPrice(contractList.get(i).getUnitPrice()).dealCondition(contractList.get(i).getDealCondition())
-								.contractFile(contractList.get(i).getContractFile()).contractStatus(true).build();
+													.materialName(contractList.get(i).getMaterial().getName()).companyNo(contractList.get(i).getCompany().getNo())
+													.companyName(contractList.get(i).getCompany().getName()).manager(contractList.get(i).getCompany().getManager())
+													.managerTel(contractList.get(i).getCompany().getManagerTel()).supplyLt(contractList.get(i).getSupplyLt())
+													.unitPrice(contractList.get(i).getUnitPrice()).dealCondition(contractList.get(i).getDealCondition())
+													.contractFile(contractList.get(i).getContractFile()).contractStatus("완료").build();
 				contractDTOList.add(contractDTO);
 			}
 		}else { //contractList에 비어있을때 = 계약상태가 미완료인 상태
-			contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractStatus(false).build();
+			contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractStatus("미완료").build();
 			contractDTOList.add(contractDTO);
 		}				
 		
@@ -75,9 +74,9 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public ContractDTO contractEntityToDTO(Contract contract) {
 		ContractDTO contractDTO = ContractDTO.builder().contractNo(contract.getNo()).materialCode(contract.getMaterial().getCode()).materialName(contract.getMaterial().getName())
-									.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
-									.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
-									.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus(true).build();
+														.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
+														.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
+														.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus("완료").build();
 		return contractDTO;
 	}
 
@@ -85,9 +84,9 @@ public class ContractServiceImpl implements ContractService {
 	public Contract dtoToEntity(ContractDTO contractDTO) {		
 		//계약서번호, 품목코드(품목), 사업자등록번호(협력회사), 품목공급LT, 단가, 거래조건, 계약서		
 		Contract contract = Contract.builder().no(contractDTO.getContractNo()).material(materialRepository.findById(contractDTO.getMaterialCode()).get())
-							.company(companyRepository.findById(contractDTO.getCompanyNo()).get()).supplyLt(contractDTO.getSupplyLt())
-							.unitPrice(contractDTO.getUnitPrice()).dealCondition(contractDTO.getDealCondition())
-							.contractFile(contractDTO.getContractFile()).build();							
+												.company(companyRepository.findById(contractDTO.getCompanyNo()).get()).supplyLt(contractDTO.getSupplyLt())
+												.unitPrice(contractDTO.getUnitPrice()).dealCondition(contractDTO.getDealCondition())
+												.contractFile(contractDTO.getContractFile()).build();							
 		return contract;
 	}
 
@@ -105,15 +104,15 @@ public class ContractServiceImpl implements ContractService {
 			if(contractList.size()!=0) {
 				for(int i=0;i<contractList.size();i++) {
 					contractDTO = ContractDTO.builder().contractNo(contractList.get(i).getNo()).materialCode(contractList.get(i).getMaterial().getCode())
-							.materialName(contractList.get(i).getMaterial().getName()).companyName(contractList.get(i).getCompany().getName())
-							.manager(contractList.get(i).getCompany().getManager()).managerTel(contractList.get(i).getCompany().getManagerTel())
-							.supplyLt(contractList.get(i).getSupplyLt()).unitPrice(contractList.get(i).getUnitPrice())
-							.dealCondition(contractList.get(i).getDealCondition()).contractFile(contractList.get(i).getContractFile())
-							.contractStatus(true).build();
+														.materialName(contractList.get(i).getMaterial().getName()).companyName(contractList.get(i).getCompany().getName())
+														.manager(contractList.get(i).getCompany().getManager()).managerTel(contractList.get(i).getCompany().getManagerTel())
+														.supplyLt(contractList.get(i).getSupplyLt()).unitPrice(contractList.get(i).getUnitPrice())
+														.dealCondition(contractList.get(i).getDealCondition()).contractFile(contractList.get(i).getContractFile())
+														.contractStatus("완료").build();
 					contractDTOList.add(contractDTO);
 				}
 			}else { //contractList에 비어있을때 = 계약상태가 미완료인 상태
-				contractDTO = ContractDTO.builder().materialCode(materialList.get(j).getCode()).materialName(materialList.get(j).getName()).contractStatus(false).build();
+				contractDTO = ContractDTO.builder().materialCode(materialList.get(j).getCode()).materialName(materialList.get(j).getName()).contractStatus("미완료").build();
 				contractDTOList.add(contractDTO);
 			}				
 		}		

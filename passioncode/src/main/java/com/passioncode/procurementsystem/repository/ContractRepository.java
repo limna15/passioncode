@@ -24,7 +24,7 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
 	 * @param material
 	 * @return
 	 */
-	public boolean existsByMaterial(Material material);
+	public Boolean existsByMaterial(Material material);
 	
 
 	

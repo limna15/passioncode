@@ -6,6 +6,7 @@ import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
+import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 public interface ProcurementPlanService {
@@ -60,7 +61,7 @@ public interface ProcurementPlanService {
 	 * @return
 	 */
 	List<ProcurementPlanDTO> getDTOList();
-		
+			
 	/**
 	 * 조달계획 등록 (ProcurementPlanDTO 이용해서)
 	 * @param procurementPlanDTO

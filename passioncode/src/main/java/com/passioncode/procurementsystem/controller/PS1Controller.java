@@ -1,8 +1,12 @@
 package com.passioncode.procurementsystem.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.passioncode.procurementsystem.dto.MaterialDTO;
+import com.passioncode.procurementsystem.service.MaterialService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,9 +17,13 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class PS1Controller {
 	
+	private final MaterialService materialService;
+	
 	@GetMapping("/materialList")
-	public void PS1List() {
-		log.info("품목정보목록 보기>>");
+	public void PS1List(MaterialDTO materialDTO,Model model) {
+		log.info("품목정보목록 보기");
+		
+		model.addAttribute("DTOList",materialService.getDTOList());
 		
 	}
 	

@@ -29,7 +29,7 @@ public class MaterialDTO {
 	private String name;
 	
 	/**
-	 * 공용여부 (품목), 
+	 * 공용여부 (품목) <br>
 	 * 기본값 = 1, 0 : 공용, 1 : 전용
 	 */
 	private String shareStatus;		
@@ -70,10 +70,10 @@ public class MaterialDTO {
 	private String middleCategoryName;
 		
 	/**
-	 * 계약상태 (추가된 변수)
-	 * False : 미완료, True : 완료
+	 * 계약상태 (추가된 변수) <br>
+	 * 완료 : 계약상태 O, 미완료 : 계약상태 X 
 	 */
-	private Boolean contractStatus;
+	private String contractStatus;
 	
 	/**
 	 * 대분류 코드 (대분류)

@@ -6,72 +6,67 @@
 
 
 <style>
-.search-box {
-    position: relative;        
-    float: right;
-}
-.search-box input {
-    height: 34px;
-    border-radius: 20px;
-    padding-left: 35px;
-    border-color: #ddd;
-    box-shadow: none;
-}
-.search-box input:focus {
-    border-color: #3FBAE4;
-}
-.search-box i {
-    color: #a0a5b1;
-    position: absolute;
-    font-size: 19px;
-    top: 8px;
-    left: 10px;
-}
-
-
-.pagination {
-    float: right;
-    margin: 0 0 5px;
-}
-.pagination li a {
-    border: none;
-    font-size: 95%;
-    width: 30px;
-    height: 30px;
-    color: #999;
-    margin: 0 2px;
-    line-height: 30px;
-    border-radius: 30px !important;
-    text-align: center;
-    padding: 0;
-}
-.pagination li a:hover {
-    color: #666;
-}	
-.pagination li.active a {
-    background: #03A9F4;
-}
-.pagination li.active a:hover {        
-    background: #0397d6;
-}
-.pagination li.disabled i {
-    color: #ccc;
-}
-.pagination li i {
-    font-size: 16px;
-    padding-top: 6pxrow
-}
-.hint-text {
-    float: left;
-    margin-top: 6px;
-    font-size: 95%;
-}    
+	.search-box {
+	    position: relative;        
+	    float: right;
+	}
+	.search-box input {
+	    height: 34px;
+	    border-radius: 20px;
+	    padding-left: 35px;
+	    border-color: #ddd;
+	    box-shadow: none;
+	}
+	.search-box input:focus {
+	    border-color: #3FBAE4;
+	}
+	.search-box i {
+	    color: #a0a5b1;
+	    position: absolute;
+	    font-size: 19px;
+	    top: 8px;
+	    left: 10px;
+	}	
+	
+	.pagination {
+	    float: right;
+	    margin: 0 0 5px;
+	}
+	.pagination li a {
+	    border: none;
+	    font-size: 95%;
+	    width: 30px;
+	    height: 30px;
+	    color: #999;
+	    margin: 0 2px;
+	    line-height: 30px;
+	    border-radius: 30px !important;
+	    text-align: center;
+	    padding: 0;
+	}
+	.pagination li a:hover {
+	    color: #666;
+	}	
+	.pagination li.active a {
+	    background: #03A9F4;
+	}
+	.pagination li.active a:hover {        
+	    background: #0397d6;
+	}
+	.pagination li.disabled i {
+	    color: #ccc;
+	}
+	.pagination li i {
+	    font-size: 16px;
+	    padding-top: 6pxrow
+	}
+	.hint-text {
+	    float: left;
+	    margin-top: 6px;
+	    font-size: 95%;
+	}    
 </style>
-<script>
-$(document).ready(function(){
-	$('[data-toggle="tooltip"]').tooltip();
-});
-</script>
+
 
             <div class="col-md-12 stretch-card">
               <!--수정 부분 시작 -->
@@ -107,7 +102,7 @@ $(document).ready(function(){
                     <table id="recent-purchases-listing" class="table">
                       <thead>
                         <tr>
-                            <th>ch</th>
+                            <th> </th>
                             <th>품목코드</th>
                             <th>품목명</th>
                             <th>대</th>
@@ -122,74 +117,23 @@ $(document).ready(function(){
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                            <td><div class="custom-control custom-checkbox mr-sm-2">
-                              <input type="checkbox" class="custom-control-input" id="mycheck">
-                              <label class="custom-control-label" for="mycheck"></label>
-                          </div></td>
-                            <td>CGa0001</td>
-                            <td>Gear</td>
-                            <td>철</td>
-                            <td>기어</td>
-                            <td>G1</td>
-                            <td>B</td>
-                            <td>12mm</td>
-                            <td>B23</td>
-                            <td>썸네일</td>
-                            <td>공용</td>
-                            <td>완료</td>
-                        </tr>
-                        <tr>
-                          <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck2">
-                            <label class="custom-control-label" for="mycheck2"></label>
-                        </div></td>
-                            <td>2</td>
-                            <td>니즈원</td>
-                            <td></td>
-                            <td>23/08/12</td>
-                            <td>10일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
-                            <td>1200</td>
-                            <td>1200</td>
-                        </tr>
-                        <tr>
-                          <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck3">
-                            <label class="custom-control-label" for="mycheck3"></label>
-                        </div></td>
-                            <td>3</td>
-                            <td>대명</td>
-                            <td></td>
-                            <td>23/08/12</td>
-                            <td>15일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
-                            <td>1200</td>
-                            <td>1200</td>
-                        </tr>
-                        <tr>
-                          <td><div class="custom-control custom-checkbox mr-sm-2">
-                            <input type="checkbox" class="custom-control-input" id="mycheck4">
-                            <label class="custom-control-label" for="mycheck4"></label>
-                        </div></td>
-                            <td>4</td>
-                            <td>렉스큐브</td>
-                            <td></td>
-                            <td>23/08/12</td>
-                            <td>10일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
-                            <td>1200</td>
-                            <td>1200</td>
-                        </tr>
+                                           
+                        <tr th:each="dto : ${DTOList}" >
+                            <td>
+                              <input type="checkbox">
+                          	</td>
+                            <td>[[${dto.code}]]</td>
+                            <td>[[${dto.name}]]</td>
+                            <td>[[${dto.largeCategoryName}]]</td>
+                            <td>[[${dto.middleCategoryName}]]</td>
+                            <td>[[${dto.size}]]</td>
+                            <td>[[${dto.quality}]]</td>
+                            <td>[[${dto.spec}]]</td>
+                            <td>[[${dto.drawingNo}]]</td>
+                            <td>[[${dto.drawingFile}]]</td>
+                            <td>[[${dto.shareStatus}]]</td>
+                            <td>[[${dto.contractStatus}]]</td>
+                        </tr>                      
                       </tbody>
                     </table>
                     <!--페이지 번호 시작-->
