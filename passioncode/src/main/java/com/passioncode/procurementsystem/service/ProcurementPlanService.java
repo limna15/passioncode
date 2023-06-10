@@ -2,7 +2,9 @@ package com.passioncode.procurementsystem.service;
 
 import java.util.List;
 
+import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
+import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
@@ -21,6 +23,13 @@ public interface ProcurementPlanService {
 	 * @return
 	 */
 	MRP getMRP(Integer code);	
+	
+	/**
+	 * 계약서번호를 이용해서 Contract 엔티티 가져오기
+	 * @param no
+	 * @return
+	 */
+	Contract getContract(Integer no);
 		
 	/**
 	 * MRP 엔티티를 이용해서 ProcurementPlanDTO로 만들기(ProcurementPlan -> ProcurementPlanDTO) <br> 
@@ -51,5 +60,25 @@ public interface ProcurementPlanService {
 	 * @return
 	 */
 	List<ProcurementPlanDTO> getDTOList();
+		
+	/**
+	 * 조달계획 등록 (ProcurementPlanDTO 이용해서)
+	 * @param procurementPlanDTO
+	 * @return
+	 */
+	Integer register(ProcurementPlanDTO procurementPlanDTO);
+	
+	/**
+	 * 조달계획 수정 (ProcurementPlanDTO 이용해서)
+	 * @param procurementPlanDTO
+	 */
+	void modify(ProcurementPlanDTO procurementPlanDTO);
+	
+	/**
+	 * 조달계획 삭제 (ProcurementPlanDTO 이용해서)
+	 * @param procurementPlanDTO
+	 */
+	void delete(ProcurementPlanDTO procurementPlanDTO);
+	
 
 }

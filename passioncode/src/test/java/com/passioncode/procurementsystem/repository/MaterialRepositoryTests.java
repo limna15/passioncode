@@ -59,6 +59,12 @@ public class MaterialRepositoryTests {
 		
 	}
 	
+	/**
+	 * 공용여부 Integer -> 한글로 만들어주기 <br>
+	 * 0 : 공용, 1 : 전용
+	 * @param shareStatus
+	 * @return
+	 */
 	public String shareStatusChangeToString(Integer shareStatus) {
 		// 0 : 공용, 1 : 전용
 		String shareStatusKor = "공용";
@@ -68,6 +74,12 @@ public class MaterialRepositoryTests {
 		return shareStatusKor;
 	}
 	
+	/**
+	 * 공용여부 한글 -> Integer 로 만들어주기 <br>
+	 * 공용 : 0 , 전용 : 1
+	 * @param shareStatus
+	 * @return
+	 */
 	public Integer shareStatusChangeToInteger(String shareStatus) {
 		// 공용 : 0 , 전용 : 1
 		Integer shareStatusInteger = 0;
@@ -107,10 +119,10 @@ public class MaterialRepositoryTests {
 	@Test
 	public void InsertByDTOTest() {
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드").size("PC001").quality("ABC")
-				.spec("10*10cm").drawingNo("PC3333").drawingFile("서비스로 입력 테스트중").shareStatus("공용")
-				.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
-				.contractStatus(contractRepository.existsByMaterial((materialRepository.findById("PCa0001").orElse(null))))
-				.largeCategoryCode("PP0001").middleCategoryCode("CC0001").build();
+									.spec("10*10cm").drawingNo("PC3333").drawingFile("서비스로 입력 테스트중").shareStatus("공용")
+									.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
+									.contractStatus(contractRepository.existsByMaterial((materialRepository.findById("PCa0001").orElse(null))))
+									.largeCategoryCode("PP0001").middleCategoryCode("CC0001").build();
 		log.info("만들어진 materialDTO 보자 : "+materialDTO);
 		
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(shareStatusChangeToInteger(materialDTO.getShareStatus()))
@@ -118,19 +130,19 @@ public class MaterialRepositoryTests {
 												.drawingNo(materialDTO.getDrawingNo()).drawingFile(materialDTO.getDrawingFile())
 												.middleCategory(middleCategoryRepository.findById(materialDTO.getMiddleCategoryCode()).get()).build();
 		log.info("dto에서 엔티티로 바뀐거 보자 : "+material);
-		
 		materialRepository.save(material);		
 	}
 	
-	
+	@Transactional
+	@Commit	
 	@Test
-	public void ModifyTest() {
+	public void ModifyByDTOTest() {
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드수정중").size("PC001수정").quality("ABC수정")
-				.spec("10*10cm수정").drawingNo("PC3333수정").drawingFile("서비스로 입력 테스트중 수정").shareStatus("공용")
-				.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
-				.contractStatus(contractRepository.existsByMaterial((materialRepository.findById("PCa0001").orElse(null))))
-				.largeCategoryCode("PP0001")
-				.middleCategoryCode("CC0001").build();
+									.spec("10*10cm수정").drawingNo("PC3333수정").drawingFile("서비스로 입력 테스트중 수정").shareStatus("공용")
+									.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
+									.contractStatus(contractRepository.existsByMaterial((materialRepository.findById("PCa0001").orElse(null))))
+									.largeCategoryCode("PP0001")
+									.middleCategoryCode("CC0001").build();
 		log.info("만들어진 materialDTO 보자 : "+materialDTO);
 		
 		Material material = Material.builder().code(materialDTO.getCode()).name(materialDTO.getName()).shareStatus(shareStatusChangeToInteger(materialDTO.getShareStatus()))
@@ -145,7 +157,7 @@ public class MaterialRepositoryTests {
 	}
 	
 	@Test
-	public void DeleteTest() {
+	public void DeleteByDTOTest() {
 		MaterialDTO materialDTO = MaterialDTO.builder().code("PCa0001").build();
 				
 		materialRepository.deleteById(materialDTO.getCode());

@@ -4,8 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +28,7 @@ import lombok.ToString;
  * @author KSH
  * 
  */ 
+@EntityListeners(value= {AuditingEntityListener.class})
 @Entity
 @Builder
 @AllArgsConstructor
@@ -61,7 +66,8 @@ public class ProcurementPlan {		//조달계획
 	/**
 	 * 조달계획 등록일
 	 */
-	@Column(columnDefinition = "DATETIME", nullable = false)
+	@CreatedDate
+	@Column(columnDefinition = "DATETIME", nullable = false, updatable = false)
 	private LocalDateTime registerDate;			
 	
 	/**

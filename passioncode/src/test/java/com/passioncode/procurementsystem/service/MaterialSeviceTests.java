@@ -60,9 +60,10 @@ public class MaterialSeviceTests {
 	@Test
 	public void registerTest() {
 		//현재 등록화면에서 계약상태는 없음, 애초에 처음 등록하는 화면이라 당연히 계약상태는 미완료라서
+		//기존재고 수량 화면에는 없지만 숨겨서!! 0으로 기본값 세팅해주자
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드").size("PC001").quality("ABC")
 									.spec("10*10cm").drawingNo("PC3333").drawingFile("서비스로 입력 테스트중").shareStatus("공용")
-									.largeCategoryName("플라스틱").middleCategoryName("케이스")
+									.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
 									.contractStatus(materialService.contractStatusCheck(materialService.getMaterial("PCa0001")))
 									.largeCategoryCode("PP0001")
 									.middleCategoryCode("CC0001").build();
@@ -76,12 +77,22 @@ public class MaterialSeviceTests {
 	public void modifyTest() {
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드수정").size("PC001수정").quality("ABC수정")
 									.spec("10*10cm수정").drawingNo("PC3333수정").drawingFile("서비스로 입력 테스트중 수정").shareStatus("공용")
-									.largeCategoryName("플라스틱").middleCategoryName("케이스")
+									.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
 									.contractStatus(materialService.contractStatusCheck(materialService.getMaterial("PCa0001")))
 									.largeCategoryCode("PP0001")
 									.middleCategoryCode("CC0001").build();
 		log.info("만들어진 materialDTO 보자 : "+materialDTO);
 		materialService.modify(materialDTO);
+	}
+	
+	@Transactional
+	@Commit
+	@Test
+	public void deleteTest() {
+		Material material = materialService.getMaterial("PCa0001");
+		MaterialDTO materialDTO = materialService.entityToDTO(material);	//이때 DTO로 만들면서 외래키 지연로딩 쓰기 때문에 @Transactional 필요
+		materialService.delete(materialDTO);								//하지만 테스트환경에서는 @Transactional 쓰면 자동롤백 되기때문에, 삭제 테스틀르 위해 @Commit 필요
+		
 	}
 	
 

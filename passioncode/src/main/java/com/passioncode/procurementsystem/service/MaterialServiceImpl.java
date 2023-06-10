@@ -32,6 +32,12 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialRepository.findById(code).orElse(null);
 	}
 	
+	/**
+	 * 공용여부 Integer -> 한글로 만들어주기 <br>
+	 * 0 : 공용, 1 : 전용
+	 * @param shareStatus
+	 * @return
+	 */
 	public String shareStatusChangeToString(Integer shareStatus) {
 		// 0 : 공용, 1 : 전용
 		String shareStatusKor = "공용";
@@ -41,6 +47,12 @@ public class MaterialServiceImpl implements MaterialService {
 		return shareStatusKor;
 	}
 	
+	/**
+	 * 공용여부 한글 -> Integer 로 만들어주기 <br>
+	 * 공용 : 0 , 전용 : 1
+	 * @param shareStatus
+	 * @return
+	 */
 	public Integer shareStatusChangeToInteger(String shareStatus) {
 		// 공용 : 0 , 전용 : 1
 		Integer shareStatusInteger = 0;
@@ -86,7 +98,7 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 
 	@Override
-	public Boolean contractStatusCheck(Material material) {
+	public Boolean contractStatusCheck(Material material) {		
 		return contractRepository.existsByMaterial(material);
 	}
 	
@@ -107,11 +119,11 @@ public class MaterialServiceImpl implements MaterialService {
 		materialRepository.save(material);
 		log.info("수정된 품목(material) 정보 : "+material);
 	}
-
+	
 	@Override
 	public void delete(MaterialDTO materialDTO) {
-		// TODO Auto-generated method stub
-		
+		log.info("삭제된 품목(material)정보 : "+dtoToEntity(materialDTO));
+		materialRepository.deleteById(materialDTO.getCode());		
 	}
 	
 	

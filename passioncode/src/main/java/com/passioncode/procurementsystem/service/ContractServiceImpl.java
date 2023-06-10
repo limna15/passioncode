@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.entity.Company;
@@ -27,14 +28,24 @@ public class ContractServiceImpl implements ContractService {
 	private final CompanyRepository companyRepository;
 	
 	@Override
-	public Contract get(Integer no) {
+	public Contract getContract(Integer no) {
 		return contractRepository.findById(no).get();
+	}
+	
+	@Override
+	public Material getMaterial(String code) {
+		return materialRepository.findById(code).get();
+	}
+
+	@Override
+	public Company getCompany(String no) {
+		return companyRepository.findById(no).get();
 	}
 	
 	
 	@Override
 	public List<ContractDTO> materialEntityToDTO(Material material) {
-		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약 상태
+		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약 상태 / 사업자등록번호
 		
 		List<Contract> contractList = contractRepository.findByMaterial(material);
 		
@@ -109,6 +120,43 @@ public class ContractServiceImpl implements ContractService {
 		
 		return contractDTOList;
 	}
+
+
+	@Override
+	public Integer register(ContractDTO contractDTO) {
+		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약 상태 / 사업자등록번호
+		// 화면에서 사업자등록번호 숨겨서 가지고 있자!
+		
+		//계약서등록 시, 협력회사를 찾아 등록할때, 거래가능여부가 1인 회사중에서만 찾음!! 만약 바꾸고싶으면 계약 등록전에 협력회사 관리창에서 바꿔줘야함!
+		
+		//계약상태는, 계약을 등록하는 상황이기때문에 무조건 true -> 화면에서 계약상태 숨겨서 값을 true로 보내주자!
+		//입력하는 상황이라서 계약서번호도 숨겨서 null값으로 보내주자!!!
+		
+		//계약서번호, 품목공급LT, 단가, 거래조건, 계약서, 품목코드(외래키)(품목), 사업자등록번호(외래키)(협력회사)
+		Contract contract = dtoToEntity(contractDTO);
+		log.info("저장된 계약서(contract) 정보 : "+contract);
+		
+		contractRepository.save(contract);		
+		
+		return contract.getNo();
+	}
+	
+	@Transactional
+	@Override
+	public void modify(ContractDTO contractDTO) {
+		Contract contract = dtoToEntity(contractDTO);
+		log.info("수정된 계약서(contract) 정보 : "+contract);		
+		contractRepository.save(contract);		
+	}
+
+	@Override
+	public void delete(ContractDTO contractDTO) {
+		log.info("삭제된 계약서(contract) 정보 : "+dtoToEntity(contractDTO));
+		contractRepository.deleteById(contractDTO.getContractNo());
+	}
+
+
+
 
 
 

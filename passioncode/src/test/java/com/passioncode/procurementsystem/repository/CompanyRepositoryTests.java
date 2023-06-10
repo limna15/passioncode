@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.entity.Company;
+import com.passioncode.procurementsystem.entity.Material;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -30,8 +32,11 @@ public class CompanyRepositoryTests {
 		Company company = Company.builder().no("124-87-31644").address("서울시 강북구").ceo("김신영").dealStatus(0).manager("브로니")
 				.managerEmail("browny@gmail.com").managerTel("010-9999-9999").name("(주)브로우맥스").tel("02-999-9999").build();
 		
-		companyRepository.save(company);
-		
+		companyRepository.save(company);		
 	};
+	
+	
+	
+	
 
 }

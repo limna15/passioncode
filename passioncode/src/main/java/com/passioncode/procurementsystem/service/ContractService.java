@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
+import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.Material;
 
@@ -14,7 +15,21 @@ public interface ContractService {
 	 * @param no
 	 * @return
 	 */
-	Contract get(Integer no);
+	Contract getContract(Integer no);
+	
+	/**
+	 * 품목코드를 이용해서 Material 품목 엔티티 가져오기
+	 * @param code
+	 * @return
+	 */
+	Material getMaterial(String code);
+	
+	/**
+	 * 사업자등록번호를 이용해서 Company 협력회사 엔티티 가져오기
+	 * @param no
+	 * @return
+	 */
+	Company getCompany(String no);	
 	
 	/**
 	 * 품목 엔티티를 이용해서 List<ContractDTO>로 만들기(Material -> List<ContractDTO>) <br> 
@@ -45,5 +60,26 @@ public interface ContractService {
 	 * @return
 	 */
 	List<ContractDTO> getDTOList();
+	
+	/**
+	 * 계약서 등록 (ContractDTO 이용해서)
+	 * @param contractDTO
+	 * @return
+	 */
+	Integer register(ContractDTO contractDTO);
+	
+	/**
+	 * 계약서 수정 (ContractDTO 이용해서)
+	 * @param contractDTO
+	 */
+	void modify(ContractDTO contractDTO);
+	
+	/**
+	 * 계약서 삭제 (ContractDTO 이용해서)
+	 * @param contractDTO
+	 */
+	void delete(ContractDTO contractDTO);
+	
+	
 
 }

@@ -19,7 +19,8 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
 	
 	
 	/**
-	 * 품목을 이용하여 계약상태(미완료,완료) 체크하기 , 존재여부=계약상태, False=미완료, True=완료
+	 * 품목을 이용하여 계약상태(미완료,완료) 체크하기 <br>
+	 * 존재여부=계약상태, False=미완료, True=완료
 	 * @param material
 	 * @return
 	 */

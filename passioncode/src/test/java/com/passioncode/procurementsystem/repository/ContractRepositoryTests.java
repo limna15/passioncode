@@ -1,8 +1,6 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.util.ArrayList;
-
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -125,6 +123,61 @@ public class ContractRepositoryTests {
 		log.info(">>>>>>>>>>>"+collectionContract);;
 	}
 	
+	
+	@Test
+	public void InsertByDTOTest() {
+		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약 상태 / 사업자등록번호
+		
+		//계약서등록 시, 협력회사를 찾아 등록할때, 거래가능여부가 1인 회사중에서만 찾음!! 만약 바꾸고싶으면 계약 등록전에 협력회사 관리창에서 바꿔줘야함!
+		Material material = materialRepository.findById("CNa0001").get();
+		Company company = companyRepository.findById("104-84-55123").get();
+		
+		//계약상태는, 계약을 등록하는 상황이기때문에 무조건 true
+		//입력하는 상항이라서 계약서 번호는 몰라!
+		ContractDTO contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName())
+														.companyNo(company.getNo()).companyName(company.getName()).manager(company.getManager())
+														.managerTel(company.getManagerTel()).supplyLt(20).unitPrice(500).contractFile("DTO넣는거로 테스트중")
+														.contractStatus(true).build();
+		log.info("contractDTO 봐보자 : "+contractDTO);
+		
+		//계약서번호, 품목공급LT, 단가, 거래조건, 계약서, 품목코드(외래키)(품목), 사업자등록번호(외래키)(협력회사)
+		Contract contract = Contract.builder().supplyLt(contractDTO.getSupplyLt()).unitPrice(contractDTO.getUnitPrice()).contractFile(contractDTO.getContractFile())
+												.material(materialRepository.findById(contractDTO.getMaterialCode()).get())
+												.company(companyRepository.findById(contractDTO.getCompanyNo()).get()).build();
+		log.info("DTO -> contract 봐보자 : "+contract);
+		
+		contractRepository.save(contract);		
+		
+	}
+	
+	@Test	
+	public void ModifyByDTOTest() {
+		Material material = materialRepository.findById("CNa0001").get();
+		Company company = companyRepository.findById("104-84-55123").get();
+		
+		//수정하는 거기때문에, 계약서 번호 추가해서 테스트!
+		ContractDTO contractDTO = ContractDTO.builder().materialCode(material.getCode()).materialName(material.getName()).contractNo(9)
+														.companyNo(company.getNo()).companyName(company.getName()).manager(company.getManager())
+														.managerTel(company.getManagerTel()).supplyLt(11).unitPrice(2500).contractFile("DTO넣는거로 테스트중 수정")
+														.contractStatus(true).build();
+		log.info("contractDTO 봐보자 : "+contractDTO);
+		
+		Contract contract = Contract.builder().supplyLt(contractDTO.getSupplyLt()).unitPrice(contractDTO.getUnitPrice()).contractFile(contractDTO.getContractFile())
+												.material(materialRepository.findById(contractDTO.getMaterialCode()).get()).no(contractDTO.getContractNo())
+												.company(companyRepository.findById(contractDTO.getCompanyNo()).get()).build();
+		log.info("DTO -> contract 봐보자 : "+contract);
+		
+		contractRepository.save(contract);				
+	}
+	
+	
+	@Test
+	public void DeleteByDTOTest() {
+		ContractDTO contractDTO = ContractDTO.builder().contractNo(9).build();
+		
+		contractRepository.deleteById(contractDTO.getContractNo());
+		
+	}
 	
 	
 	
