@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
+import com.passioncode.procurementsystem.dto.PurchaseReportDTO;
 import com.passioncode.procurementsystem.dto.TransactionDetailDTO;
 import com.passioncode.procurementsystem.service.MateriallInService;
+import com.passioncode.procurementsystem.service.PurchaseReportService;
 import com.passioncode.procurementsystem.service.TransactionDetailService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,19 +24,18 @@ public class PS3Controller {
 	
 	private final MateriallInService materiallInService;
 	private final TransactionDetailService transactionDetailService;
+	private final PurchaseReportService purchaseReportService;
 	
 
 	@GetMapping("/materialIn")
-	public void materialIn(Model model, MaterialInDTO materialInDTO) {
-		
+	public void materialIn(Model model, MaterialInDTO materialInDTO) {	
 		log.info("list............." + materialInDTO);
 
-		model.addAttribute("DTOList",materiallInService.getMaterialInDTOLsit());
+		model.addAttribute("DTOList", materiallInService.getMaterialInDTOLsit());
 	}
 	
 	@PostMapping("/materialIn")
 	public void materialInPost(Model model, MaterialInDTO materialInDTO) {
-		
 		log.info("list............. 거래명세서 인쇄할 때 화면" + materialInDTO);
 
 		model.addAttribute("DTOList",materiallInService.getMaterialInDTOLsit());
@@ -51,7 +52,9 @@ public class PS3Controller {
 	}
 	
 	@GetMapping("/purchaseReport")
-	public void purchaseReport() {
-		log.info("발주진행 현황관리");		
+	public void purchaseReport(Model model, PurchaseReportDTO purchaseReportDTO) {
+		log.info("발주진행 현황관리");
+		
+		model.addAttribute("list", purchaseReportService.getCountPurchaseReportDTO());
 	}
 }

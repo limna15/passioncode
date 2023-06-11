@@ -92,12 +92,12 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>[[${}]]</td>
-									<td>[[${}]]</td>
-									<td>[[${}]]</td>
-									<td>[[${}]]</td>
-									<td>[[${}]]</td>
+								<tr th:each="list: ${list}">
+									<td>-</td>
+									<td id="ppCount">[[${list.procurementPlanCount}]]</td>
+									<td id="beforeCount">[[${list.beforePurchase}]]</td>
+									<td id="ingCount">[[${list.ingProcurement}]]</td>
+									<td id="doneCount">[[${list.doneProcurement}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -117,46 +117,33 @@
                   </div>
                   <!--페이지 번호 끝-->
 					</div>
+					<br>
+					<!-- bar chart 넣을 자리-->
+		              <div class="card">
+		                <div class="card-body">
+		                  <h4 class="card-title">발주진행 현황 그래프</h4>
+		                  <canvas id="barChart"></canvas>
+		                </div>
+		              </div>
+		            </div>
+                    
+                </div>    
 				</div>
 			</div>
 		</div>
-
-<div class="modal fade" id="modal" >
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
 		
-            <!-- header title -->
-				<h4 class="modal-title">거래명세서 발행</h4>
-             <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal">×</button>
-			
-			</div>
-						
-			<!-- body -->
-			<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
-			<div class="modal-body">
-				<div class="modal-body">
-      <th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
-     </div>
-				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
-						
-			<!-- Footer -->
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-			</div>
-		</div>
-	</div>
-</div>
-		
-<script type="text/javascript">
-	 $('.ls-modal').on('click', function(e){
-		  e.preventDefault();
-		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
-		});
-	 
+<script  th:inline="javascript">
+	var list= /*[[${list}]]*/'list';
+	console.log("list 값 읽기 >>> ", list);
 	 
 </script>
+<script src="../../vendors/base/vendor.bundle.base.js"></script>
+<script src="../../vendors/chart.js/Chart.min.js"></script>
+<script src="../../js/off-canvas.js"></script>
+<script src="../../js/hoverable-collapse.js"></script>
+<script src="../../js/template.js"></script>
+<script src="../../js/chart.js"></script>
+
 	</th:block>
 
 </th:block>

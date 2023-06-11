@@ -24,10 +24,18 @@ public class PurchaseReportServiceImpl implements PurchaseReportService {
 		int beforePurchaseCount= 0;
 		int ingProcurementCount= 0;
 		int doneProcurementCount= 0;
+		int ppCount= 0;
 		
 		for(int i=0; i<procurementPlanDTOList.size(); i++) {
+			if(procurementPlanDTOList.get(i).getPpProgress() != null){			
+				ppCount++;
+			}
+		}
+		
+				
+		for(int i=0; i<procurementPlanDTOList.size(); i++) {
 			String ppProgress= procurementPlanDTOList.get(i).getPpProgress();
-			log.info("조달계획 진행사항 >>> " + ppProgress);
+			//log.info("조달계획 진행사항 >>> " + ppProgress);
 			if(ppProgress!=null) {
 				if(ppProgress.equals("발주 예정")) {
 					beforePurchaseCount++;
@@ -39,12 +47,12 @@ public class PurchaseReportServiceImpl implements PurchaseReportService {
 			}
 		}
 		
-		log.info("발주 예정 개수 >>> " + beforePurchaseCount);
-		log.info("조달 진행 중 개수 >>> " + ingProcurementCount);
-		log.info("조달 완료 개수 >>> " + doneProcurementCount);
+		//log.info("발주 예정 개수 >>> " + beforePurchaseCount);
+		//log.info("조달 진행 중 개수 >>> " + ingProcurementCount);
+		//log.info("조달 완료 개수 >>> " + doneProcurementCount);
 		
-		PurchaseReportDTO purchaseReportDTO= PurchaseReportDTO.builder().procurementPlanCount(procurementPlanDTOList.size())
-				.procurementPlanCount(procurementPlanDTOList.size())
+		PurchaseReportDTO purchaseReportDTO= PurchaseReportDTO.builder()
+				.procurementPlanCount(ppCount)
 				.beforePurchase(beforePurchaseCount).ingProcurement(ingProcurementCount)
 				.doneProcurement(doneProcurementCount).build();
 		
