@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 
 public interface MiddleCategoryRepository extends JpaRepository<MiddleCategory, String> {
@@ -17,4 +18,11 @@ public interface MiddleCategoryRepository extends JpaRepository<MiddleCategory, 
 	 */
 	List<MiddleCategory> findByCategory(String category);	
 //	Optional<MiddleCategory> findByCategory(String category);
+	
+	/**
+	 * 대분류코드(외래키) 대분류 엔티티를 이용하여 중분류 찾기
+	 * @param largeCategory
+	 * @return
+	 */
+	List<MiddleCategory> findByLargeCategory(LargeCategory largeCategory);
 }

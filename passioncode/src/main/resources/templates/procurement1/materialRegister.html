@@ -84,68 +84,93 @@
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">품목 정보 등록</p> 
 					<br>
-					<div class="row">
-						<div class="table-responsive col-md-12" style="margin-bottom: 5px;">
-							<!-- 테이블 시작 -->
-							<table id="recent-purchases-listing" class="table">
-								<thead>
-									<tr>
-<!-- 										<th style="display:none;"></th> -->
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>대</th>
-										<th>중</th>
-										<th>규격</th>
-										<th>재질</th>
-										<th>제작 사양</th>
-										<th>도면 번호</th>
-										<th>도면<br>image</th>
-										<th>공용여부</th>
- 										<th style="border-right: none; border-top: none; border-bottom: none;" ></th> 
-									</tr>
-								</thead>
-								<tbody>			
-									<tr >
-<!-- 										<td style="display:none;"></td> -->
-										<td><input type="text" placeholder="품목코드" style="width:100%; border: 0;"></td>
-										<td><input type="text" placeholder="품목명" style="width:100%; border: 0;"></td>
-										<td></td>
-										<td></td>
-										<td><input type="text" placeholder="규격" style="width:100%; border: 0;"></td>
-										<td><input type="text" placeholder="재질" style="width:100%; border: 0;"></td>
-										<td><input type="text" placeholder="제작사양" style="width:100%; border: 0;"></td>
-										<td><input type="text" placeholder="도면번호" style="width:100%; border: 0;"></td>
-										<td></td>
-										<td></td>
- 										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
- 											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >등록추가 +</button>
-										</td> 
-									</tr>
-									<tr >
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
- 										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
- 											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >삭제 -</button>
-										</td> 
-									</tr>
-								</tbody>
-							</table>
-							<!-- 테이블 끝 -->
-						</div>	
-						<!--  	
-						<div class="col-md-1">		
-							<button type="submit" class="btn btn-primary" style="margin-top: 100px; padding-left: 20px; padding-right: 20px;">등록추가 +</button>
-						</div>	
-						-->
-					</div>	
+					<div class="table-responsive" style="margin-bottom: 5px;">
+						<!-- 테이블 시작 -->
+						<table id="recent-purchases-listing" class="table">
+							<thead>
+								<tr>
+									<th>품목코드</th>
+									<th>품목명</th>
+									<th>대</th>
+									<th>중</th>
+									<th>규격</th>
+									<th>재질</th>
+									<th>제작 사양</th>
+									<th>도면 번호</th>
+									<th>도면<br>image</th>
+									<th>공용여부</th>
+										<th style="border-right: none; border-top: none; border-bottom: none;" ></th> 
+								</tr>
+							</thead>
+							<tbody>			
+								<tr >
+									<td><input type="text" placeholder="품목코드" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="품목명" style="width:100%; border: 0;"></td>
+									<td>
+										<select style="width:100%; border: 0;" >
+											<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
+												<option value='[[${LCDTO.code}]]'>[[${LCDTO.category}]]</option>
+											</th:block>
+										</select>
+									</td>
+									<td>
+										<select style="width:100%; border: 0;" >
+											<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
+												<option value='[[${MCDTO.middleCode}]]'>[[${MCDTO.middleCategory}]]</option>
+											</th:block>
+										</select>									
+									</td>
+									<td><input type="text" placeholder="규격" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="재질" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="제작사양" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="도면번호" style="width:100%; border: 0;"></td>
+									<td></td>
+									<td>
+										<select style="width:100%; border: 0;" >
+											<option value='공용'>공용</option>
+											<option value='전용'>전용</option>
+										</select>											
+									</td>
+									<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
+										<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >등록추가 &nbsp;&nbsp;+</button>
+									</td> 
+								</tr>
+								<tr >
+									<td><input type="text" placeholder="품목코드" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="품목명" style="width:100%; border: 0;"></td>
+									<td>
+										<select style="width:100%; border: 0;" >
+											<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
+												<option value='[[${LCDTO.code}]]'>[[${LCDTO.category}]]</option>
+											</th:block>
+										</select>
+									</td>
+									<td>
+										<select style="width:100%; border: 0;" >
+											<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
+												<option value='[[${MCDTO.middleCode}]]'>[[${MCDTO.middleCategory}]]</option>
+											</th:block>
+										</select>									
+									</td>
+									<td><input type="text" placeholder="규격" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="재질" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="제작사양" style="width:100%; border: 0;"></td>
+									<td><input type="text" placeholder="도면번호" style="width:100%; border: 0;"></td>
+									<td></td>
+									<td>
+										<select style="width:100%; border: 0;" >
+											<option value='공용'>공용</option>
+											<option value='전용'>전용</option>
+										</select>											
+									</td>
+										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
+											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >삭제 &nbsp;&nbsp;-</button>
+									</td> 
+								</tr>
+							</tbody>
+						</table>
+						<!-- 테이블 끝 -->
+					</div>
 					<div class="col-md-12">						
 						<!-- 등록확인, 등록취소 버튼 시작 -->
 						<form style="float: right;" action="/procurement1/materialList">
@@ -153,13 +178,26 @@
 						</form>
 						<form style="float: right;">
 							&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >등록확인</button>&nbsp;&nbsp;
-						</form>
-						
+						</form>						
 						<!-- 등록확인, 등록취소 버튼 끝 -->
 					</div>	
 				</div>
 			</div>
 		</div>
+		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+		<script th:inline="javascript">
+
+
+		$(document).ready(function() {
+			var className = $('th').attr('class');
+			console.log("th 클래스 찍히나?",className);
+		});
+
+	    
+	    var className = $('div')[2].className;
+	    console.log("div 클래스 찍히나?",className);
+		
+		</script>
 		
 	</th:block>
 </th:block>

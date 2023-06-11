@@ -1,12 +1,9 @@
 package com.passioncode.procurementsystem.service;
 
 import java.util.List;
-
-import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
-import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 public interface ProcurementPlanService {

@@ -1,7 +1,6 @@
 package com.passioncode.procurementsystem.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.entity.Material;
-import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.repository.ContractRepository;
 import com.passioncode.procurementsystem.repository.MaterialRepository;
 import com.passioncode.procurementsystem.repository.MiddleCategoryRepository;
