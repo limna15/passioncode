@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 진척검수처리 화면을 위한 진척검수처리DTO 클래스
+ * 진척검수일정등록, 진척 평가 화면을 위한 진척검수일정등록, 진척 평가DTO 클래스
  * @author Soojin
  *
  */
@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ProgressCheckDTO {
-	//발주코드, 협력회사, 품목명, 다음 진척 검수 일정
-	//, 납기 진도율, 기타
+public class DetailProgressCheckDTO {
+	//발주코드, 협력회사, 조달납기예정일, 품목명, 납기현황, 다음 진척 검수 일정
+	//, 납기 진도율, 검수완료, 발주서 마감 상태
 	
 	//외래키로 사용할 것들 추가하기
 	
@@ -37,24 +37,9 @@ public class ProgressCheckDTO {
 	private Date dueDate;//조달납기 예정일
 	
 	/**
-	 * 기타 사항
-	 */
-	private String etc;
-	
-	/**
 	 * 품목명
 	 */
 	private String materialName;//품목명
-	
-	/**
-	 * 단가
-	 */
-	private Integer unitPrice;//단가
-	
-	/**
-	 * 납기현황
-	 */
-	private Integer diliveryStatus;
 	
 	/**
 	 *다음 진척 검수 일정
@@ -70,10 +55,5 @@ public class ProgressCheckDTO {
 	 *검수완료
 	 */
 	private Integer inspectionComplete;
-	
-	/**
-	 *발주서 마감 상태
-	 */
-	private Integer purchaseOrderDeadlineStatus;
 	
 }
