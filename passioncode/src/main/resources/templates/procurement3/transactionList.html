@@ -10,24 +10,31 @@
 			<div class="card">
 				<div class="card-body">
 					<p class="card-title">거래명세서 목록</p>
-					<form>
-					거래명세서 번호
-					<input type="text" style="width:150px; height:25px;">
-                      <button type="submit" class="btn btn-primary" style="height:25px;">검색</button>
-					</form>
+					 <div class="form-row align-items-center">
+                    <div class="col-auto my-1">
+                      거래명세서 번호
+                    </div>
+                    
+                    <input type="text" style="width:150px;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+                    <div class="col-auto my-1">
+                      <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+                    </div>
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
 							style="text-align: center;">
 							<thead>
 								<tr>
 									<th>거래명세서 번호</th>
-									<th>인쇄</th>
+									<th>구매발주서 번호</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>Jeremy Ortega</td>
-									<td><button type="submit" class="btn btn-primary" style="height:25px;">인쇄</button></td>
+								<tr th:each="list:${list}">
+									<td><a class="ls-modal" data-toggle="modal" href="#" data-target="#modal">
+										<u>&nbsp;&nbsp;&nbsp;[[${list.no}]]&nbsp;&nbsp;&nbsp;</u></a>
+									</td>
+									<td>[[${list.getPurchaseOrder.no}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -35,6 +42,42 @@
 				</div>
 			</div>
 		</div>
+
+<!-- 거래명세서 모달창 -->
+<div class="modal fade" id="modal" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+		
+            <!-- header title -->
+				<h4 class="modal-title">거래명세서 발행</h4>
+             <!-- 닫기(x) 버튼 -->
+					<button type="button" class="close" data-dismiss="modal">×</button>
+			
+			</div>
+						
+			<!-- body -->
+			<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
+			<div class="modal-body">
+				<div class="modal-body">
+      <th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
+     </div>
+				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
+						
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$('.ls-modal').on('click', function(e){
+	  e.preventDefault();
+	  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
+	});
+</script>
 
 	</th:block>
 

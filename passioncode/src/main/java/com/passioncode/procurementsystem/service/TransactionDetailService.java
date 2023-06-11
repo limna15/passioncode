@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.service;
 
+import java.util.List;
+
 import com.passioncode.procurementsystem.dto.TransactionDetailDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.TransactionDetail;
@@ -27,4 +29,10 @@ public interface TransactionDetailService {
 	 * @return
 	 */
 	Integer register(TransactionDetailDTO transactionDetailDTO);
+	
+	/**
+	 * 거래명세서 목록에 보여줄 거래명세서DTO 리스트
+	 * @return
+	 */
+	List<TransactionDetail> getTransactionDetailList();
 }

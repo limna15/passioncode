@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
+import com.passioncode.procurementsystem.dto.TransactionDetailDTO;
 import com.passioncode.procurementsystem.service.MateriallInService;
+import com.passioncode.procurementsystem.service.TransactionDetailService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +21,7 @@ import lombok.extern.log4j.Log4j2;
 public class PS3Controller {
 	
 	private final MateriallInService materiallInService;
+	private final TransactionDetailService transactionDetailService;
 	
 
 	@GetMapping("/materialIn")
@@ -38,12 +41,17 @@ public class PS3Controller {
 	}
 	
 	@GetMapping("/transactionList")
-	public void transactionList() {
-		
+	public void transactionList(Model model, TransactionDetailDTO transactionDetailDTO) {
+		model.addAttribute("list", transactionDetailService.getTransactionDetailList());
 	}
 	
 	@GetMapping("/transactionPrint")
 	public void printTest() {
 		log.info("거래명세서 인쇄");		
+	}
+	
+	@GetMapping("/purchaseReport")
+	public void purchaseReport() {
+		log.info("발주진행 현황관리");		
 	}
 }

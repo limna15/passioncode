@@ -63,4 +63,10 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 		return transactionDetail.getNo();
 	}
 
+	@Override
+	public List<TransactionDetail> getTransactionDetailList() {
+		List<TransactionDetail> transactionDetailList= transactionDetailRepository.findAll();
+		return transactionDetailList;
+	}
+
 }

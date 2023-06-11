@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+
+	<!-- 여기 부분이 값을 바꿔서 대체해서 들어가는 부분! 나머지형식은 basic.html을 이용해서 하는것! 
+		그래서 basic.html이 header와 footer 가 들어가 있다고 보면됨! -->
+	<th:block th:fragment="content">
+
+<style>
+.search-box {
+    position: relative;        
+    float: right;
+}
+.search-box input {
+    height: 34px;
+    border-radius: 20px;
+    padding-left: 35px;
+    border-color: #ddd;
+    box-shadow: none;
+}
+.search-box input:focus {
+    border-color: #3FBAE4;
+}
+.search-box i {
+    color: #a0a5b1;
+    position: absolute;
+    font-size: 19px;
+    top: 8px;
+    left: 10px;
+}
+
+   
+.pagination {
+    float: right;
+    margin: 0 0 5px;
+}
+.pagination li a {
+    border: none;
+    font-size: 95%;
+    width: 30px;
+    height: 30px;
+    color: #999;
+    margin: 0 2px;
+    line-height: 30px;
+    border-radius: 30px !important;
+    text-align: center;
+    padding: 0;
+}
+.pagination li a:hover {
+    color: #666;
+}	
+.pagination li.active a {
+    background: #03A9F4;
+}
+.pagination li.active a:hover {        
+    background: #0397d6;
+}
+.pagination li.disabled i {
+    color: #ccc;
+}
+.pagination li i {
+    font-size: 16px;
+    padding-top: 6pxrow
+}
+.hint-text {
+    float: left;
+    margin-top: 6px;
+    font-size: 95%;
+}    
+</style>
+
+		<div class="col-md-12 stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title">발주진행 현황관리</p>
+					
+					<div class="col-auto my-1">기간
+					<input type="date">&nbsp;&nbsp;~&nbsp;&nbsp;<input type="date">
+					<button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+      
+					<div class="table-responsive">
+					<form method="post">
+						<table id="recent-purchases-listing" class="table" style="text-align: center;">
+							<thead>
+								<tr>
+									<th>기간</th>
+									<th>조달 계획 개수</th>
+									<th>발주 예정</th>
+									<th>조달 진행 중</th>
+									<th>조달 완료</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>[[${}]]</td>
+									<td>[[${}]]</td>
+									<td>[[${}]]</td>
+									<td>[[${}]]</td>
+									<td>[[${}]]</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>	
+					<!--페이지 번호 시작-->
+                    <div class="clearfix">
+                      <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                      <ul class="pagination">
+                          <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
+                          <li class="page-item"><a href="#" class="page-link">1</a></li>
+                          <li class="page-item"><a href="#" class="page-link">2</a></li>
+                          <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                          <li class="page-item"><a href="#" class="page-link">4</a></li>
+                          <li class="page-item"><a href="#" class="page-link">5</a></li>
+                          <li class="page-item"><a href="#" class="page-link">>><i class="fa fa-angle-double-right"></i></a></li>
+                      </ul>
+                  </div>
+                  <!--페이지 번호 끝-->
+					</div>
+				</div>
+			</div>
+		</div>
+
+<div class="modal fade" id="modal" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+		
+            <!-- header title -->
+				<h4 class="modal-title">거래명세서 발행</h4>
+             <!-- 닫기(x) 버튼 -->
+					<button type="button" class="close" data-dismiss="modal">×</button>
+			
+			</div>
+						
+			<!-- body -->
+			<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
+			<div class="modal-body">
+				<div class="modal-body">
+      <th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
+     </div>
+				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
+						
+			<!-- Footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+		
+<script type="text/javascript">
+	 $('.ls-modal').on('click', function(e){
+		  e.preventDefault();
+		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
+		});
+	 
+	 
+</script>
+	</th:block>
+
+</th:block>
+</html>
