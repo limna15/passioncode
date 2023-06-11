@@ -19,23 +19,31 @@ public class PS1Controller {
 	
 	private final MaterialService materialService;
 	
-	@GetMapping("/materialList")
+	@GetMapping("materialList")
 	public void PS1List(MaterialDTO materialDTO,Model model) {
-		log.info("품목정보목록 보기");
+		log.info("품목정보 목록 보기.....");
 		
-		model.addAttribute("DTOList",materialService.getDTOList());
+		model.addAttribute("DTOList",materialService.getDTOList());		
+	}
+	
+	
+	@GetMapping("materialRegister")
+	public void PS1Register(MaterialDTO materialDTO,Model model) {
+		log.info("품목정보 등록 보기.....");
+		
 		
 	}
 	
-	@GetMapping("/contractList")
+	
+	@GetMapping("contractList")
 	public void PS1List2() {
-		log.info("계약 목록 보기>>");
+		log.info("계약 목록 보기.....");
 		
 	}
 
-	@GetMapping("/procurementPlanList")
+	@GetMapping("procurementPlanList")
 	public void PS1List3() {
-		log.info("조달 계획 목록 보기>>");
+		log.info("조달 계획 목록 보기.....");
 		
 	}
 

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+
+	<th:block th:fragment="content">
+
+
+<style>
+.search-box {
+	position: relative;
+	float: right;
+}
+
+.search-box input {
+	height: 34px;
+	border-radius: 20px;
+	padding-left: 35px;
+	border-color: #ddd;
+	box-shadow: none;
+}
+
+.search-box input:focus {
+	border-color: #3FBAE4;
+}
+
+.search-box i {
+	color: #a0a5b1;
+	position: absolute;
+	font-size: 19px;
+	top: 8px;
+	left: 10px;
+}
+
+.pagination {
+	float: right;
+	margin: 0 0 5px;
+}
+
+.pagination li a {
+	border: none;
+	font-size: 95%;
+	width: 30px;
+	height: 30px;
+	color: #999;
+	margin: 0 2px;
+	line-height: 30px;
+	border-radius: 30px !important;
+	text-align: center;
+	padding: 0;
+}
+
+.pagination li a:hover {
+	color: #666;
+}
+
+.pagination li.active a {
+	background: #03A9F4;
+}
+
+.pagination li.active a:hover {
+	background: #0397d6;
+}
+
+.pagination li.disabled i {
+	color: #ccc;
+}
+
+.pagination li i {
+	font-size: 16px;
+	padding-top: 6pxrow
+}
+
+.hint-text {
+	float: left;
+	margin-top: 6px;
+	font-size: 95%;
+}
+</style>
+
+
+		<div class="col-md-12 stretch-card">
+			<!-- 수정 부분 시작 -->
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title" style="font-size:23px;">품목 정보 등록</p> 
+					<br>
+					<div class="row">
+						<div class="table-responsive col-md-12" style="margin-bottom: 5px;">
+							<!-- 테이블 시작 -->
+							<table id="recent-purchases-listing" class="table">
+								<thead>
+									<tr>
+<!-- 										<th style="display:none;"></th> -->
+										<th>품목코드</th>
+										<th>품목명</th>
+										<th>대</th>
+										<th>중</th>
+										<th>규격</th>
+										<th>재질</th>
+										<th>제작 사양</th>
+										<th>도면 번호</th>
+										<th>도면<br>image</th>
+										<th>공용여부</th>
+ 										<th style="border-right: none; border-top: none; border-bottom: none;" ></th> 
+									</tr>
+								</thead>
+								<tbody>			
+									<tr >
+<!-- 										<td style="display:none;"></td> -->
+										<td><input type="text" placeholder="품목코드" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="품목명" style="width:100%; border: 0;"></td>
+										<td></td>
+										<td></td>
+										<td><input type="text" placeholder="규격" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="재질" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="제작사양" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="도면번호" style="width:100%; border: 0;"></td>
+										<td></td>
+										<td></td>
+ 										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
+ 											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >등록추가 +</button>
+										</td> 
+									</tr>
+									<tr >
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+ 										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
+ 											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >삭제 -</button>
+										</td> 
+									</tr>
+								</tbody>
+							</table>
+							<!-- 테이블 끝 -->
+						</div>	
+						<!--  	
+						<div class="col-md-1">		
+							<button type="submit" class="btn btn-primary" style="margin-top: 100px; padding-left: 20px; padding-right: 20px;">등록추가 +</button>
+						</div>	
+						-->
+					</div>	
+					<div class="col-md-12">						
+						<!-- 등록확인, 등록취소 버튼 시작 -->
+						<form style="float: right;" action="/procurement1/materialList">
+							<button type="submit" class="btn btn-primary" style="margin-right: 200px;">등록취소</button>
+						</form>
+						<form style="float: right;">
+							&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >등록확인</button>&nbsp;&nbsp;
+						</form>
+						
+						<!-- 등록확인, 등록취소 버튼 끝 -->
+					</div>	
+				</div>
+			</div>
+		</div>
+		
+	</th:block>
+</th:block>
+</html>
