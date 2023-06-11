@@ -2,11 +2,16 @@ package com.passioncode.procurementsystem.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+/**
+ * 구매발주서 발행화면을 위한 DTO 클래스
+ * @author soojin
+ *
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
