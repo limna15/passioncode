@@ -1,5 +1,8 @@
 package com.passioncode.procurementsystem.controller;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import com.passioncode.procurementsystem.service.MateriallInService;
 import com.passioncode.procurementsystem.service.PurchaseReportService;
 import com.passioncode.procurementsystem.service.TransactionDetailService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -28,17 +32,16 @@ public class PS3Controller {
 	
 
 	@GetMapping("/materialIn")
-	public void materialIn(Model model, MaterialInDTO materialInDTO) {	
-		log.info("list............." + materialInDTO);
+	public void materialIn(Model model, MaterialInDTO materialInDTO) {
+		List<MaterialInDTO> materialInDTOList = materiallInService.getMaterialInDTOLsit();
+		log.info("list............." + materialInDTOList);
 
-		model.addAttribute("DTOList", materiallInService.getMaterialInDTOLsit());
+		model.addAttribute("DTOList", materialInDTOList);
 	}
 	
-	@PostMapping("/materialIn")
-	public void materialInPost(Model model, MaterialInDTO materialInDTO) {
-		log.info("list............. 거래명세서 인쇄할 때 화면" + materialInDTO);
-
-		model.addAttribute("DTOList",materiallInService.getMaterialInDTOLsit());
+	@GetMapping("/transactionDetail")
+	public void transactionDetail() {
+		log.info("url getTransactionDetail .... ");
 	}
 	
 	@GetMapping("/transactionList")

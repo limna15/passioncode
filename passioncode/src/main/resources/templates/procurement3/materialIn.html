@@ -108,43 +108,47 @@
 						
 						<!-- 거래명세서 발행 모달창 버튼 -->
 						<div class="col-md-6" >	
-							<!-- <button type="submit" class="btn btn-primary" style="height:25px; float:right;"> -->
-							<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float: right;">거래명세서 발행</a><!-- </button> -->
+							<a class="ls-modal btn btn-primary" href="/transactionDetail" data-target="#modal" data-toggle="modal" data-backdrop="static"
+								style="float: right;">거래명세서 발행</a>
+							<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>
 						</div>
+						
 						<!-- 거래명세서 발행 모달창 버튼 끝 -->
 					</div>	
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
-						<table id="recent-purchases-listing" class="table" style="text-align: center;">
-							<thead>
-								<tr>
-									<th></th>
-									<th>발주서 번호</th>
-									<th>발주 코드</th>
-									<th>조달납기<br>예정일</th>
-									<th>품목코드</th>
-									<th>품목명</th>
-									<th>발주 수량</th>
-									<th>입고 상태</th>
-									<th>발행 상태</th>
-								</tr>
-							</thead>
-							<tbody>			
-								<tr th:each="list: ${DTOList}">
-									<td><input type="checkbox"></td>
-									<td>[[${list.no}]]</td>
-									<td>[[${list.code}]]</td>
-									<td>[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
-									<td>[[${list.materialCode}]]</td>
-									<td>[[${list.materialName}]]</td>
-									<td>[[${list.amount}]]</td>
-									<td><button type="submit" class="btn btn-primary" value="done" style="height:25px;">완료</button>
-										<button type="submit" class="btn btn-primary" value="cancle" style="height:25px;">취소</button></td>
-									<!-- <td>[[${list.transactionStatus}]]</td> -->
-									<td th:text="${list.transactionStatus} ? '완료' : '미완료' "></td>
-								</tr>
-							</tbody>
-						</table>
+						<form action="/transactionDetail">
+							<table id="recent-purchases-listing" class="table" style="text-align: center;">
+								<thead>
+									<tr>
+										<th></th>
+										<th>발주서 번호</th>
+										<th>발주 코드</th>
+										<th>조달납기<br>예정일</th>
+										<th>품목코드</th>
+										<th>품목명</th>
+										<th>발주 수량</th>
+										<th>입고 상태</th>
+										<th>발행 상태</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="list: ${DTOList}">
+										<td><input type="checkbox" name="checkBox" th:id="checkBox" th:value="${list.no}" onclick="chkClicked()"></td>
+										<td id="purchaseOrderNo">[[${list.no}]]</td>
+										<td>[[${list.code}]]</td>
+										<td>[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
+										<td>[[${list.materialCode}]]</td>
+										<td>[[${list.materialName}]]</td>
+										<td>[[${list.amount}]]</td>
+										<td><button type="submit" class="btn btn-primary" value="done" style="height:25px;">완료</button>
+											<button type="submit" class="btn btn-primary" value="cancle" style="height:25px;">취소</button></td>
+										<!-- <td>[[${list.transactionStatus}]]</td> -->
+										<td th:text="${list.transactionStatus} ? '완료' : '미완료' "></td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
 						<!-- 테이블 끝 -->
 						<!-- 페이지 번호 시작 -->
 						<div class="clearfix">
@@ -186,25 +190,22 @@
 		</div>
 
 <!-- 모달창 -->
-<div class="modal fade" id="modal" >
+<div class="modal" id="modal" >
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-		
             <!-- header title -->
 				<h4 class="modal-title">거래명세서 발행</h4>
              <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal">×</button>
-			
+				<button type="button" class="close" data-dismiss="modal">×</button>
 			</div>
 						
 			<!-- body -->
 			<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
 			<div class="modal-body">
-				<div class="modal-body">
-      <th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
-     </div>
-				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
+			    	<th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
+				<!--여기에 외부에서 작성한 테이블 들어옴-->
+			</div>
 						
 			<!-- Footer -->
 			<div class="modal-footer">
@@ -214,14 +215,67 @@
 	</div>
 </div>
 <!-- 모달창 끝 -->
+
+<script th:inline="javascript" type="text/javascript">
 	
-<script type="text/javascript">
-	 $('.ls-modal').on('click', function(e){
-		  e.preventDefault();
-		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
-		});
-	 
-	 
+	/*<![CDATA[*/
+	var DTOList = [[${DTOList}]];
+	console.log("DTOList 읽기 >>> ", DTOList);
+	
+	var codeList= new Array();
+	var dpoCode= new Object();
+	
+	DTOList.forEach(function(item){
+		dpoCode= item.code
+		codeList.push(dpoCode);
+		//console.log("dpoCode가 제대로 오나 >>> ", dpoCode);
+	});
+	/*]]>*/
+	
+	console.log("codeList가 제대로 오나 >>> ", codeList);
+	
+	var purchaseNo = '';
+	function chkClicked(){
+		const chkChecked = 'input[name="checkBox"]:checked';
+		const selectedEls = document.querySelectorAll(chkChecked);
+		purchaseNo = '';
+		
+		selectedEls.forEach((el) => {
+			purchaseNo += el.value + ' ';
+	  });
+ 		console.log("purchaseNo >>> ", purchaseNo);
+		
+		
+
+	}
+
+//제이쿼리 라이브러리가 없어서 $인식이 안되는거임
+// 	$("#data").on('click', function(e){
+// 		console.log("purchaseNo 찍히나 >>> ", purchaseNo)
+// 	});
+	
+	function aaa(){
+		console.log("purchaseNo 찍히나 >>> ", purchaseNo)
+	};	
+	
+	
+/* 	$('.ls-modal').on('click', function(e){
+		e.preventDefault();
+		//$('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
+	}); */
+	
+/* 	function chkClicked(){
+		//체크박스 전체 개수
+		//const allCount= document.querySelectorAll("input[name='checkBox']").length;
+		
+		//선택된 체크박스 개수
+		const chkChecked = 'input[name="checkBox"]:checked';
+		const selectedElements = document.querySelectorAll(chkChecked)
+		const selectedElementsCnt = selectedElements.length;
+		
+		//console.log("allCount >>> ", allCount);
+		console.log("selectedElementsCnt >>> ", selectedElementsCnt);
+	}; */ 
 </script>	
 		
 	</th:block>

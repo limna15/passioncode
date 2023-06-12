@@ -35,7 +35,7 @@
 									</tr>
 									<tr>
 										<th>발주서 번호</th>
-										<td>-</td>
+										<td id="purchaseOrderNo">[[${DTOList.get(1).no}]]</td>
 										<th>상호(법인명)</th>
 										<td>-</td>
 										<th>성명(대표자)</th>
@@ -74,8 +74,8 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>-</td>
-										<td>-</td>
+										<td>[[${DTOList.get(1).materialCode}]]</td>
+										<td>[[${DTOList.get(1).materialName}]]</td>
 										<td>-</td>
 										<td>-</td>
 										<td>-</td>
@@ -108,11 +108,13 @@
 
 		</form>
 	</div>
-<script>
+<script th:inline="javascript" type="text/javascript">
 let printPurchaseOrder;
 function print(){
 	printPurchaseOrder = window.open('/procurement3/transactionPrint','thePopup','width=722,height=600')
 };
+
+
 </script>
 </body>
 </th:block>
