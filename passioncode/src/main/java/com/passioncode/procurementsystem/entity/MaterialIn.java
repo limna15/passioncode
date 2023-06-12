@@ -15,7 +15,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +27,7 @@ import lombok.ToString;
  * @author LNY
  * 
  */
+@EntityListeners(value= {AuditingEntityListener.class})
 @Entity
 @Builder
 @AllArgsConstructor
@@ -55,7 +55,8 @@ public class MaterialIn {	//입고
 	/**
 	 * 입고일
 	 */
-	@Column(columnDefinition = "DATETIME", nullable = false)
+	@CreatedDate
+	@Column(columnDefinition = "DATETIME", nullable = false, updatable = false)
 	private LocalDateTime date;
 	
 	/**

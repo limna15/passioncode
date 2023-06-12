@@ -45,6 +45,9 @@ public class PurchaseOrderRepositoryTests {
 	@Transactional
 	@Test
 	public void purchaseOrderDTOTest() {//조달 계획 가져오기
+		//협력회사, 발주일, 조달납기 예정일, 품목공급LT, 최소 발주일, 품목코드, 품목명
+		//, 기존재고수량, 필요수량, 발주수량, 단가, 공급가격, 발주서 발행상태
+		//총 13개 DTO
 		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
 		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder().companyName(procurementPlan.getContract().getCompany().getName())
 				.purchaseOrderDate(procurementPlan.getDueDate()).dueDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())

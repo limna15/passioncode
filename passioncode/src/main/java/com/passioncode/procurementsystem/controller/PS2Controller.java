@@ -20,6 +20,7 @@ import lombok.extern.log4j.Log4j2;
 public class PS2Controller {
 	
 	private final DetailPurchaseOrderRepository repository;
+	//서비스로 받아오는 것으로 변경하기
 	
 	@GetMapping("/purchaseOrder")	//발주서 발행
 	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO) {
