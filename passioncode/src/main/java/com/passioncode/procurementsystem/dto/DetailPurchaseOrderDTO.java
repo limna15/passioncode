@@ -39,11 +39,6 @@ public class DetailPurchaseOrderDTO {
 	private Date dueDate;
 	
 	/**
-	 * 글 순서번호
-	 */
-	private Integer no;
-	
-	/**
 	 * 발주코드
 	 */
 	private Integer purchaseOrderCode;
@@ -57,7 +52,6 @@ public class DetailPurchaseOrderDTO {
 	 * 발주수량
 	 */
 	private Integer amount;
-	
 	
 	/**
 	 * 단가

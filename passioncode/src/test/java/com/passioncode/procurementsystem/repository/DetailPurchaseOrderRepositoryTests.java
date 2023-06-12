@@ -47,5 +47,16 @@ public class DetailPurchaseOrderRepositoryTests {
 		
 	}
 	
+	@Test
+	public void detailPurchaseOrderDTOTest() {//발주서 번호 생성 전 보기
+		PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(1).get();
+		//발주서 번호, 협력회사, 발주일자, 납기 예정일
+		//발주 번호, 품목코드, 품목, 발주수량, 단가, 공급 가격
+		//총 10개
+		
+		log.info(purchaseOrder);
+		
+	}
+	
 
 }
