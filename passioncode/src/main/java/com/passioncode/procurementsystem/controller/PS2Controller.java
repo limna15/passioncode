@@ -60,9 +60,9 @@ public class PS2Controller {
 	
 	@GetMapping("/purchaseOrderPublish")
 	public void PS24Test22(Model model, String checkBox) {
-		model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
-		model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
-		model.addAttribute("myListData",checkBox);
+		//model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
+		//model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
+		//model.addAttribute("myListData",checkBox);
 		log.info("purchaseOrderPublish>>>>>>>");
 		
 		
@@ -70,7 +70,8 @@ public class PS2Controller {
 	}
 	
 	@GetMapping("/print")
-	public void PS2TestPrint(PurchaseOrderDTO purchaseOrderDTO) {
+	public void PS2TestPrint(Model model,PurchaseOrderDTO purchaseOrderDTO, String checkBox) {
+		model.addAttribute("myListData",checkBox);
 		log.info("인쇄합니다>>>>>>>");
 		
 		

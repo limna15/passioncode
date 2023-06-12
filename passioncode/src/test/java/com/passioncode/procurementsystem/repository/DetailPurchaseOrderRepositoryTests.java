@@ -45,11 +45,16 @@ public class DetailPurchaseOrderRepositoryTests {
 	}
 	
 	@Test
-	public void InsertTest() {	//발주 코드 생성 테스트
-		PurchaseOrder purchaseOrder = new PurchaseOrder(101);
-		//Integer code, Integer amount, LocalDateTime date, Integer purchaseOrderNo		
+	public void InsertTest() {	
+		//발주 코드 생성 테스트
+		//잘 만들어 진다 
 		
-		DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, 450, LocalDateTime.now(), purchaseOrder);
+		PurchaseOrder purchaseOrder = new PurchaseOrder(findMax2());
+		//Integer code, Integer amount, LocalDateTime date, Integer purchaseOrderNo		
+		//코드는 자동 생성
+		//발주 번호는 참고해서
+		
+		DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, 600, LocalDateTime.now(), purchaseOrder);
 		detailPurchaseOrderRepository.save(detailPurchaseOrder);
 		
 	}
@@ -88,10 +93,11 @@ public class DetailPurchaseOrderRepositoryTests {
 	}
 	
 	@Test
-	public void findMax2() {
+	public Integer findMax2() {
 		detailPurchaseOrderRepository.findMaxOrderNo();
 		
 		log.info(">>>>>>>>>>"+detailPurchaseOrderRepository.findMaxOrderNo());
+		return detailPurchaseOrderRepository.findMaxOrderNo();
 	}
 	
 	@Test
@@ -107,8 +113,6 @@ public class DetailPurchaseOrderRepositoryTests {
 		
 	}
 	
-	@Transactional
-	@Test
 	public DetailPurchaseOrderDTO entityToDTO(ProcurementPlan procurementPlan) {
 		// 세부 구매 발주서 발행 화면
 		DetailPurchaseOrderDTO detailPurchaseOrderDTO = DetailPurchaseOrderDTO.builder()
@@ -116,7 +120,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.companyName(procurementPlan.getContract().getCompany().getName())
 				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
-				.materialCode(procurementPlan.getMrp().getMaterial().getName())
+				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
 				.purchaseOrderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice()))

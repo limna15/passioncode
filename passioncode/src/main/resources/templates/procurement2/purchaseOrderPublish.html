@@ -13,102 +13,68 @@
     text-align: center;
   }
 </style>
+
 <div class="publish">
+<!-- 
 		<form th:action="@{/procurement2/purchaseOrder}" th:method="GET">
-					<div class="card-body">
+ -->
+ 
 					<br>
-						<p class="card-title"><b>구매 발주서</b></p>
-						
 						<!--거래명세서 회사 정보-->
 						<div>
+						<tr th:each="dto: ${DetailPurchaseOrderList}">
+						<th:block th:if="${myListData} == ${dto.procurementPlan}">
+						<h4> 협력 회사: [[${dto.companyName}]]</h4>
+						<h4> 발주서 번호: [[${dto.purchaseOrderNo}]]</h4>
+						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
+						<h4> 납기 예정일: [[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</h4>
+						</th:block>
+						</tr>
+						<br>
 							<table id="transactionInfo">
 									<tr th:each="dto: ${DetailPurchaseOrderList}">
-						<th:block th:if="${myListData == null}">
-							<h1>보여라</h1>
-<!-- 
- 						<th:block th:if="${dto.procurementPlan == '${myListData}'}">
- -->
-							</th:block>
-							<th:block th:if="${dto.procurementPlan == '${myListData}'}">
-							<h2>보여줘2</h2>
-							</th:block>
-										<th>발주 회사</th>
-										<th:block th:if="${'myListData' == '$dto.procurementPlan'}">
-										<td>[[${dto.procurementPlan}]]</td>
-										<th>[[${dto.procurementPlan}]]</th>
-										<td>[[${dto.companyName}]]</td>
-										
+							<!-- 중요한 데이터 화면  -->
+										<th:block th:if="${myListData} == ${dto.procurementPlan}">
+										<th>발주 코드</th>
+										<th>품목 코드</th>
+										<th>품목명</th>
+										<th>발주 수량</th>
+										<th>단가</th>
+										<th>공급 가격</th>
 										</th:block>
 										<!-- 블럭 조건 끝 -->
-										<th rowspan="4">공<br><br>급<br><br>자</th>
-										<th>사업자 등록번호</th>
-										<td colspan="3"></td>
 									</tr>
-									<tr>
-										<th>발주서 번호</th>
-										<td>-</td>
-										<th>상호(법인명)</th>
-										<td>-</td>
-										<th>성명(대표자)</th>
-										<td>[[${myListData}]]</td>
-									</tr>
-									<tr>
-										<th>납기일자</th>
-										<td>-</td>
-										<th>주소</th>
-										<td colspan="3">-</td>
-									</tr>
-									<tr>
-										<th>공급 가격</th>
-										<td>-</td>
-										<th>담당자</th>
-										<td>-</td>
-										<th>연락처</th>
-										<td>-</td>
+									<tr th:each="dto: ${DetailPurchaseOrderList}">
+										<th:block th:if="${myListData} == ${dto.procurementPlan}">										
+										<td>[[${dto.purchaseOrderCode}]]</td>
+										<th>[[${dto.materialCode}]]</th>
+										<th>[[${dto.materialName}]]</th>
+										<td>[[${dto.purchaseOrderAmount}]]</td>
+										<th>[[${dto.unitPrice}]]</th>
+										<th>[[${dto.suppluPrice}]]</th>
+</th:block>									
 									</tr>
 							</table>
 						</div>
 						<br>
-						
-						<!--거래명세서 품목 정보-->
-						<div class="table-responsive">
-							<table id="transactionDetail">
-								<thead>
-									<tr>
-										<th>번호</th>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>품목명</th>
-										<th>발주수량</th>
-										<th>단가</th>
-										<th>공급<br>가격</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>-</td>
-										<td>[[${DetailPurchaseOrderList}]]</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-									</tr>
-									
-								</tbody>
-							</table>
-							<br>
-
+					
 						<button type="submit" class="btn btn-primary" style="float: right;">취소</button>
 						<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;">발행</button>
 						</div>
 						<br>
 						
 
-					</div>
-
+<!-- 
 		</form>
-	</div>
-			
+ -->
 	</body>
+<script type="text/javascript">
+//엔티티에 넣어서 생성하기 
+//디테일 엔티티: 발주코드, 발주수량, 발주일자, 발주서 번호(외래키)
+var purCode = null;
+var purAmount = null;
+var purOrderDate = null;
+var PurNo = null;
+
+</script>
 </th:block>

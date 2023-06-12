@@ -28,6 +28,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public ProcurementPlan get(Integer code) {
 		return procurementPlanRepository.findById(code).get();
 	}
+	
+	
 
 	@Override
 	public List<PurchaseOrderDTO> getDTOList() {

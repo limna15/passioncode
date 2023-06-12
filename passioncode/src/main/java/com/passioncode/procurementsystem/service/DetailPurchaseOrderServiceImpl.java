@@ -26,6 +26,21 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	private final ProcurementPlanRepository procurementPlanRepository;
 	
 	@Override
+	public Integer register(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
+		DetailPurchaseOrder detailPurchaseOrder = dtoToEntity(detailPurchaseOrderDTO);
+		return null;
+	}
+	
+	@Override
+	public DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
+		DetailPurchaseOrder detailPurchaseOrder = null;
+		DetailPurchaseOrder = detailPurchaseOrderDTO.builder().
+		
+		return null;
+		
+	}
+	
+	@Override
 	public DetailPurchaseOrderDTO read(Integer no) {
 		// TODO Auto-generated method stub
 		return null;
@@ -53,9 +68,10 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		DetailPurchaseOrderDTO detailPurchaseOrderDTO = DetailPurchaseOrderDTO.builder()
 				.purchaseOrderNo(detailPurchaseOrderRepository.findMaxOrderNo())
 				.companyName(procurementPlan.getContract().getCompany().getName())
+				.materialName(procurementPlan.getMrp().getMaterial().getName())
 				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
-				.materialCode(procurementPlan.getMrp().getMaterial().getName())
+				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
 				.purchaseOrderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice()))
@@ -69,6 +85,7 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	public DetailPurchaseOrder get(Integer code) {
 		return detailPurchaseOrderRepository.findById(code).get();
 	}
+
 	
 	
 	

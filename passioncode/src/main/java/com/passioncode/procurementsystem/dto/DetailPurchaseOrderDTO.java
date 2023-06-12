@@ -49,6 +49,11 @@ public class DetailPurchaseOrderDTO {
 	private String materialCode;
 	
 	/**
+	 * 품목명
+	 */
+	private String materialName;
+	
+	/**
 	 * 발주수량
 	 */
 	private Integer purchaseOrderAmount;
