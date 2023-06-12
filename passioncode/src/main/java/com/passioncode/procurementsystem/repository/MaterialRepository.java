@@ -1,12 +1,9 @@
 package com.passioncode.procurementsystem.repository;
 
-import java.util.Collection;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.jpa.repository.Query;
 import com.passioncode.procurementsystem.entity.Material;
-
 public interface MaterialRepository extends JpaRepository<Material, String> {
 	
 	/**
@@ -15,5 +12,13 @@ public interface MaterialRepository extends JpaRepository<Material, String> {
 	 * @return
 	 */
 	public List<Material> findByNameContainingIgnoreCase(String name);
+	
+	/**
+	 * 전체 품목리스트 정렬해서 가져오기 <br>
+	 * 계약서 테이블과 조인해서, 계약상태 미완료가 상단으로, 그리고 기본 품목코드 오름차순 정렬으로 세팅
+	 * @return
+	 */
+	@Query(value="SELECT distinct CODE,NAME,share_status,stock_amount,size,quality,spec,drawing_no,drawing_file,middle_category_code FROM material left outer JOIN contract ON CODE=material_code ORDER BY material_code,code;" , nativeQuery = true)
+	public List<Material> getListWithSort();
 
 }

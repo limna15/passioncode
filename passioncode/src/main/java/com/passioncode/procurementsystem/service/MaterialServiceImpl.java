@@ -3,6 +3,7 @@ package com.passioncode.procurementsystem.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,7 +79,8 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Override
 	public List<MaterialDTO> getDTOList() {
-		List<Material> materialList = materialRepository.findAll();
+//		List<Material> materialList = materialRepository.findAll(Sort.by(Sort.Direction.ASC, "code"));
+		List<Material> materialList = materialRepository.getListWithSort();
 		List<MaterialDTO> materialDTOList = new ArrayList<>();
 		for(int i=0;i<materialList.size();i++) {
 			materialDTOList.add(entityToDTO(materialList.get(i)));
