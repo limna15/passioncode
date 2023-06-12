@@ -10,71 +10,79 @@
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">품목 정보 등록</p> 
 					<br>
-					<div class="table-responsive" style="margin-bottom: 5px;">
-						<!-- 테이블 시작 -->
-						<table class="table table-bordered" id="registerTable" style="text-align: center;">
-							<thead>
-								<tr>
-									<th>품목코드</th>
-									<th>품목명</th>
-									<th>대</th>
-									<th>중</th>
-									<th>규격</th>
-									<th>재질</th>
-									<th>제작 사양</th>
-									<th>도면 번호</th>
-									<th>도면<br>image</th>
-									<th>공용여부</th>
-									<th></th> 
-								</tr>
-							</thead>
-							<tbody>			
-								<tr >
-									<td><input type="text" style="width:100%; border: 0;"></td>
-									<td><input type="text" style="width:100%; border: 0;"></td>
-									<td>
-										<select style="width:100%; border: 0;" >
-											<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
-												<option value='[[${LCDTO.code}]]'>[[${LCDTO.category}]]</option>
-											</th:block>
-										</select>
-									</td>
-									<td>
-										<select style="width:100%; border: 0;" >
-											<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
-												<option value='[[${MCDTO.middleCode}]]'>[[${MCDTO.middleCategory}]]</option>
-											</th:block>
-										</select>									
-									</td>
-									<td><input type="text" style="width:100%; border: 0;"></td>
-									<td><input type="text" style="width:100%; border: 0;"></td>
-									<td><input type="text" style="width:100%; border: 0;"></td>
-									<td><input type="text" style="width:100%; border: 0;"></td>
-									<td></td>
-									<td>
-										<select style="width:100%; border: 0;" >
-											<option value='공용'>공용</option>
-											<option value='전용'>전용</option>
-										</select>											
-									</td>
-									<td>
-										<button class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px;padding-right: 10px;" id='addRow'>등록추가 &nbsp;&nbsp;+</button>
-									</td> 
-								</tr>								
-							</tbody>
-						</table>
-						<!-- 테이블 끝 -->
-					</div>
-					<div class="col-md-12">						
-						<!-- 등록확인, 등록취소 버튼 시작 -->
-						<form style="float: right;" action="/procurement1/materialList">
-							<button class="btn btn-primary" style="margin-right: 130px;">등록취소</button>
-						</form>
-						<form style="float: right;">
-							&nbsp;&nbsp;<button class="btn btn-primary" >등록확인</button>&nbsp;&nbsp;
-						</form>						
-						<!-- 등록확인, 등록취소 버튼 끝 -->
-					</div>	
+					<form th:action = "@{/procurement1/materialRegister}" th:method="post" id="registerForm">
+						<div class="table-responsive" style="margin-bottom: 10px;">
+							<!-- 테이블 시작 -->
+								<table class="table table-bordered" id="registerTable" style="text-align: center;">
+									<thead>
+										<tr>
+											<th>품목코드</th>
+											<th>품목명</th>
+											<th>대</th>
+											<th>중</th>
+											<th>규격</th>
+											<th>재질</th>
+											<th>제작 사양</th>
+											<th>도면 번호</th>
+											<th>도면<br>image</th>
+											<th>공용여부</th>
+											<th></th> 
+										</tr>
+									</thead>
+									<tbody>	
+										<tr>									
+											<td>
+												<input type="text" style="width:100%; border: 0;" name="code" class="materialCode">
+												<input type="hidden" name="contractStatus" value="미완료">
+												<input type="hidden" name="stockAmount" value="0">
+											</td>
+											<td><input type="text" style="width:100%; border: 0;" name="name" class="materialName"></td>
+											<td>
+												<select style="width:100%; border: 0;" name="largeCategoryCode">
+													<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
+														<option th:value="${LCDTO.code}">[[${LCDTO.category}]]</option>
+													</th:block>
+												</select>
+											</td>
+											<td>
+												<select style="width:100%; border: 0;" name="middleCategoryCode">
+													<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
+														<option th:value="${MCDTO.middleCode}">[[${MCDTO.middleCategory}]]</option>
+													</th:block>
+												</select>									
+											</td>
+											<td><input type="text" style="width:100%; border: 0;" name="size"></td>
+											<td><input type="text" style="width:100%; border: 0;" name="quality"></td>
+											<td><input type="text" style="width:100%; border: 0;" name="spec"></td>
+											<td><input type="text" style="width:100%; border: 0;" name="drawingNo"></td>
+											<td></td>
+											<td>
+												<select style="width:100%; border: 0;" name="shareStatus">
+													<option value='공용'>공용</option>
+													<option value='전용'>전용</option>
+												</select>											
+											</td>
+											<td>
+												<button type="button" class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px;padding-right: 10px;" id='addRow'>
+													등록추가 &nbsp;&nbsp;+
+												</button>
+											</td> 
+										</tr>
+									</tbody>
+								</table>
+							<!-- 테이블 끝 -->
+						</div>
+						<div class="col-md-12">						
+							<!-- 등록확인, 등록취소 버튼 시작 -->						
+							<button class="btn btn-primary" style="margin-right: 130px; float: right;" onclick="location.href='/procurement1/materialList'" type="button">
+								등록취소
+							</button>
+							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="registerBtn">
+								등록확인
+							</button>										
+							<!-- 등록확인, 등록취소 버튼 끝 -->
+						</div>	
+					</form>								
 				</div>
 			</div>
 		</div>
@@ -98,10 +106,10 @@
     		return `<option value=${code}>${category}</option>`;
     	};    
     	
-    	//option 넣어서, 넣어야할 html 문장 만들기
-    	function makeHtml(option){
+    	//option 넣어서, 넣어야할 대분류 html 문장 만들기
+    	function makeLCHtml(option){
     		let temp_html = `<td>
-					 			<select style="width:100%; border: 0;" >
+					 			<select style="width:100%; border: 0;" name="largeCategoryCode">
 									${option}
 								</select>
 							</td>`;
@@ -117,7 +125,7 @@
     	//console.log("합친 대분류 option",LCoptionList);       		
     	
     	//최종적으로 만들어진 대분류 옵션 html 문장
-    	//console.log("최종 합친 대분류 옵션 전체 문장",makeHtml(LCoptionList));
+    	//console.log("최종 합친 대분류 옵션 전체 문장",makeLCHtml(LCoptionList));
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     	
@@ -141,8 +149,18 @@
     	});    	    	
     	//console.log("합친 중분류 option",MCoptionList);       		
     	
+    	//option 넣어서, 넣어야할 대분류 html 문장 만들기
+    	function makeMCHtml(option){
+    		let temp_html = `<td>
+					 			<select style="width:100%; border: 0;" name="middleCategoryCode">
+									${option}
+								</select>
+							</td>`;
+			return temp_html;
+    	}
+    	
     	//최종적으로 만들어진 중분류 옵션 html 문장
-    	//console.log("최종 합친 중분류 옵션 전체 문장",makeHtml(MCoptionList));
+    	//console.log("최종 합친 중분류 옵션 전체 문장",makeMCHtml(MCoptionList));
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    
@@ -166,33 +184,39 @@
 	            const new_cell = new_row.insertCell(i);
 	            let temp_html = ``;
 	            if(i === 0) {
-	                   temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	                   temp_html = `<td>
+				                	    <input type="text" style="width:100%; border: 0;" name="code" class="materialCode">
+										<input type="hidden" name="contractStatus" value="미완료">
+										<input type="hidden" name="stockAmount" value="0">
+									</td>`;
 	            }else if(i === 1) {
-					temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+					temp_html = `<td><input type="text" style="width:100%; border: 0;" name="name" class="materialName"></td>`;
 	            }else if(i === 2) {
-	            	temp_html = makeHtml(LCoptionList);
+	            	temp_html = makeLCHtml(LCoptionList);
 	            }else if(i === 3){
-	            	temp_html = makeHtml(MCoptionList);
+	            	temp_html = makeMCHtml(MCoptionList);
 	            }else if(i === 4){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="size"></td>`;
 	            }else if(i === 5){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="quality"></td>`;
 	            }else if(i === 6){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="spec"></td>`;
 	            }else if(i === 7){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="drawingNo"></td>`;
 	            }else if(i === 8){
 	            	temp_html = `<td></td>`;
 	            }else if(i === 9){
 	            	temp_html = `<td>
-				        			<select style="width:100%; border: 0;" >
+				        			<select style="width:100%; border: 0;" name="shareStatus">
 					    				<option value='공용'>공용</option>
 					    				<option value='전용'>전용</option>
 					    			</select>											
 					    		</td>`;
 	            }else{
 	            	temp_html = `<td>
-				    				<button type="submit" class="btn btn-primary tr_delete" style="width:106px; height:40px;" onclick="tr_delete_event(this)">삭제 &nbsp;&nbsp;-</button>
+				    				<button type="button" class="btn btn-primary tr_delete" style="width:106px; height:40px;" onclick="tr_delete_event(this)">
+				    					삭제 &nbsp;&nbsp;-
+			    					</button>
 					    		</td> `;
 	            }
 	            new_cell.insertAdjacentHTML('beforeend', temp_html);
@@ -218,7 +242,72 @@
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);
     	};	    
-		
+    	
+    	$(document).ready(function(){
+    		$("#registerBtn").on("click",function(e){
+    			//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			//2. 입력창으로 값을 받기
+    			
+    			//입력받은 품목코드 -> 품목코드 리스트에 담기
+    			let codeList = new Array();
+    			$('.materialCode').each(function(){
+    				let code = $(this).val();
+    				//console.log("이거 잘 code 읽어온건가!!",code);
+    				if(code != ""){
+    					codeList.push(code);
+    				}    				
+    			});
+    			//입력받은 품목명 -> 품목명 리스트에 담기
+    			let nameList = new Array();
+    			$('.materialName').each(function(){
+    				let name = $(this).val();
+    				//console.log("이거 잘 code 읽어온건가!!",name);
+    				if(name != ""){
+    					nameList.push(name);
+    				}    				
+    			});
+    			
+    			//각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
+    			let codenameList = new Array();
+    			
+    			for(var i = 0; i<codeList.length; i++){
+    				let codenameObj = new Object();
+    				codenameObj.code = codeList[i];
+    				codenameObj.name = nameList[i];
+    				codenameList.push(codenameObj);
+    			}
+    			
+    			//console.log("제대로 넣어 졌는지 보자",codenameList[0]);
+    			//console.log("제대로 넣어 졌는지 보자",codenameList[1]);
+    			
+    			//3. 입력받은 리스트를 이용해서 한문장으로 만들기
+    			let sentence = '';
+    			
+    			function makeSentence(code,name){
+    				let sentence =`품목코드 : ${code}, 품목명 : ${name}\n`;
+    				return sentence;    				
+    			}		
+    			
+   				codenameList.forEach(function(item){
+   					sentence=sentence+makeSentence(item.code,item.name);
+   				});
+   				//console.log("현재까지 만들어진 문장보자",sentence);
+   				
+   				sentence=sentence+'\n등록 하시겠습니까?';
+   				
+   				//console.log("완성된 문장보자",sentence);
+   				
+   				//4. confirm창 이용해서 확인 후 submit 처리하기
+   				var result = confirm(sentence);
+   				
+   				if(result){
+   					$("#registerForm").submit();
+   				}
+   			});
+   		});	
+    	
+    	
 		
 		</script>
 		
