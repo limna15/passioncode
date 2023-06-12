@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +30,7 @@ public class PurchaseOrderDTO {
 	/**
 	 * 발주일
 	 */
-	private Date purchaseOrderDate;//발주일
+	private LocalDateTime purchaseOrderDate;//발주일
 	
 	/**
 	 * 조달납기 예정일

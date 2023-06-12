@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Optional;
@@ -26,10 +28,13 @@ public class PurchaseOrderRepositoryTests {
 	@Autowired
 	ProcurementPlanRepository procurementPlanRepository;
 	
+	@Autowired
+	DetailPurchaseOrderRepository detailPurchaseOrderRepository;
+	
 	
 	@Test
 	public void getList() {
-		Optional<PurchaseOrder> list = purchaseOrderRepository.findById(101);
+		Optional<PurchaseOrder> list = purchaseOrderRepository.findById(1);
 		PurchaseOrder detail = list.get();
 		List<PurchaseOrder> list2 = purchaseOrderRepository.findAll();
 		log.info("글 번호 가져오기>>"+list2);
@@ -51,38 +56,26 @@ public class PurchaseOrderRepositoryTests {
 		//총 13개 DTO
 		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
 		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder().companyName(procurementPlan.getContract().getCompany().getName())
-				.purchaseOrderDate(procurementPlan.getDueDate()).dueDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())
+				.purchaseOrderDate(extistPurchaseOrderDate(procurementPlan)).dueDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())
 				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getMrp().getMaterial().getName())
-				.materialName(procurementPlan.getContract().getMaterial().getName()).stockAmount(procurementPlan.getMrp().getMaterial().getStockAmount())
+				.materialName(procurementPlan.getContract().getMaterial().getName())
+				.stockAmount(procurementPlan.getMrp().getMaterial().getStockAmount())
 				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
-				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder2(procurementPlan)).build();
-				//purchaseOrderDate발주일 고치기
-				//발주서 발행 상태 고치기
-				log.info(">>>>>>>>>>>"+purchaseOrderDTO);
+				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder(procurementPlan)).build();
+			
+			log.info(">>>>>>>>>>>"+purchaseOrderDTO);
 	}
-
+	
+	
 	/**
 	 * 조달예정 품목 화면에서 발주서 발행상태를 만들어주는 메소드<br>
 	 * 발주서 번확 존재하지 않으면 미완료<br>
 	 * 그렇지 않으면 완료<br>
-	 * @param detailPurchaseOrder
+	 * @param procurementPlan
 	 * @return
 	 */
-	public String existPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder) {
-		String detailStatus = null;
-		if (detailPurchaseOrder.getPurchaseOrder() == null) {// 발주서 번호 존재X
-			detailStatus = "미완료";
-			
-		} else {
-			detailStatus = "완료";
-		}
-
-		return detailStatus;
-	}
-	
-	
-	public String existPurchaseOrder2(ProcurementPlan procurementPlan) {
+	public String existPurchaseOrder(ProcurementPlan procurementPlan) {
 		String detailStatus = null;
 		if (procurementPlan.getDetailPurchaseOrder() == null) {// 발주서 번호 존재X
 			detailStatus = "미완료";
@@ -92,6 +85,17 @@ public class PurchaseOrderRepositoryTests {
 		}
 		
 		return detailStatus;
+	}
+	
+	public LocalDateTime extistPurchaseOrderDate(ProcurementPlan procurementPlan) {
+		//세부 구매발주서에 있는 발주 번호 갖고 오기
+		LocalDateTime detailPurchaseOrderDate = null;
+		if(procurementPlan.getDetailPurchaseOrder() != null) {
+			detailPurchaseOrderDate=procurementPlan.getDetailPurchaseOrder().getDate();
+		}
+
+		return detailPurchaseOrderDate;
+		
 	}
 	
 }
