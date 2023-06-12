@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
+import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
@@ -55,11 +56,42 @@ public class PurchaseOrderRepositoryTests {
 				.materialName(procurementPlan.getContract().getMaterial().getName()).stockAmount(procurementPlan.getMrp().getMaterial().getStockAmount())
 				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
-				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(true).build();
+				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder2(procurementPlan)).build();
 				//purchaseOrderDate발주일 고치기
 				//발주서 발행 상태 고치기
-				
 				log.info(">>>>>>>>>>>"+purchaseOrderDTO);
 	}
 
+	/**
+	 * 조달예정 품목 화면에서 발주서 발행상태를 만들어주는 메소드<br>
+	 * 발주서 번확 존재하지 않으면 미완료<br>
+	 * 그렇지 않으면 완료<br>
+	 * @param detailPurchaseOrder
+	 * @return
+	 */
+	public String existPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder) {
+		String detailStatus = null;
+		if (detailPurchaseOrder.getPurchaseOrder() == null) {// 발주서 번호 존재X
+			detailStatus = "미완료";
+			
+		} else {
+			detailStatus = "완료";
+		}
+
+		return detailStatus;
+	}
+	
+	
+	public String existPurchaseOrder2(ProcurementPlan procurementPlan) {
+		String detailStatus = null;
+		if (procurementPlan.getDetailPurchaseOrder() == null) {// 발주서 번호 존재X
+			detailStatus = "미완료";
+			
+		} else {
+			detailStatus = "완료";
+		}
+		
+		return detailStatus;
+	}
+	
 }

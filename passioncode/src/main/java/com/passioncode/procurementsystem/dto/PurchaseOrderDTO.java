@@ -84,7 +84,7 @@ public class PurchaseOrderDTO {
 	/**
 	 * 발주서 발행 상태
 	 */
-	private Boolean purchaseOrderStatus;//발주서 발행 상태
+	private String purchaseOrderStatus;//발주서 발행 상태
 	
 
 }

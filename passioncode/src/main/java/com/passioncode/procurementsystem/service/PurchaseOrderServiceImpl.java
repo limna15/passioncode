@@ -49,7 +49,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.needAmount(procurementPlan.getAmount()).orderAmount(procurementPlan.getAmount() - 10)
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.supplyPrice((procurementPlan.getAmount() - 100) * (procurementPlan.getContract().getUnitPrice()))
-				.purchaseOrderStatus(true).build();
+				.purchaseOrderStatus(existPurchaseOrder(procurementPlan)).build();
+		
 		return purchaseOrderDTO;
 	}
 
@@ -58,24 +59,25 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	/**
 	 * 조달예정 품목 화면에서 발주서 발행상태를 만들어주는 메소드<br>
 	 * 발주서 번확 존재하지 않으면 미완료<br>
 	 * 그렇지 않으면 완료<br>
-	 * @param detailPurchaseOrder
+	 * @param procurementPlan
 	 * @return
 	 */
-	public String existPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder) {
+	public String existPurchaseOrder(ProcurementPlan procurementPlan) {
 		String detailStatus = null;
-		if (detailPurchaseOrder.getPurchaseOrder() == null) {// 발주서 번호 존재X
+		if (procurementPlan.getDetailPurchaseOrder() == null) {// 발주서 번호 존재X
 			detailStatus = "미완료";
-
+			
 		} else {
 			detailStatus = "완료";
 		}
-
+		
 		return detailStatus;
-
 	}
+	
+		
 }
