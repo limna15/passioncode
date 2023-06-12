@@ -56,9 +56,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.materialName(procurementPlan.getContract().getMaterial().getName())
 				.stockAmount(procurementPlan.getMrp().getMaterial().getStockAmount())
 				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
-				.unitPrice(procurementPlan.getContract().getUnitPrice())
+				.unitPrice(procurementPlan.getContract().getUnitPrice()).procuremnetPlan(procurementPlan.getCode())
 				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder(procurementPlan)).build();
 			
+		
 		return purchaseOrderDTO;
 	}
 

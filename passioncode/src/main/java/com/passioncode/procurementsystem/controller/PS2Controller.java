@@ -46,8 +46,18 @@ public class PS2Controller {
 	}
 	
 	@GetMapping("/detailPurchaseOrder")
-	public void PS2Test22(PurchaseOrderDTO purchaseOrderDTO) {
-		log.info(">>>>>>>"+purchaseOrderDTO);
+	public void PS2Test22(Model model) {
+		model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
+		log.info(">>>>>>>");
+		
+		
+		
+	}
+	
+	@GetMapping("/purchaseOrderPublish")
+	public void PS24Test22(Model model) {
+		model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
+		log.info(">>>>>>>");
 		
 		
 		

@@ -114,14 +114,16 @@
 								</th>
 								<th>발주서<br>발행 상태
 								</th>
+								<th>보낼정보(조달계획코드)</th>
 								</tr>
 							</thead>
 														<tbody>
 								<tr th:each="dto: ${purchaseOrderList}">
 								<td>
 									<div class="custom-control custom-checkbox mr-sm-2">
-										<input type="checkbox" class="custom-control-input" id="mycheck4"> <label
+										<input type="checkbox" class="custom-control-input" id="mycheck4" value="[[${dto.companyName}]]"> <label
 											class="custom-control-label" for="mycheck4"></label>
+											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
 									</div>
 								</td>
 								<td>1</td>
@@ -138,6 +140,7 @@
 								<td>[[${dto.unitPrice}]]</td>
 								<td>[[${dto.supplyPrice}]]</td>
 								<td>[[${dto.purchaseOrderStatus}]]</td>
+								<td>[[${dto.procuremnetPlan}]]</td>
 							</tr>
 							</tbody>
 						</table>

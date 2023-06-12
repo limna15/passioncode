@@ -87,5 +87,9 @@ public class PurchaseOrderDTO {
 	 */
 	private String purchaseOrderStatus;//발주서 발행 상태
 	
+	/**
+	 * 조달계획코드
+	 */
+	private Integer procuremnetPlan;//세부 구매발주서를 위한 조달계획코드
 
 }
