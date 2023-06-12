@@ -122,7 +122,7 @@
 										<u>&nbsp;&nbsp;&nbsp;[[${list.no}]]&nbsp;&nbsp;&nbsp;</u></a>
 									</td>
 									<td>[[${list.getPurchaseOrder.no}]]</td>
-									<td>[[${list.date}]]</td>
+									<td>[[${#temporals.format(list.date, 'yyyy/MM/dd HH:mm:ss')}]]</td>
 								</tr>
 							</tbody>
 						</table>
