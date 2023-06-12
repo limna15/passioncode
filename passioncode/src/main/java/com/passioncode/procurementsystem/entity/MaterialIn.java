@@ -4,9 +4,12 @@ package com.passioncode.procurementsystem.entity;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +27,8 @@ import lombok.ToString;
  * 입고코드, 입고상태, 입고일, 발행상태, 발주코드(외래키)(세부구매발주서)
  * @author LNY
  * 
- */ 
+ */
+@EntityListeners(value= {AuditingEntityListener.class})
 @Entity
 @Builder
 @AllArgsConstructor
@@ -52,7 +56,8 @@ public class MaterialIn {	//입고
 	/**
 	 * 입고일
 	 */
-	@Column(columnDefinition = "DATETIME", nullable = false)
+	@CreatedDate
+	@Column(columnDefinition = "DATETIME", nullable = false, updatable = false)
 	private LocalDateTime date;
 	
 	/**
