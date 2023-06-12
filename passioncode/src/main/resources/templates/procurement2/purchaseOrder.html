@@ -116,8 +116,8 @@
 								</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="dto: ${list}">
+														<tbody>
+								<tr th:each="dto: ${purchaseOrderList}">
 								<td>
 									<div class="custom-control custom-checkbox mr-sm-2">
 										<input type="checkbox" class="custom-control-input" id="mycheck4"> <label
@@ -125,19 +125,19 @@
 									</div>
 								</td>
 								<td>1</td>
-								<td>[[${dto.purchaseOrder.no}]]</td>
-								<td>[[${#temporals.format(dto.date, 'yyyy/MM/dd')}]]</td>
-								<td>[[${dto.code}]]</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>d</td>
-								<td>[[${dto.amount}]]</td>
-								<td>d</td>
-								<td>d</td>
-								<td>N</td>
+								<td>[[${dto.companyName}]]</td>
+								<td>[[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</td>
+								<td>[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
+								<td>[[${dto.supplyLT}]]</td>
+								<td>[[${#dates.format(dto.minimumOrderDate, 'yyyy/MM/dd')}]]</td>
+								<td>[[${dto.materialCode}]]</td>
+								<td>[[${dto.materialName}]]</td>
+								<td>[[${dto.stockAmount}]]</td>
+								<td>[[${dto.needAmount}]]</td>
+								<td>[[${dto.orderAmount}]]</td>
+								<td>[[${dto.unitPrice}]]</td>
+								<td>[[${dto.supplyPrice}]]</td>
+								<td>[[${dto.purchaseOrderStatus}]]</td>
 							</tr>
 							</tbody>
 						</table>
@@ -156,6 +156,7 @@
                   </div>
                   <!--페이지 번호 끝-->
 					</div>
+					
 				</div>
 			</div>
 		</div>

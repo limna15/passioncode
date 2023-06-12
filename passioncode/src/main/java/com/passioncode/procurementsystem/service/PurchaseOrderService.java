@@ -12,19 +12,17 @@ public interface PurchaseOrderService {
 	
 	/**
 	 * 조달계획 엔티티를 이용해 PurchaseOrderDTO로 만들기(ProcurementPlan -> PurchaseOrderDTO)
-	 * @param PurchaseOrder
+	 * @param procurementPlan
 	 * @return
 	 */
 	PurchaseOrderDTO entityToDTO(ProcurementPlan procurementPlan);
-
+	
 	
 	
 	/**
 	 * PurchaseOrderDTO 리스트 가져오기
 	 * @return
 	 */
-	List<PurchaseOrderDTO> getList();
-	
-	List<PurchaseOrderDTO> getList(ProcurementPlan procurementPlan);
+	List<PurchaseOrderDTO> getDTOList();
 
 }

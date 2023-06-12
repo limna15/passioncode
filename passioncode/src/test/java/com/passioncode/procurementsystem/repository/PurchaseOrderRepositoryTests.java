@@ -87,6 +87,11 @@ public class PurchaseOrderRepositoryTests {
 		return detailStatus;
 	}
 	
+	/**
+	 * 조달예정 품목 화면에서 발주일자를 보여주는 메소드<br>
+	 * @param procurementPlan
+	 * @return
+	 */
 	public LocalDateTime extistPurchaseOrderDate(ProcurementPlan procurementPlan) {
 		//세부 구매발주서에 있는 발주 번호 갖고 오기
 		LocalDateTime detailPurchaseOrderDate = null;
