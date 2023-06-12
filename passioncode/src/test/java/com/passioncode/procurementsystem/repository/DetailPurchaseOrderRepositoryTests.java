@@ -25,7 +25,7 @@ public class DetailPurchaseOrderRepositoryTests {
 	
 	@Test
 	public void getList() {
-		Optional<DetailPurchaseOrder> list = detailPurchaseOrderRepository.findById(3);
+		Optional<DetailPurchaseOrder> list = detailPurchaseOrderRepository.findById(1);
 		
 		DetailPurchaseOrder detail = list.get();
 		

@@ -8,6 +8,7 @@ import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
 import com.passioncode.procurementsystem.repository.DetailPurchaseOrderRepository;
 import com.passioncode.procurementsystem.service.DetailPurchaseOrderService;
+import com.passioncode.procurementsystem.service.PurchaseOrderService;
 
 import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +23,15 @@ public class PS2Controller {
 	private final DetailPurchaseOrderRepository repository;
 	//서비스로 받아오는 것으로 변경하기
 	
+	private final PurchaseOrderService purchaseOrderService;
+	
 	@GetMapping("/purchaseOrder")	//발주서 발행
 	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO) {
 		log.info(">>>>>>>"+purchaseOrderDTO);
 		log.info("세부사항 >>>>>>>"+detailDTO);
 		
 		model.addAttribute("list",repository.findAll());
+		model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
 		
 	}
 	

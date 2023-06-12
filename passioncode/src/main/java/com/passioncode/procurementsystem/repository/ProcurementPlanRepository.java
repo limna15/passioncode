@@ -36,4 +36,5 @@ public interface ProcurementPlanRepository extends JpaRepository<ProcurementPlan
 	 * @return
 	 */
 	Long countBy();
+	
 }

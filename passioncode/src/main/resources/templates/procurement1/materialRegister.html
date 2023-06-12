@@ -4,80 +4,6 @@
 
 	<th:block th:fragment="content">
 
-
-<style>
-.search-box {
-	position: relative;
-	float: right;
-}
-
-.search-box input {
-	height: 34px;
-	border-radius: 20px;
-	padding-left: 35px;
-	border-color: #ddd;
-	box-shadow: none;
-}
-
-.search-box input:focus {
-	border-color: #3FBAE4;
-}
-
-.search-box i {
-	color: #a0a5b1;
-	position: absolute;
-	font-size: 19px;
-	top: 8px;
-	left: 10px;
-}
-
-.pagination {
-	float: right;
-	margin: 0 0 5px;
-}
-
-.pagination li a {
-	border: none;
-	font-size: 95%;
-	width: 30px;
-	height: 30px;
-	color: #999;
-	margin: 0 2px;
-	line-height: 30px;
-	border-radius: 30px !important;
-	text-align: center;
-	padding: 0;
-}
-
-.pagination li a:hover {
-	color: #666;
-}
-
-.pagination li.active a {
-	background: #03A9F4;
-}
-
-.pagination li.active a:hover {
-	background: #0397d6;
-}
-
-.pagination li.disabled i {
-	color: #ccc;
-}
-
-.pagination li i {
-	font-size: 16px;
-	padding-top: 6pxrow
-}
-
-.hint-text {
-	float: left;
-	margin-top: 6px;
-	font-size: 95%;
-}
-</style>
-
-
 		<div class="col-md-12 stretch-card">
 			<!-- 수정 부분 시작 -->
 			<div class="card">
@@ -86,7 +12,7 @@
 					<br>
 					<div class="table-responsive" style="margin-bottom: 5px;">
 						<!-- 테이블 시작 -->
-						<table id="recent-purchases-listing" class="table" style="text-align: center;">
+						<table class="table table-bordered" id="registerTable" style="text-align: center;">
 							<thead>
 								<tr>
 									<th>품목코드</th>
@@ -99,13 +25,13 @@
 									<th>도면 번호</th>
 									<th>도면<br>image</th>
 									<th>공용여부</th>
-										<th style="border-right: none; border-top: none; border-bottom: none;" ></th> 
+									<th></th> 
 								</tr>
 							</thead>
 							<tbody>			
 								<tr >
-									<td><input type="text" placeholder="품목코드" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="품목명" style="width:100%; border: 0;"></td>
+									<td><input type="text" style="width:100%; border: 0;"></td>
+									<td><input type="text" style="width:100%; border: 0;"></td>
 									<td>
 										<select style="width:100%; border: 0;" >
 											<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
@@ -120,10 +46,10 @@
 											</th:block>
 										</select>									
 									</td>
-									<td><input type="text" placeholder="규격" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="재질" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="제작사양" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="도면번호" style="width:100%; border: 0;"></td>
+									<td><input type="text" style="width:100%; border: 0;"></td>
+									<td><input type="text" style="width:100%; border: 0;"></td>
+									<td><input type="text" style="width:100%; border: 0;"></td>
+									<td><input type="text" style="width:100%; border: 0;"></td>
 									<td></td>
 									<td>
 										<select style="width:100%; border: 0;" >
@@ -131,42 +57,10 @@
 											<option value='전용'>전용</option>
 										</select>											
 									</td>
-									<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
-										<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >등록추가 &nbsp;&nbsp;+</button>
+									<td>
+										<button class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px;padding-right: 10px;" id='addRow'>등록추가 &nbsp;&nbsp;+</button>
 									</td> 
-								</tr>
-								<tr >
-									<td><input type="text" placeholder="품목코드" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="품목명" style="width:100%; border: 0;"></td>
-									<td>
-										<select style="width:100%; border: 0;" >
-											<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
-												<option value='[[${LCDTO.code}]]'>[[${LCDTO.category}]]</option>
-											</th:block>
-										</select>
-									</td>
-									<td>
-										<select style="width:100%; border: 0;" >
-											<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
-												<option value='[[${MCDTO.middleCode}]]'>[[${MCDTO.middleCategory}]]</option>
-											</th:block>
-										</select>									
-									</td>
-									<td><input type="text" placeholder="규격" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="재질" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="제작사양" style="width:100%; border: 0;"></td>
-									<td><input type="text" placeholder="도면번호" style="width:100%; border: 0;"></td>
-									<td></td>
-									<td>
-										<select style="width:100%; border: 0;" >
-											<option value='공용'>공용</option>
-											<option value='전용'>전용</option>
-										</select>											
-									</td>
-										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
-											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >삭제 &nbsp;&nbsp;-</button>
-									</td> 
-								</tr>
+								</tr>								
 							</tbody>
 						</table>
 						<!-- 테이블 끝 -->
@@ -174,10 +68,10 @@
 					<div class="col-md-12">						
 						<!-- 등록확인, 등록취소 버튼 시작 -->
 						<form style="float: right;" action="/procurement1/materialList">
-							<button type="submit" class="btn btn-primary" style="margin-right: 130px;">등록취소</button>
+							<button class="btn btn-primary" style="margin-right: 130px;">등록취소</button>
 						</form>
 						<form style="float: right;">
-							&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >등록확인</button>&nbsp;&nbsp;
+							&nbsp;&nbsp;<button class="btn btn-primary" >등록확인</button>&nbsp;&nbsp;
 						</form>						
 						<!-- 등록확인, 등록취소 버튼 끝 -->
 					</div>	
@@ -186,16 +80,145 @@
 		</div>
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
-
-
-		$(document).ready(function() {
-			var className = $('th').attr('class');
-			console.log("th 클래스 찍히나?",className);
-		});
-
+				
+		//대분류 리스트 타임리프 포문으로 안되서! 변수로 바꿔주기
+		let LargeCategoryDTOList = [[${LargeCategoryDTOList}]];    	
+    	let LCDTOList = new Array();
+    	
+    	LargeCategoryDTOList.forEach(function(item){
+    		let LCDTO = new Object();
+    		LCDTO.code = item.code;
+    		LCDTO.category = item.category;
+    		LCDTOList.push(LCDTO);
+    	});    	
+    	//console.log("대분류 전체 리스트 확인",LCDTOList);
+    	
+    	//code와 category 값을 넣어서 option 만들기
+    	function makeOption(code,category){
+    		return `<option value=${code}>${category}</option>`;
+    	};    
+    	
+    	//option 넣어서, 넣어야할 html 문장 만들기
+    	function makeHtml(option){
+    		let temp_html = `<td>
+					 			<select style="width:100%; border: 0;" >
+									${option}
+								</select>
+							</td>`;
+			return temp_html;
+    	}
+		
+    	//넣어야할 option을 한 문장으로 만들기
+    	let LCoptionList = ``;
+    	
+    	LCDTOList.forEach(function(item){
+    		LCoptionList=LCoptionList+(makeOption(item.code,item.category));
+    	});    	    	
+    	//console.log("합친 대분류 option",LCoptionList);       		
+    	
+    	//최종적으로 만들어진 대분류 옵션 html 문장
+    	//console.log("최종 합친 대분류 옵션 전체 문장",makeHtml(LCoptionList));
+    	
+    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    	
+    	//중분류 리스트 타임리프 포문으로 안되서! 변수로 바꿔주기
+		let MiddleCategoryDTOList = [[${MiddleCategoryDTOList}]];        	
+    	let MCDTOList = new Array();
+    	
+    	MiddleCategoryDTOList.forEach(function(item){
+    		let MCDTO = new Object();
+    		MCDTO.middleCode = item.middleCode;
+    		MCDTO.middleCategory = item.middleCategory;
+    		MCDTOList.push(MCDTO);
+    	});    	
+    	//console.log("중분류 전체 리스트 확인",MCDTOList);
+    			
+    	//넣어야할 option을 한 문장으로 만들기
+    	let MCoptionList = ``;
+    	
+    	MCDTOList.forEach(function(item){
+    		MCoptionList=MCoptionList+(makeOption(item.middleCode,item.middleCategory));
+    	});    	    	
+    	//console.log("합친 중분류 option",MCoptionList);       		
+    	
+    	//최종적으로 만들어진 중분류 옵션 html 문장
+    	//console.log("최종 합친 중분류 옵션 전체 문장",makeHtml(MCoptionList));
+    	
+    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    
-	    var className = $('div')[2].className;
-	    console.log("div 클래스 찍히나?",className);
+	    //등록추가 + 버튼 누를때, 행 추가
+	    document.getElementById('addRow').addEventListener('click', () => {
+		    console.log("등록 추가 버튼 누름")
+		    	
+	    	// table element 찾기
+	    	const table = document.getElementById('registerTable');
+	    	console.log("가져온 table 정보",table)
+	    	
+	    	// 새 행(Row) 추가
+	    	const new_row = table.insertRow();
+	    	
+	    	// Cell의 길이
+	    	const cell_length = table.rows[1].cells.length;
+	    	console.log("Cell의 길이",cell_length)    	
+	    	
+	    	//각 Cell html 작성 및, 행에 추가
+	    	for(let i = 0; i < cell_length; i++) {
+	            const new_cell = new_row.insertCell(i);
+	            let temp_html = ``;
+	            if(i === 0) {
+	                   temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            }else if(i === 1) {
+					temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            }else if(i === 2) {
+	            	temp_html = makeHtml(LCoptionList);
+	            }else if(i === 3){
+	            	temp_html = makeHtml(MCoptionList);
+	            }else if(i === 4){
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            }else if(i === 5){
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            }else if(i === 6){
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            }else if(i === 7){
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0;"></td>`;
+	            }else if(i === 8){
+	            	temp_html = `<td></td>`;
+	            }else if(i === 9){
+	            	temp_html = `<td>
+				        			<select style="width:100%; border: 0;" >
+					    				<option value='공용'>공용</option>
+					    				<option value='전용'>전용</option>
+					    			</select>											
+					    		</td>`;
+	            }else{
+	            	temp_html = `<td>
+				    				<button type="submit" class="btn btn-primary tr_delete" style="width:106px; height:40px;" onclick="tr_delete_event(this)">삭제 &nbsp;&nbsp;-</button>
+					    		</td> `;
+	            }
+	            new_cell.insertAdjacentHTML('beforeend', temp_html);
+	        }
+	    	
+	    	const tdBtn = document.getElementsByClassName('tr_delete');
+			//console.log("td버튼 클래스 잘 읽어오나",tdBtn);
+			
+			const tdtest = $(tdBtn).parent('td');
+			//console.log("어디보자,,td읽어오나,,,,",tdtest);
+			
+			//tdtest.style.cssText = 'border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;';
+			//tdtest.style.css('border-right','none'); 
+			//tdtest.style.css('border-top','none'); 
+			//tdtest.style.css('border-bottom','none'); 
+			//tdtest.style.css('background-color','#FFFFFF'); 
+	    	
+	    });
+	    
+	    //삭제 - 버튼 누를때, 행 삭제
+	    const tr_delete_event = (btn) => {
+			const table = document.getElementById('registerTable');
+			const row_index = btn.closest('tr').rowIndex;
+			table.deleteRow(row_index);
+    	};	    
+		
 		
 		</script>
 		
