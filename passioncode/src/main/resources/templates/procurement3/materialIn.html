@@ -2,100 +2,123 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{::content})}">
 
-	<!-- 여기 부분이 값을 바꿔서 대체해서 들어가는 부분! 나머지형식은 basic.html을 이용해서 하는것! 
-		그래서 basic.html이 header와 footer 가 들어가 있다고 보면됨! -->
 	<th:block th:fragment="content">
+
 
 <style>
 .search-box {
-    position: relative;        
-    float: right;
-}
-.search-box input {
-    height: 34px;
-    border-radius: 20px;
-    padding-left: 35px;
-    border-color: #ddd;
-    box-shadow: none;
-}
-.search-box input:focus {
-    border-color: #3FBAE4;
-}
-.search-box i {
-    color: #a0a5b1;
-    position: absolute;
-    font-size: 19px;
-    top: 8px;
-    left: 10px;
+	position: relative;
+	float: right;
 }
 
-   
+.search-box input {
+	height: 34px;
+	border-radius: 20px;
+	padding-left: 35px;
+	border-color: #ddd;
+	box-shadow: none;
+}
+
+.search-box input:focus {
+	border-color: #3FBAE4;
+}
+
+.search-box i {
+	color: #a0a5b1;
+	position: absolute;
+	font-size: 19px;
+	top: 8px;
+	left: 10px;
+}
+
 .pagination {
-    float: right;
-    margin: 0 0 5px;
+	float: right;
+	margin: 0 0 5px;
 }
+
 .pagination li a {
-    border: none;
-    font-size: 95%;
-    width: 30px;
-    height: 30px;
-    color: #999;
-    margin: 0 2px;
-    line-height: 30px;
-    border-radius: 30px !important;
-    text-align: center;
-    padding: 0;
+	border: none;
+	font-size: 95%;
+	width: 30px;
+	height: 30px;
+	color: #999;
+	margin: 0 2px;
+	line-height: 30px;
+	border-radius: 30px !important;
+	text-align: center;
+	padding: 0;
 }
+
 .pagination li a:hover {
-    color: #666;
-}	
+	color: #666;
+}
+
 .pagination li.active a {
-    background: #03A9F4;
+	background: #03A9F4;
 }
-.pagination li.active a:hover {        
-    background: #0397d6;
+
+.pagination li.active a:hover {
+	background: #0397d6;
 }
+
 .pagination li.disabled i {
-    color: #ccc;
+	color: #ccc;
 }
+
 .pagination li i {
-    font-size: 16px;
-    padding-top: 6pxrow
+	font-size: 16px;
+	padding-top: 6pxrow
 }
+
 .hint-text {
-    float: left;
-    margin-top: 6px;
-    font-size: 95%;
-}    
+	float: left;
+	margin-top: 6px;
+	font-size: 95%;
+}
 </style>
 
+
 		<div class="col-md-12 stretch-card">
+			<!-- 수정 부분 시작 -->
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title">자재 입고</p>
-                  <form>
-                    <div class="form-row align-items-center">
-                    <div class="col-auto my-1">
-                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                        <option selected>검색 조건 선택</option>
-                        <option value="1">발주서 번호</option>
-                        <option value="2">발주코드</option>
-                        <option value="3">품목코드</option>
-                        </select>
-                    </div>
-                    
-                    <input type="text" style="width:150px;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
-                    <div class="col-auto my-1">
-                      <button type="submit" class="btn btn-primary">검색</button>
-                    </div>
-					<!-- <button type="submit" class="btn btn-primary" style="height:25px; float:right;"> -->
-					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal">거래명세서 발행</a><!-- </button> -->
+					<p class="card-title" style="font-size:23px;">자재 입고</p> 
+					<br>
+					<div class="row" style="margin-bottom: 5px;">
+						<!-- 목록 내려보기 시작 -->
+						<div class="col-md-6"> 
+							<form>
+								<div style="display:inline-block;">
+									<select class="custom-select mr-sm-2"  style="display:inline-block;">
+										<option selected>검색 조건 선택</option>
+				                        <option value="1">발주서 번호</option>
+				                        <option value="2">발주코드</option>
+				                        <option value="3">품목코드</option>
+									</select>
+								</div> 
+								&nbsp;	
+								<input type="text" style="width: 150px; height: 40px; display:inline-block;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+								&nbsp;
+								<div style="display:inline-block;"> 
+									<button type="submit" class="btn btn-primary" style="display:inline-block;">검색</button>
+								</div>
+							</form>
+						</div> 
+						<!-- 목록 내려보기 끝 -->
+						
+						<!-- 거래명세서 발행 모달창 버튼 -->
+						<div class="col-md-6" >	
+							<!-- <button type="submit" class="btn btn-primary" style="height:25px; float:right;"> -->
+							<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float: right;">거래명세서 발행</a><!-- </button> -->
+						</div>
+						<!-- 거래명세서 발행 모달창 버튼 끝 -->
+					</div>	
 					<div class="table-responsive">
-					<form method="post">
+						<!-- 테이블 시작 -->
 						<table id="recent-purchases-listing" class="table" style="text-align: center;">
 							<thead>
 								<tr>
-									<th><input type="checkbox"></th>
+									<th></th>
 									<th>발주서 번호</th>
 									<th>발주 코드</th>
 									<th>조달납기<br>예정일</th>
@@ -106,7 +129,7 @@
 									<th>발행 상태</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody>			
 								<tr th:each="list: ${DTOList}">
 									<td><input type="checkbox"></td>
 									<td>[[${list.no}]]</td>
@@ -122,26 +145,47 @@
 								</tr>
 							</tbody>
 						</table>
-					</form>	
-					<!--페이지 번호 시작-->
-                    <div class="clearfix">
-                      <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                      <ul class="pagination">
-                          <li class="page-item disabled"><a href="#"> << <i class="fa fa-angle-double-left"></i></a></li>
-                          <li class="page-item"><a href="#" class="page-link">1</a></li>
-                          <li class="page-item"><a href="#" class="page-link">2</a></li>
-                          <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                          <li class="page-item"><a href="#" class="page-link">4</a></li>
-                          <li class="page-item"><a href="#" class="page-link">5</a></li>
-                          <li class="page-item"><a href="#" class="page-link">>><i class="fa fa-angle-double-right"></i></a></li>
-                      </ul>
-                  </div>
-                  <!--페이지 번호 끝-->
-					</div>
+						<!-- 테이블 끝 -->
+						<!-- 페이지 번호 시작 -->
+						<div class="clearfix">
+							<div class="hint-text">
+								Showing <b>5</b> out of <b>25</b> entries
+							</div>
+							<ul class="pagination">
+								<li class="page-item disabled">
+									<a href="#"> 
+										<i class="fa fa-angle-double-left"></i>
+									</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">1</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">2</a>
+								</li>
+								<li class="page-item active">
+									<a href="#" class="page-link">3</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">4</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">5</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">
+										>> <i class="fa fa-angle-double-right"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<!-- 페이지 번호 끝 -->
+					</div>					
 				</div>
 			</div>
 		</div>
 
+<!-- 모달창 -->
 <div class="modal fade" id="modal" >
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
@@ -169,7 +213,8 @@
 		</div>
 	</div>
 </div>
-		
+<!-- 모달창 끝 -->
+	
 <script type="text/javascript">
 	 $('.ls-modal').on('click', function(e){
 		  e.preventDefault();
@@ -177,8 +222,8 @@
 		});
 	 
 	 
-</script>
+</script>	
+		
 	</th:block>
-
 </th:block>
 </html>

@@ -1,8 +1,14 @@
 package com.passioncode.procurementsystem.entity;
 
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +26,8 @@ import lombok.ToString;
  * 거래명세서번호, 발주서번호(외래키)(구매발주서)
  * @author LNY
  * 
- */ 
+ */
+@EntityListeners(value= {AuditingEntityListener.class})
 @Entity
 @Builder
 @AllArgsConstructor
@@ -38,10 +45,16 @@ public class TransactionDetail {	//거래명세서
 	private Integer no;
 	
 	/**
+	 * 거래명세서 발행일
+	 */
+	@CreatedDate
+	@Column(columnDefinition = "DATETIME", nullable = false, updatable = false)
+	private LocalDateTime date;
+	
+	/**
 	 * 발주서번호(외래키)(구매발주서)
 	 */
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false)
-	private PurchaseOrder purchaseOrder;
-	
+	private PurchaseOrder purchaseOrder;	
 }

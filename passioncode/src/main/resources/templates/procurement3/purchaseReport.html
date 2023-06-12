@@ -2,85 +2,104 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{::content})}">
 
-	<!-- 여기 부분이 값을 바꿔서 대체해서 들어가는 부분! 나머지형식은 basic.html을 이용해서 하는것! 
-		그래서 basic.html이 header와 footer 가 들어가 있다고 보면됨! -->
 	<th:block th:fragment="content">
+
 
 <style>
 .search-box {
-    position: relative;        
-    float: right;
-}
-.search-box input {
-    height: 34px;
-    border-radius: 20px;
-    padding-left: 35px;
-    border-color: #ddd;
-    box-shadow: none;
-}
-.search-box input:focus {
-    border-color: #3FBAE4;
-}
-.search-box i {
-    color: #a0a5b1;
-    position: absolute;
-    font-size: 19px;
-    top: 8px;
-    left: 10px;
+	position: relative;
+	float: right;
 }
 
-   
+.search-box input {
+	height: 34px;
+	border-radius: 20px;
+	padding-left: 35px;
+	border-color: #ddd;
+	box-shadow: none;
+}
+
+.search-box input:focus {
+	border-color: #3FBAE4;
+}
+
+.search-box i {
+	color: #a0a5b1;
+	position: absolute;
+	font-size: 19px;
+	top: 8px;
+	left: 10px;
+}
+
 .pagination {
-    float: right;
-    margin: 0 0 5px;
+	float: right;
+	margin: 0 0 5px;
 }
+
 .pagination li a {
-    border: none;
-    font-size: 95%;
-    width: 30px;
-    height: 30px;
-    color: #999;
-    margin: 0 2px;
-    line-height: 30px;
-    border-radius: 30px !important;
-    text-align: center;
-    padding: 0;
+	border: none;
+	font-size: 95%;
+	width: 30px;
+	height: 30px;
+	color: #999;
+	margin: 0 2px;
+	line-height: 30px;
+	border-radius: 30px !important;
+	text-align: center;
+	padding: 0;
 }
+
 .pagination li a:hover {
-    color: #666;
-}	
+	color: #666;
+}
+
 .pagination li.active a {
-    background: #03A9F4;
+	background: #03A9F4;
 }
-.pagination li.active a:hover {        
-    background: #0397d6;
+
+.pagination li.active a:hover {
+	background: #0397d6;
 }
+
 .pagination li.disabled i {
-    color: #ccc;
+	color: #ccc;
 }
+
 .pagination li i {
-    font-size: 16px;
-    padding-top: 6pxrow
+	font-size: 16px;
+	padding-top: 6pxrow
 }
+
 .hint-text {
-    float: left;
-    margin-top: 6px;
-    font-size: 95%;
-}    
+	float: left;
+	margin-top: 6px;
+	font-size: 95%;
+}
 </style>
 
+
 		<div class="col-md-12 stretch-card">
+			<!-- 수정 부분 시작 -->
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title">발주진행 현황관리</p>
-					
-					<div class="col-auto my-1">기간
-					<input type="date">&nbsp;&nbsp;~&nbsp;&nbsp;<input type="date">
-					<button type="submit" class="btn btn-primary">검색</button>
-                    </div>
-      
+					<p class="card-title" style="font-size:23px;">발주진행 현황관리</p> 
+					<br>
+					<div class="row" style="margin-bottom: 5px;">
+						<!-- 목록 내려보기 시작 -->
+						<div class="col-md-6"> 
+							<form>
+								<div class="col-auto my-1">
+									<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
+									<input type="date" style="width: 150px; height: 40px;">&nbsp;&nbsp;~&nbsp;&nbsp;
+									<input type="date" style="width: 150px; height: 40px;">&nbsp;&nbsp;
+									<input type="submit" value="검색" class="btn btn-primary">
+			                    </div>
+							</form>
+						</div> 
+						<!-- 목록 내려보기 끝 -->
+					</div>	
 					<div class="table-responsive">
-					<form method="post">
+						<!-- 테이블 시작 -->
 						<table id="recent-purchases-listing" class="table" style="text-align: center;">
 							<thead>
 								<tr>
@@ -91,8 +110,8 @@
 									<th>조달 완료</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr th:each="list: ${list}">
+							<tbody>			
+									<tr th:each="list: ${list}">
 									<td>-</td>
 									<td id="ppCount">[[${list.procurementPlanCount}]]</td>
 									<td id="beforeCount">[[${list.beforePurchase}]]</td>
@@ -101,37 +120,54 @@
 								</tr>
 							</tbody>
 						</table>
-					</form>	
-					<!--페이지 번호 시작-->
-                    <div class="clearfix">
-                      <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                      <ul class="pagination">
-                          <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-                          <li class="page-item"><a href="#" class="page-link">1</a></li>
-                          <li class="page-item"><a href="#" class="page-link">2</a></li>
-                          <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                          <li class="page-item"><a href="#" class="page-link">4</a></li>
-                          <li class="page-item"><a href="#" class="page-link">5</a></li>
-                          <li class="page-item"><a href="#" class="page-link">>><i class="fa fa-angle-double-right"></i></a></li>
-                      </ul>
-                  </div>
-                  <!--페이지 번호 끝-->
+						<!-- 테이블 끝 -->
+						<!-- 페이지 번호 시작 -->
+						<div class="clearfix">
+							<div class="hint-text">
+								Showing <b>5</b> out of <b>25</b> entries
+							</div>
+							<ul class="pagination">
+								<li class="page-item disabled">
+									<a href="#"> 
+										<i class="fa fa-angle-double-left"></i>
+									</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">1</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">2</a>
+								</li>
+								<li class="page-item active">
+									<a href="#" class="page-link">3</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">4</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">5</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">
+										>> <i class="fa fa-angle-double-right"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<!-- 페이지 번호 끝 -->
 					</div>
 					<br>
 					<!-- bar chart 넣을 자리-->
-		              <div class="card">
-		                <div class="card-body">
-		                  <h4 class="card-title">발주진행 현황 그래프</h4>
-		                  <canvas id="barChart"></canvas>
-		                </div>
-		              </div>
+		            <div class="card">
+		            	<div class="card-body">
+		                <h4 class="card-title">발주진행 현황 그래프</h4>
+		                <canvas id="barChart"></canvas>
 		            </div>
-                    
-                </div>    
+		        	</div>		
 				</div>
 			</div>
 		</div>
-		
+	
 <script  th:inline="javascript">
 	var list= /*[[${list}]]*/'list';
 	console.log("list 값 읽기 >>> ", list);
@@ -143,8 +179,7 @@
 <script src="../../js/hoverable-collapse.js"></script>
 <script src="../../js/template.js"></script>
 <script src="../../js/chart.js"></script>
-
+		
 	</th:block>
-
 </th:block>
 </html>
