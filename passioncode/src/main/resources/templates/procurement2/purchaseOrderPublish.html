@@ -14,7 +14,7 @@
   }
 </style>
 <div class="publish">
-		<form th:action="@{/procurement2/purchaseOrder}" th:method="POST">
+		<form th:action="@{/procurement2/purchaseOrder}" th:method="GET">
 					<div class="card-body">
 					<br>
 						<p class="card-title"><b>구매 발주서</b></p>
@@ -22,9 +22,24 @@
 						<!--거래명세서 회사 정보-->
 						<div>
 							<table id="transactionInfo">
-									<tr>
+									<tr th:each="dto: ${DetailPurchaseOrderList}">
+						<th:block th:if="${myListData == null}">
+							<h1>보여라</h1>
+<!-- 
+ 						<th:block th:if="${dto.procurementPlan == '${myListData}'}">
+ -->
+							</th:block>
+							<th:block th:if="${dto.procurementPlan == '${myListData}'}">
+							<h2>보여줘2</h2>
+							</th:block>
 										<th>발주 회사</th>
-										<td>-</td>
+										<th:block th:if="${'myListData' == '$dto.procurementPlan'}">
+										<td>[[${dto.procurementPlan}]]</td>
+										<th>[[${dto.procurementPlan}]]</th>
+										<td>[[${dto.companyName}]]</td>
+										
+										</th:block>
+										<!-- 블럭 조건 끝 -->
 										<th rowspan="4">공<br><br>급<br><br>자</th>
 										<th>사업자 등록번호</th>
 										<td colspan="3"></td>
@@ -35,7 +50,7 @@
 										<th>상호(법인명)</th>
 										<td>-</td>
 										<th>성명(대표자)</th>
-										<td>-</td>
+										<td>[[${myListData}]]</td>
 									</tr>
 									<tr>
 										<th>납기일자</th>
@@ -71,8 +86,8 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>[[${purchaseOrderList}]]</td>
 										<td>-</td>
+										<td>[[${DetailPurchaseOrderList}]]</td>
 										<td>-</td>
 										<td>-</td>
 										<td>-</td>

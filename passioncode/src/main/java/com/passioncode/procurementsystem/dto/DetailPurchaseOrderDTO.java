@@ -26,7 +26,7 @@ public class DetailPurchaseOrderDTO {
 	/**
 	 * 협력 회사
 	 */
-	private String company;
+	private String companyName;
 	
 	/**
 	 * 발주 일자
@@ -66,6 +66,6 @@ public class DetailPurchaseOrderDTO {
 	/**
 	 * 조달계획코드
 	 */
-	private Integer procuremnetPlan;//세부 구매발주서를 위한 조달계획코드
+	private Integer procurementPlan;//세부 구매발주서를 위한 조달계획코드
 	
 }

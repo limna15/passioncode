@@ -85,14 +85,15 @@
                     <div class="col-auto my-1">
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
-					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;">발행</a>&nbsp;
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;" onclick="aaa()">발행</a>&nbsp;
+					<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;
 					 <button class="btn btn-primary" onclick="print();">인쇄</button>&nbsp;
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
 							style="text-align: center;">
 							<thead>
 								<tr>
-								<th>ch</th>
+								<th>ch [[${myListData}]]</th>
 								<th>No</th>
 								<th>협력<br> 회사
 								</th>
@@ -121,8 +122,7 @@
 								<tr th:each="dto: ${purchaseOrderList}">
 								<td>
 									<div class="custom-control custom-checkbox mr-sm-2">
-										<input type="checkbox" class="custom-control-input" id="mycheck4" value="[[${dto.companyName}]]"> <label
-											class="custom-control-label" for="mycheck4"></label>
+									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" onclick="myCheckBox()">
 											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
 									</div>
 								</td>
@@ -198,6 +198,45 @@ let printPurchaseOrder;
 function print(){
 	printPurchaseOrder = window.open('/procurement2/print','thePopup','width=722,height=600')
 };
+</script>
+<!-- 체크박스 시작 -->
+<script th:inline="javascript" type="text/javascript">
+var purchaseOrderList = [[${purchaseOrderList}]];
+console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
+
+var codeList= new Array();
+var dtoCode= new Object();
+
+purchaseOrderList.forEach(function(item){
+	dtoCode= item.code;
+	codeList.push(dtoCode);
+});
+
+console.log("codeList가 제대로 오나 >>> ", codeList);
+
+var purchaseNo = '';
+function myCheckBox(){
+	const chkChecked = 'input[name="checkBox"]:checked';
+	const selectedEls = document.querySelectorAll(chkChecked);
+	purchaseNo = '';
+	
+	selectedEls.forEach((el) => {
+		purchaseNo += el.value + ' ';
+  });
+		console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	
+	
+
+};
+function aaa(){
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	purchaseNo = purchaseNo.replaceAll(" ","");
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
+	location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
+}
+	
+	
 </script>
 	</th:block>
 

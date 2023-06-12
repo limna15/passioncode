@@ -1,6 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,15 +63,17 @@ public class DetailPurchaseOrderRepositoryTests {
 		//총 11개(+ 외래키 조달계획코드로 갖고오기)
 		
 		//공급가격만 구매발주서에서 가져옴
-		DetailPurchaseOrderDTO detailPurchaseOrderDTO = DetailPurchaseOrderDTO.builder().purchaseOrderNo(null)
-				.company(procurementPlan.getContract().getCompany().getName())
+		//발주서 번호, 발주 코드
+		DetailPurchaseOrderDTO detailPurchaseOrderDTO = DetailPurchaseOrderDTO.builder()
+				.purchaseOrderNo(detailPurchaseOrderRepository.findMaxOrderNo())
+				.companyName(procurementPlan.getContract().getCompany().getName())
 				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getName())
 				.purchaseOrderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice()))
-				.procuremnetPlan(procurementPlan.getCode()).build();
+				.procurementPlan(procurementPlan.getCode()).build();
 				
 		
 		log.info(detailPurchaseOrderDTO);
@@ -82,6 +85,45 @@ public class DetailPurchaseOrderRepositoryTests {
 		detailPurchaseOrderRepository.findMaxCode();
 		
 		log.info(">>>>>>>>>>"+detailPurchaseOrderRepository.findMaxCode());
+	}
+	
+	@Test
+	public void findMax2() {
+		detailPurchaseOrderRepository.findMaxOrderNo();
+		
+		log.info(">>>>>>>>>>"+detailPurchaseOrderRepository.findMaxOrderNo());
+	}
+	
+	@Test
+	public List<DetailPurchaseOrderDTO> getDTOList(){
+		List<ProcurementPlan> procurmentPlanList = procurementPlanRepository.findAll();
+		
+		List<DetailPurchaseOrderDTO> detailDTOList = new ArrayList<>();
+		
+		for(int i=0;i<procurmentPlanList.size();i++) {
+			detailDTOList.add(entityToDTO(procurmentPlanList.get(i)));
+		}
+		return detailDTOList;
+		
+	}
+	
+	@Transactional
+	@Test
+	public DetailPurchaseOrderDTO entityToDTO(ProcurementPlan procurementPlan) {
+		// 세부 구매 발주서 발행 화면
+		DetailPurchaseOrderDTO detailPurchaseOrderDTO = DetailPurchaseOrderDTO.builder()
+				.purchaseOrderNo(detailPurchaseOrderRepository.findMaxOrderNo())
+				.companyName(procurementPlan.getContract().getCompany().getName())
+				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
+				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
+				.materialCode(procurementPlan.getMrp().getMaterial().getName())
+				.purchaseOrderAmount((procurementPlan.getAmount())-(procurementPlan.getMrp().getMaterial().getStockAmount()))
+				.unitPrice(procurementPlan.getContract().getUnitPrice())
+				.suppluPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice()))
+				.procurementPlan(procurementPlan.getCode()).build();
+				
+		log.info("세부 구매 발주서 발행DTO"+detailPurchaseOrderDTO);
+		return detailPurchaseOrderDTO;
 	}
 	
 }

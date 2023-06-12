@@ -9,4 +9,7 @@ public interface DetailPurchaseOrderRepository extends JpaRepository<DetailPurch
 	@Query(value="SELECT MAX(CODE)+1 FROM detail_purchase_order",nativeQuery = true)
 	public Integer findMaxCode();
 	
+	@Query(value="SELECT MAX(purchase_order_no)+1 FROM detail_purchase_order",nativeQuery = true)
+	public Integer findMaxOrderNo();
+	
 }

@@ -1,8 +1,11 @@
 package com.passioncode.procurementsystem.service;
+import java.util.List;
+
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialOut;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 public interface DetailPurchaseOrderService {
@@ -10,11 +13,11 @@ public interface DetailPurchaseOrderService {
 	DetailPurchaseOrderDTO read(Integer no);
 
 	/**
-	 * 조달계획 엔티티를 이용해 PurchaseOrderDTO로 만들기(ProcurementPlan -> PurchaseOrderDTO)
-	 * @param detailPurchaseOrder
+	 * 조달계획 엔티티를 이용해 PurchaseOrderDTO로 만들기(ProcurementPlan -> DetailPurchaseOrderDTO)
+	 * @param procurementPlan
 	 * @return
 	 */
-	DetailPurchaseOrderDTO entityToDTO(DetailPurchaseOrder detailPurchaseOrder, MaterialOut materialOut);
+	DetailPurchaseOrderDTO entityToDTO(ProcurementPlan procurementPlan);
 
 	/**
 	 * MaterialDTO를 이용해서 품목 엔티티 만들기(MaterialDTO -> Material)
@@ -29,4 +32,11 @@ public interface DetailPurchaseOrderService {
 	 * @return
 	 */
 	DetailPurchaseOrder get(Integer code);
+
+	/**
+	 * 
+	 * @return
+	 */
+	List<DetailPurchaseOrderDTO> getDTOList();
+
 }

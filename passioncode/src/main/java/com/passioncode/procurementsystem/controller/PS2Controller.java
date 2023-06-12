@@ -25,19 +25,22 @@ public class PS2Controller {
 	
 	private final PurchaseOrderService purchaseOrderService;
 	
+	private final DetailPurchaseOrderService detailPurchaseOrderService;
+	
 	@GetMapping("/purchaseOrder")	//발주서 발행
-	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO) {
-		log.info(">>>>>>>"+purchaseOrderDTO);
-		log.info("세부사항 >>>>>>>"+detailDTO);
+	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, String checkBox) {
+		log.info("내가 원하는 발주서 번호>>"+checkBox);
 		
-		model.addAttribute("list",repository.findAll());
+		model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
+		//model.addAttribute("list",repository.findAll());
 		model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
+		model.addAttribute("myListData",checkBox);
 		
 	}
 	
 	@GetMapping("/progressCheck")
 	public void PS2Test2(Model model ,PurchaseOrderDTO purchaseOrderDTO) {
-		log.info(">>>>>>>"+purchaseOrderDTO);
+		log.info("progressCheck>>>>>>>"+purchaseOrderDTO);
 		
 		
 		model.addAttribute("list",100);
@@ -47,17 +50,20 @@ public class PS2Controller {
 	
 	@GetMapping("/detailPurchaseOrder")
 	public void PS2Test22(Model model) {
+		model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
 		model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
-		log.info(">>>>>>>");
+		log.info("detailPurchaseOrder>>>>>>>"+purchaseOrderService.getDTOList());
 		
 		
 		
 	}
 	
 	@GetMapping("/purchaseOrderPublish")
-	public void PS24Test22(Model model) {
+	public void PS24Test22(Model model, String checkBox) {
 		model.addAttribute("purchaseOrderList", purchaseOrderService.getDTOList());
-		log.info(">>>>>>>");
+		model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
+		model.addAttribute("myListData",checkBox);
+		log.info("purchaseOrderPublish>>>>>>>");
 		
 		
 		
