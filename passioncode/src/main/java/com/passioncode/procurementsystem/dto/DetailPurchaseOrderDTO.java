@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class DetailPurchaseOrderDTO {
+	//총 11개 
 	
 	/**
 	 * 발주서 번호

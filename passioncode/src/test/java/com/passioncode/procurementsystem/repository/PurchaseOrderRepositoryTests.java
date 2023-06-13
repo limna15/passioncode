@@ -43,6 +43,7 @@ public class PurchaseOrderRepositoryTests {
 	
 	@Test
 	public void InsertTest() {	//발주서 번호 생성 
+		//잘 만들어진다.
 		PurchaseOrder purchaseOrder = new PurchaseOrder(null);
 		purchaseOrderRepository.save(purchaseOrder);
 		
@@ -98,7 +99,7 @@ public class PurchaseOrderRepositoryTests {
 		if(procurementPlan.getDetailPurchaseOrder() != null) {
 			detailPurchaseOrderDate=procurementPlan.getDetailPurchaseOrder().getDate();
 		}
-
+		
 		return detailPurchaseOrderDate;
 		
 	}

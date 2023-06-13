@@ -38,7 +38,20 @@ public class DetailPurchaseOrderRepositoryTests {
 
 	@Autowired
 	ContractRepository contractRepository;
-
+	
+	@Test
+	public void purchaseOrderNoCreateTest() {	//발주서 번호 생성 
+		//********잘 만들어진다.
+		PurchaseOrder purchaseOrder = new PurchaseOrder(null);
+		purchaseOrderRepository.save(purchaseOrder);
+		
+		DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, 200, LocalDateTime.now(),
+				purchaseOrder);
+		detailPurchaseOrderRepository.save(detailPurchaseOrder);
+		detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(), 14);//앞 발주번호, 뒤 조달 코드
+		log.info("저장 되어라==>"+detailPurchaseOrder);
+	}
+	
 	@Test
 	public void InsertTest() { // 6월 13일 잘되던 코드
 		// 발주 코드 생성 테스트
@@ -52,7 +65,21 @@ public class DetailPurchaseOrderRepositoryTests {
 		DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, 200, LocalDateTime.now(),
 				purchaseOrder);
 		detailPurchaseOrderRepository.save(detailPurchaseOrder);
-
+		
+		//아래는 테스트 중
+		//발주서 번호-> 발주 코드가 생성되고 난 뒤에 조달계획 코드 업데이트 하기
+		
+		//detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(), null);//앞 발주번호, 뒤 조달 코드
+	}
+	
+	@Test
+	public void midifyProcurementPlanTest() {// ====>>> ************ 중요 myUpdate() 이 안에 값을 넣기 !!!
+		// 발주코드 생성해서 조달계획을 수정해서 저장하는 것
+		// 발주코드 같으면 지정해서 조달계획 번호 저장
+		
+		// 여기 안에 숫자 넣어서 하기
+		
+		detailPurchaseOrderRepository.myUpdate(20, 13);
 	}
 	
 	@Transactional
@@ -72,6 +99,7 @@ public class DetailPurchaseOrderRepositoryTests {
 		log.info(">>만들어 주세요 제발 =========>>"+detailPurchaseOrder);
 	}
 	
+	
 	@Transactional
 	@Test
 	public DetailPurchaseOrder purchaseOrderBuilTest() {//이거 안됨
@@ -85,6 +113,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				detailPurchaseOrderRepository.save(detailPurchaseOrder);
 				return detailPurchaseOrder;
 	}
+	
 	@Transactional
 	@Test
 	public DetailPurchaseOrder purchaseOrderBuilTest23() {//이거 안됨
@@ -119,15 +148,6 @@ public class DetailPurchaseOrderRepositoryTests {
 		
 	}
 
-	@Test
-	public void midifyProcurementPlanTest() {// ====>>> ************ 중요 myUpdate() 이 안에 값을 넣기 !!!
-		// 발주코드 생성해서 조달계획을 수정해서 저장하는 것
-		// 발주코드 같으면 지정해서 조달계획 번호 저장
-
-		// 여기 안에 숫자 넣어서 하기
-
-		detailPurchaseOrderRepository.myUpdate(20, 13);
-	}
 
 	@Test
 	public void InsertTest(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
@@ -221,7 +241,7 @@ public class DetailPurchaseOrderRepositoryTests {
 	@Transactional
 	@Test
 	public void detailPurchaseOrderDTOTest() {// 발주서 번호 생성 전 보기
-		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(14).get();
 		// Optional<DetailPurchaseOrder> detailPurchaseOrderDTO
 		// =detailPurchaseOrderRepository.findById(1);
 
@@ -243,7 +263,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();
 
-		log.info(detailPurchaseOrderDTO);
+		log.info("무엇을 만드는 것인지>>"+detailPurchaseOrderDTO);
 
 	}
 
