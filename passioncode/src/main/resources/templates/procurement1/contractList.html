@@ -112,7 +112,10 @@
 							<form style="float: right;">
 								&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >수정</button>&nbsp;&nbsp;
 							</form>
-							<button class="btn btn-primary" style="float: right;" onclick="location.href='/procurement1/contractRegister'">등록</button>
+							<form style="float: right;" th:action = "@{/procurement1/contractRegister}" th:method="get" id="registerForm">
+								<input type="hidden" name="materialCodeList" id="materialCodeList">
+								<button class="btn btn-primary" id="registerBtn">등록</button>
+							</form>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->
 					</div>	
@@ -137,7 +140,7 @@
 							</thead>
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
-									<td><input type="checkbox"></td>
+									<td><input type="checkbox" name="checkBox" th:value="${dto.materialCode}" onclick="chkClicked()"></td>
 									<td>[[${dto.contractNo}]]</td>
 									<td>[[${dto.materialCode}]]</td>
 									<td>[[${dto.materialName}]]</td>
@@ -147,7 +150,7 @@
 									<td>[[${dto.supplyLt}]]</td>
 									<td>[[${dto.unitPrice}]]</td>
 									<td>[[${dto.dealCondition}]]</td>
-									<td value='[[${dto.contractFile}]]'><button type="submit" class="btn btn-primary" style="height:25px;">보기</button></td>
+									<td th:value='${dto.contractFile}'><button type="submit" class="btn btn-primary" style="height:25px;">보기</button></td>
 									<td>[[${dto.contractStatus}]]</td>
 								</tr>
 							</tbody>
@@ -191,6 +194,52 @@
 				</div>
 			</div>
 		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+		<script th:inline="javascript">
+		
+		//체크박스 체크한것 -> 품목코드 리스트로 만들기
+		function chkClicked(){
+			const chkChecked = 'input[name="checkBox"]:checked';
+			const selectedEls = document.querySelectorAll(chkChecked);
+			
+	 		console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+	 		
+	 		let materialCodeList = new Array();
+	 		
+	 		selectedEls.forEach((el) => {
+				console.log("체크된거 어떻게 찍히나 보자", el.value);
+				materialCodeList.push(el.value);
+		 	});
+	 		
+	 		console.log("만들어진 리스트 보자",materialCodeList);
+	 		
+	 		return materialCodeList;
+		}
+		
+		$(document).ready(function(){
+    		$("#registerBtn").on("click",function(e){
+    			//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			//2. 만든 품목코드 리스트를 input 히든에 담기
+    			let materialCodeList = new Array();
+    			materialCodeList = $('input[name=materialCodeList]').attr('value',chkClicked());
+    			console.log("이렇게 만든 리스트 되는건가?",materialCodeList);
+    			
+    			//var test = $('input[name=materialCodeList]').attr('value');
+    			//console.log("값을 봐보자.. 흠",test);
+    			//alert(test);
+    			
+   				//3.담은거 submit으로 보내자
+    			$("#registerForm").submit();
+   			});
+   		});	
+		
+		
+		
+		
+		
+		</script>		
 		
 	</th:block>
 </th:block>

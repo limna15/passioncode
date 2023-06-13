@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.service.ContractService;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
@@ -169,8 +170,16 @@ public class PS1Controller {
 	}
 	
 	@GetMapping("contractRegister")
-	public void ContractRegister(Model model) {
+	public void ContractRegister(String[] materialCodeList, Model model) {
 		log.info("계약 등록 화면 보기.....");
+		List<ContractDTO> contractDTOList = new ArrayList<>();
+		
+		for(int i=0;i<materialCodeList.length;i++) {
+			ContractDTO contractDTO = ContractDTO.builder().materialCode(materialCodeList[i]).materialName(materialService.getMaterial(materialCodeList[i]).getName()).build();
+			contractDTOList.add(contractDTO);
+		}
+		
+		model.addAttribute("contractDTOList", contractDTOList);
 		
 	}	
 
