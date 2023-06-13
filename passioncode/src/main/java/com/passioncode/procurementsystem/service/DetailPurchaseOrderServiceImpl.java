@@ -25,20 +25,26 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	private final ProcurementPlanRepository procurementPlanRepository;
 	
+	
+	@Override
+	public DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
+		//구매발주서번호, 발주 코드는 자동으로 만들어져서 여기서는 만들지 않는다.
+		//발주코드 발주수량, 발주일자, 발주서 번호(외래키) (총 4개)
+		//Integer code, PurchaseOrder purchaseOrder
+		
+		DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().amount(detailPurchaseOrderDTO.getPurchaseOrderAmount())
+				.date(LocalDateTime.now()).code(null).purchaseOrder(null).build();
+		
+		return detailPurchaseOrder;
+		
+	}
+	
 	@Override
 	public Integer register(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
 		DetailPurchaseOrder detailPurchaseOrder = dtoToEntity(detailPurchaseOrderDTO);
 		return null;
 	}
 	
-	@Override
-	public DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
-		DetailPurchaseOrder detailPurchaseOrder = null;
-		//DetailPurchaseOrder = detailPurchaseOrderDTO.builder()
-		
-		return null;
-		
-	}
 	
 	@Override
 	public DetailPurchaseOrderDTO read(Integer no) {
@@ -84,6 +90,11 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	@Override
 	public DetailPurchaseOrder get(Integer code) {
 		return detailPurchaseOrderRepository.findById(code).get();
+	}
+
+	public void detailPurchaseOrderDTO() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

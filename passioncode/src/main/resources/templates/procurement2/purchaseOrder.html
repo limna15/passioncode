@@ -187,21 +187,18 @@
 </div>
 
 		
+<!-- 체크박스 시작 -->
 <script th:inline="javascript" type="text/javascript">
-	
-	/*<![CDATA[*/
-	var DTOList = [[${DTOList}]];
-	console.log("DTOList 읽기 >>> ", DTOList);
-	
-	var codeList= new Array();
-	var dpoCode= new Object();
-	
-	DTOList.forEach(function(item){
-		dpoCode= item.code
-		codeList.push(dpoCode);
-		//console.log("dpoCode가 제대로 오나 >>> ", dpoCode);
-	});
-	/*]]>*/
+var purchaseOrderList = [[${purchaseOrderList}]];
+console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
+
+var codeList= new Array();
+var dtoCode= new Object();
+
+purchaseOrderList.forEach(function(item){
+	dtoCode= item.code;
+	codeList.push(dtoCode);
+});
 	
 	console.log("codeList가 제대로 오나 >>> ", codeList);
 	
@@ -223,7 +220,7 @@
 		//console.log("purchaseCode 찍히나 >>> ", purchaseCode)		
 		location.href="/procurement3/materialIn?purchaseCode="+purchaseCode;
 	};	
-	
+</script>
 <script type="text/javascript">
 let printPurchaseOrder;
 function print(){
@@ -255,17 +252,19 @@ function myCheckBox(){
 		purchaseNo += el.value + ' ';
   });
 		console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+//	aaa();
 	
 	
 
 };
+
 function aaa(){
 	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
 	purchaseNo = purchaseNo.replaceAll(" ","");
 	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
-	location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
+	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
 	location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
-}
+};
 	
 	
 </script>

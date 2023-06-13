@@ -13,13 +13,12 @@
     text-align: center;
   }
 </style>
-
 <div class="publish">
+					<br>
 <!-- 
 		<form th:action="@{/procurement2/purchaseOrder}" th:method="GET">
  -->
  
-					<br>
 						<!--거래명세서 회사 정보-->
 						<div>
 						<tr th:each="dto: ${DetailPurchaseOrderList}">
@@ -57,11 +56,13 @@
 							</table>
 						</div>
 						<br>
-					
+					<tr th:each="dto: ${DetailPurchaseOrderList}">
+						<th:block th:if="${myListData} == ${dto.procurementPlan}">
 						<button type="submit" class="btn btn-primary" style="float: right;">취소</button>
 						<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;">발행</button>
+						</th:block>
+						</tr>
 						</div>
-						<br>
 						
 
 <!-- 

@@ -53,4 +53,6 @@ public interface DetailPurchaseOrderService {
 	 */
 	DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO);
 
+	void detailPurchaseOrderDTO();
+
 }
