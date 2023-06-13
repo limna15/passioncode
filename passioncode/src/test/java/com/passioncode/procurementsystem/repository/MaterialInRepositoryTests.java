@@ -1,11 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -90,46 +86,49 @@ public class MaterialInRepositoryTests {
 		//log.info("세부구매발주서로 procurementPlan 찾기! " + pp.getDueDate());
 		
 		List<DetailPurchaseOrder> dpoList= detailPurchaseOrderRepository.findAll();
-		//log.info("dpoList 한번 볼게요 " + dpoList);
 		
 		List<MaterialInDTO> materialInDTOList= new ArrayList<>();
 		MaterialInDTO materialInDTO= null;
 		List<ProcurementPlan> ppList= new ArrayList<>();
+		List<MaterialIn>miList= new ArrayList<>();
 		
 		for(int i=0; i<dpoList.size(); i++) {
 			ppList.add(procurementPlanRepository.findByDetailPurchaseOrder(dpoList.get(i)));
+			miList.add(materialInRepository.findByDetailPurchaseOrder(dpoList.get(i)));
 		}
 		
-		log.info("pp 리스트 보기 >>> " + ppList);
-		log.info("dpo 리스트 보기 >>> " + dpoList);
-		log.info("pp date 보기 >>> " + ppList.get(0).getDueDate());
-		log.info("dpo 리스트 사이즈 >>> " + dpoList.size());
-		log.info("pp 리스트 사이즈 >>> " + ppList.size());
-		
 		for(int i=0; i<ppList.size(); i++) {
-			log.info(i+ "번째 데이트값 " + ppList.get(i).getDueDate());
+			//log.info(i+ "번째 데이트값 " + ppList.get(i).getDueDate());
 			if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태 완료
 				if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //발행상태 완료
 					materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 							.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 							.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-							.status(true).transactionStatus(true).build();
+							.status(true).transactionStatus(true)
+							.inDate(miList.get(i).getDate()).build();
 					materialInDTOList.add(materialInDTO);
 				}else { //발행상태 미완료
 					materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 							.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 							.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-							.status(true).transactionStatus(false).build();
+							.status(true).transactionStatus(false)
+							.inDate(miList.get(i).getDate()).build();
 					materialInDTOList.add(materialInDTO);
 				}
 			}else { //입고상태 미완료
 				materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-						.status(false).transactionStatus(false).build();
+						.status(false).transactionStatus(false).inDate(null).build();
 				materialInDTOList.add(materialInDTO);
 			}
 		}
+		log.info("pp 리스트 보기 >>> " + ppList);
+		log.info("dpo 리스트 보기 >>> " + dpoList);
+		log.info("pp date 보기 >>> " + ppList.get(0).getDueDate());
+		log.info("dpo 리스트 사이즈 >>> " + dpoList.size());
+		log.info("pp 리스트 사이즈 >>> " + ppList.size());
+		
 		log.info("materialDTOList 한번 보자! " + materialInDTOList);
 	}
 
@@ -147,12 +146,14 @@ public class MaterialInRepositoryTests {
 	public void DTOTest() {
 		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(1).get();
 		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		MaterialIn mi= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		log.info("pp는 어케 찍히나 " + pp);
 		
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder.getPurchaseOrder().getNo()).code(detailPurchaseOrder.getCode())
 									.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
 									.materialName(pp.getMrp().getMaterial().getName())
-									.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false).build();
+									.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false)
+									.inDate(mi.getDate()).build();
 		
 		log.info("DTO 하나는 어케 가져오는거죠 " + materialInDTO);
 	}
@@ -174,6 +175,12 @@ public class MaterialInRepositoryTests {
 		log.info("DTO를 이용해서 엔티티에 넣어지는걸까 " + materialIn);
 		
 		materialInRepository.save(materialIn);	
+	}
+	
+	@Test
+	public void miListTest() {
+		List<MaterialIn> materialInList= materialInRepository.findAll();
+		log.info("List >>> " + materialInList);
 	}
 	
 }

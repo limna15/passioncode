@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
+import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.dto.TransactionDetailDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
@@ -96,29 +97,44 @@ public class TransactionDetailRepositoryTests {
 		
 		for(int i=0; i<dpoList.size();i++) {
 			ppList.add(procurementPlanRepository.findByDetailPurchaseOrder(dpoList.get(i)));
-			miList.add(materialInRepository.findByDetailPurchaseOrder(dpoList.get(i)));		
+			if(materialInRepository.findByDetailPurchaseOrder(dpoList.get(i))!=null) {
+				miList.add(materialInRepository.findByDetailPurchaseOrder(dpoList.get(i)));		
+			}
 		}
 		
-		log.info("ppList >>> " + ppList + ppList.size());
-		log.info("miList >>> " + miList + miList.size());
-		//ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
-		//MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		log.info("ppList 읽기 >>> " + ppList + "ppList 사이즈 읽기 >>> " + ppList.size());
+		log.info("miList 읽기 >>> " + miList + "miList 사이즈 읽기 >>> " + miList.size());
+
+		List<MaterialInDTO> miDTOList= new ArrayList<>();
+		MaterialInDTO materialInDTO= null;
+		
+		for(int i=0; i<miList.size(); i++) {
+			materialInDTO= MaterialInDTO.builder().code(miList.get(i).getCode()).inDate(miList.get(i).getDate()).build();
+			miDTOList.add(materialInDTO);
+		}
+		log.info("miDTOList 읽기 >>> " + miDTOList + "miDTOList 사이즈 읽기 >>> " + miDTOList.size());
 		
 		TransactionDetailDTO transactionDetailDTO= null;
 		List<TransactionDetailDTO> transactionDetailDTOList= new ArrayList<>();
+		
 		for(int i=0; i<miList.size();i++) {
 			Company ourCompany= companyRepository.findById("777-77-77777").get();
-			
+			log.info(i + "번째 dpoList 읽기 >>> " + dpoList.get(i));
+
 			transactionDetailDTO= TransactionDetailDTO.builder().company(ourCompany.getName()).purchaseOrderNo(dpoList.get(i).getPurchaseOrder().getNo())
-													.detailPurchaseOrderCode(miList.get(i).getDetailPurchaseOrder().getCode())
-													.companyNo(ppList.get(i).getContract().getCompany().getNo())
-													.companyName(ppList.get(i).getContract().getCompany().getName()).CEO(ppList.get(i).getContract().getCompany().getCeo())
-													.companyAddress(ppList.get(i).getContract().getCompany().getAddress()).manager(ppList.get(i).getContract().getCompany().getManager())
-													.managerTel(ppList.get(i).getContract().getCompany().getManagerTel())
-													.materialCode(ppList.get(i).getContract().getMaterial().getCode()).materialName(ppList.get(i).getContract().getMaterial().getName())
-													.amount(ppList.get(i).getDetailPurchaseOrder().getAmount()).unitPrice(ppList.get(i).getContract().getUnitPrice()).build();
+								.detailPurchaseOrderCode(ppList.get(i).getDetailPurchaseOrder().getCode())
+								.date(miDTOList.get(i).getInDate())
+								.companyNo(ppList.get(i).getContract().getCompany().getNo())
+								.companyName(ppList.get(i).getContract().getCompany().getName()).CEO(ppList.get(i).getContract().getCompany().getCeo())
+								.companyAddress(ppList.get(i).getContract().getCompany().getAddress()).manager(ppList.get(i).getContract().getCompany().getManager())
+								.managerTel(ppList.get(i).getContract().getCompany().getManagerTel())
+								.materialCode(ppList.get(i).getContract().getMaterial().getCode()).materialName(ppList.get(i).getContract().getMaterial().getName())
+								.amount(ppList.get(i).getDetailPurchaseOrder().getAmount()).unitPrice(ppList.get(i).getContract().getUnitPrice()).build();
+			
 			transactionDetailDTOList.add(transactionDetailDTO);
 		}
+		
+		
 		log.info("transactionDetailDTOList 어떻게 가지고 오는지 보자>>> " + transactionDetailDTOList);
 	}
 	

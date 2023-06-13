@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 자재입고 화면을 위한 입고DTO 클래스(8개) <br>
+ * 자재입고 화면을 위한 입고DTO 클래스(8개 + 1개(거래명세서에 쓸 납기일자=입고일)) <br>
  * 발주서 번호, 발주코드, 조달납기 예정일, 품목코드, 품목명, 발주수량, 입고상태, 거래명세서 발행상태
  * @author LNY
  *
@@ -48,6 +49,11 @@ public class MaterialInDTO {
 	 * 발주수량
 	 */
 	private Integer amount;
+	
+	/**
+	 * 입고일(=납기일자)
+	 */
+	private LocalDateTime inDate;
 	
 	/**
 	 * 입고상태

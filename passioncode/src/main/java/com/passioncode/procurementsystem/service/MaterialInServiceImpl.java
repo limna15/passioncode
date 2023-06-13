@@ -28,12 +28,15 @@ public class MaterialInServiceImpl implements MateriallInService {
 	
 	@Override
 	public MaterialInDTO materialInToDTO(DetailPurchaseOrder detailPurchaseOrder) {
-		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);		
+		MaterialIn mi= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+
 		
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder.getPurchaseOrder().getNo()).code(detailPurchaseOrder.getCode())
 									.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
 									.materialName(pp.getMrp().getMaterial().getName())
-									.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false).build();
+									.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false)
+									.inDate(mi.getDate()).build();
 		return materialInDTO;
 	}
 
@@ -59,9 +62,11 @@ public class MaterialInServiceImpl implements MateriallInService {
 		List<MaterialInDTO> materialInDTOList= new ArrayList<>();
 		MaterialInDTO materialInDTO= null;
 		List<ProcurementPlan> ppList= new ArrayList<>();
+		List<MaterialIn>miList= new ArrayList<>();
 		
 		for(int i=0; i<dpoList.size(); i++) {
 			ppList.add(procurementPlanRepository.findByDetailPurchaseOrder(dpoList.get(i)));
+			miList.add(materialInRepository.findByDetailPurchaseOrder(dpoList.get(i)));
 		}
 		
 		for(int i=0; i<ppList.size(); i++) {
@@ -71,20 +76,22 @@ public class MaterialInServiceImpl implements MateriallInService {
 					materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 							.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 							.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-							.status(true).transactionStatus(true).build();
+							.status(true).transactionStatus(true)
+							.inDate(miList.get(i).getDate()).build();
 					materialInDTOList.add(materialInDTO);
 				}else { //발행상태 미완료
 					materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 							.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 							.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-							.status(true).transactionStatus(false).build();
+							.status(true).transactionStatus(false)
+							.inDate(miList.get(i).getDate()).build();
 					materialInDTOList.add(materialInDTO);
 				}
 			}else { //입고상태 미완료
 				materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-						.status(false).transactionStatus(false).build();
+						.status(false).transactionStatus(false).inDate(null).build();
 				materialInDTOList.add(materialInDTO);
 			}
 		}
@@ -98,5 +105,12 @@ public class MaterialInServiceImpl implements MateriallInService {
 		materialInRepository.save(materialIn);
 		
 		return materialIn.getCode();
+	}
+
+
+	@Override
+	public List<MaterialIn> getMaterialInLsit() {
+		List<MaterialIn> materialInList= materialInRepository.findAll();
+		return materialInList;
 	}	
 }
