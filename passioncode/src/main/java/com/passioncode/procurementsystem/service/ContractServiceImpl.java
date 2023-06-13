@@ -41,6 +41,11 @@ public class ContractServiceImpl implements ContractService {
 	public Company getCompany(String no) {
 		return companyRepository.findById(no).get();
 	}
+	
+	@Override
+	public List<Company> searchCompany(String name) {
+		return companyRepository.findByNameContaining(name);
+	}
 		
 	@Override
 	public List<ContractDTO> materialEntityToDTO(Material material) {
@@ -181,6 +186,8 @@ public class ContractServiceImpl implements ContractService {
 		log.info("삭제된 계약서(contract) 정보 : "+dtoToEntity(contractDTO));
 		contractRepository.deleteById(contractDTO.getContractNo());
 	}
+
+	
 
 
 

@@ -16,48 +16,48 @@
 								<table class="table table-bordered" id="registerTable" style="text-align: center;">
 									<thead>
 										<tr>
-											<th>품목코드</th>
-											<th>품목명</th>
-											<th>대</th>
-											<th>중</th>
-											<th>규격</th>
-											<th>재질</th>
-											<th>제작 사양</th>
-											<th>도면 번호</th>
-											<th>도면<br>image</th>
-											<th>공용여부</th>
+											<th width="10%">품목코드</th>
+											<th width="10%">품목명</th>
+											<th width="7%">대</th>
+											<th width="7%">중</th>
+											<th width="">규격</th>
+											<th width="">재질</th>
+											<th width="">제작 사양</th>
+											<th width="">도면 번호</th>
+											<th width="">도면<br>image</th>
+											<th width="7%">공용여부</th>
 											<th></th> 
 										</tr>
 									</thead>
 									<tbody>	
 										<tr>									
 											<td>
-												<input type="text" style="width:100%; border: 0;" name="code" class="materialCode">
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="code" class="materialCode">
 												<input type="hidden" name="contractStatus" value="미완료">
 												<input type="hidden" name="stockAmount" value="0">
 											</td>
-											<td><input type="text" style="width:100%; border: 0;" name="name" class="materialName"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName"></td>
 											<td>
-												<select style="width:100%; border: 0;" name="largeCategoryCode">
+												<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode">
 													<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
 														<option th:value="${LCDTO.code}">[[${LCDTO.category}]]</option>
 													</th:block>
 												</select>
 											</td>
 											<td>
-												<select style="width:100%; border: 0;" name="middleCategoryCode">
+												<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode">
 													<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
 														<option th:value="${MCDTO.middleCode}">[[${MCDTO.middleCategory}]]</option>
 													</th:block>
 												</select>									
 											</td>
-											<td><input type="text" style="width:100%; border: 0;" name="size"></td>
-											<td><input type="text" style="width:100%; border: 0;" name="quality"></td>
-											<td><input type="text" style="width:100%; border: 0;" name="spec"></td>
-											<td><input type="text" style="width:100%; border: 0;" name="drawingNo"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo"></td>
 											<td></td>
 											<td>
-												<select style="width:100%; border: 0;" name="shareStatus">
+												<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
 													<option value='공용'>공용</option>
 													<option value='전용'>전용</option>
 												</select>											
@@ -109,7 +109,7 @@
     	//option 넣어서, 넣어야할 대분류 html 문장 만들기
     	function makeLCHtml(option){
     		let temp_html = `<td>
-					 			<select style="width:100%; border: 0;" name="largeCategoryCode">
+					 			<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode">
 									${option}
 								</select>
 							</td>`;
@@ -152,7 +152,7 @@
     	//option 넣어서, 넣어야할 대분류 html 문장 만들기
     	function makeMCHtml(option){
     		let temp_html = `<td>
-					 			<select style="width:100%; border: 0;" name="middleCategoryCode">
+					 			<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode">
 									${option}
 								</select>
 							</td>`;
@@ -185,29 +185,29 @@
 	            let temp_html = ``;
 	            if(i === 0) {
 	                   temp_html = `<td>
-				                	    <input type="text" style="width:100%; border: 0;" name="code" class="materialCode">
+				                	    <input type="text" style="width:100%; border: 0; text-align: center;" name="code" class="materialCode">
 										<input type="hidden" name="contractStatus" value="미완료">
 										<input type="hidden" name="stockAmount" value="0">
 									</td>`;
 	            }else if(i === 1) {
-					temp_html = `<td><input type="text" style="width:100%; border: 0;" name="name" class="materialName"></td>`;
+					temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName"></td>`;
 	            }else if(i === 2) {
 	            	temp_html = makeLCHtml(LCoptionList);
 	            }else if(i === 3){
 	            	temp_html = makeMCHtml(MCoptionList);
 	            }else if(i === 4){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="size"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size"></td>`;
 	            }else if(i === 5){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="quality"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>`;
 	            }else if(i === 6){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="spec"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>`;
 	            }else if(i === 7){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0;" name="drawingNo"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo"></td>`;
 	            }else if(i === 8){
 	            	temp_html = `<td></td>`;
 	            }else if(i === 9){
 	            	temp_html = `<td>
-				        			<select style="width:100%; border: 0;" name="shareStatus">
+				        			<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
 					    				<option value='공용'>공용</option>
 					    				<option value='전용'>전용</option>
 					    			</select>											
@@ -243,6 +243,7 @@
 			table.deleteRow(row_index);
     	};	    
     	
+    	//등록확인 버튼 누를때
     	$(document).ready(function(){
     		$("#registerBtn").on("click",function(e){
     			//1. 버튼 이벤트(submit)금지
