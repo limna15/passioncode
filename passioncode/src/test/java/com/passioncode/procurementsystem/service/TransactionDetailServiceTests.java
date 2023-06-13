@@ -56,4 +56,11 @@ public class TransactionDetailServiceTests {
 		
 		log.info("거래명세서 등록됐나 보자 >>> " + transactionDetailService.register(transactionDetailDTO));
 	}
+	
+	@Transactional
+	@Commit
+	@Test
+	public void DTOListTest() {
+		log.info("거래명세서 detailDTO 보자 >>> " + transactionDetailService.getTransactionDetailDTOLsit());
+	}
 }

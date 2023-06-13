@@ -184,12 +184,43 @@
 </div>
 
 		
-<script type="text/javascript">
-	 $('.ls-modal').on('click', function(e){
-		  e.preventDefault();
-		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
-		});
-</script>
+<script th:inline="javascript" type="text/javascript">
+	
+	/*<![CDATA[*/
+	var DTOList = [[${DTOList}]];
+	console.log("DTOList 읽기 >>> ", DTOList);
+	
+	var codeList= new Array();
+	var dpoCode= new Object();
+	
+	DTOList.forEach(function(item){
+		dpoCode= item.code
+		codeList.push(dpoCode);
+		//console.log("dpoCode가 제대로 오나 >>> ", dpoCode);
+	});
+	/*]]>*/
+	
+	console.log("codeList가 제대로 오나 >>> ", codeList);
+	
+	var purchaseCode = '';
+	function chkClicked(){
+		const chkChecked = 'input[name="checkBox"]:checked';
+		const selectedEls = document.querySelectorAll(chkChecked);
+		purchaseCode = '';
+		
+		selectedEls.forEach((el) => {
+			purchaseCode += el.value + ' ';
+	  });
+ 		console.log("purchaseCode >>> ", purchaseCode);
+	}
+	
+	function aaa(){
+		console.log("purchaseCode 찍히나 >>> ", purchaseCode)
+		//purchaseCode= purchaseCode.replaceAll(" ","");
+		//console.log("purchaseCode 찍히나 >>> ", purchaseCode)		
+		location.href="/procurement3/materialIn?purchaseCode="+purchaseCode;
+	};	
+	
 <script type="text/javascript">
 let printPurchaseOrder;
 function print(){

@@ -26,18 +26,18 @@
 						<!--거래명세서 회사 정보-->
 						<div>
 							<table id="transactionInfo">
-									<tr>
+<tr>
 										<th>발주 회사</th>
-										<td>-</td>
+										<td></td>
 										<th rowspan="4">공<br><br>급<br><br>자</th>
 										<th>사업자 등록번호</th>
 										<td colspan="3"></td>
 									</tr>
 									<tr>
 										<th>발주서 번호</th>
-										<td id="purchaseOrderNo">[[${DTOList.get(1).no}]]</td>
+										<td>[[${purchaseCode}]]</td>
 										<th>상호(법인명)</th>
-										<td>-</td>
+										<td></td>
 										<th>성명(대표자)</th>
 										<td>-</td>
 									</tr>
@@ -73,13 +73,13 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td>[[${DTOList.get(1).materialCode}]]</td>
-										<td>[[${DTOList.get(1).materialName}]]</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
+									<tr th:each="list: ${tdDTOList}">
+										<td>[[${list.materialCode}]]</td>
+										<td>[[${list.materialName}]]</td>
+										<td>[[${list.amount}]]</td>
+										<td>[[${list.unitPrice}]]</td>
+										<td>[[${list.amount}*${list.unitPrice}]]</td>
+										<td>[[${list.amount}*${list.unitPrice}/10]]</td>
 									</tr>
 									
 								</tbody>

@@ -3,7 +3,6 @@ package com.passioncode.procurementsystem.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,9 @@ import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
 import com.passioncode.procurementsystem.repository.TransactionDetailRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class MaterialInServiceImpl implements MateriallInService {
 	
 	private final MaterialInRepository materialInRepository;

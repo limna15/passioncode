@@ -35,6 +35,11 @@ public class TransactionDetailDTO {
 	private Integer purchaseOrderNo;
 	
 	/**
+	 * 발주코드 (세부구매발주서)
+	 */
+	private Integer detailPurchaseOrderCode;
+	
+	/**
 	 * 납기일자(=입고일) (자재입고)
 	 */
 	private LocalDateTime date;

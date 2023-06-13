@@ -6,6 +6,17 @@
 
 
 <style>
+  table {
+    width: 100%;
+    border: 1px solid #444444;
+    font-size: 13px;
+
+  }
+  th, td {
+    border: 1px solid #444444;
+    padding: 10px;
+    text-align: center;
+  }
 .search-box {
 	position: relative;
 	float: right;
@@ -108,7 +119,7 @@
 						
 						<!-- 거래명세서 발행 모달창 버튼 -->
 						<div class="col-md-6" >	
-							<a class="ls-modal btn btn-primary" href="/transactionDetail" data-target="#modal" data-toggle="modal" data-backdrop="static"
+							<a class="ls-modal btn btn-primary" href="#" data-target="#modal" data-toggle="modal" data-backdrop="static"
 								style="float: right;">거래명세서 발행</a>
 							<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>
 						</div>
@@ -117,7 +128,7 @@
 					</div>	
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
-						<form action="/transactionDetail">
+						<form>
 							<table id="recent-purchases-listing" class="table" style="text-align: center;">
 								<thead>
 									<tr>
@@ -134,7 +145,7 @@
 								</thead>
 								<tbody>
 									<tr th:each="list: ${DTOList}">
-										<td><input type="checkbox" name="checkBox" th:id="checkBox" th:value="${list.no}" onclick="chkClicked()"></td>
+										<td><input type="checkbox" name="checkBox" th:id="checkBox" th:value="${list.code}" onclick="chkClicked()"></td>
 										<td id="purchaseOrderNo">[[${list.no}]]</td>
 										<td>[[${list.code}]]</td>
 										<td>[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
@@ -203,7 +214,100 @@
 			<!-- body -->
 			<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
 			<div class="modal-body">
-			    	<th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
+			    	<div class="publish">
+		<form th:action="@{/procurement3/materialIn}" th:method="POST">
+					<div class="card-body">
+						<button type="submit" class="btn btn-primary" style="float: right;">취소</button>
+						<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;">인쇄</button>
+					<br>
+						<p class="card-title"><b>거래명세서</b></p>
+						
+						<!--거래명세서 회사 정보-->
+						<div>
+							<table id="transactionInfo">
+									<tr>
+										<th>발주 회사</th>
+										<td></td>
+										<th rowspan="4">공<br><br>급<br><br>자</th>
+										<th>사업자 등록번호</th>
+										<td colspan="3"></td>
+									</tr>
+									<tr>
+										<th>발주서 번호</th>
+										<td>[[${purchaseCode}]]</td>
+										<th>상호(법인명)</th>
+										<td></td>
+										<th>성명(대표자)</th>
+										<td>-</td>
+									</tr>
+									<tr>
+										<th>납기일자</th>
+										<td>-</td>
+										<th>주소</th>
+										<td colspan="3">-</td>
+									</tr>
+									<tr>
+										<th>총 가격</th>
+										<td>-</td>
+										<th>담당자</th>
+										<td>-</td>
+										<th>연락처</th>
+										<td>-</td>
+									</tr>
+							</table>
+						</div>
+						<br>
+						
+						<!--거래명세서 품목 정보-->
+						<div class="table-responsive">
+							<table id="transactionDetail">
+								<thead>
+									<tr>
+										<th>품목코드</th>
+										<th>품목명</th>
+										<th>수량</th>
+										<th>단가</th>
+										<th>공급가격</th>
+										<th>부가세</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="list: ${tdDTOList}">
+										<td>[[${list.materialCode}]]</td>
+										<td>[[${list.materialName}]]</td>
+										<td>[[${list.amount}]]</td>
+										<td>[[${list.unitPrice}]]</td>
+										<td>[[${list.amount}*${list.unitPrice}]]</td>
+										<td>[[${list.amount}*${list.unitPrice}/10]]</td>
+									</tr>
+									
+								</tbody>
+							</table>
+						</div>
+						<br>
+						
+						<!--거래명세서 품목 정리 요약-->
+						<div class="table-responsive">
+							<table id="transactionResult" style="border: 1px solid ; font-size: 13px;">
+									<tr>
+										<th>수량</th>
+										<td></td>
+										<th>공급가격</th>
+										<td></td>
+										<th>VAT</th>
+										<td></td>
+										<th>합계</th>
+										<td></td>
+									</tr>
+							</table>
+						</div>					
+							<br>
+
+					</div>
+
+		</form>
+	</div>
+				<!-- <th:block th:replace="~{/procurement3/transactionDetail :: materialIn(~{this::publish} )}"></th:block> -->
 				<!--여기에 외부에서 작성한 테이블 들어옴-->
 			</div>
 						
@@ -234,35 +338,29 @@
 	
 	console.log("codeList가 제대로 오나 >>> ", codeList);
 	
-	var purchaseNo = '';
+	var purchaseCode = '';
 	function chkClicked(){
 		const chkChecked = 'input[name="checkBox"]:checked';
 		const selectedEls = document.querySelectorAll(chkChecked);
-		purchaseNo = '';
+		purchaseCode = '';
 		
 		selectedEls.forEach((el) => {
-			purchaseNo += el.value + ' ';
+			purchaseCode += el.value + ' ';
 	  });
- 		console.log("purchaseNo >>> ", purchaseNo);
-		
-		
-
+ 		console.log("purchaseCode >>> ", purchaseCode);
 	}
-
-//제이쿼리 라이브러리가 없어서 $인식이 안되는거임
-// 	$("#data").on('click', function(e){
-// 		console.log("purchaseNo 찍히나 >>> ", purchaseNo)
-// 	});
 	
 	function aaa(){
-		console.log("purchaseNo 찍히나 >>> ", purchaseNo)
+		console.log("purchaseCode 찍히나 >>> ", purchaseCode)
+		//purchaseCode= purchaseCode.replaceAll(" ","");
+		//console.log("purchaseCode 찍히나 >>> ", purchaseCode)		
+		location.href="/procurement3/materialIn?purchaseCode="+purchaseCode;
 	};	
 	
-	
-/* 	$('.ls-modal').on('click', function(e){
-		e.preventDefault();
-		//$('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
-	}); */
+//제이쿼리 라이브러리가 없어서 $인식이 안되는거임
+// 	$("#data").on('click', function(e){
+// 		console.log("purchaseCode 찍히나 >>> ", purchaseCode)
+// 	});
 	
 /* 	function chkClicked(){
 		//체크박스 전체 개수

@@ -106,7 +106,6 @@ public class MaterialInRepositoryTests {
 		log.info("dpo 리스트 사이즈 >>> " + dpoList.size());
 		log.info("pp 리스트 사이즈 >>> " + ppList.size());
 		
-
 		for(int i=0; i<ppList.size(); i++) {
 			log.info(i+ "번째 데이트값 " + ppList.get(i).getDueDate());
 			if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태 완료

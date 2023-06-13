@@ -35,4 +35,11 @@ public interface TransactionDetailService {
 	 * @return
 	 */
 	List<TransactionDetail> getTransactionDetailList();
+	
+	/**
+	 * TransactionDetailDTO 리스트 가져오기
+	 * @return
+	 */
+	List<TransactionDetailDTO> getTransactionDetailDTOLsit();
+	
 }

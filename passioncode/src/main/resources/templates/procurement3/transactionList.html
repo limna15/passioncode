@@ -118,9 +118,7 @@
 							</thead>
 							<tbody>			
 								<tr th:each="list:${list}">
-									<td><a class="ls-modal" data-toggle="modal" href="#" data-target="#modal">
-										<u>&nbsp;&nbsp;&nbsp;[[${list.no}]]&nbsp;&nbsp;&nbsp;</u></a>
-									</td>
+									<td>[[${list.no}]]</td>
 									<td>[[${list.getPurchaseOrder.no}]]</td>
 									<td>[[${#temporals.format(list.date, 'yyyy/MM/dd HH:mm:ss')}]]</td>
 								</tr>
@@ -165,45 +163,6 @@
 				</div>
 			</div>
 		</div>
-
-<!-- 거래명세서 모달창 -->
-<div class="modal fade" id="modal" >
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-		
-            <!-- header title -->
-				<h4 class="modal-title">거래명세서 발행</h4>
-             <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal">×</button>
-			
-			</div>
-						
-			<!-- body -->
-			<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
-			<div class="modal-body">
-				<div class="modal-body">
-      <th:block th:replace="~{/procurement3/transactionDetail :: setLogin(~{this::login} )}"></th:block>
-     </div>
-				<!--여기에 외부에서 작성한 테이블 들어옴--></div>
-						
-			<!-- Footer -->
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- 거래명세서 모달창 끝 -->
-	
-<script type="text/javascript">
-	 $('.ls-modal').on('click', function(e){
-		  e.preventDefault();
-		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
-		});
-	 
-	 
-</script>	
 		
 	</th:block>
 </th:block>
