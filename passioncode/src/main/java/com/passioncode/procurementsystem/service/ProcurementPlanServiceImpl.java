@@ -214,7 +214,48 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		
 		return ppDTOList;
 	}
-
+	
+	/**
+	 * 정렬생각 안하고 처음에 짠 ProcurementPlanDTO리스트 불러오기
+	 * @return
+	 */
+	public List<ProcurementPlanDTO> getDTOList2() {
+		List<MRP> mrpList = mrpRepository.findAll();
+		
+		List<ProcurementPlanDTO> ppDTOList = new ArrayList<>();
+		ProcurementPlanDTO procurementPlanDTO = null;		
+		
+		for(int i=0;i<mrpList.size();i++) {
+			ProcurementPlan procurementPlan = procurementPlanRepository.findByMrp(mrpList.get(i));	
+			
+			//procurementPlan 가 존재할때, 조달계획 등록 완료된 상태
+			if(procurementPlan!=null) {
+				procurementPlanDTO =ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
+																.materialName(procurementPlan.getMrp().getMaterial().getName()).process(procurementPlan.getMrp().getProcess())
+																.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
+																.freePeriod(makefreePeriod(procurementPlan.getMrp().getDate(),procurementPlan.getDueDate()))
+																.companyName(procurementPlan.getContract().getCompany().getName())
+																.supplyLt(procurementPlan.getContract().getSupplyLt())
+																.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
+																.ppAmount(procurementPlan.getAmount())
+																.contractStatus(contractStatusCheck(procurementPlan.getMrp().getMaterial()))
+																.ppRegisterStatus("완료").ppProgress(ppProgressCheck(procurementPlan))
+																.mrpCode(procurementPlan.getMrp().getCode()).companyNo(procurementPlan.getContract().getCompany().getNo())
+																.contractNo(procurementPlan.getContract().getNo()).build();
+				ppDTOList.add(procurementPlanDTO);
+			}else {  ////procurementPlan 가 존재X, 조달계획 등록 미완료된 상태
+				procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrpList.get(i).getMaterial().getCode()).materialName(mrpList.get(i).getMaterial().getName())
+																.process(mrpList.get(i).getProcess()).mrpdate(mrpList.get(i).getDate()).mrpAmount(mrpList.get(i).getAmount())
+																.contractStatus(contractStatusCheck(mrpList.get(i).getMaterial())).ppRegisterStatus("미완료")
+																.mrpCode(mrpList.get(i).getCode()).build();	
+				ppDTOList.add(procurementPlanDTO);
+			}			
+		}	
+		
+		return ppDTOList;
+	}
+	
+	
 	@Override
 	public Integer register(ProcurementPlanDTO procurementPlanDTO) {
 		//조달계획을 등록한다는건! 계약상태 = 완료, 조달계획 등록상태 = 완료, 조달계획 진행사항 =  발주 예정

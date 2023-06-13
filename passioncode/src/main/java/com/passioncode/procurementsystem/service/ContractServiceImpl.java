@@ -3,6 +3,7 @@ package com.passioncode.procurementsystem.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,6 +92,34 @@ public class ContractServiceImpl implements ContractService {
 
 	@Override
 	public List<ContractDTO> getDTOList() {
+						
+		List<ContractDTO> contractDTOList = new ArrayList<>();
+		
+		//계약이 미완료 인것만! 품목 가져오기 -> 계약 미완료인 상태
+		List<Material> materialList = materialRepository.getListNoContract();
+		
+		//계약 미완료인것 먼저 DTO리스트에 넣기
+		for(int i=0;i<materialList.size();i++) {
+			ContractDTO contractDTO = ContractDTO.builder().materialCode(materialList.get(i).getCode()).materialName(materialList.get(i).getName()).contractStatus("미완료").build();
+			contractDTOList.add(contractDTO);			
+		}
+		
+		//계약서에서 계약서번호 오름차순으로 계약서 전부 가져오기 -> 계약상태 완료인 상태
+		List<Contract> contractList = contractRepository.findAll(Sort.by(Sort.Direction.ASC, "no"));
+		
+		//계약 완료인것 DTO리스트에 넣기
+		for(int i=0;i<contractList.size();i++) {
+			contractDTOList.add(contractEntityToDTO(contractList.get(i)));
+		}
+		
+		return contractDTOList;
+	}
+	
+	/**
+	 * 정렬생각 안하고 처음에 짠 ContractDTO리스트 불러오기
+	 * @return
+	 */	
+	public List<ContractDTO> getDTOList2() {
 		List<Material> materialList = materialRepository.findAll();
 		
 		List<ContractDTO> contractDTOList = new ArrayList<>();
@@ -117,7 +146,7 @@ public class ContractServiceImpl implements ContractService {
 		}		
 		
 		return contractDTOList;
-	}
+	} 
 
 
 	@Override
