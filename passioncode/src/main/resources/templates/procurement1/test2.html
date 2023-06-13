@@ -84,43 +84,68 @@
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">품목 정보 등록</p> 
 					<br>
-					
-					
-					
-					
-					
-					<div class="table-responsive" style="margin-bottom: 10px;">
-						<!-- 테이블 시작 -->
-							<table class="table table-bordered" id="registerTable" style="text-align: center;">
+					<div class="row">
+						<div class="table-responsive col-md-12" style="margin-bottom: 5px;">
+							<!-- 테이블 시작 -->
+							<table id="recent-purchases-listing" class="table">
 								<thead>
 									<tr>
-										<th>사업자 등록번호</th>
-										<th>협력회사</th>
-										<th>담당자</th>
-										<th>담당자<br>연락처</th>
-										<th></th> 
+<!-- 										<th style="display:none;"></th> -->
+										<th>품목코드</th>
+										<th>품목명</th>
+										<th>대</th>
+										<th>중</th>
+										<th>규격</th>
+										<th>재질</th>
+										<th>제작 사양</th>
+										<th>도면 번호</th>
+										<th>도면<br>image</th>
+										<th>공용여부</th>
+ 										<th style="border-right: none; border-top: none; border-bottom: none;" ></th> 
 									</tr>
 								</thead>
-								<tbody>	
-									<tr th:each="dto : ${contractDTOList}" >									
-										<td><input type="hidden" name="companyNo" value=""></td>
-										<td><input type="text" style="width:100%; border: 0;" name="companyName"></td>
-										<td><input type="text" style="width:100%; border: 0;" name="manager" ></td>
-										<td><input type="text" style="width:100%; border: 0;" name="managerTel"></td>
-										<td>
-											<button type="button" class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px; padding-right: 10px;">
-												선택
-											</button>
+								<tbody>			
+									<tr >
+<!-- 										<td style="display:none;"></td> -->
+										<td><input type="text" placeholder="품목코드" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="품목명" style="width:100%; border: 0;"></td>
+										<td></td>
+										<td></td>
+										<td><input type="text" placeholder="규격" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="재질" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="제작사양" style="width:100%; border: 0;"></td>
+										<td><input type="text" placeholder="도면번호" style="width:100%; border: 0;"></td>
+										<td></td>
+										<td></td>
+ 										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
+ 											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >등록추가 +</button>
+										</td> 
+									</tr>
+									<tr >
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+ 										<td style="border-right: none; border-top: none; border-bottom: none; background-color: #FFFFFF;">
+ 											<button type="submit" class="btn btn-primary" style="width:106px; height:40px;" >삭제 -</button>
 										</td> 
 									</tr>
 								</tbody>
 							</table>
-						<!-- 테이블 끝 -->
-					</div>
-						
-						
-						
-						
+							<!-- 테이블 끝 -->
+						</div>	
+						<!--  	
+						<div class="col-md-1">		
+							<button type="submit" class="btn btn-primary" style="margin-top: 100px; padding-left: 20px; padding-right: 20px;">등록추가 +</button>
+						</div>	
+						-->
+					</div>	
 					<div class="col-md-12">						
 						<!-- 등록확인, 등록취소 버튼 시작 -->
 						<form style="float: right;" action="/procurement1/materialList">

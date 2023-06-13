@@ -40,7 +40,7 @@
 													<input type="hidden" name="companyNo" value="">
 													<input type="text" style="float:left; width:70%; border: 0;" name="companyName" >
 													&nbsp;&nbsp;
-													<button type="button" class="btn btn-primary btn-rounded btn-icon" style="float:right">
+													<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right">
 														<i class="mdi mdi-magnify"></i>
 													</button>
 												</div>
@@ -77,9 +77,75 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- 협력회사 찾기 모달창 시작 -->
+		<div class="companySearchModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">협력회사 찾기</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    
+                       	<div class="table-responsive" style="margin-bottom: 10px;">
+							<!-- 테이블 시작 -->
+								<table class="table table-bordered" id="registerTable" style="text-align: center;">
+									<thead>
+										<tr>
+											<th>사업자<br>등록번호</th>
+											<th>협력회사</th>
+											<th>담당자</th>
+											<th>담당자<br>연락처</th>
+											<th></th> 
+										</tr>
+									</thead>
+									<tbody>	
+										<tr th:each="dto : ${contractDTOList}" >									
+											<td><input type="hidden" name="companyNo" value=""></td>
+											<td><input type="text" style="width:100%; border: 0;" name="companyName"></td>
+											<td><input type="text" style="width:100%; border: 0;" name="manager" ></td>
+											<td><input type="text" style="width:100%; border: 0;" name="managerTel"></td>
+											<td>
+												<button type="button" class="btn btn-primary" >
+													선택
+												</button>
+											</td> 
+										</tr>
+									</tbody>
+								</table>
+							<!-- 테이블 끝 -->
+						</div>   
+						              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary reviewSaveBtn">Save changes</button>
+                        <button type="button" class="btn btn-warning modifyBtn">Modify </button>
+                        <button type="button" class="btn btn-danger removeBtn">Remove </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 협력회사 찾기 모달창 끝 -->
+				
+		
+		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
-				
+		
+		
+		$(document).ready(function(){		
+			$(document).on("click",".companySearchBtn",function(){
+				console.log("협력회사 찾기 버튼 누름");
+				$(".companySearchModal").modal('show');
+			});
+		});
+		
+    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		//contractDTO 리스트 타임리프 포문으로 안되서! 변수로 바꿔주기
 		let contractDTOList = [[${contractDTOList}]];    	
     	let DTOList = new Array();
@@ -106,8 +172,7 @@
     		return `<td>
 			    		<input type="text" style="width:100%; border: 0;" name="materialName" class="materialName" value=${materialName} readonly>
 		    		</td>`;
-    	};    
-    	
+    	};        	
     	    	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    
@@ -116,7 +181,7 @@
     		
     		// table element 찾기
 	    	const table = document.getElementById('registerTable');
-	    	console.log("가져온 table 정보",table)
+	    	//console.log("가져온 table 정보",table)
 	    	
 	    	//클릭된 행의 인덱스            
             function getObj(){
@@ -127,14 +192,14 @@
                 return obj
             }
             var idx = getObj().parentElement.rowIndex;
-			console.log("와 대박 이거 되는거 같아!!! 와!!",idx)          
+			//console.log("와 대박 이거 되는거 같아!!! 와!!",idx)          
 	    	
 	    	// 클릭한 행 +1 -> 밑에 새로 행 추가
 	    	const new_row = table.insertRow(idx+1);
 	    	
 	    	// Cell의 길이
 	    	const cell_length = table.rows[1].cells.length;
-	    	console.log("Cell의 길이",cell_length)    	
+	    	//console.log("Cell의 길이",cell_length)    	
 	    	
 	    	//각 Cell html 작성 및, 행에 추가
 	    	for(let i = 0; i < cell_length; i++) {
@@ -150,7 +215,7 @@
 										<input type="hidden" name="companyNo" value="">
 										<input type="text" style="float:left; width:70%; border: 0;" name="companyName" >
 										&nbsp;&nbsp;
-										<button type="button" class="btn btn-primary btn-rounded btn-icon" style="float:right">
+										<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right">
 											<i class="mdi mdi-magnify"></i>
 										</button>
 									</div>
@@ -176,12 +241,10 @@
 	            }
 	            new_cell.insertAdjacentHTML('beforeend', temp_html);
     		}
-    	}   	
-    	
+    	}   	    	
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    	
-	    	    
+    		    	    
 	    //삭제 - 버튼 누를때, 행 삭제
 	    const tr_delete_event = (btn) => {
 			const table = document.getElementById('registerTable');
