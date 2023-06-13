@@ -23,7 +23,7 @@ public interface MiddleCategoryService {
 	List<MiddleCategory> getMiddleCategoryByLargeCategory(LargeCategory largeCategory);
 	
 	/**
-	 * 대분류코드를 이용해서 LargeCategory 중분류 엔티티 가져오기
+	 * 대분류코드를 이용해서 LargeCategory 대분류 엔티티 가져오기
 	 * @param code
 	 * @return
 	 */

@@ -89,54 +89,11 @@ ul,li {
 }
 </style>
 <div id="wrap">
-	<div class="order">[영 수 증]</div><br>
-	<div class="container">
-		<div class="info">
-			[매 장 명] <br><br>
-			<span class="adress">[주 소]</span><br><br>
-		[대 표 자] 최종일 [TEL] <br><br>
-		</div>
-		============================
-		<div class="info2">
-			<ul class="title">
-				<li>메 뉴 명</li>
-				<li>단 가</li>
-				<li>수 량</li>
-				<li>금 액</li>
-			</ul>
-		</div>
-		------------------------------------------------
-		<div class="info2">
-			<div class="pay">음식명</div>
-			<ul class="orders">
-				<li>000046</li>
-				<li>9,900</li>
-				<li>1</li>
-				<li>9,900</li>
-			</ul>
-		</div>
-		------------------------------------------------
-		<div class="info2">합 계 금 액
-			<div class="price">9,900</div>
-		</div>
-		------------------------------------------------
-		<div class="info2">
-			<ul class="vat">
-				<li>부가세 과세물품가액</li>
-				<li>부가세</li>
-			</ul>
-			<ul class="vat">
-				<li>------</li>
-				<li>------</li>
-			</ul>
-		</div>
-		
+	
 	</div>
 	<div>
 	<div class="card-body">
-						<button type="submit" class="btn btn-primary" style="float: right;">취소</button>
-						<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;">인쇄</button>
-					<br>
+						
 						<p class="card-title"><b>구매 발주서</b></p>
 						
 						<!--거래명세서 회사 정보-->
@@ -174,56 +131,12 @@ ul,li {
 							</table>
 						</div>
 						<br>
-						
-						<!--거래명세서 품목 정보-->
-						<div class="table-responsive">
-							<table id="transactionDetail">
-								<thead>
-									<tr>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>수량</th>
-										<th>단가</th>
-										<th>공급가격</th>
-										<th>부가세</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-									</tr>
-									
-								</tbody>
-							</table>
-						</div>
-						<br>
-						
-						<!--거래명세서 품목 정리 요약-->
-						<div class="table-responsive">
-							<table id="transactionResult" style="border: 1px solid ; font-size: 13px;">
-									<tr>
-										<th>수량</th>
-										<td></td>
-										<th>공급가격</th>
-										<td></td>
-										<th>VAT</th>
-										<td></td>
-										<th>합계</th>
-										<td></td>
-									</tr>
-							</table>
 						</div>					
 							<br>
 
 					</div>
 	</div>
 	<button id="noprint" onclick="pops();">인쇄하기</button>
-</div>
 <script>
 function pops(){
 	window.print();

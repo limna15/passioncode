@@ -175,11 +175,11 @@
 			<!-- body -->
 			
 				<div class="modal-body">
-				  <th:block th:if="${list == 101}">
+				  <th:block th:if="${list == 100}">
 				  	<th:block th:replace="~{/procurement2/progressCheckAvg :: setPlan(~{this::newPlan} )}"></th:block>
 				  </th:block>
 				  
-				  <th:block th:if="${list == 100}">
+				  <th:block th:if="${list == 101}">
 				  	<th:block th:replace="~{/procurement2/progressCheckAvg :: setAvg(~{this::newAvg} )}"></th:block>
 				  </th:block>
   

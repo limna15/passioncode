@@ -26,12 +26,12 @@ public class DetailPurchaseOrderDTO {
 	/**
 	 * 협력 회사
 	 */
-	private String company;
+	private String companyName;
 	
 	/**
 	 * 발주 일자
 	 */
-	private LocalDateTime date;
+	private LocalDateTime purchaseOrderDate;
 	
 	/**
 	 * 납기 예정일
@@ -46,12 +46,17 @@ public class DetailPurchaseOrderDTO {
 	/**
 	 * 품목코드
 	 */
-	private Integer materialCode;
+	private String materialCode;
+	
+	/**
+	 * 품목명
+	 */
+	private String materialName;
 	
 	/**
 	 * 발주수량
 	 */
-	private Integer amount;
+	private Integer purchaseOrderAmount;
 	
 	/**
 	 * 단가
@@ -62,5 +67,10 @@ public class DetailPurchaseOrderDTO {
 	 * 공급가격
 	 */
 	private Integer suppluPrice;
+	
+	/**
+	 * 조달계획코드
+	 */
+	private Integer procurementPlan;//세부 구매발주서를 위한 조달계획코드
 	
 }

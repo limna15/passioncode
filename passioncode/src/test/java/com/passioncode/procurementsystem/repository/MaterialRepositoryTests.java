@@ -1,10 +1,12 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,6 +115,20 @@ public class MaterialRepositoryTests {
 		
 		log.info("이게 안되는건가,,? : "+materialRepository.findById("PCa0001").orElse(null));
 	}
+	
+	
+	@Test
+	public void getDTOListTest() {
+		List<Material> materialList = materialRepository.findAll(Sort.by(Sort.Direction.ASC, "code"));
+		log.info("리스트 정렬된거 봐보자 : "+materialList);		
+	}
+	
+	@Test
+	public void getListBySortTest() {
+		List<Material> materialList = materialRepository.getListWithSort();
+		log.info("정렬된 리스트 잘되나 어디 한번 보자 : "+materialList);
+	}
+	
 	
 	
 //	트랜잭션 처리는 테스트에서 쓰면 자동 롤백된다! 그래서 지연로딩부분때문에 하는거 아니면 쓰면 안돼! 삽입 안돼!
