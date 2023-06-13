@@ -13,7 +13,7 @@
 					<form th:action = "@{/procurement1/contractRegister}" th:method="post" id="registerForm">
 						<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
-								<table class="table table-bordered" id="registerTable" style="text-align: center;">
+								<table class="table table-bordered" id="contractRegisterTable" style="text-align: center;">
 									<thead>
 										<tr>
 											<th>품목코드</th>
@@ -92,30 +92,20 @@
                     
                        	<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
-								<table class="table table-bordered" id="registerTable" style="text-align: center;">
-									<thead>
-										<tr>
-											<th>사업자<br>등록번호</th>
-											<th>협력회사</th>
-											<th>담당자</th>
-											<th>담당자<br>연락처</th>
-											<th></th> 
-										</tr>
-									</thead>
-									<tbody id="searchCompanyList">	
-										<tr th:each="dto : ${contractDTOList}" >									
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="companyNo" value="104-84-55123"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="companyName" value="(주)길승유업"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" value="강준서"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel" value="010-2233-3344"></td>
-											<td>
-												<button type="button" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-													선택
-												</button>
-											</td> 
-										</tr>
-									</tbody>
-								</table>
+							<table class="table table-bordered" id="searchCompanyListTable" style="text-align: center;">
+								<thead>
+									<tr>
+										<th>사업자<br>등록번호</th>
+										<th>협력회사</th>
+										<th>담당자</th>
+										<th>담당자<br>연락처</th>
+										<th></th> 
+									</tr>
+								</thead>
+								<tbody id="searchCompanyList">
+								 	<!-- 검색한 회사 리스트 보여줄 공간 -->
+								</tbody>
+							</table>
 							<!-- 테이블 끝 -->
 						</div>   
 						              
@@ -136,47 +126,94 @@
 		<script th:inline="javascript">
 		
 		
-		$(document).ready(function(){		
+		$(document).ready(function(){
+			//모달창에서 회사리스트 넣을 태그 찾기
+			const tag = document.querySelector("#searchCompanyList");
+			var cloneObj=$("#searchCompanyList").clone();    			//버튼 클릭전, 태그 안에 모든 정보
+			//console.log("태그 잘 읽나??",tag)
+			
+			//협력회사 찾기 버튼 누를때, 모달창 띄우기
 			$(document).on("click",".companySearchBtn",function(){
 				console.log("협력회사 찾기 버튼 누름");
 				//검색 버튼위의 td를 통해서 회사이름 찾기
-				var companyName = getObj().querySelector("input[type=text]").value;
+				var companyName = getObj().querySelector("input[type=text]").value;				
 				console.log("회사이름 : ",companyName);
-				
+								
 				$.ajax({
 					type : "post" ,
 					url : "/procurement1/companySearch" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
 					data : companyName ,                			//보내는 데이터!(요청 데이터)
 					contentType :"text/plain; charset=UTF-8" ,  	//보내는 데이터 형식 (전송 데이터,요청데이터)
-					dataType : "text" ,							 	//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					dataType : "json" ,							 	//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
 					success : function(data){        				//가져오는 데이터! (응답데이터)
 						console.log("받아온 데이터 : ",data);
 						//console.log("json 리스트 사이즈 보자 : ",data.length);
-						//console.log("일반 리스트 사이즈 보자 : ",data.size);
-						const tag = document.querySelector("#searchCompanyList");
-						console.log("태그 잘 읽나??",tag)
 						
+						//data를 이용해서, 모달창에 넣을 tr 행 html 만들기
+						let completeHtml =``;    					
+						data.forEach(function(item){
+							completeHtml = completeHtml + makeCompanySearchList(item.companyNo,item.companyName,item.manager,item.managerTel);							
+						});						
+						//console.log("완성된 html 보자",completeHtml);						
 						
-						
+						//시작 태그 바로 뒤에 html 넣기
+						tag.insertAdjacentHTML('afterbegin', completeHtml);						
 					},
-					error: function(xhr,status,er){  
-						if(error)
-							error();
+					error : function(jqXHR,textStatus,errorThrown){
+						console.log(jqXHR); 			//응답 메시지
+						console.log(textStatus); 		//"error"로 고정인듯함
+						console.log(errorThrown);
 					}
-				
 				});					
 				
+				$(".companySearchModal").modal('show');
 				
-				
-				getObj().querySelector("input[type=hidden]").value="테스트중";
-				var companyNo = getObj().querySelector("input[type=hidden]").value;
-				console.log("회사 사업자번호 : ",companyNo);		
-				
-				
-				//$(".companySearchModal").modal('show');
-				
+				//모달창 닫기 전에, 모달창안에 넣었던 회사리스트 초기화 시키기
+				$("#searchCompanyList").html(cloneObj.html());
+
 			});
-		});
+			
+			
+			$(document).on("click",".companySelectBtn",function(){
+				console.log("선택 버튼 누름");
+				console.log("그러면 이건 읽겠지?",getObjTR());
+				
+				var companyNo = getObjTR().querySelector("input[name=companyNo]").value;
+				var companyName = getObjTR().querySelector("input[name=companyName]").value;
+				var manager = getObjTR().querySelector("input[name=manager]").value;
+				var managerTel = getObjTR().querySelector("input[name=managerTel]").value;
+				console.log("선택한 회사 사업자번호 : ",companyNo);
+				console.log("선택한 회사 이름 : ",companyName);
+				console.log("선택한 회사 매니저 : ",manager);
+				console.log("선택한 회사 매니저 연락처 : ",managerTel);	
+			
+			});
+			
+			
+			
+			
+			
+		});		
+		
+		//모달창에 들어가는 테이블 tr 행 만들기(검색한 회사리스트 보여줄 tr html)
+		function makeCompanySearchList(companyNo,companyName,manager,managerTel){
+			return `<tr>									
+						<td><input type="text" style="width:100%; border: 0; text-align: center;" name="companyNo" value=${companyNo} readonly></td>
+						<td><input type="text" style="width:100%; border: 0; text-align: center;" name="companyName" value=${companyName} readonly></td>
+						<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" value=${manager} readonly></td>
+						<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel" value=${managerTel} readonly></td>
+						<td>
+							<button type="button" class="btn btn-primary companySelectBtn" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+								선택
+							</button>
+						</td> 
+					</tr>`;
+		}
+		
+		
+		
+		
+		
 		
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -189,7 +226,7 @@
     		DTO.materialCode = item.materialCode;
     		DTO.materialName = item.materialName;
     		DTOList.push(DTO);
-    	});    	
+    	});
     	//console.log("contractDTO 전체 리스트 확인",DTOList);
     	
     	//materialCode 값을 넣어서 html 만들기
@@ -218,12 +255,21 @@
             }
             return obj
         }
+    	
+      //이벤트 발생한 요소의 상위의 TR 객체 찾기
+        function getObjTR(){
+            var obj = event.srcElement
+            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+                obj = obj.parentElement
+            }
+            return obj
+        }
 	    
 		//등록추가 버튼 누를때, 행 추가
     	function registerAddBtn(materialCode,materialName){
     		
     		// table element 찾기
-	    	const table = document.getElementById('registerTable');
+	    	const table = document.getElementById('contractRegisterTable');
 	    	//console.log("가져온 table 정보",table)
 	    	
 	    	//클릭된 행의 인덱스            
@@ -283,7 +329,7 @@
     		    	    
 	    //삭제 - 버튼 누를때, 행 삭제
 	    const tr_delete_event = (btn) => {
-			const table = document.getElementById('registerTable');
+			const table = document.getElementById('contractRegisterTable');
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);
     	};	    
