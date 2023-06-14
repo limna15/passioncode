@@ -128,7 +128,7 @@
 						
 						<!-- 거래명세서 발행 모달창 버튼 -->
 						<div class="col-md-6" >	
-							<form method="post">
+							<form action="/procurement3/materialIn" method="post">
 								<button class="td-modal btn btn-primary" data-target="#modal" data-toggle="modal" data-backdrop="static" style="float: right;">거래명세서 발행</button>
 							</form>
 						</div>
@@ -137,7 +137,7 @@
 					</div>	
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
-						<form action="/procurement3/materialInRegister" method="post">
+						<form action="/procurement3/materialInRegister" method="post" id="inForm">
 							<table id="recent-purchases-listing" class="listTable" style="text-align: center;">
 								<thead>
 									<tr>
@@ -153,22 +153,23 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="list: ${DTOList}">
+									<tr th:each="list: ${DTOList}" id="trList">
 										<td><input type="checkbox" name="checkBox" th:value="${list.code}" onclick="chkClicked()"></td>
-										<td id="purchaseOrderNo">[[${list.no}]]</td>
-										<td><input type="hidden" name="code" value="${list.code}">[[${list.code}]]</td>
-										<td>[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
-										<td>[[${list.materialCode}]]</td>
-										<td>[[${list.materialName}]]</td>
-										<td>[[${list.amount}]]</td>
+										<td><input type="hidden" name="no" th:value="${list.no}">[[${list.no}]]</td>
+										<td><input type="hidden" name="code" th:value="${list.code}">[[${list.code}]]</td>
+										<td><input type="hidden" name="date" th:value="${list.dueDate}">[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
+										<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
+										<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>
+										<td><input type="hidden" name="amount" th:value="${list.amount}">[[${list.amount}]]</td>
 										<td><span th:if="${list.status} == null">
-												<input type="submit" class="btn btn-primary" name="done" value="완료" style="height:25px;">
-												<input type="button" class="btn btn-primary" name="cancle" value="취소" style="height:25px;">
+												<input type="hidden" name="status" th:value="${list.status}">
+												<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
+												<button class="btn btn-primary" name="cancle" value="취소" style="height:25px;">취소</button>
 											</span>
 											<span th:if="${list.status} == true">완료</span>
 											<span th:if="${list.status} == false">취소</span>
 										</td>
-										<td th:text="${list.transactionStatus} ? '완료' : '미완료' " id="transactionStatus"></td>
+										<td th:text="${list.transactionStatus} ? '완료' : '미완료' " id="transactionStatus"><input type="hidden" value="transactionStatus"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -333,9 +334,8 @@
 
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
-	
-	/*<![CDATA[*/
-	let DTOList = [[${DTOList}]];
+
+	var DTOList = [[${DTOList}]];
 	console.log("DTOList 읽기 >>> ", DTOList);
 	
 	let codeList= new Array();
@@ -346,8 +346,7 @@
 		codeList.push(dpoCode);
 		//console.log("dpoCode가 제대로 오나 >>> ", dpoCode);
 	});
-	/*]]>*/
-	
+
 	console.log("codeList가 제대로 오나 >>> ", codeList)
 	
 	let purchaseCode = '';
@@ -375,18 +374,67 @@
 	  e.preventDefault();
 	  sendPurchaseCode();
 	});
- 	
- 	
-	
-	// table element 찾기
-	//const table = document.getElementById('recent-purchases-listing');
-	//console.log("가져온 table 정보", table)
-	
-   	// row의 길이(thead의 row는 빼기위해 -1)
-//    	const row_length = table.rows.length-1;
-//   	console.log("row의 길이",row_length)  
-	
 
+	//이벤트 발생한 요소의 상위의 TD 객체 찾기
+    function getObj(){
+        var obj = event.srcElement
+        while (obj.tagName !='TD'){  //TD가 나올때까지의 Object추출
+            obj = obj.parentElement
+        }
+        return obj
+    }
+	
+  //이벤트 발생한 요소의 상위의 TR 객체 찾기
+    function getObjTR(){
+        var obj = event.srcElement
+        while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+            obj = obj.parentElement
+        }
+        return obj
+    }
+  
+	$(document).on("click", "#doneBtn", function(e){
+		e.preventDefault();
+		//console.log("완료버튼 클릭")		
+		var no= getObjTR().querySelector("input[name=no]").value;
+		var code= getObjTR().querySelector("input[name=code]").value;
+		//var dueDate= getObjTR().querySelector("input[name=dueDate]").value;
+		var materialCode= getObjTR().querySelector("input[name=materialCode]").value;
+		var materialName= getObjTR().querySelector("input[name=materialName]").value;
+		var amount= getObjTR().querySelector("input[name=amount]").value;
+		var status= getObjTR().querySelector("input[name=status]").value;
+		
+		
+		console.log("no 읽기 >>> ", no)
+		console.log("code 읽기 >>> ", code)
+		//console.log("dueDate 읽기 >>> ", dueDate)
+		console.log("materialCode 읽기 >>> ", materialCode)
+		console.log("materialName 읽기 >>> ", materialName)
+		console.log("amount 읽기 >>> ", amount)
+		
+		var DTO= new Object();
+		DTO.no= no;
+		DTO.code= code;
+		DTO.materialCode= materialCode;
+		DTO.materialName= materialName;
+		DTO.amount= amount;
+		DTO.status= status;
+		console.log("DTO 읽기 >>> ", DTO)
+		
+		if(DTO.status == ""){
+			//$("#inForm").submit();
+		}
+		
+	
+	});
+
+// 	// table element 찾기
+// 	const table = document.getElementById('recent-purchases-listing');
+// 	console.log("가져온 table 정보", table)
+	
+//    	// row의 길이(thead의 row는 빼기위해 -1)
+//    	const row_length = table.rows.length-1;
+//   	console.log("row의 길이",row_length) 
 </script>	
 		
 	</th:block>

@@ -108,14 +108,20 @@ public class PS3Controller {
 
 	}
 	
+	@PostMapping("/materialIn")
+	public String tdInfo() {
+	
+		return "redirect:/procurement3/materialIn";
+	}
+	
 	@PostMapping("/materialInRegister")
 	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-		//등록해야될 정보: 입고상태, 발행상태
-		
+		//등록해야될 정보: 입고상태, 발행상태	
 		log.info("자재입고 화면에서 보낸 MaterialDTO 보기 >>> " + materialInDTO);
 		
-		return "/procurement3/materialIn";
-		//return "redirect:/procurement3/materialIn";
+		materiallInService.register(materialInDTO);
+
+		return "redirect:/procurement3/materialIn";
 	}
 	
 	@GetMapping("/transactionList")
