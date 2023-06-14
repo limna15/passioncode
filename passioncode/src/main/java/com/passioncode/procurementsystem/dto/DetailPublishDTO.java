@@ -2,8 +2,20 @@ package com.passioncode.procurementsystem.dto;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * @author Soojin
+ * 발주서 발행용 
+ */
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class DetailPublishDTO {
 	
@@ -14,7 +26,7 @@ public class DetailPublishDTO {
 	private Integer ppcode;
 	
 	/**
-	 * 품목코드
+	 * 회사이름
 	 */
 	private String cname;
 	
@@ -24,12 +36,12 @@ public class DetailPublishDTO {
 	private Date due_date;
 	
 	/**
-	 * 품목명
+	 * 품목코드
 	 */
-	private Integer mcode;
+	private String mcode;
 	
 	/**
-	 * 발주수량
+	 * 품목이름
 	 */
 	private String mname;
 	

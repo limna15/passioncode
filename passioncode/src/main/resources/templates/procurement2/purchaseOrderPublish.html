@@ -15,7 +15,8 @@
 </style>
 <div class="publish">
 					<br>
-						<!--거래명세서 회사 정보-->
+						<!--거래명세서 회사 정보 DetailPublishDTO(ppcode=6, cname=(주)넥스큐브, due_date=2023-06-25, mcode=CBa0001,
+						 mname=Bracket, unit_price=1000)-->
 						<div>
 						<tr th:each="dto: ${DetailPurchaseOrderList}">
 						<th:block th:if="${myListData} == ${dto.procurementPlan}">

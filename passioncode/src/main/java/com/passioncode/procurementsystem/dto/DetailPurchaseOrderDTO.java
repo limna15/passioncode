@@ -20,7 +20,7 @@ public class DetailPurchaseOrderDTO {
 	//총 11개 
 	
 	/**
-	 * 발주서 번호
+	 * 조달계회
 	 */
 	private Integer purchaseOrderNo;
 	

@@ -2,8 +2,12 @@ package com.passioncode.procurementsystem.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Service;
+
+import com.passioncode.procurementsystem.dto.DetailPublishDTO;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
@@ -25,6 +29,31 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	private final ProcurementPlanRepository procurementPlanRepository;
 	
+	
+	@Override
+	public List<DetailPublishDTO> detailToDTO(Integer no){
+		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(no);
+		
+		List<DetailPublishDTO> detailList = new ArrayList<>();//저장하는 곳
+		for(Object[] arr : result) {//이 아래가 변환하는 것 이다. 
+			log.info("222>>"+Arrays.toString(arr));
+			//출력 모양[2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1]
+			
+			DetailPublishDTO detailpDTO = new DetailPublishDTO();
+			detailpDTO.setPpcode((Integer)arr[0]);
+			detailpDTO.setCname((String)arr[1]);
+			detailpDTO.setDue_date((Date)arr[2]);
+			detailpDTO.setUnit_price((Integer)arr[3]);
+			detailpDTO.setMcode((String)arr[4]);
+			detailpDTO.setMname((String)arr[5]);
+	        
+			detailList.add(detailpDTO);			
+					
+		}
+		
+		return detailList;
+		
+	}
 	
 	@Override
 	public DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {

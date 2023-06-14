@@ -1,11 +1,18 @@
 package com.passioncode.procurementsystem.service;
 import java.util.List;
 
+import com.passioncode.procurementsystem.dto.DetailPublishDTO;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 public interface DetailPurchaseOrderService {
+	/**
+	 * 발주서 발행 전 갖고 오기 위해서 
+	 * @return
+	 */
+	List<DetailPublishDTO> detailToDTO(Integer no);
+	
 	
 	DetailPurchaseOrderDTO read(Integer no);
 
@@ -51,5 +58,6 @@ public interface DetailPurchaseOrderService {
 	DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO);
 
 	void detailPurchaseOrderDTO();
+
 
 }

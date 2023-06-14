@@ -3,6 +3,7 @@ package com.passioncode.procurementsystem.repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.passioncode.procurementsystem.dto.DetailPublishDTO;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
@@ -53,16 +56,37 @@ public class DetailPurchaseOrderRepositoryTests {
 	}
 	
 	@Test
-	public void bring() {
+	public void bring() {//myDetailList
 		//detailPurchaseOrderRepository.myDetailList(2);
 		//detailPurchaseOrderRepository.myDetailList();
 		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(2);
 		
 		log.info("중요한 나의 정보>>"+result);
 		
+		//아래 리스트에 더하기
+		List<DetailPublishDTO> list = new ArrayList<>();
+		
 		for(Object[] arr : result) {//이 아래가 변환하는 것 이다. 
-			log.info("222>>"+Arrays.toString(arr));
+			log.info("222>>"+Arrays.toString(arr));//[2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1]
+			
+			DetailPublishDTO dto = new DetailPublishDTO();
+			dto.setPpcode((Integer)arr[0]);
+			dto.setCname((String)arr[1]);
+			dto.setDue_date((Date)arr[2]);
+			dto.setUnit_price((Integer)arr[3]);
+			dto.setMcode((String)arr[4]);
+			dto.setMname((String)arr[5]);
+	        
+	        list.add(dto);			
+					
 		}
+		//잘 들어갔는지 확인
+		for(DetailPublishDTO dto :list){
+			log.info("dto 데이터"+dto);
+		};
+	
+		
+		
 	}
 	
 	
@@ -74,6 +98,7 @@ public class DetailPurchaseOrderRepositoryTests {
 	//	detailPurchaseOrderRepository.myPublish2(1);
 	//	log.info(""+detailPurchaseOrderRepository.myPublish(1));
 	}
+	
 	@Test
 	public void aaa() {
 		log.info("gogogo");;

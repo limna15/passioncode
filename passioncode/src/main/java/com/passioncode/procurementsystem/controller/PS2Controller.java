@@ -31,7 +31,7 @@ public class PS2Controller {
 	
 	
 	@GetMapping("/purchaseOrder")	//발주서 발행
-	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, String checkBox) {
+	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, Integer checkBox) {
 		log.info("내가 원하는 발주서 번호>>"+checkBox);
 		
 		model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
@@ -40,8 +40,10 @@ public class PS2Controller {
 		
 		//여서기 서비스 호출 뒤에 리턴 값을 보낸다
 		model.addAttribute("myListData",checkBox);
+		model.addAttribute("myListData22",detailPurchaseOrderService.detailToDTO(checkBox));
+		log.info("제가 보고 싶은 값 2222>>>>>>==="+detailPurchaseOrderService.detailToDTO(checkBox));
 		log.info("제가 보고 싶은 값 입니다>>>>>>==="+checkBox);
-		//if(checkBox == )
+		
 		
 		
 		
