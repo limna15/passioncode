@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -302,7 +303,7 @@ public class PS1Controller {
 		List<Integer> registerList = new ArrayList<>();
 		//받아온 DTO리스트 각각 DB에 저장하기
 		for(ContractDTO dto : contractDTOList) {
-//			registerList.add(contractService.register(dto));
+			registerList.add(contractService.register(dto));
 //			log.info("각각 엔티티 변환 보자 : "+contractService.dtoToEntity(dto));
 		}
 		
@@ -359,8 +360,7 @@ public class PS1Controller {
 	public void ProcurementPlanRegister2(ProcurementPlanDTO procurementPlanDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//품목코드, 품목명, 소요공정, 소요일, 소요량, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항 <br>
 		//조달계획코드, 자재소요계획코드, 사업자등록번호, 계약서번호 // 기본 여유기간
-		
-		
+				
 		log.info("조달계획 등록 처리.....");
 		
 		log.info("화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
@@ -368,7 +368,7 @@ public class PS1Controller {
 		//받아온 date(소요일, 조달납기예정일, 최소발주일) String으로 왔기 때문에 Date 형식으로 변환해줘야함
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
-		List<ProcurementPlanDTO> contractDTOList = new ArrayList<>();
+		List<ProcurementPlanDTO> procurementPlanDTOList = new ArrayList<>();
 		
 		//조달계획코드 -> 등록하는 거라서 null 값, 애초에 보내지도 않음
 		
@@ -382,7 +382,12 @@ public class PS1Controller {
 		String[] mrpdateStr = request.getParameterValues("mrpdate");		
 		Date[] mrpdate = null;
 		for(int i=0;i<mrpdateStr.length;i++) {
-			mrpdate[i] = simpleDateFormat.parse(mrpdateStr[i]);
+			try {
+				mrpdate[i] = simpleDateFormat.parse(mrpdateStr[i]);
+			} catch (ParseException e) {
+				//e.printStackTrace();
+				log.info("소요일 date 변환시 오류 발생함!!");
+			}
 			log.info("변경되서 넣어진 소요일 날짜 형식 봐보자 : "+mrpdate[i]);
 		}
 		//소요량 배열 -> Integer로 변경
@@ -403,14 +408,24 @@ public class PS1Controller {
 		String[] dueDateStr = request.getParameterValues("dueDate");		
 		Date[] dueDate = null;
 		for(int i=0;i<dueDateStr.length;i++) {
-			dueDate[i] = simpleDateFormat.parse(dueDateStr[i]);
+			try {
+				dueDate[i] = simpleDateFormat.parse(dueDateStr[i]);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				log.info("조달납기예정일 date 변환시 오류 발생함!!");
+			}
 			log.info("변경되서 넣어진 조달납기예정일 날짜 형식 봐보자 : "+dueDate[i]);
 		}
 		//최소발주일 배열 -> Date 형식으로 변환
 		String[] minimumOrderDateStr = request.getParameterValues("minimumOrderDate");		
 		Date[] minimumOrderDate = null;
 		for(int i=0;i<minimumOrderDateStr.length;i++) {
-			minimumOrderDate[i] = simpleDateFormat.parse(minimumOrderDateStr[i]);
+			try {
+				minimumOrderDate[i] = simpleDateFormat.parse(minimumOrderDateStr[i]);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				log.info("최소발주일일 date 변환시 오류 발생함!!");
+			}
 			log.info("변경되서 넣어진 조달납기예정일 날짜 형식 봐보자 : "+minimumOrderDate[i]);
 		}
 		//필요수량 배열 -> Integer로 변경
@@ -444,50 +459,40 @@ public class PS1Controller {
 		
 		//품목코드는 null일수 없으니까, 품목코드 배열 기준으로, 각각의 DTO에 넣어주고, 그값 DTO리스트에 넣기
 		for(int i=0; i<materialCode.length; i++) {
-			ContractDTO contractDTO2 = new ContractDTO();
-			//계약서 번호 null
-			contractDTO2.setContractStatus("완료");			
-			contractDTO2.setMaterialCode(materialCode[i]);
-			contractDTO2.setMaterialName(materialName[i]);
-			contractDTO2.setCompanyName(companyName[i]);;
-			contractDTO2.setManager(manager[i]);
-			contractDTO2.setManagerTel(managerTel[i]);
-			contractDTO2.setSupplyLt(Integer.parseInt(supplyLt[i]));
-			contractDTO2.setUnitPrice(Integer.parseInt(unitPrice[i]));
-			//계약서 업로드 null 허용이 아니라서, 일단은 "화면DB테스트 문구"라고 보내자
-//			contractDTO2.setContractFile(contractFile[i]);
-			contractDTO2.setContractFile("화면DB 테스트중");
-			contractDTO2.setCompanyNo(companyNo[i]);
+			ProcurementPlanDTO procurementPlanDTO2 = new ProcurementPlanDTO();
+			//조달계획코드 null
+			procurementPlanDTO2.setContractStatus("완료");		
+			procurementPlanDTO2.setPpRegisterStatus("완료");
+			procurementPlanDTO2.setPpProgress("발주 예정");
+			procurementPlanDTO2.setMaterialCode(materialCode[i]);
+			procurementPlanDTO2.setMaterialName(materialName[i]);
+			procurementPlanDTO2.setProcess(process[i]);
+			procurementPlanDTO2.setMrpdate(mrpdate[i]);
+			procurementPlanDTO2.setMrpAmount(mrpAmount[i]);
+			procurementPlanDTO2.setCompanyName(companyName[i]);;
+			procurementPlanDTO2.setSupplyLt(supplyLt[i]);
+			procurementPlanDTO2.setDueDate(dueDate[i]);
+			procurementPlanDTO2.setMinimumOrderDate(minimumOrderDate[i]);
+			procurementPlanDTO2.setPpAmount(ppAmount[i]);
+			procurementPlanDTO2.setMrpCode(mrpCode[i]);
+			procurementPlanDTO2.setCompanyNo(companyNo[i]);
+			procurementPlanDTO2.setContractNo(contractNo[i]);
 			
-			if(dealCondition != null) {									//받아온 dealCondition가 존재 O
-				if(!dealCondition[i].equals("")) {						//빈값이 아닐때
-					contractDTO2.setDealCondition(dealCondition[i]);				
-				}else {													//"" 빈값으로 받아올때
-					contractDTO2.setDealCondition(null);
-				}
-			}else {														//받아온 dealCondition가 존재 X
-				contractDTO2.setDealCondition(null);
-			}
-			
-			contractDTOList.add(contractDTO2);
+			//받아온 데이터에 null값으로 오는 항목이 없음! 그대로 리스트에 넣어주기			
+			procurementPlanDTOList.add(procurementPlanDTO2);
 		}
 		
-		log.info("만든 contractDTOList 보자 : "+contractDTOList);
+		log.info("만든 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
 	
-		//등록된 계약서 번호 리스트
+		//등록된 조달계획코드 리스트
 		List<Integer> registerList = new ArrayList<>();
 		//받아온 DTO리스트 각각 DB에 저장하기
-		for(ContractDTO dto : contractDTOList) {
-//			registerList.add(contractService.register(dto));
-//			log.info("각각 엔티티 변환 보자 : "+contractService.dtoToEntity(dto));
+		for(ProcurementPlanDTO dto : procurementPlanDTOList) {
+			registerList.add(procurementPlanService.register(dto));
+			log.info("각각 엔티티 변환 보자 : "+procurementPlanService.dtoToEntity(dto));
 		}
 		
 		redirectAttributes.addFlashAttribute("registerList",registerList);
-		
-		
-		
-		
-		
 		
 		
 	}

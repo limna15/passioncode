@@ -28,8 +28,9 @@
 		<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
 			<div class="navbar-brand-wrapper d-flex justify-content-center">
 				<div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-					<a class="navbar-brand brand-logo" href="/layout/basic">
-						<img src="/images/logo.svg" alt="logo" />
+					<a class="navbar-brand brand-logo" href="/procurement1/materialList">
+<!-- 					<img src="/images/logo.svg" alt="logo" />  -->
+						<i class="mdi mdi-bank">PassionCode</i>
 					</a> 
 					<a class="navbar-brand brand-logo-mini" href="/layout/basic">
 						<img src="/images/logo-mini.svg" alt="logo" />
@@ -174,19 +175,21 @@
 			<!-- partial:partials/_sidebar.html -->
 			<nav class="sidebar sidebar-offcanvas" id="sidebar">
 				<ul class="nav">
-					<!-- <li class="nav-item">
+<!--
+					 <li class="nav-item">
 						<a class="nav-link" href="index.html">
 							<i class="mdi mdi-home menu-icon"></i> 
 							<span class="menu-title">Dashboard</span>
 						</a>
-					</li> -->
+					</li> 
+-->
 					<li class="nav-item">
-						<a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic"> 
+						<a class="nav-link" data-toggle="collapse" href="#procurementPlan" aria-expanded="false" aria-controls="procurementPlan"> 
 							<i class="mdi mdi-circle-outline menu-icon"></i> 
 							<span class="menu-title">발주 계획</span> 
 							<i class="menu-arrow"></i>
 						</a>
-						<div class="collapse" id="ui-basic">
+						<div class="collapse" id="procurementPlan">
 							<ul class="nav flex-column sub-menu">
 								<li class="nav-item">
 									<a class="nav-link" href="/procurement1/materialList">
@@ -207,12 +210,12 @@
 						</div>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link"	data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth"> 
+						<a class="nav-link"	data-toggle="collapse" href="#purchaseOrder" aria-expanded="false" aria-controls="purchaseOrder"> 
 							<i class="mdi mdi-account menu-icon"></i>
 							<span class="menu-title">구매 발주</span> 
 							<i class="menu-arrow"></i>
 						</a>
-						<div class="collapse" id="auth">
+						<div class="collapse" id="purchaseOrder">
 							<ul class="nav flex-column sub-menu">
 								<li class="nav-item">
 									<a class="nav-link"	href="/procurement2/purchaseOrder"> 
@@ -229,12 +232,12 @@
 						</div>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" data-toggle="collapse" href="#ui-basic2" aria-expanded="false" aria-controls="ui-basic2"> 
+						<a class="nav-link" data-toggle="collapse" href="#materialIn" aria-expanded="false" aria-controls="materialIn"> 
 							<i class="mdi mdi-circle-outline menu-icon"></i> 
 							<span class="menu-title">자재 입고</span> 
 							<i class="menu-arrow"></i>
 						</a>
-						<div class="collapse" id="ui-basic2">
+						<div class="collapse" id="materialIn">
 							<ul class="nav flex-column sub-menu">
 								<li class="nav-item">
 									<a class="nav-link" href="/procurement3/materialIn">
@@ -254,14 +257,40 @@
 							</ul>
 						</div>
 					</li>
-					
+					<li class="nav-item">
+						<a class="nav-link" data-toggle="collapse" href="#materialOut" aria-expanded="false" aria-controls="materialOut"> 
+							<i class="mdi mdi-grid-large menu-icon"></i> 
+							<span class="menu-title">자재 출고</span>
+							<i class="menu-arrow"></i>
+						</a>
+						<div class="collapse" id="materialOut">
+							<ul class="nav flex-column sub-menu">
+								<li class="nav-item">
+									<a class="nav-link" href="#"> <!-- /procurement4/materialOut -->
+										자재 출고
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link"	href="#"> <!-- /procurement4/stockResult -->
+										재고 산출
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link"	href="#"> <!-- /procurement4/stockPriceManager -->
+										재고금액 현황 리포트
+									</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+<!--					
 					<li class="nav-item">
 						<a class="nav-link" href="/pages/tables/basic-table.html"> 
 							<i class="mdi mdi-grid-large menu-icon"></i> 
 							<span class="menu-title">자재 출고</span>
 						</a>
 					</li>
-<!-- 					<li class="nav-item">
+ 					<li class="nav-item">
 						<a class="nav-link" href="/pages/icons/mdi.html"> 
 							<i class="mdi mdi-emoticon menu-icon"></i> 
 							<span class="menu-title">Icons</span>
@@ -274,7 +303,8 @@
 							<span class="menu-title">Documentation</span>
 						</a>
 					</li>
-				</ul> -->
+-->
+				</ul> 
 			</nav>
 			<!-- partial -->
 			<div class="main-panel">
