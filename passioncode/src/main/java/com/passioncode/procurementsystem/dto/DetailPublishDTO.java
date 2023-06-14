@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -19,9 +20,18 @@ import lombok.NoArgsConstructor;
 @Data
 public class DetailPublishDTO {
 	
+	/**
+	 * 발주서 번호
+	 */
+	private Integer pono;
 	
 	/**
-	 * 발주코드
+	 * 발주 코드
+	 */
+	private Integer pocode;
+	
+	/**
+	 * 조달계획 코드
 	 */
 	private Integer ppcode;
 	
@@ -49,5 +59,24 @@ public class DetailPublishDTO {
 	 * 단가
 	 */
 	private Integer unit_price;
+	
+	/**
+	 * 공급 가격
+	 */
+	private Integer supply_price;
+	
+	/**
+	 * 발주일
+	 */
+	private LocalDateTime purchaseOrderDate;
+	
+	/**
+	 * 기존재고수량
+	 */
+	private Integer mamount;
 
+	/**
+	 * 필요수량
+	 */
+	private Integer ppamount;
 }

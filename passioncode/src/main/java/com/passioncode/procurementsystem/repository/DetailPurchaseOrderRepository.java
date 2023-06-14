@@ -38,7 +38,7 @@ public interface DetailPurchaseOrderRepository extends JpaRepository<DetailPurch
 	
 	//\r\n
 	//List 실험 이 아래가 되는 코드
-	@Query(value="SELECT distinct pp.code AS ppcode , com.name AS cname, pp.due_date, cont.unit_price, mat.code AS mcode, mat.name AS mname FROM company AS com JOIN contract AS cont JOIN procurement_plan AS pp JOIN mrp AS m JOIN material AS mat WHERE pp.code=:mycode AND cont.no=pp.contract_no AND cont.company_no=com.no AND pp.mrp_code=m.code AND mat.code=m.material_code",nativeQuery = true)
+	@Query(value="SELECT distinct pp.code AS ppcode , com.name AS cname, pp.due_date, cont.unit_price, mat.code AS mcode, mat.name AS mname,mat.stock_amount AS mamount , pp.amount AS ppamount FROM company AS com JOIN contract AS cont JOIN procurement_plan AS pp JOIN mrp AS m JOIN material AS mat WHERE pp.code=:mycode AND cont.no=pp.contract_no AND cont.company_no=com.no AND pp.mrp_code=m.code AND mat.code=m.material_code",nativeQuery = true)
 	public List<Object[]> myDetailList(@Param("mycode")Integer mycode);
 	
 	//@Query(value="SELECT * FROM contract",nativeQuery = true)

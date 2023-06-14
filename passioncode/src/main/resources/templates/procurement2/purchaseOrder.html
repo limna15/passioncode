@@ -86,6 +86,7 @@
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
 					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;" onclick="aaa()">발행</a>&nbsp;
+					<button type="submit" id="data" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;" onclick="aaa()">발행실패</button>&nbsp;
 					<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;
 					 <button class="btn btn-primary" onclick="print();">인쇄</button>&nbsp;
 					<div class="table-responsive">
@@ -188,39 +189,7 @@
 
 		
 <!-- 체크박스 시작 -->
-<script th:inline="javascript" type="text/javascript">
-var purchaseOrderList = [[${purchaseOrderList}]];
-console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
 
-var codeList= new Array();
-var dtoCode= new Object();
-
-purchaseOrderList.forEach(function(item){
-	dtoCode= item.code;
-	codeList.push(dtoCode);
-});
-	
-	console.log("codeList가 제대로 오나 >>> ", codeList);
-	
-	var purchaseCode = '';
-	function chkClicked(){
-		const chkChecked = 'input[name="checkBox"]:checked';
-		const selectedEls = document.querySelectorAll(chkChecked);
-		purchaseCode = '';
-		
-		selectedEls.forEach((el) => {
-			purchaseCode += el.value + ' ';
-	  });
- 		console.log("purchaseCode >>> ", purchaseCode);
-	}
-	
-	function aaa(){
-		console.log("purchaseCode 찍히나 >>> ", purchaseCode)
-		//purchaseCode= purchaseCode.replaceAll(" ","");
-		//console.log("purchaseCode 찍히나 >>> ", purchaseCode)		
-		location.href="/procurement3/materialIn?purchaseCode="+purchaseCode;
-	};	
-</script>
 <script type="text/javascript">
 let printPurchaseOrder;
 function print(){
@@ -251,7 +220,8 @@ function myCheckBox(){
 	selectedEls.forEach((el) => {
 		purchaseNo += el.value + ' ';
   });
-		console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+		console.log("purchaseNo 조달계획번호 여기>>> ", purchaseNo);
+		
 //	aaa();
 	
 	
@@ -262,8 +232,9 @@ function aaa(){
 	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
 	purchaseNo = purchaseNo.replaceAll(" ","");
 	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	//아래 두개 없어도 잘됨
 	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
-	location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
+	//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
 };
 	
 	

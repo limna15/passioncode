@@ -67,8 +67,11 @@ public class DetailPurchaseOrderRepositoryTests {
 		List<DetailPublishDTO> list = new ArrayList<>();
 		
 		for(Object[] arr : result) {//이 아래가 변환하는 것 이다. 
-			log.info("222>>"+Arrays.toString(arr));//[2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1]
+			log.info("222>>"+Arrays.toString(arr));
+			//dto 데이터DetailPublishDTO(pono=8, pocode=8, ppcode=2, cname=(주)경도전자, due_date=2023-06-10, mcode=CNa0001, mname=Bolt1, unit_price=200, supply_price=20000, 
+			//purchaseOrderDate=2023-06-14T20:23:29.881289800, mamount=0, ppamount=100)
 			
+			//[2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
 			DetailPublishDTO dto = new DetailPublishDTO();
 			dto.setPpcode((Integer)arr[0]);
 			dto.setCname((String)arr[1]);
@@ -76,6 +79,16 @@ public class DetailPurchaseOrderRepositoryTests {
 			dto.setUnit_price((Integer)arr[3]);
 			dto.setMcode((String)arr[4]);
 			dto.setMname((String)arr[5]);
+			dto.setMamount((Integer)arr[6]);
+			dto.setPpamount(((Integer)arr[7])-((Integer)arr[6]));//필요수량 - 재고수량
+	        dto.setPurchaseOrderDate(LocalDateTime.now());		
+	        dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
+	        dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
+	        dto.setSupply_price((((Integer)arr[7]))*((Integer)arr[3]));//필요수량 * 단가
+	        
+	        //발주수량과 공급 가격 구하기 위해서 조달계획 가져옴
+	        //ProcurementPlan procurementPlan = procurementPlanRepository.findById((Integer)arr[0]).get();
+	        
 	        
 	        list.add(dto);			
 					
@@ -83,6 +96,8 @@ public class DetailPurchaseOrderRepositoryTests {
 		//잘 들어갔는지 확인
 		for(DetailPublishDTO dto :list){
 			log.info("dto 데이터"+dto);
+			//dto 데이터DetailPublishDTO(ppcode=2, cname=(주)경도전자, due_date=2023-06-10, mcode=CNa0001, 
+			//mname=Bolt1, unit_price=200, purchaseOrderDate=2023-06-14T19:26:53.218694900, mamount=null)
 		};
 	
 		
@@ -147,14 +162,14 @@ public class DetailPurchaseOrderRepositoryTests {
 		// 발주 코드 생성 테스트
 		// 잘 만들어 진다
 
-		PurchaseOrder purchaseOrder = new PurchaseOrder(findMax2());
+		//PurchaseOrder purchaseOrder = new PurchaseOrder(findMax2());
 		// Integer code, Integer amount, LocalDateTime date, Integer purchaseOrderNo
 		// 코드는 자동 생성
 		// 발주 번호는 참고해서
 
-		DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, 200, LocalDateTime.now(),
-				purchaseOrder);
-		detailPurchaseOrderRepository.save(detailPurchaseOrder);
+		//DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, 200, LocalDateTime.now(),
+			//	purchaseOrder);
+		//detailPurchaseOrderRepository.save(detailPurchaseOrder);
 		
 		//아래는 테스트 중
 		//발주서 번호-> 발주 코드가 생성되고 난 뒤에 조달계획 코드 업데이트 하기
@@ -179,21 +194,6 @@ public class DetailPurchaseOrderRepositoryTests {
 		log.info(">>만들어 주세요 제발 =========>>"+detailPurchaseOrder);
 	}
 	
-	
-	@Transactional
-	@Test
-	public DetailPurchaseOrder purchaseOrderBuilTest() {//이거 안됨
-		ProcurementPlan procurementPlan = procurementPlanRepository.findById(13).get();
-		PurchaseOrder purchaseOrder = PurchaseOrder.builder().build();
-		DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().amount(procurementPlan.getAmount()).code(findMax())
-				.date(LocalDateTime.now()).purchaseOrder(purchaseOrder).build();
-				log.info(">>구매 발주서 번호 만들어 주세요 제발 =========>>"+purchaseOrder);
-				log.info(">>만들어 주세요 제발 =========>>"+detailPurchaseOrder);
-				
-				detailPurchaseOrderRepository.save(detailPurchaseOrder);
-				return detailPurchaseOrder;
-	}
-	
 	@Transactional
 	@Test
 	public DetailPurchaseOrder purchaseOrderBuilTest23() {//이거 안됨
@@ -214,9 +214,6 @@ public class DetailPurchaseOrderRepositoryTests {
 
 	}
 
-	public void DTOtoEntuty() {
-
-	}
 
 	@Test
 	public void createCodeAndNo() {
@@ -348,19 +345,18 @@ public class DetailPurchaseOrderRepositoryTests {
 	}
 
 	@Test
-	public Integer findMax() {
+	public void findMax() {
 		detailPurchaseOrderRepository.findMaxCode();
 
 		log.info(">>>>>>>>>>" + detailPurchaseOrderRepository.findMaxCode());
-		return detailPurchaseOrderRepository.findMaxCode();
 	}
 
 	@Test
-	public Integer findMax2() {
+	public void findMax2() {
 		detailPurchaseOrderRepository.findMaxOrderNo();
 
 		log.info(">>>>>>>>>>" + detailPurchaseOrderRepository.findMaxOrderNo());
-		return detailPurchaseOrderRepository.findMaxOrderNo();
+		
 	}
 
 	
