@@ -8,6 +8,7 @@ import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
 import com.passioncode.procurementsystem.repository.DetailPurchaseOrderRepository;
 import com.passioncode.procurementsystem.service.DetailPurchaseOrderService;
+import com.passioncode.procurementsystem.service.ProgressCheckService;
 import com.passioncode.procurementsystem.service.PurchaseOrderService;
 
 import org.springframework.ui.Model;
@@ -26,6 +27,8 @@ public class PS2Controller {
 	private final PurchaseOrderService purchaseOrderService;
 	
 	private final DetailPurchaseOrderService detailPurchaseOrderService;
+	private final ProgressCheckService progressCheckService;
+	
 	
 	@GetMapping("/purchaseOrder")	//발주서 발행
 	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, String checkBox) {
@@ -46,6 +49,7 @@ public class PS2Controller {
 		log.info("progressCheck>>>>>>>"+purchaseOrderDTO);
 		
 		
+		model.addAttribute("pCheckList", progressCheckService.getProgressCheckDTOList());
 		model.addAttribute("list",100);
 		
 		

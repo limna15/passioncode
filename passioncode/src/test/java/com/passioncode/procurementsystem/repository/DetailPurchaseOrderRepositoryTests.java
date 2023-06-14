@@ -219,7 +219,7 @@ public class DetailPurchaseOrderRepositoryTests {
 		// 발주서 번호, 협력회사, 발주일자, 납기 예정일
 		// 발주 번호, 품목코드, 품목, 발주수량, 단가, 공급 가격,조달계획코드(외래키)
 		// 총 11개(+ 외래키 조달계획코드로 갖고오기)
-
+		
 		// 공급가격만 구매발주서에서 가져옴
 		// 발주서 번호, 발주 코드
 		DetailPurchaseOrderDTO detailPurchaseOrderDTO = DetailPurchaseOrderDTO.builder()

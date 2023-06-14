@@ -3,6 +3,7 @@ package com.passioncode.procurementsystem.repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.dto.ProgressCheckDTO;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
+import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.ProgressCheck;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -42,6 +45,9 @@ public class ProgressCheckRepositoryTests {
 	
 	@Autowired
 	TransactionDetailRepository transactionDetailRepository;
+	
+	@Autowired
+	MRPRepository mrpRepository;
 	
 	@Transactional
 	@Test
@@ -74,43 +80,82 @@ public class ProgressCheckRepositoryTests {
 		
 		
 		for(int i=0; i<detailList.size(); i++) {
-			progressCheckDTOList.add(entityToDTO(detailList.get(i)));
+			//progressCheckDTOList.add(entityToDTO(detailList.get(i)));
 		}
 		
 		log.info(">> 목록 보여주세요 >>>"+progressCheckDTOList);;
 		return progressCheckDTOList;
 	}
 	
+	@Test
+	public List<ProgressCheckDTO> getProgressCheckDTOList() {//발주서 목록 갖고오기
+		List<DetailPurchaseOrder> detilList = detailPurchaseOrderRepository.findAll();
+		
+		List<ProgressCheckDTO> progressCheckDTOlList = new ArrayList<>();
+		for(int i=0;i<detilList.size();i++) {
+			//progressCheckDTOlList.add(entityToDTO(detilList.get(i)));
+					}
+		return progressCheckDTOlList;
+		
+	}
+	
+	@Test
+	public void getList() {
+		Optional<DetailPurchaseOrder> list = detailPurchaseOrderRepository.findById(1);
+		//ProgressCheck pcheckList = pcheckList.get();
+		List<PurchaseOrder> list2 = purchaseOrderRepository.findAll();
+		log.info("발주서 가져오기>>"+list2);
+		
+	}
+	
 	@Transactional
 	@Test
-	public ProgressCheckDTO entityToDTO(DetailPurchaseOrder detailPurchaseOrder) {
+	public void entityToDTO() {//이게 가져와 지는 것
 		//발주서 목록 갖고오기
-		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
+		//ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
 		//조달계획으로 갖고와서 테스트 하기
+		
 		//DetailPurchaseOrder detailPurchaseOrder2 = detailPurchaseOrderRepository.findById(1).get();
 		//1번 세구부매 발주서로 테스트
 		
+		//세부구매발주서 -> 조달계획 -> ..
+		DetailPurchaseOrder detailPurchaseOrder2= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder2);
+		//MRP mrp = mrpRepository.findBymaterialCode(null);
+		//log.info("발주 계획 보기>>"+pp);		
 		//만약에로 발주 코드가 널이 아닌것 으로 불러오기
 		
-		ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
-				.companyName(procurementPlan.getContract().getCompany().getName())
-				.purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
-				.dueDate(procurementPlan.getDueDate())
-				.materialName(procurementPlan.getContract().getMaterial().getName())
-				.unitPrice(procurementPlan.getContract().getUnitPrice())
-				.diliveryStatus(null)
-				.nextCheckDate(null)
-				.diliveryPercent(null)
-				.inspectionComplete(null)
-				.purchaseOrderDeadlineStatus(null)
-				.build();
+		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
+		  .companyName(procurementPlan.getContract().getCompany().getName())
+		  .purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
+		  .dueDate(procurementPlan.getDueDate())
+		  .materialName(procurementPlan.getContract().getMaterial().getName())
+		  .unitPrice(procurementPlan.getContract().getUnitPrice())
+		  .diliveryStatus("미완료") .diliveryPercent(20) .inspectionComplete("미완료")
+		  .purchaseOrderDeadlineStatus("미완료") .build();
+		  
+		  log.info(">> 목록 보여주세요 >>>"+progressCheckDTO); 
+		 		
 		
-		log.info(">> 목록 보여주세요 >>>"+progressCheckDTO);
-		
-		return progressCheckDTO;
-		
+		//return null;
 	}
 		
+	@Transactional
+	@Test
+	public void DTOTest() {//자재 입고 화면 가져온 것
+		DetailPurchaseOrder detailPurchaseOrder2= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder2);
+		MaterialIn mi= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder2);
+		log.info("pp는 어케 찍히나 " + pp);
+		
+		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder2.getPurchaseOrder().getNo()).code(detailPurchaseOrder2.getCode())
+				.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
+				.materialName(pp.getMrp().getMaterial().getName())
+				.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false)
+				.inDate(mi.getDate()).build();
+		
+		log.info("DTO 하나는 어케 가져오는거죠 " + materialInDTO);
+	}
 	
 	
 	@Transactional
@@ -155,22 +200,6 @@ public class ProgressCheckRepositoryTests {
 		
 	}
 	
-	@Transactional
-	@Test
-	public void DTOTest() {//자재 입고 화면 가져온 것
-		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(1).get();
-		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
-		MaterialIn mi= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
-		log.info("pp는 어케 찍히나 " + pp);
-		
-		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder.getPurchaseOrder().getNo()).code(detailPurchaseOrder.getCode())
-									.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
-									.materialName(pp.getMrp().getMaterial().getName())
-									.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false)
-									.inDate(mi.getDate()).build();
-		
-		log.info("DTO 하나는 어케 가져오는거죠 " + materialInDTO);
-	}
 	
 	
 	

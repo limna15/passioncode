@@ -51,6 +51,10 @@ public class ProgressCheckDTO {
 	private String materialName;//품목명
 	
 	//납기 현황
+	/**
+	 * 발주 수량
+	 */
+	private Integer orderAmount;
 	
 	/**
 	 * 단가
@@ -60,12 +64,12 @@ public class ProgressCheckDTO {
 	/**
 	 * 납기현황
 	 */
-	private Integer diliveryStatus;
+	private String diliveryStatus;
 	
 	/**
 	 *다음 진척 검수 일정
 	 */
-	private Date nextCheckDate;
+	//private Date nextCheckDate;
 	
 	/**
 	 *납기 진도율
@@ -75,7 +79,7 @@ public class ProgressCheckDTO {
 	/**
 	 *검수완료
 	 */
-	private Integer inspectionComplete;
+	private String inspectionComplete;
 	
 	/**
 	 *발주서 마감 상태

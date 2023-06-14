@@ -106,21 +106,22 @@
                         </tr>
                       </thead>
                       <tbody>
-                      <tr>
-                            <td>1</td>
-                            <td>대명</td>
-                            <td>23/08/12</td>
-                            <td>10일</td>
-                            <td>23/08/12</td>
-                            <td>B11</td>
-                            <td>배터리</td>
-                            <td>50</td>
+                      <tr th:each="dto: ${pCheckList}">
+                            <td>[[${dto.purchaseOrderCode}]]</td>
+                            <td>[[${dto.companyName}]]</td>
+                            <td>[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
+                            <td>[[${dto.materialName}]]</td>
+                            <td>[[${dto.orderAmount}]]</td>
+                            <td>[[${dto.unitPrice}]]</td>
+                            <td>[[${dto.companyName}]]</td>
+                            <td>[[${dto.companyName}]]</td>
                             <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="schedule">일정등록</a></td>
                             <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="avg">평가</a></td>
-                            <td>100,000</td>
-                            <td>115,000,000</td>
-                            <td>미완료</td>
+                            <td>[[${dto.diliveryPercent}]]</td>
+                            <td>[[${dto.inspectionComplete}]]</td>
+                            <td>[[${dto.purchaseOrderDeadlineStatus}]]</td>
                         </tr>
+                        
                      	<!-- 
                      	 <tr>
                             <td>2</td>
