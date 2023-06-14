@@ -56,7 +56,7 @@ public interface ProcurementPlanService {
 	 * ProcurementPlanDTO 리스트 가져오기 (조달계획 등록상태 완료,미완료 전부)
 	 * @return
 	 */
-	List<ProcurementPlanDTO> getDTOList();
+	List<ProcurementPlanDTO> getDTOList();	
 			
 	/**
 	 * 조달계획 등록 (ProcurementPlanDTO 이용해서)

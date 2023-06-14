@@ -7,10 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
@@ -19,7 +17,6 @@ import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.repository.ContractRepository;
 import com.passioncode.procurementsystem.repository.MRPRepository;
 import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -183,39 +180,53 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 
 	@Override
 	public List<ProcurementPlanDTO> getDTOList() {
-		List<MRP> mrpList = mrpRepository.findAll();
+		// 조달계획등록 상태가 완료된거, 미완료 된거 나눠서 정리!
 		
-		List<ProcurementPlanDTO> ppDTOList = new ArrayList<>();
-		ProcurementPlanDTO procurementPlanDTO = null;		
+		//1. 조달계획등록 미완료인 mrp 가져오기
+		// -> 조달계획등록 미완료, 계약완료 미완료, 랜덤으로 섞여서 위에 존재하는 상태 
+		List<MRP> mrpList = mrpRepository.getMRPJoinPPWithNotCompletePP();
 		
-		for(int i=0;i<mrpList.size();i++) {
-			ProcurementPlan procurementPlan = procurementPlanRepository.findByMrp(mrpList.get(i));	
-			
-			//procurementPlan 가 존재할때, 조달계획 등록 완료된 상태
-			if(procurementPlan!=null) {
-				procurementPlanDTO =ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
-																.materialName(procurementPlan.getMrp().getMaterial().getName()).process(procurementPlan.getMrp().getProcess())
-																.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
-																.freePeriod(makefreePeriod(procurementPlan.getMrp().getDate(),procurementPlan.getDueDate()))
-																.companyName(procurementPlan.getContract().getCompany().getName())
-																.supplyLt(procurementPlan.getContract().getSupplyLt())
-																.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
-																.ppAmount(procurementPlan.getAmount())
-																.contractStatus(contractStatusCheck(procurementPlan.getMrp().getMaterial()))
-																.ppRegisterStatus("완료").ppProgress(ppProgressCheck(procurementPlan))
-																.mrpCode(procurementPlan.getMrp().getCode()).companyNo(procurementPlan.getContract().getCompany().getNo())
-																.contractNo(procurementPlan.getContract().getNo()).build();
-				ppDTOList.add(procurementPlanDTO);
-			}else {  ////procurementPlan 가 존재X, 조달계획 등록 미완료된 상태
-				procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrpList.get(i).getMaterial().getCode()).materialName(mrpList.get(i).getMaterial().getName())
-																.process(mrpList.get(i).getProcess()).mrpdate(mrpList.get(i).getDate()).mrpAmount(mrpList.get(i).getAmount())
-																.contractStatus(contractStatusCheck(mrpList.get(i).getMaterial())).ppRegisterStatus("미완료")
-																.mrpCode(mrpList.get(i).getCode()).build();	
-				ppDTOList.add(procurementPlanDTO);
+		//일단 받아온 mrp 리스트 -> ProcurementPlanDTO 리스트로 변경
+		List<ProcurementPlanDTO> nonePPByMrpList = new ArrayList<>();
+		for(MRP mrp : mrpList) {
+			nonePPByMrpList.add(mrpEntityToDTO(mrp));
+		}
+		
+		//최종적으로 만들 DTO 리스트 셋팅해주기
+		List<ProcurementPlanDTO> finalDTOList = new ArrayList<>();
+		
+		//1번 리스트에서 계약상태 완료 리스트 만들기
+		//1번 리스트에서 계약상태 미완료 리스트 만들기
+		List<ProcurementPlanDTO> notPPByMrpListCompleteContract = new ArrayList<>();
+		List<ProcurementPlanDTO> notPPByMrpListNonContract = new ArrayList<>();
+		for(ProcurementPlanDTO dto : nonePPByMrpList) {
+			if(dto.getContractStatus().equals("완료")) {
+				notPPByMrpListCompleteContract.add(dto);
+			}else {
+				notPPByMrpListNonContract.add(dto);
 			}			
-		}	
+		}
 		
-		return ppDTOList;
+		//1번 리스트에서 계약상태 완료 먼저 최종 리스트에 넣어주고, 
+		for(ProcurementPlanDTO dto : notPPByMrpListCompleteContract) {
+			finalDTOList.add(dto);
+		}
+		//1번 리스트에서 계약상태 미완료인것은 그다음에 최종리스트에 넣어주기
+		for(ProcurementPlanDTO dto : notPPByMrpListNonContract) {
+			finalDTOList.add(dto);
+		}
+		
+		//2. 조달계획등록 완료인 조달계획 가져오기
+		List<ProcurementPlan> ppList = procurementPlanRepository.getPPJoinMRPWithOrder();
+		
+		//받아온 리스트, DTO로 변경하면서, 최종리스트에 넣어주기
+		for(ProcurementPlan pp : ppList) {
+			finalDTOList.add(ppEntityToDTO(pp));
+		}
+		
+		log.info("만들어진 정렬된 ProcurementPlanDTO 리스트 보기 : "+finalDTOList);
+		
+		return finalDTOList;
 	}
 	
 	/**
@@ -253,8 +264,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 																.mrpCode(mrpList.get(i).getCode()).build();	
 				ppDTOList.add(procurementPlanDTO);
 			}			
-		}	
-		
+		}			
 		return ppDTOList;
 	}
 	

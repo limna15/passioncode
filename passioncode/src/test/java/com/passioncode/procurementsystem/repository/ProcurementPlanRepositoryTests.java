@@ -1,10 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.text.DateFormat;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,13 +10,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
@@ -452,10 +447,19 @@ public class ProcurementPlanRepositoryTests {
 	
 	@Test
 	public void deleteByDTOTest() {
-		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(15).build();
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(15).build();		
 		
 		procurementPlanRepository.deleteById(procurementPlanDTO.getPpcode());
 	}
+	
+	@Test
+	public void getMRPJoinPPWithOrderTest() {
+		log.info("어디 조인한 mrp리스트 잘가져오나 보자 : "+mrpRepository.getMRPJoinPPWithNotCompletePP());
+//		log.info("조달계획 총 개수 보자 : "+procurementPlanRepository.countBy());
+//		log.info("mrp 총 개수 보자 : "+mrpRepository.countBy());
+//		log.info("조달계획 리스트 보자 : "+procurementPlanRepository.getPPJoinMRPWithOrder());
+	}
+	
 	
 	
 	

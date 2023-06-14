@@ -1,6 +1,10 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
@@ -31,10 +35,20 @@ public interface ProcurementPlanRepository extends JpaRepository<ProcurementPlan
 	public ProcurementPlan findByMrp(MRP mrp);
 	
 	/**
-	 * 조달계획 총개수 세기
+	 * 조달계획 총개수 세기 <br>
 	 * count 조회 시 Long으로 리턴 -> 쓰려면 리턴 데이터타입이 Long이어야함
 	 * @return
 	 */
-	Long countBy();
+	public Long countBy();
+	
+	/**
+	 * mrp와 조인하여 조달계획 리스트 가져오기 <br>
+	 * 소요일 기준으로 오름차순 정렬 -> 조달계획 완료된 리스트들 <br>
+	 */
+	@Query(value="SELECT pp.code,pp.mrp_code,pp.contract_no,pp.amount,pp.due_date,pp.minimum_order_date,pp.register_date,pp.completion_date,pp.detail_purchase_order_code "
+					+ "FROM procurement_plan pp JOIN mrp m ON pp.mrp_code=m.code ORDER BY m.date", nativeQuery = true)
+	public List<ProcurementPlan> getPPJoinMRPWithOrder();
+	
+	
 	
 }

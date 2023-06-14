@@ -217,7 +217,7 @@
 		$(document).ready(function(){
 			//계약서 찾으려고 검색한 tr을 넣어주기 위한 tr 전역변수 선언
 			var searchContractTR = new Object();
-			//console.log("tr 전역변수 만들고 난 값 : ",searchContractTR);			
+			console.log("tr 전역변수 만들고 난 값 : ",searchContractTR);			
 						
 			//계약서 찾기 모달창 -> 본문내용 넣을 태그 찾기 
 			const searchContractListModalTag = document.querySelector("#searchContractListModal");
@@ -230,18 +230,18 @@
 			//console.log("전역에 넣은 계약서오류창 태그 : ",searchContractListErrorModalTag);
 			
 			
-			//협력회사 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
+			//계약서(협력회사) 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
 			$(document).on("click",".contractSearchBtn",function(){
 				console.log("계약서 찾기 버튼 누름");
-				//협력회사 찾기 버튼 누르고 난 후 해당 TR의 값 세팅해주기
-				searchcompanyTR=getObjTR();
-				//console.log("세팅이 된 TR 값 읽기 : ",searchcompanyTR);
+				//계약서 찾기 버튼 누르고 난 후 해당 TR의 값 세팅해주기
+				searchContractTR=getObjTR();
+				console.log("계약서 찾기 버튼 누르고 난 후 해당 TR의 값 세팅 : ",searchContractTR);
 				
 				//검색 버튼위의 td위에 tr을 통해서 회사이름과 품목코드 찾기 -> 즉 검색버튼 누른 행에서 회사이름과 품목코드 찾기
-				//위에서 셋팅 해놓은 searchcompanyTR 이용하기
-				var companyName = searchcompanyTR.querySelector("input[name=companyName]").value;				
+				//위에서 셋팅 해놓은 searchContractTR 이용하기
+				var companyName = searchContractTR.querySelector("input[name=companyName]").value;				
 				console.log("회사이름 : ",companyName);
-				var materialCode = searchcompanyTR.querySelector("input[name=materialCode]").value;	
+				var materialCode = searchContractTR.querySelector("input[name=materialCode]").value;	
 				console.log("품목코드 : ",materialCode);
 				
 				//보내는 데이터가 2개를 contractDTO 객체의 속성이니까 -> contractDTO 객체로 읽게 json 처리 해주기
@@ -308,14 +308,17 @@
 				//모달창 닫기 전에, 모달창안에 넣었던 값들 초기화 시키기
 				$("#searchContractListModal").html(searchContractListModalcloneObj.html());
 				$("#searchContractListErrorModal").html(searchContractListErrorModalcloneObj.html());
+				console.log("계약서 찾기 버튼 후, 막바지 html 리셋 된 후 태그 정보 보자",searchContractListModalTag);
 			});	
 			
-			//console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchcompanyTR);
+			console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchContractTR);
 			
 			//계약서 찾기 모달창안에 선택 버튼 누를때
 			$(document).on("click",".contractSelectBtn",function(){
 				console.log("선택 버튼 누름");
 				//console.log("그러면 이건 읽겠지?",getObjTR());
+				
+				console.log("계약서 찾기 버튼 -> 선택버튼 누르고 난 후도 초기의 TR의 값 유지중인지 : ",searchContractTR);
 				
 				//선택된 계약서의 정보 각각 읽기
 				var contractNo = getObjTR().querySelector("input[name=contractNo]").value;
@@ -330,21 +333,21 @@
 				//console.log("선택한 기본여유기간 : ",freePeriod);	
 				
 				//원래 조달계획 등록 테이블에서 소요일, 소요량 읽어오기
-				var mrpdate = searchcompanyTR.querySelector("input[name=mrpdate]").value;
-				var mrpAmount = searchcompanyTR.querySelector("input[name=mrpAmount]").value;
-				//console.log("읽어온 소요일 : ",mrpdate);
-				//console.log("읽어온 소요량 : ",mrpAmount);
-				
+				var mrpdate = searchContractTR.querySelector("input[name=mrpdate]").value;
+				var mrpAmount = searchContractTR.querySelector("input[name=mrpAmount]").value;
+				console.log("읽어온 소요일 : ",mrpdate);
+				console.log("읽어온 소요량 : ",mrpAmount);
+								
 				//선택한 계약서의 정보 -> 원래 조달계획 등록 테이블에 넣어주기
-				searchcompanyTR.querySelector("input[name=contractNo]").value = contractNo;
-				searchcompanyTR.querySelector("input[name=companyNo]").value = companyNo;
-				searchcompanyTR.querySelector("input[name=companyName]").value = companyName;
-				searchcompanyTR.querySelector("input[name=supplyLt]").value = supplyLt;
-				searchcompanyTR.querySelector("input[name=freePeriod]").value = freePeriod;		
-				searchcompanyTR.querySelector("input[name=ppAmount]").value = mrpAmount;	
+				searchContractTR.querySelector("input[name=contractNo]").value = contractNo;
+				searchContractTR.querySelector("input[name=companyNo]").value = companyNo;
+				searchContractTR.querySelector("input[name=companyName]").value = companyName;
+				searchContractTR.querySelector("input[name=supplyLt]").value = supplyLt;
+				searchContractTR.querySelector("input[name=freePeriod]").value = freePeriod;		
+				searchContractTR.querySelector("input[name=ppAmount]").value = mrpAmount;	
 				
-				//console.log("모달창에서 선택을 누른 후에도 세팅이 된 TR 값 유지 중인가? : ",searchcompanyTR);				
-				//console.log("눌렀던 tr에서 input값 읽어보자 : ",searchcompanyTR.querySelector("input[name=companyNo]").value);
+				//console.log("모달창에서 선택을 누른 후에도 세팅이 된 TR 값 유지 중인가? : ",searchContractTR);				
+				//console.log("눌렀던 tr에서 input값 읽어보자 : ",searchContractTR.querySelector("input[name=companyNo]").value);
 				
 				//보내는 데이터 3개(소요일, 기본여유기간, 품목공급LT) -> procurementDTO 객체로 읽게 json 처리 해주기
 				var procurementDTOObj = {};
@@ -369,10 +372,10 @@
 					//받아온 날짜 형식 -> 2023-06-23T00:00:00.000+00:00
 					//넣어줘야하는 날짜 형식 -> 2023-06-23
 					//substring(0,10) 이용해서 날짜형식 맞춰주기 
-					searchcompanyTR.querySelector("input[name=dueDate]").value = data.dueDate.substring(0,10);		
-					searchcompanyTR.querySelector("input[name=minimumOrderDate]").value = data.minimumOrderDate.substring(0,10);	
+					searchContractTR.querySelector("input[name=dueDate]").value = data.dueDate.substring(0,10);		
+					searchContractTR.querySelector("input[name=minimumOrderDate]").value = data.minimumOrderDate.substring(0,10);	
 					
-					//console.log("넣어준 날짜 확인해보자 : ",searchcompanyTR.querySelector("input[name=dueDate]").value);
+					//console.log("넣어준 날짜 확인해보자 : ",searchContractTR.querySelector("input[name=dueDate]").value);
 					
 					},
 					error : function(jqXHR,textStatus,errorThrown){    
@@ -382,13 +385,26 @@
 						console.log("조달납기예정일, 최소발주일 계산 Ajax 에러발생~~!!!!!");						
 					}
 				});	
-				//console.log("값이 제대로 바뀌었나? : ",searchcompanyTR.querySelector("input[name=companyNo]").value);
+				//console.log("값이 제대로 바뀌었나? : ",searchContractTR.querySelector("input[name=companyNo]").value);
 				
 				//그리고 자동으로 모달창 닫아주기
 				$(".contractSearchModal").modal('hide');			
 				
 				//닫기 전에, 기본여유기간 기본값은 2로 다시 셋팅해주기
 				document.querySelector("input[id=freePeriodSetting]").value = 2;
+				
+				//선택하고 창 닫기 전에 원래 조달계획 등록 테이블에 값들 어떻게 되어있는지 보자
+				console.log("선택하고 창 닫기 전에 원래 조달계획 등록 테이블에 값들 어떻게 되어있는지 보자");
+				console.log("어디!! 계약서 번호 : ", searchContractTR.querySelector("input[name=contractNo]").value);
+				console.log("어디!! 사업자등록번호 : ", searchContractTR.querySelector("input[name=companyNo]").value);
+				console.log("어디!! mrp코드 : ", searchContractTR.querySelector("input[name=mrpCode]").value);
+				console.log("어디!! 소요량 : ", searchContractTR.querySelector("input[name=mrpAmount]").value);
+				console.log("어디!! 소요일 : ", searchContractTR.querySelector("input[name=mrpdate]").value);
+				console.log("어디!! 품목공급LT : ", searchContractTR.querySelector("input[name=supplyLt]").value);
+				console.log("어디!! 필요수량 : ", searchContractTR.querySelector("input[name=ppAmount]").value);
+				console.log("어디!! 조달납기예정일 : ", searchContractTR.querySelector("input[name=dueDate]").value);
+				console.log("어디!! 최소발주일 : ", searchContractTR.querySelector("input[name=minimumOrderDate]").value);
+				console.log("어디!! 기본여유기간 : ", searchContractTR.querySelector("input[name=freePeriod]").value);
 				
 			});		
 			
@@ -406,6 +422,9 @@
 				console.log("등록확인 버튼 누름");
 				//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
+				
+    			console.log("등록확인 누르고 난 후도 초기의 TR의 값 유지중인지 : ",searchContractTR);
+				
     			//2. 입력창으로 값을 받기
     			
     			//2-1. 등록확인 모달창에 띄울 값 받기(품목코드, 품목명)
@@ -493,7 +512,9 @@
 						
 			//등록확인 모달창의 확인 버튼 누를때
 			$(document).on("click",".ppRegisterConfirmBtn",function(e){
-				e.preventDefault();				
+				e.preventDefault();							
+				
+				
 				//폼태그에 실어서 등록하기
 				$("#ppRegisterForm").submit();
 				//모달창 닫기 전에, 모달창안에 넣었던 등록확인 정보 초기화 시키기

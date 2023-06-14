@@ -2,9 +2,10 @@ package com.passioncode.procurementsystem.dto;
 
 import java.util.Date;
 
-import com.passioncode.procurementsystem.entity.ProcurementPlan;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -56,6 +57,8 @@ public class ProcurementPlanDTO {
 	/**
 	 * 소요일 (MRP)
 	 */
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date mrpdate;	
 	
 	/**
@@ -86,11 +89,15 @@ public class ProcurementPlanDTO {
 	/**
 	 * 조달납기 예정일 (조달계획)
 	 */
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date dueDate;	
 	
 	/**
 	 * 최소발주일 (조달계획)
 	 */
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date minimumOrderDate;		
 	
 	/**
