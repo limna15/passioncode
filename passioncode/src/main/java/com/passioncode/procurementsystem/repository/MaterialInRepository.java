@@ -1,10 +1,11 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
-import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 public interface MaterialInRepository extends JpaRepository<MaterialIn, Integer> {
 	
@@ -22,6 +23,4 @@ public interface MaterialInRepository extends JpaRepository<MaterialIn, Integer>
 	 * @return
 	 */
 	public MaterialIn findByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
-
-
 }

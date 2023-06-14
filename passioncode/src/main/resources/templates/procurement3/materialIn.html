@@ -128,16 +128,17 @@
 						
 						<!-- 거래명세서 발행 모달창 버튼 -->
 						<div class="col-md-6" >	
-							<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>
-							<button class="ls-modal btn btn-primary" data-target="#modal" data-toggle="modal" data-backdrop="static" style="float: right;">거래명세서 발행</button>
+							<form method="post">
+								<button class="td-modal btn btn-primary" data-target="#modal" data-toggle="modal" data-backdrop="static" style="float: right;">거래명세서 발행</button>
+							</form>
 						</div>
 						
 						<!-- 거래명세서 발행 모달창 버튼 끝 -->
 					</div>	
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
-						<form>
-							<table id="recent-purchases-listing" class="table" style="text-align: center;">
+						<form action="/procurement3/materialInRegister" method="post">
+							<table id="recent-purchases-listing" class="listTable" style="text-align: center;">
 								<thead>
 									<tr>
 										<th></th>
@@ -155,14 +156,19 @@
 									<tr th:each="list: ${DTOList}">
 										<td><input type="checkbox" name="checkBox" th:value="${list.code}" onclick="chkClicked()"></td>
 										<td id="purchaseOrderNo">[[${list.no}]]</td>
-										<td>[[${list.code}]]</td>
+										<td><input type="hidden" name="code" value="${list.code}">[[${list.code}]]</td>
 										<td>[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
 										<td>[[${list.materialCode}]]</td>
 										<td>[[${list.materialName}]]</td>
 										<td>[[${list.amount}]]</td>
-										<td><button type="submit" class="btn btn-primary" value="done" style="height:25px;">완료</button>
-											<button type="submit" class="btn btn-primary" value="cancle" style="height:25px;">취소</button></td>
-										<td th:text="${list.transactionStatus} ? '완료' : '미완료' "></td>
+										<td><span th:if="${list.status} == null">
+												<input type="submit" class="btn btn-primary" name="done" value="완료" style="height:25px;">
+												<input type="button" class="btn btn-primary" name="cancle" value="취소" style="height:25px;">
+											</span>
+											<span th:if="${list.status} == true">완료</span>
+											<span th:if="${list.status} == false">취소</span>
+										</td>
+										<td th:text="${list.transactionStatus} ? '완료' : '미완료' " id="transactionStatus"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -329,11 +335,11 @@
 <script th:inline="javascript" type="text/javascript">
 	
 	/*<![CDATA[*/
-	var DTOList = [[${DTOList}]];
+	let DTOList = [[${DTOList}]];
 	console.log("DTOList 읽기 >>> ", DTOList);
 	
-	var codeList= new Array();
-	var dpoCode= new Object();
+	let codeList= new Array();
+	let dpoCode= new Object();
 	
 	DTOList.forEach(function(item){
 		dpoCode= item.code
@@ -342,9 +348,9 @@
 	});
 	/*]]>*/
 	
-	console.log("codeList가 제대로 오나 >>> ", codeList);
+	console.log("codeList가 제대로 오나 >>> ", codeList)
 	
-	var purchaseCode = '';
+	let purchaseCode = '';
 	function chkClicked(){
 		const chkChecked = 'input[name="checkBox"]:checked';
 		const selectedEls = document.querySelectorAll(chkChecked);
@@ -353,36 +359,34 @@
 		selectedEls.forEach((el) => {
 			purchaseCode += el.value + ' ';
 	  });
- 		console.log("purchaseCode >>> ", purchaseCode);
+ 		console.log("purchaseCode >>> ", purchaseCode)
  		
  		return purchaseCode;
 	}
 	
-	function aaa(){
+	function sendPurchaseCode(){
 		console.log("purchaseCode 찍히나 >>> ", purchaseCode)
 		//purchaseCode= purchaseCode.replaceAll(" ","");
 		//console.log("purchaseCode 찍히나 >>> ", purchaseCode)		
 		location.href="/procurement3/materialIn?purchaseCode="+purchaseCode;
-
  	};
+ 	
+ 	$('.td-modal').on('click', function(e){
+	  e.preventDefault();
+	  sendPurchaseCode();
+	});
+ 	
+ 	
 	
-//제이쿼리 라이브러리가 없어서 $인식이 안되는거임
-// 	$("#data").on('click', function(e){
-// 		console.log("purchaseCode 찍히나 >>> ", purchaseCode)
-// 	});
+	// table element 찾기
+	//const table = document.getElementById('recent-purchases-listing');
+	//console.log("가져온 table 정보", table)
 	
-/* 	function chkClicked(){
-		//체크박스 전체 개수
-		//const allCount= document.querySelectorAll("input[name='checkBox']").length;
-		
-		//선택된 체크박스 개수
-		const chkChecked = 'input[name="checkBox"]:checked';
-		const selectedElements = document.querySelectorAll(chkChecked)
-		const selectedElementsCnt = selectedElements.length;
-		
-		//console.log("allCount >>> ", allCount);
-		console.log("selectedElementsCnt >>> ", selectedElementsCnt);
-	}; */ 
+   	// row의 길이(thead의 row는 빼기위해 -1)
+//    	const row_length = table.rows.length-1;
+//   	console.log("row의 길이",row_length)  
+	
+
 </script>	
 		
 	</th:block>

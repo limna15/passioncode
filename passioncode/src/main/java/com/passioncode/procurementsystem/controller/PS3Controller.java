@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.dto.PurchaseReportDTO;
@@ -18,6 +20,7 @@ import com.passioncode.procurementsystem.service.MateriallInService;
 import com.passioncode.procurementsystem.service.PurchaseReportService;
 import com.passioncode.procurementsystem.service.TransactionDetailService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -33,13 +36,13 @@ public class PS3Controller {
 	private final DetailPurchaseOrderService detailPurchaseOrderService;
 	
 	@GetMapping("/materialIn")
-	public void materialIn(Model model, MaterialInDTO materialInDTO, String purchaseCode) {
+	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
 		List<MaterialInDTO> materialInDTOList = materiallInService.getMaterialInDTOLsit();
 		//List<MaterialIn> materialInList= materiallInService.getMaterialInLsit();
 		//log.info("list............." + materialInDTOList);
 		//log.info("purchaseCode >>> " + purchaseCode);
 		//log.info("materialInDTOList >>> " + materialInDTOList);
-	
+		
 		List<String> dpoCodeList= new ArrayList<>();
 		if(purchaseCode!=null) {
 			String[] splitdpoCode= purchaseCode.split(" ");
@@ -103,6 +106,16 @@ public class PS3Controller {
 		model.addAttribute("DTOList", materialInDTOList);
 		//model.addAttribute("purchaseCode", purchaseCode);
 
+	}
+	
+	@PostMapping("/materialInRegister")
+	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		//등록해야될 정보: 입고상태, 발행상태
+		
+		log.info("자재입고 화면에서 보낸 MaterialDTO 보기 >>> " + materialInDTO);
+		
+		return "/procurement3/materialIn";
+		//return "redirect:/procurement3/materialIn";
 	}
 	
 	@GetMapping("/transactionList")
