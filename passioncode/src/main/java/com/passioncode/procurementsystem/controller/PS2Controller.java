@@ -21,11 +21,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class PS2Controller {
 	
-	private final DetailPurchaseOrderRepository repository;
-	//서비스로 받아오는 것으로 변경하기
-	
 	private final PurchaseOrderService purchaseOrderService;
-	
 	private final DetailPurchaseOrderService detailPurchaseOrderService;
 	private final ProgressCheckService progressCheckService;
 	

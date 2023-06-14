@@ -28,6 +28,10 @@ public interface DetailPurchaseOrderRepository extends JpaRepository<DetailPurch
 	@Query(value="UPDATE procurement_plan myp SET myp.detail_purchase_order_code=:detailcode WHERE myp.code=:pcode",nativeQuery = true)
 	public void myUpdate(@Param("detailcode")Integer code1,@Param("pcode")Integer code2);
 	
+	@Transactional
+	@Query(value="UPDATE procurement_plan AS pp SET pp.detail_purchase_order_code=:detailcode WHERE pp.code=:pcode",nativeQuery = true)
+	public void myUpdate2(@Param("detailcode")Integer detailcode,@Param("pcode")Integer pcode);
+	
 	//문자용 실험
 //	@Query(value="SELECT distinct pp.code, com.name, pp.due_date, cont.unit_price, mat.code, mat.name FROM company AS com JOIN contract AS cont JOIN procurement_plan AS pp JOIN mrp AS m"
 //			+ "JOIN material AS mat"

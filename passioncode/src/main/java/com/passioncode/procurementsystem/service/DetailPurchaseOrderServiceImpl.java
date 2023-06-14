@@ -81,13 +81,6 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		return null;
 	}
 	
-	
-	@Override
-	public DetailPurchaseOrderDTO read(Integer no) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	@Override
 	public List<DetailPurchaseOrderDTO> getDTOList(){
 		List<ProcurementPlan> procurmentPlanList = procurementPlanRepository.findAll();

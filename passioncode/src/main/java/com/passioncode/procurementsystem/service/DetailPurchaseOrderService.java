@@ -12,9 +12,6 @@ public interface DetailPurchaseOrderService {
 	 * @return
 	 */
 	List<DetailPublishDTO> detailToDTO(Integer no);
-	
-	
-	DetailPurchaseOrderDTO read(Integer no);
 
 	/**
 	 * detailPurchaseOrderDTO를 이용해서 세부구매발주서 발행
