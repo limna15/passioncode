@@ -38,7 +38,7 @@ public class PS1RestController {
 		log.info("값은 가져오나 보자 : "+companyName);
 		
 		List<ContractDTO> searchContractDTOs = new ArrayList<>();
-		List<Company> companyList = contractService.searchCompany(companyName);
+		List<Company> companyList = contractService.searchCompanyWithDeal(companyName);
 		log.info("가져온걸로 잘 검색했나~~"+companyList);
 		
 		for(Company company:companyList) {

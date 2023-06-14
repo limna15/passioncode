@@ -41,6 +41,9 @@ public class PS2Controller {
 		//여서기 서비스 호출 뒤에 리턴 값을 보낸다
 		model.addAttribute("myListData",checkBox);
 		log.info("제가 보고 싶은 값 입니다>>>>>>==="+checkBox);
+		//if(checkBox == )
+		
+		
 		
 	}
 	

@@ -36,7 +36,18 @@ public class CompanyRepositoryTests {
 	};
 	
 	
+	@Test
+	public void getCompnayByNameWithDealTest() {
+		log.info("되나아?? : "+companyRepository.findByNameContainingWithDeal("길승"));
+		log.info("되나아?? : "+companyRepository.findByNameContainingWithDeal("미쥬"));
+		
+	}
 	
-	
+//	@Test
+//	public void getCompnayByNameWithDeal2Test() {
+//		log.info("되나아?? : "+companyRepository.getCompnayByNameWithDeal2("길승"));
+//		log.info("되나아?? : "+companyRepository.getCompnayByNameWithDeal("미쥬"));
+//		
+//	}
 
 }

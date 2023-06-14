@@ -115,8 +115,9 @@
                             <td>[[${dto.unitPrice}]]</td>
                             <td>[[${dto.companyName}]]</td>
                             <td>[[${dto.companyName}]]</td>
-                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="schedule">일정등록</a></td>
-                            <td><a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="avg">평가</a></td>
+                            <!-- 조달계획의 버튼 <button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button> -->
+                            <td><a name="myPlan" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="schedule" th:value="100">일정등록</a></td>
+                            <td><a name="myAvg" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="avg" th:value="101">평가</a></td>
                             <td>[[${dto.diliveryPercent}]]</td>
                             <td>[[${dto.inspectionComplete}]]</td>
                             <td>[[${dto.purchaseOrderDeadlineStatus}]]</td>
@@ -196,11 +197,43 @@
 	//var cc = tr.getElementsByTagName('a');
 	//document.getElementById("schedule2")
 	 $('.ls-modal').on('click', function(e){
+		 const chkChecked = 'input[name="myAvg"]:checked';
 		  e.preventDefault();
 		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
 		});
 	
 </script>
+
+<!-- 체크박스 시작 -->
+<script th:inline="javascript" type="text/javascript">
+var pCheckListt = [[${pCheckList}]];
+console.log("pCheckList 입니다===>>",pCheckList);
+
+var codeList= new Array();
+var dtoCode= new Object();
+
+purchaseOrderList.forEach(function(item){
+	dtoCode= item.code;
+	codeList.push(dtoCode);
+});
+
+console.log("codeList가 제대로 오나 >>> ", codeList);
+
+var purchaseNo = '';
+function myCheckBox(){
+	const chkChecked = 'input[name="checkBox"]:checked';
+	const selectedEls = document.querySelectorAll(chkChecked);
+	purchaseNo = '';
+	
+	selectedEls.forEach((el) => {
+		purchaseNo += el.value + ' ';
+  });
+		console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+};
+
+
+</script>
+
 	</th:block>
 
 </th:block>

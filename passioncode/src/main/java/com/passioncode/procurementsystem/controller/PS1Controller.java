@@ -212,7 +212,7 @@ public class PS1Controller {
 	 * @param request
 	 */
 	@PostMapping("contractRegister")
-	public void ContractRegister2(ContractDTO contractDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
+	public String ContractRegister2(ContractDTO contractDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
 		//사업자등록번호
 		
@@ -289,6 +289,7 @@ public class PS1Controller {
 		
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
+		return "redirect:/procurement1/contractList";
 	}
 
 	@GetMapping("procurementPlanList")

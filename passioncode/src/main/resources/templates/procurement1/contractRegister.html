@@ -10,7 +10,7 @@
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">계약 등록</p> 
 					<br>
-					<form th:action = "@{/procurement1/contractRegister}" th:method="post" id="registerForm">
+					<form th:action = "@{/procurement1/contractRegister}" th:method="post" id="contractRegisterForm">
 						<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
 								<table class="table table-bordered" id="contractRegisterTable" style="text-align: center;">
@@ -37,19 +37,19 @@
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="materialName" class="materialName" th:value="${dto.materialName}" readonly></td>
 											<td>
 												<div class="row" style="margin-left: 0px;" >
-													<input type="hidden" name="companyNo" value="104-84-55123">
-													<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name=companyName >
+													<input type="hidden" name="companyNo" class="companyNo">
+													<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name=companyName class="companyName">
 													&nbsp;&nbsp;
 													<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right" >
 														<i class="mdi mdi-magnify"></i>
 													</button>
 												</div>
 											</td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" ></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel"></td>
-											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt"></td>
-											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" class="manager" ></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel" class="managerTel"></td>
+											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt"></td>
+											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice" class="unitPrice"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition" class="dealCondition"></td>
 											<td></td>
 											<td>
 												<button type="button" class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px; padding-right: 10px;" 
@@ -68,7 +68,7 @@
 							<button class="btn btn-primary" style="margin-right: 130px; float: right;" onclick="location.href='/procurement1/contractList'" type="button">
 								등록취소
 							</button>
-							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="registerBtn">
+							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="contractRegisterBtn">
 								등록확인
 							</button>										
 							<!-- 등록확인, 등록취소 버튼 끝 -->
@@ -84,13 +84,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">협력회사 찾기</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" >
                     
-                       	<div class="table-responsive" style="margin-bottom: 10px;">
+                    	<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
 							<table class="table table-bordered" id="searchCompanyListTable" style="text-align: center;">
 								<thead>
@@ -102,16 +102,17 @@
 										<th></th> 
 									</tr>
 								</thead>
-								<tbody id="searchCompanyList">
-								 	<!-- 검색한 회사 리스트 보여줄 공간 -->
+								<tbody id="searchCompanyListModal">
+									<!-- 검색한 회사 리스트 보여줄 공간 -->
+									
 								</tbody>
 							</table>
 							<!-- 테이블 끝 -->
-						</div>   
-						              
+						</div>    
+                    	   
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        	</button>
                     </div>
@@ -119,7 +120,81 @@
             </div>
         </div>
 		<!-- 협력회사 찾기 모달창 끝 -->
+		
+		<!-- 협력회사 찾았는데, 없을시와 오류시 보여줄 모달창 시작 -->
+		<div class="companySearchErrorModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">협력회사 찾기</h5>
+                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="searchCompanyListErrorModal">
+                    	<!-- 협력회사 찾은 후에, 회사가 없을 시와 오류시 보여줄 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary AllResetSetting" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 협력회사 찾았는데, 없을시와 오류시 보여줄 모달창 끝 -->
 				
+		<!-- 등록확인 모달창 시작-->
+		<div class="contractRegisterConfirmModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">계약 등록 확인</h5>
+                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="contractRegisterCheckModal">
+                    	<!-- 계약 등록 확인할 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary contractRegisterConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary contractRegisterCanaelBtn" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 등록확인 모달창 끝 -->
+		
+		<!-- 등록확인 모달창의 오류시 보여줄 모달창 시작 -->
+		<div class="contractRegisterConfirmErrorModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">계약 등록 확인</h5>
+                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">   
+                    	<span>등록해야할 값들이 누락되어있습니다.</span><br>
+                    	<span>다시 작성해주시길 바랍니다.</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 등록확인 모달창의 오류시 보여줄 모달창 끝 -->
 		
 		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -127,18 +202,31 @@
 		
 		
 		$(document).ready(function(){
-			//모달창에서 회사리스트 넣을 태그 찾기
-			const tag = document.querySelector("#searchCompanyList");
-			var cloneObj=$("#searchCompanyList").clone();    			//버튼 클릭전, 태그 안에 모든 정보
-			//console.log("태그 잘 읽나??",tag)
+			//협력회사 찾으려고 검색한 tr을 넣어주기 위한 tr 전역변수 선언
+			var searchcompanyTR = new Object();
+			//console.log("tr 전역변수 만들고 난 값 : ",searchcompanyTR);			
+						
+			//협력회사 찾기 모달창 -> 본문내용 넣을 태그 찾기 
+			const searchCompanyListModalTag = document.querySelector("#searchCompanyListModal");
+			var searchCompanyListModalcloneObj = $("#searchCompanyListModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
+			//console.log("전역에 넣은 건데 협력회사 찾기 태그 선언되고 처음 값 이건 읽자나??",searchCompanyListModalTag);
 			
-			//협력회사 찾기 버튼 누를때, 모달창 띄우기
+			//협력회사 찾았는데, 없을시와 오류시 보여줄 모달창 -> 본문내용 넣을 태그 찾기 
+			const searchCompanyListErrorModalTag = document.querySelector("#searchCompanyListErrorModal");
+			var searchCompanyListErrorModalcloneObj = $("#searchCompanyListErrorModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
+						
+			//협력회사 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
 			$(document).on("click",".companySearchBtn",function(){
 				console.log("협력회사 찾기 버튼 누름");
 				//검색 버튼위의 td를 통해서 회사이름 찾기
 				var companyName = getObj().querySelector("input[type=text]").value;				
 				console.log("회사이름 : ",companyName);
-								
+				
+				//협력회사 찾기 버튼 누르고 난 후 해당 TR의 값 세팅해주기
+				searchcompanyTR=getObjTR();
+				//console.log("세팅이 된 TR 값 읽기 : ",searchcompanyTR);
+				
+				//협력회사 이름으로 (거래가능한)협력회사 찾는 Ajax처리
 				$.ajax({
 					type : "post" ,
 					url : "/procurement1/companySearch" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
@@ -146,54 +234,253 @@
 					contentType :"text/plain; charset=UTF-8" ,  	//보내는 데이터 형식 (전송 데이터,요청데이터)
 					dataType : "json" ,							 	//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
 					success : function(data){        				//가져오는 데이터! (응답데이터)
-						console.log("받아온 데이터 : ",data);
+						//console.log("받아온 데이터 : ",data);
 						//console.log("json 리스트 사이즈 보자 : ",data.length);
 						
 						//data를 이용해서, 모달창에 넣을 tr 행 html 만들기
-						let completeHtml =``;    					
-						data.forEach(function(item){
-							completeHtml = completeHtml + makeCompanySearchList(item.companyNo,item.companyName,item.manager,item.managerTel);							
-						});						
-						//console.log("완성된 html 보자",completeHtml);						
+						let completeHtml =``;    	
 						
-						//시작 태그 바로 뒤에 html 넣기
-						tag.insertAdjacentHTML('afterbegin', completeHtml);						
+						if(data.length!=0){		//받아온 데이터가 존재 O, 즉 검색되서 찾은 협력회사가 O
+							data.forEach(function(item){
+								completeHtml = completeHtml + makeCompanySearchList(item.companyNo,item.companyName,item.manager,item.managerTel);							
+							});						
+							//console.log("완성된 html 보자",completeHtml);								
+							
+							//시작 태그 바로 뒤에, 협력회사 찾기 모달창 -> 본문에 html 넣기
+							searchCompanyListModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
+							//console.log("넣은 태그 보자",tag)		
+							
+							//협력회사 찾기 모달 창 보여주기
+							$(".companySearchModal").modal('show');	
+							
+						}else{					//받아온 데이터가 존재 X, 즉 검색되서 찾은 협력회사가 X
+							completeHtml = `<span>거래 가능한 협력회사를 찾을 수 없습니다.</span><br>
+											<span>다시 검색해 주시기바랍니다.</span>`;
+											
+							//시작 태그 바로 뒤에, 협력회사 오류 모달창 -> 본문 html 넣기
+							searchCompanyListErrorModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
+							
+							//협력회사 오류 모달창 보여주기
+							$(".companySearchErrorModal").modal('show');
+						}
 					},
-					error : function(jqXHR,textStatus,errorThrown){
-						console.log(jqXHR); 			//응답 메시지
-						console.log(textStatus); 		//"error"로 고정인듯함
-						console.log(errorThrown);
+					error : function(jqXHR,textStatus,errorThrown){    //검색어 입력 안했을 시!
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);						
+						completeHtml = `<span>검색한 내용이 없습니다.</span><br>
+										<span>다시 검색해 주시기바랍니다.</span>`;
+						
+						//시작 태그 바로 뒤에, 협력회사 오류 모달창 -> 본문 html 넣기
+						searchCompanyListErrorModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
+						
+						//협력회사 오류 모달창 보여주기
+						$(".companySearchErrorModal").modal('show');
 					}
 				});					
-				
-				$(".companySearchModal").modal('show');
-				
-				//모달창 닫기 전에, 모달창안에 넣었던 회사리스트 초기화 시키기
-				$("#searchCompanyList").html(cloneObj.html());
-
-			});
+									
+				//모달창 닫기 전에, 모달창안에 넣었던 값들 초기화 시키기
+				$("#searchCompanyListModal").html(searchCompanyListModalcloneObj.html());
+				$("#searchCompanyListErrorModal").html(searchCompanyListErrorModalcloneObj.html());
+			});	
 			
+			//console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchcompanyTR);
 			
+			//협력회사 찾기 모달창안에 선택 버튼 누를때
 			$(document).on("click",".companySelectBtn",function(){
 				console.log("선택 버튼 누름");
-				console.log("그러면 이건 읽겠지?",getObjTR());
+				//console.log("그러면 이건 읽겠지?",getObjTR());
 				
+				//선택된 회사의 정보 각각 읽기
 				var companyNo = getObjTR().querySelector("input[name=companyNo]").value;
 				var companyName = getObjTR().querySelector("input[name=companyName]").value;
 				var manager = getObjTR().querySelector("input[name=manager]").value;
 				var managerTel = getObjTR().querySelector("input[name=managerTel]").value;
-				console.log("선택한 회사 사업자번호 : ",companyNo);
-				console.log("선택한 회사 이름 : ",companyName);
-				console.log("선택한 회사 매니저 : ",manager);
-				console.log("선택한 회사 매니저 연락처 : ",managerTel);	
+				//console.log("선택한 회사 사업자번호 : ",companyNo);
+				//console.log("선택한 회사 이름 : ",companyName);
+				//console.log("선택한 회사 매니저 : ",manager);
+				//console.log("선택한 회사 매니저 연락처 : ",managerTel);	
+				
+				//console.log("모달창에서 선택을 누른 후에도 세팅이 된 TR 값 유지 중인가? : ",searchcompanyTR);				
+				//console.log("눌렀던 tr에서 input값 읽어보자 : ",searchcompanyTR.querySelector("input[name=companyNo]").value);
+				
+				//선택한 회사의 정보를 원래 계약 등록 테이블에 넣어주기
+				searchcompanyTR.querySelector("input[name=companyNo]").value = companyNo;
+				searchcompanyTR.querySelector("input[name=companyName]").value = companyName;
+				searchcompanyTR.querySelector("input[name=manager]").value = manager;
+				searchcompanyTR.querySelector("input[name=managerTel]").value = managerTel;				
+				//console.log("값이 제대로 바뀌었나? : ",searchcompanyTR.querySelector("input[name=companyNo]").value);
+				
+				//그리고 자동으로 모달창 닫아주기
+				$(".companySearchModal").modal('hide');							
+			});		
 			
-			});
+			//등록확인 모달창 -> 본문내용 넣을 태그 찾기 
+			const contractRegisterCheckModalTag = document.querySelector("#contractRegisterCheckModal");
+			var contractRegisterCheckModalcloneObj = $("#contractRegisterCheckModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
+			//console.log("태그를 못 읽는건가?? 등록체크 태그~~",contractRegisterCheckModalTag);	
+						
+			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
+			var contractRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
+			console.log("등록체크 전역변수 확인하기1 : ",contractRegisterValueCheck);
 			
+			//등록확인 버튼 누를때 -> 등록확인 모달창 보여주기
+			$(document).on("click","#contractRegisterBtn",function(e){
+				console.log("등록확인 버튼 누름");
+				//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			//2. 입력창으로 값을 받기
+    			
+    			//2-1. 등록확인 모달창에 띄울 값 받기(품목코드, 품목명)
+				    			
+    			//입력받은 품목코드 -> 품목코드 리스트에 담기
+    			let codeList = new Array();
+    			$('.materialCode').each(function(){
+    				let code = $(this).val();
+    				//console.log("이거 잘 code 읽어온건가!!",code);
+    				if(code != ""){
+    					codeList.push(code);
+    				}    				
+    			});
+    			//입력받은 품목명 -> 품목명 리스트에 담기
+    			let nameList = new Array();
+    			$('.materialName').each(function(){
+    				let name = $(this).val();
+    				//console.log("이거 잘 code 읽어온건가!!",name);
+    				if(name != ""){
+    					nameList.push(name);
+    				}    				
+    			});    			
+    			//각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
+    			let codenameList = new Array();
+    			
+    			for(var i = 0; i<codeList.length; i++){
+    				let codenameObj = new Object();
+    				codenameObj.code = codeList[i];
+    				codenameObj.name = nameList[i];
+    				codenameList.push(codenameObj);
+    			}    			
+    			//console.log("제대로 넣어 졌는지 보자",codenameList[0]);
+    			//console.log("제대로 넣어 졌는지 보자",codenameList[1]);
+    			
+    			//2-2. 등록할 값들이 제대로 들어갔는지 체크해주기 위한 값 받기(사업자등록번호, 품목공급LT, 단가, 계약서(추후에 다시 받기))
+    			console.log("등록체크 전역변수 확인하기(체크하기 전) : ",contractRegisterValueCheck);
+    			
+    			//사업자등록번호 값 체크해주기 
+    			//(사업자등록번호, 협력회사명, 담당자, 담당자연락처  4개 체크 가능 )
+    			//화면에서 회사를 선택 해서, 히든 input인 사업자등록번호를 셋팅해 주기 때문에,
+    			//사업자등록번호에 값이 셋팅되어 있으면, 값을 입력한것!  아니면 안한것!
+    			$('.companyNo').each(function(){
+    				let companyNo = $(this).val();
+    				console.log("들어간건가 보자 : ",companyNo);
+    				if(companyNo==""){		//빈값일때, false로 바꿔주기
+    					contractRegisterValueCheck = false;
+    				}
+    			});
+				console.log("등록체크 전역변수 확인하기(사업자등록번호 체크 후) : ",contractRegisterValueCheck);
+    			
+    			//품목공급LT 값 들어갔는지 체크해주기 
+    			$('.supplyLt').each(function(){
+    				let supplyLt = $(this).val();
+    				console.log("들어간건가 보자 : ",supplyLt);
+    				if(supplyLt==""){		//빈값일때, false로 바꿔주기
+    					contractRegisterValueCheck = false;
+    				}
+    			});
+				console.log("등록체크 전역변수 확인하기(품목공급LT 체크 후) : ",contractRegisterValueCheck);
+    			
+    			//단가 값 들어갔는지 체크해주기 
+    			$('.unitPrice').each(function(){
+    				let unitPrice = $(this).val();
+    				console.log("들어간건가 보자 : ",unitPrice);
+    				if(unitPrice==""){		//빈값일때, false로 바꿔주기
+    					contractRegisterValueCheck = false;
+    				}
+    			});
+				console.log("등록체크 전역변수 확인하기(단가 체크 후) : ",contractRegisterValueCheck);
+    			
+    			//dealCondition 거래조건은 null 허용 체크 안해줘도 됨
+    			//contractFile 계약서 도 추후에 테스트 해주기!
+    			
+    			//3. 입력받은 리스트를 이용해서, 모달창에 보여줄 한문장으로 만들기
+    			let sentence = ``;
+    			
+    			function makeSentence(code,name){
+    				let sentence =`<span>품목코드 : ${code}, 품목명 : ${name}</span><br>`;
+    				return sentence;    				
+    			}	
+    			
+    			if(contractRegisterValueCheck){		//등록체크 값이=>true 일때, 등록하려는 값들이 모두 들어간 상태 ->등록확인 모달창 보여주기
+	   				codenameList.forEach(function(item){
+	   					sentence=sentence+makeSentence(item.code,item.name);
+	   				});
+	   				//console.log("현재까지 만들어진 문장보자",sentence);
+	   				
+	   				sentence=sentence+`<br><span>계약을 등록 하시겠습니까?</span>`;   				
+	   				//console.log("완성된 문장보자",sentence);
+	   				
+	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
+	   				contractRegisterCheckModalTag.insertAdjacentHTML('afterbegin', sentence);
+	   				//console.log("태그 넣고나서 체크해보자~ 등록체크 태그~~",contractRegisterCheckModalTag);
+	   				   				
+	   				//등록확인 모달창 보여주기
+					$(".contractRegisterConfirmModal").modal('show');	   				
+    			}else{								//등록체크 값이=>false 일때, 등록하려는 값들 중 하나라도 빠진 상태 ->오류 모달창 보여주기
+					//오류 모달창 보여주기
+					$(".contractRegisterConfirmErrorModal").modal('show');    					
+					//그리고 다시 등록체크 값 true로 다시 세팅해주기
+					contractRegisterValueCheck = true;
+    			}
+				console.log("등록체크 전역변수 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",contractRegisterValueCheck);
+			});	
 			
+			console.log("등록체크 전역변수 확인하기(중간에 확인) : ",contractRegisterValueCheck);
+						
+			//등록확인 모달창의 확인 버튼 누를때
+			$(document).on("click",".contractRegisterConfirmBtn",function(e){
+				e.preventDefault();				
+				//폼태그에 실어서 등록하기
+				$("#contractRegisterForm").submit();
+				//모달창 닫기 전에, 모달창안에 넣었던 등록확인 정보 초기화 시키기
+				$("#contractRegisterCheckModal").html(contractRegisterCheckModalcloneObj.html());	
+				//그리고 자동으로 모달창 닫아주기
+				$(".contractRegisterConfirmModal").modal('hide');				
+			});	
 			
-			
+			//등록확인 모달창의 취소 버튼 누를때
+			$(document).on("click",".contractRegisterCanaelBtn",function(e){
+				e.preventDefault();
+				//모달창 닫기 전에, 모달창안에 넣었던 등록확인 정보 초기화 시키기
+				$("#contractRegisterCheckModal").html(contractRegisterCheckModalcloneObj.html());	
+				//그리고 자동으로 모달창 닫아주기
+				$(".contractRegisterConfirmModal").modal('hide');					
+			});	
+						
+			//오류창과 모달창의 x버튼 등 값을 확인하고 닫는 버튼 누를때, 셋팅해놓은 값들 초기화시키기
+			$(document).on("click",".AllResetSetting",function(e){
+				e.preventDefault();
+				//혹시모르니 모든 값들 넣었던거 초기화 시키기				
+				$("#searchCompanyListErrorModal").html(searchCompanyListErrorModalcloneObj.html());
+				$("#contractRegisterCheckErrorModal").html(contractRegisterCheckErrorModalcloneObj.html()); 	
+				
+				//잘됐던 거지만, 혹시몰라 한번더 초기화 시키기
+				$("#searchCompanyListModal").html(searchCompanyListModalcloneObj.html());
+				$("#contractRegisterCheckModal").html(contractRegisterCheckModalcloneObj.html());	
+				//그리고 자동으로 모달창 닫아주기
+				//$(".contractRegisterConfirmModal").modal('hide');					
+			});	
 			
 		});		
+		
+		/*
+			23.06.14.수 오후3시 현재상태
+			-> 협력회사 찾는건 ajax처리로 받아온 데이터 함수처리로 모달창 다보여주고, 그리고 난 후 초기화 시키기때문에, 데이터 초기화가 되는상태
+			-> 등록확인 버튼은 ajax처리가 아니라 내가 만들어준거라서, 모달창을 보여주고 난후 초기화 처리시, 값이 등록이 안되서, 모달창 보여주고 난후, 그 모달창의 버튼 누를때 초기화로 만든 상태
+			-> 그래서 현재, 등록확인 모달창을 보여주고 모달창의 버튼 말고 다른걸 눌러서 끌경우 초기화가 안되어 있음!
+		*/
+		
+		
+    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//모달창에 들어가는 테이블 tr 행 만들기(검색한 회사리스트 보여줄 tr html)
 		function makeCompanySearchList(companyNo,companyName,manager,managerTel){
@@ -209,11 +496,6 @@
 						</td> 
 					</tr>`;
 		}
-		
-		
-		
-		
-		
 		
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -235,8 +517,7 @@
 			    		<input type="text" style="width:100%; border: 0; text-align: center;" name="materialCode" class="materialCode" value=${materialCode} readonly>
 			    		<input type="hidden" name="contractStatus" value="미완료">
 		    		</td>`;
-    	};    
-    	
+    	};        	
     	
     	//materialName 값을 넣어서 html 만들기
     	function makeMaterialName(materialName){
@@ -294,8 +575,8 @@
 	            }else if(i === 2) {
 	            	temp_html = `<td>
 									<div class="row" style="margin-left: 0px;" >
-										<input type="hidden" name="companyNo" value="104-84-55123">
-										<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name="companyName" >
+										<input type="hidden" name="companyNo" class="companyNo">
+										<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name="companyName" class="companyName">
 										&nbsp;&nbsp;
 										<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right">
 											<i class="mdi mdi-magnify"></i>
@@ -303,15 +584,15 @@
 									</div>
 								</td>`;
 	            }else if(i === 3){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" ></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" class="manager"></td>`;
 	            }else if(i === 4){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel" class="managerTel"></td>`;
 	            }else if(i === 5){
-	            	temp_html = `<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt"></td>`;
+	            	temp_html = `<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt"></td>`;
 	            }else if(i === 6){
-	            	temp_html = `<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice"></td>`;
+	            	temp_html = `<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice" class="unitPrice"></td>`;
 	            }else if(i === 7){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition"></td>`;
+	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition" class="dealCondition"></td>`;
 	            }else if(i === 8){
 	            	temp_html = `<td></td>`;
 	            }else{
@@ -332,10 +613,7 @@
 			const table = document.getElementById('contractRegisterTable');
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);
-    	};	    
-    	
-    	
-    	
+    	};	       	
     	
 		
 		</script>

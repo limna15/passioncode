@@ -2,6 +2,7 @@ package com.passioncode.procurementsystem.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
+import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MRP;
@@ -38,6 +40,69 @@ public class DetailPurchaseOrderRepositoryTests {
 
 	@Autowired
 	ContractRepository contractRepository;
+	
+	@Transactional
+	@Test
+	public List<DetailPurchaseOrderDTO> chooseOneDetail() {
+		//List<ProcurementPlan> ppList = detailPurchaseOrderRepository.myDetailList(2);
+		List<DetailPurchaseOrderDTO> detailDTO = new ArrayList<>();
+		//detailDTO.add((DetailPurchaseOrderDTO) ppList);
+		
+		log.info("보여줘 제발==>"+detailDTO);
+				return detailDTO;
+	}
+	
+	@Test
+	public void bring() {
+		//detailPurchaseOrderRepository.myDetailList(2);
+		//detailPurchaseOrderRepository.myDetailList();
+		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(2);
+		
+		log.info("중요한 나의 정보>>"+result);
+		
+		for(Object[] arr : result) {//이 아래가 변환하는 것 이다. 
+			log.info("222>>"+Arrays.toString(arr));
+		}
+	}
+	
+	
+	//버튼에서 보내온 것으로 디테일 코드랑 비교해서 보내려고
+	//조달 계획을 가져와서 -> 발주서 발행 
+	@Test
+	public void chooseOneDetail2() {
+	//	PurchaseOrder myPurchaseOrder =  detailPurchaseOrderRepository.myPublish2(1);
+	//	detailPurchaseOrderRepository.myPublish2(1);
+	//	log.info(""+detailPurchaseOrderRepository.myPublish(1));
+	}
+	@Test
+	public void aaa() {
+		log.info("gogogo");;
+	
+	}
+	
+	
+	@Test
+	public void getDTOList() {
+		List<ProcurementPlan> procurmentPlanList = procurementPlanRepository.findAll();
+		
+		List<DetailPurchaseOrderDTO> detailDTOList = new ArrayList<>();
+		
+		for (int i = 0; i < procurmentPlanList.size(); i++) {
+			detailDTOList.add(entityToDTO(procurmentPlanList.get(i)));
+		}
+	
+		
+	}
+	
+	@Test
+	public void midifyProcurementPlanTest() {// ====>>> ************ 중요 myUpdate() 이 안에 값을 넣기 !!!
+		// 발주코드 생성해서 조달계획을 수정해서 저장하는 것
+		// 발주코드 같으면 지정해서 조달계획 번호 저장
+		
+		// 여기 안에 숫자 넣어서 하기
+		
+		detailPurchaseOrderRepository.myUpdate(20, 13);
+	}
 	
 	@Test
 	public void purchaseOrderNoCreateTest() {	//발주서 번호 생성 
@@ -70,16 +135,6 @@ public class DetailPurchaseOrderRepositoryTests {
 		//발주서 번호-> 발주 코드가 생성되고 난 뒤에 조달계획 코드 업데이트 하기
 		
 		//detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(), null);//앞 발주번호, 뒤 조달 코드
-	}
-	
-	@Test
-	public void midifyProcurementPlanTest() {// ====>>> ************ 중요 myUpdate() 이 안에 값을 넣기 !!!
-		// 발주코드 생성해서 조달계획을 수정해서 저장하는 것
-		// 발주코드 같으면 지정해서 조달계획 번호 저장
-		
-		// 여기 안에 숫자 넣어서 하기
-		
-		detailPurchaseOrderRepository.myUpdate(20, 13);
 	}
 	
 	@Transactional
@@ -283,18 +338,7 @@ public class DetailPurchaseOrderRepositoryTests {
 		return detailPurchaseOrderRepository.findMaxOrderNo();
 	}
 
-	@Test
-	public List<DetailPurchaseOrderDTO> getDTOList() {
-		List<ProcurementPlan> procurmentPlanList = procurementPlanRepository.findAll();
-
-		List<DetailPurchaseOrderDTO> detailDTOList = new ArrayList<>();
-
-		for (int i = 0; i < procurmentPlanList.size(); i++) {
-			detailDTOList.add(entityToDTO(procurmentPlanList.get(i)));
-		}
-		return detailDTOList;
-
-	}
+	
 
 	@Test
 	public DetailPurchaseOrderDTO entityToDTO(ProcurementPlan procurementPlan) {
