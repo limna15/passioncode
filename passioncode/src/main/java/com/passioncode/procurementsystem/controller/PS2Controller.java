@@ -78,8 +78,8 @@ public class PS2Controller {
 	}
 	
 	@GetMapping("/print")
-	public void PS2TestPrint(Model model,PurchaseOrderDTO purchaseOrderDTO, String checkBox) {
-		model.addAttribute("myListData",checkBox);
+	public void PS2TestPrint(DetailPurchaseOrderDTO detailDTO, Model model,PurchaseOrderDTO purchaseOrderDTO, Integer checkBox) {
+		model.addAttribute("myPublishDTO",detailPurchaseOrderService.detailToDTO(checkBox));
 		log.info("인쇄합니다>>>>>>>");
 		
 		

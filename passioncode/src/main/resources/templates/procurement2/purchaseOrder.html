@@ -85,9 +85,9 @@
                     <div class="col-auto my-1">
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
-					<a class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;" onclick="aaa()">발행</a>&nbsp;
-					<button type="submit" id="data" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" style="float:right;" onclick="aaa()">발행실패</button>&nbsp;
-					<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="aaa()" data-target="#modal" style="float:right;" onclick="aaa()">발행</a>&nbsp;
+					<button type="submit" id="data" class="ls-modal btn btn-primary" data-toggle="modal" href="/procurement2/purchaseOrder?purchaseNo" data-target="#modal" style="float:right;" onclick="aaa()">발행 테스트</button>&nbsp;
+					<!--<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;-->
 					 <button class="btn btn-primary" onclick="print();">인쇄</button>&nbsp;
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
@@ -193,6 +193,8 @@
 <script type="text/javascript">
 let printPurchaseOrder;
 function print(){
+	function myCheckBox(){
+	aaa();
 	printPurchaseOrder = window.open('/procurement2/print','thePopup','width=722,height=600')
 };
 </script>

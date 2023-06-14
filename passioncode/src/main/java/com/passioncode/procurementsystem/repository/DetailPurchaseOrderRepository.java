@@ -23,10 +23,10 @@ public interface DetailPurchaseOrderRepository extends JpaRepository<DetailPurch
 	@Query(value="SELECT MAX(purchase_order_no)+1 FROM detail_purchase_order",nativeQuery = true)
 	public Integer findMaxOrderNo();
 	
-	@Modifying//select 문이 아님을 나타낸다 
+	@Modifying(clearAutomatically = true,flushAutomatically = true)//select 문이 아님을 나타낸다 
 	@Transactional
 	@Query(value="UPDATE procurement_plan myp SET myp.detail_purchase_order_code=:detailcode WHERE myp.code=:pcode",nativeQuery = true)
-	public void myUpdate(@Param("detailcode")Integer code1,@Param("pcode")Integer code2);
+	public void myUpdate(@Param("detailcode")Integer detailcode,@Param("pcode")Integer pcode);
 	
 	@Transactional
 	@Query(value="UPDATE procurement_plan AS pp SET pp.detail_purchase_order_code=:detailcode WHERE pp.code=:pcode",nativeQuery = true)

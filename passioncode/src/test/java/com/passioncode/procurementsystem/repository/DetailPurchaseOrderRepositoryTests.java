@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.DetailPublishDTO;
@@ -47,8 +48,25 @@ public class DetailPurchaseOrderRepositoryTests {
 	// 앞에 들어가는걸 생성 뒤 넣어주기
 	// 1. 구매 발주서 -> 2. 세부 구매발주서 -> 3. 조달 계획코드에 들어감
 	// DetailPurchaseOrder에 저장
+	@Transactional
+	@Commit
+	@Test
+	public void updatePp() {
+		//조달품목 리스트를 다 불러와서 널값이면 확인해서 저장해 주기
+		ProcurementPlan pp = procurementPlanRepository.findById(1).get();//특정한 계획 불러오기
+		DetailPurchaseOrder dp = detailPurchaseOrderRepository.findById(15).get();
+		//ProcurementPlanDTO ppDTO = ProcurementPlanDTO.builder().
+		
+		ProcurementPlan pp2 = ProcurementPlan.builder().code(pp.getCode()).amount(pp.getAmount()).dueDate(pp.getDueDate())
+				.minimumOrderDate(pp.getMinimumOrderDate()).registerDate(pp.getRegisterDate())
+				.completionDate(pp.getCompletionDate()).mrp(pp.getMrp()).contract(pp.getContract())
+				.detailPurchaseOrder(detailPurchaseOrderRepository.findById(dp.getCode()).get()).build();
+		
+		log.info("pp2>>>>>>>"+pp2);
+		procurementPlanRepository.save(pp2);
+	}
 	
-	
+	@Transactional
 	@Test
 	public void publish2() { // 발주서 번호 생성
 		// *******발주서 업데이트 빼고 성공
@@ -62,7 +80,7 @@ public class DetailPurchaseOrderRepositoryTests {
 			PurchaseOrder po = PurchaseOrder.builder().build();
 			DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().date(LocalDateTime.now()).amount(((Integer) arr[7]) - ((Integer) arr[6])).purchaseOrder(po).build();
 			//detailPurchaseOrderRepository.save(detailPurchaseOrder);
-			detailPurchaseOrderRepository.myUpdate2(detailPurchaseOrder.getCode(), ((Integer) arr[0]));// 앞 발주번호, 뒤 조달 코드
+			detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(), ((Integer) arr[0]));// 앞 발주번호, 뒤 조달 코드
 			purchaseOrderRepository.save(po);
 			detailPurchaseOrderRepository.save(detailPurchaseOrder);
 			//purchaseOrderRepository.save(purchaseOrder);
