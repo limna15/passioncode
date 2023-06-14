@@ -1,5 +1,4 @@
 package com.passioncode.procurementsystem.service;
-
 import java.util.List;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
@@ -77,6 +76,15 @@ public interface ProcurementPlanService {
 	 * @param procurementPlanDTO
 	 */
 	void delete(ProcurementPlanDTO procurementPlanDTO);
+	
+	/**
+	 * 소요일, 기본여유기간, 품목공급LT -> 조달납기예정일, 최소발주일 <br>
+	 * 조달계획 등록 화면에서, 조달납기예정일, 최소발주일을 계산해주기 <br>
+	 * @param procurementPlanDTO
+	 * @return
+	 */
+	ProcurementPlanDTO getProcurementPlanCalculate(ProcurementPlanDTO procurementPlanDTO);
+	
 	
 
 }

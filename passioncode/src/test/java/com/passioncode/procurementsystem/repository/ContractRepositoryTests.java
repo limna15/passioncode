@@ -180,5 +180,13 @@ public class ContractRepositoryTests {
 	}
 	
 	
+	@Test
+	public void findByCompanyNameAndMaterialCodeTest() {
+//		log.info("어디 리스트 잘가져오나 보자 : "+contractRepository.findByCompanyNameAndMaterialCode("길승", "CGa0001"));
+//		log.info("어디 리스트 잘가져오나 보자 : "+contractRepository.findByCompanyNameAndMaterialCode("", "CGa0001"));
+		log.info("어디 리스트 잘가져오나 보자 : "+contractRepository.findByCompanyNameAndMaterialCode(null, "CGa0001"));
+	}
+	
+	
 	
 }

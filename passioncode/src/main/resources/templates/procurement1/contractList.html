@@ -107,14 +107,14 @@
 						<!-- 등록, 수정, 삭제 버튼 시작 -->
 						<div class="col-md-6" >	
 							<form style="float: right;">
-								<button class="btn btn-primary" >삭제</button>
+								<button class="btn btn-primary" type="submit">삭제</button>
 							</form>
 							<form style="float: right;">
 								&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >수정</button>&nbsp;&nbsp;
 							</form>
 							<form style="float: right;" th:action = "@{/procurement1/contractRegister}" th:method="get" id="registerForm">
 								<input type="hidden" name="materialCodeList" id="materialCodeList">
-								<button class="btn btn-primary" id="registerBtn">등록</button>
+								<button class="btn btn-primary" id="registerBtn" type="submit">등록</button>
 							</form>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->

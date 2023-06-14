@@ -1,6 +1,9 @@
 package com.passioncode.procurementsystem.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -280,6 +283,69 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	public void delete(ProcurementPlanDTO procurementPlanDTO) {
 		log.info("삭제된 조달계획(procurementPlan) 정보 : "+dtoToEntity(procurementPlanDTO));
 		procurementPlanRepository.deleteById(procurementPlanDTO.getPpcode());
+	}
+	
+	/**
+	 * 최소발주일 계산해주기 <br>
+	 * 조달납기예정일 - 품목공급LT
+	 * @param duedate
+	 * @param supplyLt
+	 * @return
+	 */
+	public Date makeMinimumOrderDate(Date duedate,Integer supplyLt) {
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일"); 		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(duedate);
+		duedate=cal.getTime();
+		log.info("캘린더 셋팅된 조달납기예정일 : "+simpleDateFormat.format(duedate));
+		
+		//조달납기예정일 - 품목공급LT => 최소발주일 만들기
+		cal.add(Calendar.DATE,-supplyLt);
+		
+		Date minimumOrderDate=cal.getTime();
+		log.info("제대로 뺀, 최소발주일 : "+simpleDateFormat.format(minimumOrderDate));
+		
+		return minimumOrderDate;
+	}
+	
+	/**
+	 * 조달납기예정일 계산해주기 <br>
+	 * 소요일 - 기본 여유기간
+	 * @param mrpdate
+	 * @param freePeriod
+	 * @return
+	 */
+	public Date makeDuedate(Date mrpdate,Integer freePeriod) {
+		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일"); 		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(mrpdate);
+		mrpdate=cal.getTime();
+		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpdate));
+		
+		//소요일 - 기본 여유기간 => 납기예정일 만들기
+		cal.add(Calendar.DATE,-freePeriod);
+		
+		Date duedate=cal.getTime();
+		log.info("제대로 뺀, 납기예정일 : "+simpleDateFormat.format(duedate));
+		
+		return duedate;
+	}
+
+	@Override
+	public ProcurementPlanDTO getProcurementPlanCalculate(ProcurementPlanDTO procurementPlanDTO) {
+		//화면에서 받을 procurementPlanDTO 정보 => 소요일, 기본여유기간, 품목공급LT
+		//소요일 -> 등록화면 셋팅된 값에서 얻기
+		//기본여유기간, 품목공급LT -> 계약서 찾기 모달창에서 얻기
+		
+		//조달납기 예정일 구하기 -> procurementPlanDTO 에 값 셋팅해주기
+		Date dueDate = makeDuedate(procurementPlanDTO.getMrpdate(), procurementPlanDTO.getFreePeriod());
+		procurementPlanDTO.setDueDate(dueDate);
+		
+		//최소발주일 구하기 -> procurementPlanDTO 에 값 셋팅해주기
+		Date minimumOrderDate=makeMinimumOrderDate(dueDate,procurementPlanDTO.getSupplyLt());
+		procurementPlanDTO.setMinimumOrderDate(minimumOrderDate);
+				
+		return procurementPlanDTO;
 	}
 
 

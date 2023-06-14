@@ -92,7 +92,7 @@
                     
                     	<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
-							<table class="table table-bordered" id="searchCompanyListTable" style="text-align: center;">
+							<table class="table table-bordered" id="searchCompanyListTable" style="text-align:center;">
 								<thead>
 									<tr>
 										<th>사업자<br>등록번호</th>
@@ -218,13 +218,13 @@
 			//협력회사 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
 			$(document).on("click",".companySearchBtn",function(){
 				console.log("협력회사 찾기 버튼 누름");
-				//검색 버튼위의 td를 통해서 회사이름 찾기
-				var companyName = getObj().querySelector("input[type=text]").value;				
-				console.log("회사이름 : ",companyName);
-				
 				//협력회사 찾기 버튼 누르고 난 후 해당 TR의 값 세팅해주기
 				searchcompanyTR=getObjTR();
 				//console.log("세팅이 된 TR 값 읽기 : ",searchcompanyTR);
+				
+				//검색 버튼위의 td를 통해서 회사이름 찾기
+				var companyName = getObj().querySelector("input[type=text]").value;				
+				console.log("회사이름 : ",companyName);
 				
 				//협력회사 이름으로 (거래가능한)협력회사 찾는 Ajax처리
 				$.ajax({
@@ -461,7 +461,6 @@
 				e.preventDefault();
 				//혹시모르니 모든 값들 넣었던거 초기화 시키기				
 				$("#searchCompanyListErrorModal").html(searchCompanyListErrorModalcloneObj.html());
-				$("#contractRegisterCheckErrorModal").html(contractRegisterCheckErrorModalcloneObj.html()); 	
 				
 				//잘됐던 거지만, 혹시몰라 한번더 초기화 시키기
 				$("#searchCompanyListModal").html(searchCompanyListModalcloneObj.html());
@@ -511,7 +510,7 @@
     	});
     	//console.log("contractDTO 전체 리스트 확인",DTOList);
     	
-    	//materialCode 값을 넣어서 html 만들기
+    	//첫번째 넣을 품목코드td html 만들기 (materialCode 이용)
     	function makeMaterialCode(materialCode){
     		return `<td>
 			    		<input type="text" style="width:100%; border: 0; text-align: center;" name="materialCode" class="materialCode" value=${materialCode} readonly>
@@ -519,7 +518,7 @@
 		    		</td>`;
     	};        	
     	
-    	//materialName 값을 넣어서 html 만들기
+    	//두번째 넣을 품목명td html 만들기 (materialName 이용)
     	function makeMaterialName(materialName){
     		return `<td>
 			    		<input type="text" style="width:100%; border: 0; text-align: center;" name="materialName" class="materialName" value=${materialName} readonly>
@@ -569,7 +568,7 @@
 	            const new_cell = new_row.insertCell(i);
 	            let temp_html = ``;
 	            if(i === 0) {
-	                   temp_html = makeMaterialCode(materialCode);
+	                temp_html = makeMaterialCode(materialCode);
 	            }else if(i === 1) {
 					temp_html = makeMaterialName(materialName);
 	            }else if(i === 2) {

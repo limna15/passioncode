@@ -109,12 +109,15 @@
 						<!-- 등록, 수정, 삭제 버튼 시작 -->
 						<div class="col-md-6" >	
 							<form style="float: right;">
-								<button class="btn btn-primary" >삭제</button>
+								<button class="btn btn-primary" type="submit">삭제</button>
 							</form>
 							<form style="float: right;">
 								&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >수정</button>&nbsp;&nbsp;
 							</form>
-							<button class="btn btn-primary" style="float: right;" onclick="location.href='/procurement1/procurementPlanRegister'">등록</button>
+							<form style="float: right;" th:action = "@{/procurement1/procurementPlanRegister}" th:method="get" id="registerForm">
+								<input type="hidden" name="mrpCodeList" id="mrpCodeList">
+								<button class="btn btn-primary" id="registerBtn" type="submit">등록</button>
+							</form>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->
 					</div>	
@@ -130,7 +133,7 @@
 									<th>소요일</th>
 									<th>소요량</th>
 									<th>협력회사</th>
-									<th>품목공급<br>L/T</th>
+									<th>품목 공급<br>L/T</th>
 									<th>조달납기<br>예정일</th>
 									<th>최소<br>발주일</th>
 									<th>필요<br>수량</th>
@@ -141,7 +144,7 @@
 							</thead>
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
-									<td><input type="checkbox"></td>
+									<td><input type="checkbox" name="checkBox" th:value="${dto.mrpCode}" onclick="chkClicked()"></td>
 									<td>[[${dto.materialCode}]]</td>
 									<td>[[${dto.materialName}]]</td>
 									<td>[[${dto.process}]]</td>
@@ -197,6 +200,46 @@
 				</div>
 			</div>
 		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+		<script th:inline="javascript">
+		
+		//체크박스 체크한것 -> 품목코드 리스트로 만들기
+		function chkClicked(){
+			const chkChecked = 'input[name="checkBox"]:checked';
+			const selectedEls = document.querySelectorAll(chkChecked);
+			
+	 		console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+	 		
+	 		let mrpCodeList = new Array();
+	 		
+	 		selectedEls.forEach((el) => {
+				console.log("체크된거 어떻게 찍히나 보자", el.value);
+				mrpCodeList.push(el.value);
+		 	});
+	 		
+	 		console.log("만들어진 리스트 보자",mrpCodeList);
+	 		
+	 		return mrpCodeList;
+		}
+		
+		$(document).ready(function(){
+    		$("#registerBtn").on("click",function(e){
+    			//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			//2. 만든 품목코드 리스트를 input 히든에 담기
+    			let mrpCodeList = new Array();
+    			mrpCodeList = $('input[name=mrpCodeList]').attr('value',chkClicked());
+    			console.log("이렇게 만든 리스트 되는건가?",mrpCodeList);
+    			
+   				//3.담은거 submit으로 보내자
+    			$("#registerForm").submit();
+   			});
+   		});	
+			
+		
+		
+		</script>	
 		
 	</th:block>
 </th:block>

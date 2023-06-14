@@ -21,7 +21,7 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
 	 * @param keyword
 	 * @return
 	 */
-	@Query(value="SELECT * FROM company WHERE NAME LIKE %:keyword% AND deal_status=1;", nativeQuery = true)
+	@Query(value="SELECT * FROM company WHERE NAME LIKE %:keyword% AND deal_status=1 ", nativeQuery = true)
 	public List<Company> findByNameContainingWithDeal(@Param("keyword") String keyword);
 
 //	@Query(value="SELECT * FROM company c WHERE c.NAME LIKE %:keyword% AND c.deal_status=1;")

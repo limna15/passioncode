@@ -1,6 +1,8 @@
 package com.passioncode.procurementsystem.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
+import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
+import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.service.ContractService;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialService;
@@ -43,6 +47,7 @@ public class PS1Controller {
 		log.info("품목정보 목록 화면 보기.....");
 		
 		model.addAttribute("DTOList",materialService.getDTOList());		
+		
 	}
 	
 	/**
@@ -184,6 +189,9 @@ public class PS1Controller {
 		log.info("계약 목록 화면 보기.....");
 		
 		model.addAttribute("DTOList",contractService.getDTOList());	
+		
+		//현재 등록화면에서, 버튼 클릭시 제어해야할 상황 안만들어진 상태 
+		//ex> 계약상태 미완료인것만 등록 클릭 가능 등등
 	}
 	
 	/**
@@ -193,9 +201,14 @@ public class PS1Controller {
 	 */
 	@GetMapping("contractRegister")
 	public void ContractRegister(String[] materialCodeList, Model model) {
-		log.info("계약 등록 화면 보기.....");
-		List<ContractDTO> contractDTOList = new ArrayList<>();
+		 //계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
+		 //사업자등록번호
 		
+		log.info("계약 등록 화면 보기.....");
+		
+		//클릭한 품목코드 리스트를 통해서, 등록화면에 보낼, ContractDTO 리스트 만들기		
+		List<ContractDTO> contractDTOList = new ArrayList<>();
+		//품목코드,품목명 넣어서 셋팅해주기 -> 계약상태는 아직 계약 등록할지 모르니까 null 넣어서 보내주자
 		for(int i=0;i<materialCodeList.length;i++) {
 			ContractDTO contractDTO = ContractDTO.builder().materialCode(materialCodeList[i]).materialName(materialService.getMaterial(materialCodeList[i]).getName()).build();
 			contractDTOList.add(contractDTO);
@@ -215,6 +228,12 @@ public class PS1Controller {
 	public String ContractRegister2(ContractDTO contractDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
 		//사업자등록번호
+		
+//		log.info("안보낼때 어떻게 읽나 보자 : "+request.getParameterValues("manager"));
+//		if(request.getParameterValues("manager")==null) {
+//			log.info("안보냈으면 이거 null 인건가????");
+//		}
+		// => 결론!!! 안보낼때 null 로 보내지는게 아니야!!!! 빈값으로 보내짐!
 		
 		log.info("계약 등록 처리.....");
 		
@@ -283,7 +302,7 @@ public class PS1Controller {
 		List<Integer> registerList = new ArrayList<>();
 		//받아온 DTO리스트 각각 DB에 저장하기
 		for(ContractDTO dto : contractDTOList) {
-			registerList.add(contractService.register(dto));
+//			registerList.add(contractService.register(dto));
 //			log.info("각각 엔티티 변환 보자 : "+contractService.dtoToEntity(dto));
 		}
 		
@@ -291,19 +310,187 @@ public class PS1Controller {
 		
 		return "redirect:/procurement1/contractList";
 	}
-
+	
+	/**
+	 * 조달계획 목록 화면보기
+	 * @param model
+	 */
 	@GetMapping("procurementPlanList")
 	public void ProcurementPlanList(Model model) {
-		log.info("조달 계획 목록 화면 보기.....");
+		log.info("조달계획 목록 화면 보기.....");
 		
 		model.addAttribute("DTOList",procurementPlanService.getDTOList());
+		
+		//현재 등록화면에서, 버튼 클릭시 제어해야할 상황 안만들어진 상태 
+		//ex> 계약상태 완료, 조달계획 미완료 인것만 등록 클릭 가능 등등
 	}
 	
-	
+	/**
+	 * 조달계획 등록 화면보기
+	 * @param mrpCodeList
+	 * @param model
+	 */
 	@GetMapping("procurementPlanRegister")
-	public void ProcurementPlanRegister(Model model) {
-		log.info("조달 계획 등록 화면 보기.....");
+	public void ProcurementPlanRegister(String[] mrpCodeList,Model model) {
+		//품목코드, 품목명, 소요공정, 소요일, 소요량, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항 <br>
+		//조달계획코드, 자재소요계획코드, 사업자등록번호, 계약서번호 // 기본 여유기간
+		
+		log.info("조달계획 등록 화면 보기.....");
+		
+		//클릭한 mrp코드 리스트를 통해서, 등록화면에 보낼, ProcurementPlanDTO 리스트 만들기	
+		List<ProcurementPlanDTO> procurementPlanDTOList = new ArrayList<>();
+		
+		//품목코드, 품목명, 소요공정, 소요일, 소요량, 자재소요계획코드 셋팅 가능
+		//계약상태는 완료된것이라서 조달계획 등록 가능하기 때문에, 계약상태 = 완료 로 보내기
+		//조달계획 등록상태, 조달계획 진행사항 은 아직 조달계획이 등록될지 모르니까 null 로 보내주자
+		for(int i=0;i<mrpCodeList.length;i++) {
+			MRP mrp = procurementPlanService.getMRP(Integer.parseInt(mrpCodeList[i]));
+			ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+																				.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount()).mrpCode(mrp.getCode())
+																				.contractStatus("완료").build();
+			procurementPlanDTOList.add(procurementPlanDTO);
+		}
+		log.info("만들어진 리스트 보자 : "+procurementPlanDTOList);
+		
+		model.addAttribute("procurementPlanDTOList", procurementPlanDTOList);		
+	}
+	
+	@PostMapping("procurementPlanRegister")
+	public void ProcurementPlanRegister2(ProcurementPlanDTO procurementPlanDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
+		//품목코드, 품목명, 소요공정, 소요일, 소요량, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항 <br>
+		//조달계획코드, 자재소요계획코드, 사업자등록번호, 계약서번호 // 기본 여유기간
+		
+		
+		log.info("조달계획 등록 처리.....");
+		
+		log.info("화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
+		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
+		//받아온 date(소요일, 조달납기예정일, 최소발주일) String으로 왔기 때문에 Date 형식으로 변환해줘야함
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		List<ProcurementPlanDTO> contractDTOList = new ArrayList<>();
+		
+		//조달계획코드 -> 등록하는 거라서 null 값, 애초에 보내지도 않음
+		
+		//품목코드 배열
+		String[] materialCode = request.getParameterValues("materialCode");	
+		//품목명 배열
+		String[] materialName = request.getParameterValues("materialName");
+		//소요공정 배열
+		String[] process = request.getParameterValues("process");		
+		//소요일 배열 -> Date 형식으로 변환
+		String[] mrpdateStr = request.getParameterValues("mrpdate");		
+		Date[] mrpdate = null;
+		for(int i=0;i<mrpdateStr.length;i++) {
+			mrpdate[i] = simpleDateFormat.parse(mrpdateStr[i]);
+			log.info("변경되서 넣어진 소요일 날짜 형식 봐보자 : "+mrpdate[i]);
+		}
+		//소요량 배열 -> Integer로 변경
+		String[] mrpAmountStr = request.getParameterValues("mrpAmount");	
+		Integer[] mrpAmount = null;
+		for(int i=0;i<mrpAmountStr.length;i++) {
+			mrpAmount[i] = Integer.parseInt(mrpAmountStr[i]);
+		}	
+		//협력회사 배열
+		String[] companyName = request.getParameterValues("companyName");				
+		//품목공급LT 배열 -> Integer로 변경
+		String[] supplyLtStr = request.getParameterValues("supplyLt");	
+		Integer[] supplyLt = null;
+		for(int i=0;i<supplyLtStr.length;i++) {
+			supplyLt[i] = Integer.parseInt(supplyLtStr[i]);
+		}
+		//조달납기예정일 배열 -> Date 형식으로 변환
+		String[] dueDateStr = request.getParameterValues("dueDate");		
+		Date[] dueDate = null;
+		for(int i=0;i<dueDateStr.length;i++) {
+			dueDate[i] = simpleDateFormat.parse(dueDateStr[i]);
+			log.info("변경되서 넣어진 조달납기예정일 날짜 형식 봐보자 : "+dueDate[i]);
+		}
+		//최소발주일 배열 -> Date 형식으로 변환
+		String[] minimumOrderDateStr = request.getParameterValues("minimumOrderDate");		
+		Date[] minimumOrderDate = null;
+		for(int i=0;i<minimumOrderDateStr.length;i++) {
+			minimumOrderDate[i] = simpleDateFormat.parse(minimumOrderDateStr[i]);
+			log.info("변경되서 넣어진 조달납기예정일 날짜 형식 봐보자 : "+minimumOrderDate[i]);
+		}
+		//필요수량 배열 -> Integer로 변경
+		String[] ppAmountStr = request.getParameterValues("ppAmount");	
+		Integer[] ppAmount = null;
+		for(int i=0;i<ppAmountStr.length;i++) {
+			ppAmount[i] = Integer.parseInt(ppAmountStr[i]);
+		}
+		//자재소요계획코드 배열 -> Integer로 변경
+		String[] mrpCodeStr = request.getParameterValues("mrpCode");	
+		Integer[] mrpCode = null;
+		for(int i=0;i<mrpCodeStr.length;i++) {
+			mrpCode[i] = Integer.parseInt(mrpCodeStr[i]);
+		}
+		//사업자등록번호 배열 
+		String[] companyNo = request.getParameterValues("companyNo");		
+		//계약서번호 -> Integer로 변경
+		String[] contractNoStr = request.getParameterValues("contractNo");	
+		Integer[] contractNo = null;
+		for(int i=0;i<contractNoStr.length;i++) {
+			contractNo[i] = Integer.parseInt(contractNoStr[i]);
+		}	
+		//기본여유기간 배열 -> Integer로 변경
+		String[] freePeriodStr = request.getParameterValues("freePeriod");	
+		Integer[] freePeriod = null;
+		for(int i=0;i<freePeriodStr.length;i++) {
+			freePeriod[i] = Integer.parseInt(freePeriodStr[i]);
+		}		
+		//계약상태, 조달계획 등록상태 -> 완료
+		//조달계획 진행사항 -> 발주 예정
+		
+		//품목코드는 null일수 없으니까, 품목코드 배열 기준으로, 각각의 DTO에 넣어주고, 그값 DTO리스트에 넣기
+		for(int i=0; i<materialCode.length; i++) {
+			ContractDTO contractDTO2 = new ContractDTO();
+			//계약서 번호 null
+			contractDTO2.setContractStatus("완료");			
+			contractDTO2.setMaterialCode(materialCode[i]);
+			contractDTO2.setMaterialName(materialName[i]);
+			contractDTO2.setCompanyName(companyName[i]);;
+			contractDTO2.setManager(manager[i]);
+			contractDTO2.setManagerTel(managerTel[i]);
+			contractDTO2.setSupplyLt(Integer.parseInt(supplyLt[i]));
+			contractDTO2.setUnitPrice(Integer.parseInt(unitPrice[i]));
+			//계약서 업로드 null 허용이 아니라서, 일단은 "화면DB테스트 문구"라고 보내자
+//			contractDTO2.setContractFile(contractFile[i]);
+			contractDTO2.setContractFile("화면DB 테스트중");
+			contractDTO2.setCompanyNo(companyNo[i]);
+			
+			if(dealCondition != null) {									//받아온 dealCondition가 존재 O
+				if(!dealCondition[i].equals("")) {						//빈값이 아닐때
+					contractDTO2.setDealCondition(dealCondition[i]);				
+				}else {													//"" 빈값으로 받아올때
+					contractDTO2.setDealCondition(null);
+				}
+			}else {														//받아온 dealCondition가 존재 X
+				contractDTO2.setDealCondition(null);
+			}
+			
+			contractDTOList.add(contractDTO2);
+		}
+		
+		log.info("만든 contractDTOList 보자 : "+contractDTOList);
+	
+		//등록된 계약서 번호 리스트
+		List<Integer> registerList = new ArrayList<>();
+		//받아온 DTO리스트 각각 DB에 저장하기
+		for(ContractDTO dto : contractDTOList) {
+//			registerList.add(contractService.register(dto));
+//			log.info("각각 엔티티 변환 보자 : "+contractService.dtoToEntity(dto));
+		}
+		
+		redirectAttributes.addFlashAttribute("registerList",registerList);
+		
+		
+		
+		
+		
+		
 		
 	}
+	
 
 }

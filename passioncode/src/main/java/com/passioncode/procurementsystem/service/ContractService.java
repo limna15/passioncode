@@ -44,6 +44,14 @@ public interface ContractService {
 	List<Company> searchCompanyWithDeal(String name);	
 	
 	/**
+	 * 협력회사명과 품목코드를 이용하여 계약서 찾기 
+	 * @param companyName
+	 * @param materialCode
+	 * @return
+	 */
+	List<Contract> searchContractByCompanyNameAndMaterialCode(String companyName,String materialCode);
+	
+	/**
 	 * 품목 엔티티를 이용해서 List<ContractDTO>로 만들기(Material -> List<ContractDTO>) <br> 
 	 * 품목에 해당하는 계약이 여러개일수도 있어 리스트로 나옴 <br> 
 	 * 품목 기준으로 ContractDTO를 뽑는 거라서, 계약상태가 미완료인 것도 나옴
