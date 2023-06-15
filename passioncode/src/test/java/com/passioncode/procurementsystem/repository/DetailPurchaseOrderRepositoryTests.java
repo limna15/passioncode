@@ -53,17 +53,38 @@ public class DetailPurchaseOrderRepositoryTests {
 	@Test
 	public void updatePp() {
 		//조달품목 리스트를 다 불러와서 널값이면 확인해서 저장해 주기
-		ProcurementPlan pp = procurementPlanRepository.findById(1).get();//특정한 계획 불러오기
-		DetailPurchaseOrder dp = detailPurchaseOrderRepository.findById(15).get();
+		
+		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(9);// 조달계획 2번
+		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
+			log.info("222>>" + Arrays.toString(arr));
+			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
+			// ==>조달 계획 번호만 가져오면 된다.
+			//PurchaseOrder purchaseOrder = new PurchaseOrder(null);// 구매 발주서 발행
+			//DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(purchaseOrder.getNo(),((Integer) arr[7]) - ((Integer) arr[6]), LocalDateTime.now(), purchaseOrder);
+			PurchaseOrder po = PurchaseOrder.builder().build();
+			DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().date(LocalDateTime.now()).amount(((Integer) arr[7]) - ((Integer) arr[6])).purchaseOrder(po).build();
+			//detailPurchaseOrderRepository.save(detailPurchaseOrder);
+			//detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(), ((Integer) arr[0]));// 앞 발주번호, 뒤 조달 코드
+			purchaseOrderRepository.save(po);
+			detailPurchaseOrderRepository.save(detailPurchaseOrder);
+			//purchaseOrderRepository.save(purchaseOrder);
+			log.info(detailPurchaseOrder);
+		
+		ProcurementPlan pp = procurementPlanRepository.findById((Integer)arr[0]).get();//특정한 계획 불러오기
+		log.info("조달계획>>>>>저장되는 것?"+pp);
+		//DetailPurchaseOrder dp = detailPurchaseOrderRepository.findById(15).get();
+		//log.info("dp>>"+dp);
+		
 		//ProcurementPlanDTO ppDTO = ProcurementPlanDTO.builder().
 		
 		ProcurementPlan pp2 = ProcurementPlan.builder().code(pp.getCode()).amount(pp.getAmount()).dueDate(pp.getDueDate())
 				.minimumOrderDate(pp.getMinimumOrderDate()).registerDate(pp.getRegisterDate())
 				.completionDate(pp.getCompletionDate()).mrp(pp.getMrp()).contract(pp.getContract())
-				.detailPurchaseOrder(detailPurchaseOrderRepository.findById(dp.getCode()).get()).build();
+				.detailPurchaseOrder(detailPurchaseOrder).build();
 		
 		log.info("pp2>>>>>>>"+pp2);
 		procurementPlanRepository.save(pp2);
+		}
 	}
 	
 	@Transactional

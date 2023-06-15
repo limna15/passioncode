@@ -117,7 +117,7 @@
                             <td>다음 일정</td>
                             <!-- 조달계획의 버튼 <button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button> -->
                             <td><a name="myPlan" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="schedule" th:value="100">일정등록</a></td>
-                            <td><a name="myAvg" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="avg" th:value="101">평가</a></td>
+                            <td><a name="myAvg" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" th:id="checkBox" th:value="101" onclick="myCheckBox()">평가</a></td>
                             <td>[[${dto.diliveryPercent}]]</td>
                             <td>[[${dto.inspectionComplete}]]</td>
                             <td>[[${dto.purchaseOrderDeadlineStatus}]]</td>
@@ -187,9 +187,10 @@
 </script>
 
 <!-- 체크박스 시작 -->
+<!-- 체크박스 시작 -->
 <script th:inline="javascript" type="text/javascript">
-var pCheckListt = [[${pCheckList}]];
-console.log("pCheckList 입니다===>>",pCheckList);
+var purchaseOrderList = [[${purchaseOrderList}]];
+console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
 
 var codeList= new Array();
 var dtoCode= new Object();
@@ -210,10 +211,24 @@ function myCheckBox(){
 	selectedEls.forEach((el) => {
 		purchaseNo += el.value + ' ';
   });
-		console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+		console.log("purchaseNo 조달계획번호 여기>>> ", purchaseNo);
+		
+//	aaa();
+	
+	
+
 };
 
-
+function aaa(){
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	purchaseNo = purchaseNo.replaceAll(" ","");
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	//아래 두개 없어도 잘됨
+	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
+	//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
+};
+	
+	
 </script>
 
 	</th:block>
