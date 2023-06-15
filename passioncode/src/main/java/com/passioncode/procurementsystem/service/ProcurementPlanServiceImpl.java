@@ -177,7 +177,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		}
 		return procurementPlan;
 	}
-
+	
 	@Override
 	public List<ProcurementPlanDTO> getDTOList() {
 		// 조달계획등록 상태가 완료된거, 미완료 된거 나눠서 정리!
@@ -187,9 +187,9 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		List<MRP> mrpList = mrpRepository.getMRPJoinPPWithNotCompletePP();
 		
 		//일단 받아온 mrp 리스트 -> ProcurementPlanDTO 리스트로 변경
-		List<ProcurementPlanDTO> nonePPByMrpList = new ArrayList<>();
+		List<ProcurementPlanDTO> mrpListToDTOList = new ArrayList<>();
 		for(MRP mrp : mrpList) {
-			nonePPByMrpList.add(mrpEntityToDTO(mrp));
+			mrpListToDTOList.add(mrpEntityToDTO(mrp));
 		}
 		
 		//최종적으로 만들 DTO 리스트 셋팅해주기
@@ -199,7 +199,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		//1번 리스트에서 계약상태 미완료 리스트 만들기
 		List<ProcurementPlanDTO> notPPByMrpListCompleteContract = new ArrayList<>();
 		List<ProcurementPlanDTO> notPPByMrpListNonContract = new ArrayList<>();
-		for(ProcurementPlanDTO dto : nonePPByMrpList) {
+		for(ProcurementPlanDTO dto : mrpListToDTOList) {
 			if(dto.getContractStatus().equals("완료")) {
 				notPPByMrpListCompleteContract.add(dto);
 			}else {
@@ -216,13 +216,55 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 			finalDTOList.add(dto);
 		}
 		
-		//2. 조달계획등록 완료인 조달계획 가져오기
+		//2. 조달계획등록 완료인 조달계획 가져오기 
+		//조달계획진행사항을  발주 예정 -> 조달 진행 중 -> 조달 완료  순서로 셋팅해주기!
 		List<ProcurementPlan> ppList = procurementPlanRepository.getPPJoinMRPWithOrder();
 		
-		//받아온 리스트, DTO로 변경하면서, 최종리스트에 넣어주기
+		//받아온 리스트, 일단 DTO로 바꿔주기
+		List<ProcurementPlanDTO> ppListToDTOList = new ArrayList<>();		
 		for(ProcurementPlan pp : ppList) {
-			finalDTOList.add(ppEntityToDTO(pp));
+			ppListToDTOList.add(ppEntityToDTO(pp));
 		}
+		
+		//받아온 리스트 -> 발주예정 만 모을 리스트에 넣어주기
+		List<ProcurementPlanDTO> ppListFirstStep = new ArrayList<>();
+		for(ProcurementPlanDTO dto : ppListToDTOList) {
+			if(dto.getPpProgress().equals("발주 예정")) {
+				ppListFirstStep.add(dto);
+			}
+		}
+		//log.info("발주 예정인것만 체크해보자"+ppListFirstStep);
+		
+		//받아온 리스트 -> 조달 진행 중 만 모을 리스트에 넣어주기
+		List<ProcurementPlanDTO> ppListSecondStep = new ArrayList<>();
+		for(ProcurementPlanDTO dto : ppListToDTOList) {
+			if(dto.getPpProgress().equals("조달 진행 중")) {
+				ppListSecondStep.add(dto);
+			}
+		}
+		//log.info(" 조달 진행 중 인것만 체크해보자"+ppListSecondStep);
+		
+		//받아온 리스트 -> 조달 완료 만 모을 리스트에 넣어주기
+		List<ProcurementPlanDTO> ppListThirdStep = new ArrayList<>();
+		for(ProcurementPlanDTO dto : ppListToDTOList) {
+			if(dto.getPpProgress().equals("조달 완료")) {
+				ppListThirdStep.add(dto);
+			}
+		}
+		//log.info("조달 완료 인것만 체크해보자"+ppListThirdStep);
+		
+		//최종리스트에 발주예정 -> 조달진행중 -> 조달완료 순으로 넣어주기
+		for(ProcurementPlanDTO dto : ppListFirstStep) {
+			finalDTOList.add(dto);
+		}
+		
+		for(ProcurementPlanDTO dto : ppListSecondStep) {
+			finalDTOList.add(dto);
+		}
+		
+		for(ProcurementPlanDTO dto : ppListThirdStep) {
+			finalDTOList.add(dto);
+		}	
 		
 		log.info("만들어진 정렬된 ProcurementPlanDTO 리스트 보기 : "+finalDTOList);
 		
