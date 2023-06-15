@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -40,7 +42,7 @@ public class PS3Controller {
 	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
 		List<MaterialInDTO> materialInDTOList = materiallInService.getMaterialInDTOLsit();
 		//List<MaterialIn> materialInList= materiallInService.getMaterialInLsit();
-		//log.info("list............." + materialInDTOList);
+		log.info("materialInDTOlist............." + materialInDTOList);
 		//log.info("purchaseCode >>> " + purchaseCode);
 		//log.info("materialInDTOList >>> " + materialInDTOList);
 		
@@ -106,20 +108,20 @@ public class PS3Controller {
 		model.addAttribute("price", price);
 		model.addAttribute("DTOList", materialInDTOList);
 		//model.addAttribute("purchaseCode", purchaseCode);
-
 	}
 	
-	@PostMapping("/materialIn")
-	public String tdInfo(@Param("purchaseCode") String purchaseCode) {
-		log.info("안읽히나 본데 " + purchaseCode);
-	
-		return "redirect:/procurement3/materialIn?purchaseCode="+purchaseCode;
-	}
-	
-//	@PostMapping("/materialInRegister")
-//	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-//		//등록해야될 정보: 입고상태, 발행상태	
-//		log.info("자재입고 화면에서 보낸 MaterialDTO 보기 >>> " + materialInDTO);
+//	@PostMapping("/materialIn")
+//	public String tdInfo(@Param("purchaseCode") String purchaseCode) {
+//		log.info("안읽히나 본데 " + purchaseCode);
+//	
+//		return "redirect:/procurement3/materialIn?purchaseCode="+purchaseCode;
+//	}
+//	
+//	@PostMapping(value="materialInRegister", produces=MediaType.APPLICATION_JSON_VALUE)
+//	public String materialInRegister(@RequestBody MaterialInDTO materialInDTO) {
+//		log.info("잘 보내지나 >>> "+ materialInDTO);
+//		materialInDTO.setStatus(true);
+//		materialInDTO.setTransactionStatus(false);
 //		
 //		materiallInService.register(materialInDTO);
 //

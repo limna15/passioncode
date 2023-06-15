@@ -27,6 +27,7 @@ public class PS3RestController {
 		materialInDTO.setTransactionStatus(false);
 		
 		return materialInService.register(materialInDTO);
+		//화면에 보내는 데이터? Boolean 타입이 필요한건가?
 	}
 
 }

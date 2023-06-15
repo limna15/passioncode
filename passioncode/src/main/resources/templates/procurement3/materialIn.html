@@ -162,8 +162,9 @@
 										<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
 										<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>
 										<td><input type="hidden" name="amount" th:value="${list.amount}">[[${list.amount}]]</td>
-										<td><span th:if="${list.status} == null">
-												<input type="hidden" name="status" th:value="${list.status}">
+										<td id= "status">
+											<input type="hidden" name="status" th:value="${list.status}">
+											<span th:if="${list.status} == null">
 												<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
 												<button type="button" class="btn btn-primary" name="cancle" value="취소" style="height:25px;">취소</button>
 											</span>
@@ -430,11 +431,9 @@
 			contentType :"application/json; charset=UTF-8",
 			dataType: "json",
 			success: function(data){
-				console.log("받아온 데이터 : ",data);
-				
+				console.log("받아온 데이터 : ",data); //입고코드
 				//입고 완료처리 해서 입고상태 바꿔주기
-				getObjTR().querySelector("input[name=status]").value = data.status;
-				console.log("넣어준 입고상태 확인해보자 : ", getObjTR().querySelector("input[name=status]").value);
+				status= true;	
 				
 				},
 				error: function(xhr,status,er){
