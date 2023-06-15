@@ -206,15 +206,6 @@
 			var searchcompanyTR = new Object();
 			//console.log("tr 전역변수 만들고 난 값 : ",searchcompanyTR);			
 						
-			//협력회사 찾기 모달창 -> 본문내용 넣을 태그 찾기 
-			const searchCompanyListModalTag = document.querySelector("#searchCompanyListModal");
-			var searchCompanyListModalcloneObj = $("#searchCompanyListModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
-			//console.log("전역에 넣은 건데 협력회사 찾기 태그 선언되고 처음 값 이건 읽자나??",searchCompanyListModalTag);
-			
-			//협력회사 찾았는데, 없을시와 오류시 보여줄 모달창 -> 본문내용 넣을 태그 찾기 
-			const searchCompanyListErrorModalTag = document.querySelector("#searchCompanyListErrorModal");
-			var searchCompanyListErrorModalcloneObj = $("#searchCompanyListErrorModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
-						
 			//협력회사 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
 			$(document).on("click",".companySearchBtn",function(){
 				console.log("협력회사 찾기 버튼 누름");
@@ -247,8 +238,8 @@
 							//console.log("완성된 html 보자",completeHtml);								
 							
 							//시작 태그 바로 뒤에, 협력회사 찾기 모달창 -> 본문에 html 넣기
-							searchCompanyListModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
-							//console.log("넣은 태그 보자",tag)		
+							//document.querySelector("#searchCompanyListModal").insertAdjacentHTML('afterbegin', completeHtml);	
+							document.querySelector("#searchCompanyListModal").innerHTML = completeHtml;
 							
 							//협력회사 찾기 모달 창 보여주기
 							$(".companySearchModal").modal('show');	
@@ -258,7 +249,10 @@
 											<span>다시 검색해 주시기바랍니다.</span>`;
 											
 							//시작 태그 바로 뒤에, 협력회사 오류 모달창 -> 본문 html 넣기
-							searchCompanyListErrorModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
+							//innerHTML -> 내용 덮어씌우기
+	   						//insertAdjacentHTML -> 내용 추가해서 넣기
+							//document.querySelector("#searchCompanyListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
+							document.querySelector("#searchCompanyListErrorModal").innerHTML = completeHtml;
 							
 							//협력회사 오류 모달창 보여주기
 							$(".companySearchErrorModal").modal('show');
@@ -272,16 +266,13 @@
 										<span>다시 검색해 주시기바랍니다.</span>`;
 						
 						//시작 태그 바로 뒤에, 협력회사 오류 모달창 -> 본문 html 넣기
-						searchCompanyListErrorModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
+						//document.querySelector("#searchCompanyListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
+						document.querySelector("#searchCompanyListErrorModal").innerHTML = completeHtml;	
 						
 						//협력회사 오류 모달창 보여주기
 						$(".companySearchErrorModal").modal('show');
 					}
 				});					
-									
-				//모달창 닫기 전에, 모달창안에 넣었던 값들 초기화 시키기
-				$("#searchCompanyListModal").html(searchCompanyListModalcloneObj.html());
-				$("#searchCompanyListErrorModal").html(searchCompanyListErrorModalcloneObj.html());
 			});	
 			
 			//console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchcompanyTR);
@@ -314,12 +305,7 @@
 				//그리고 자동으로 모달창 닫아주기
 				$(".companySearchModal").modal('hide');							
 			});		
-			
-			//등록확인 모달창 -> 본문내용 넣을 태그 찾기 
-			const contractRegisterCheckModalTag = document.querySelector("#contractRegisterCheckModal");
-			var contractRegisterCheckModalcloneObj = $("#contractRegisterCheckModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
-			//console.log("태그를 못 읽는건가?? 등록체크 태그~~",contractRegisterCheckModalTag);	
-						
+									
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			var contractRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
 			console.log("등록체크 전역변수 확인하기1 : ",contractRegisterValueCheck);
@@ -420,8 +406,8 @@
 	   				//console.log("완성된 문장보자",sentence);
 	   				
 	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
-	   				contractRegisterCheckModalTag.insertAdjacentHTML('afterbegin', sentence);
-	   				//console.log("태그 넣고나서 체크해보자~ 등록체크 태그~~",contractRegisterCheckModalTag);
+	   				//document.querySelector("#contractRegisterCheckModal").insertAdjacentHTML('afterbegin', sentence);
+					document.querySelector("#contractRegisterCheckModal").innerHTML = sentence;
 	   				   				
 	   				//등록확인 모달창 보여주기
 					$(".contractRegisterConfirmModal").modal('show');	   				
@@ -441,33 +427,11 @@
 				e.preventDefault();				
 				//폼태그에 실어서 등록하기
 				$("#contractRegisterForm").submit();
-				//모달창 닫기 전에, 모달창안에 넣었던 등록확인 정보 초기화 시키기
-				$("#contractRegisterCheckModal").html(contractRegisterCheckModalcloneObj.html());	
 				//그리고 자동으로 모달창 닫아주기
 				$(".contractRegisterConfirmModal").modal('hide');				
 			});	
 			
-			//등록확인 모달창의 취소 버튼 누를때
-			$(document).on("click",".contractRegisterCanaelBtn",function(e){
-				e.preventDefault();
-				//모달창 닫기 전에, 모달창안에 넣었던 등록확인 정보 초기화 시키기
-				$("#contractRegisterCheckModal").html(contractRegisterCheckModalcloneObj.html());	
-				//그리고 자동으로 모달창 닫아주기
-				$(".contractRegisterConfirmModal").modal('hide');					
-			});	
-						
-			//오류창과 모달창의 x버튼 등 값을 확인하고 닫는 버튼 누를때, 셋팅해놓은 값들 초기화시키기
-			$(document).on("click",".AllResetSetting",function(e){
-				e.preventDefault();
-				//혹시모르니 모든 값들 넣었던거 초기화 시키기				
-				$("#searchCompanyListErrorModal").html(searchCompanyListErrorModalcloneObj.html());
-				
-				//잘됐던 거지만, 혹시몰라 한번더 초기화 시키기
-				$("#searchCompanyListModal").html(searchCompanyListModalcloneObj.html());
-				$("#contractRegisterCheckModal").html(contractRegisterCheckModalcloneObj.html());	
-				//그리고 자동으로 모달창 닫아주기
-				//$(".contractRegisterConfirmModal").modal('hide');					
-			});	
+		
 			
 		});		
 		
@@ -499,6 +463,7 @@
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//contractDTO 리스트 타임리프 포문으로 안되서! 변수로 바꿔주기
+		/*
 		let contractDTOList = [[${contractDTOList}]];    	
     	let DTOList = new Array();
     	
@@ -509,6 +474,7 @@
     		DTOList.push(DTO);
     	});
     	//console.log("contractDTO 전체 리스트 확인",DTOList);
+    	*/
     	
     	//첫번째 넣을 품목코드td html 만들기 (materialCode 이용)
     	function makeMaterialCode(materialCode){

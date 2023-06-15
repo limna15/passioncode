@@ -218,6 +218,17 @@
 			//계약서 찾으려고 검색한 tr을 넣어주기 위한 tr 전역변수 선언
 			var searchContractTR = new Object();
 			console.log("tr 전역변수 만들고 난 값 : ",searchContractTR);			
+						
+			//계약서 찾기 모달창 -> 본문내용 넣을 태그 찾기 
+			const searchContractListModalTag = document.querySelector("#searchContractListModal");
+			var searchContractListModalcloneObj = $("#searchContractListModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
+			//console.log("전역에 넣은 계약서 모달창 태그 : ",searchContractListModalTag);
+			
+			//계약서 찾았는데, 없을시와 오류시 보여줄 모달창 -> 본문내용 넣을 태그 찾기 
+			const searchContractListErrorModalTag = document.querySelector("#searchContractListErrorModal");
+			var searchContractListErrorModalcloneObj = $("#searchContractListErrorModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
+			//console.log("전역에 넣은 계약서오류창 태그 : ",searchContractListErrorModalTag);
+			
 			
 			//계약서(협력회사) 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
 			$(document).on("click",".contractSearchBtn",function(){
@@ -262,8 +273,8 @@
 							//console.log("완성된 html 보자",completeHtml);								
 							
 							//시작 태그 바로 뒤에, 계약서 찾기 모달창 -> 본문에 html 넣기
-							//document.querySelector("#searchContractListModal").insertAdjacentHTML('afterbegin', completeHtml);	
-							document.querySelector("#searchContractListModal").innerHTML = completeHtml;	
+							searchContractListModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
+							//console.log("넣은 태그 보자",tag)		
 							
 							//계약서 찾기 모달 창 보여주기
 							$(".contractSearchModal").modal('show');	
@@ -273,8 +284,7 @@
 											<span>다시 검색해 주시기바랍니다.</span>`;
 											
 							//시작 태그 바로 뒤에, 계약서 오류 모달창 -> 본문 html 넣기
-							//document.querySelector("#searchContractListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
-							document.querySelector("#searchContractListErrorModal").innerHTML = completeHtml;
+							searchContractListErrorModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
 							
 							//계약서 오류 모달창 보여주기
 							$(".contractSearchErrorModal").modal('show');
@@ -288,13 +298,17 @@
 										<span>다시 검색해 주시기바랍니다.</span>`;
 						
 						//시작 태그 바로 뒤에, 계약서 오류 모달창 -> 본문 html 넣기
-						//document.querySelector("#searchContractListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
-						document.querySelector("#searchContractListErrorModal").innerHTML = completeHtml;
+						searchContractListErrorModalTag.insertAdjacentHTML('afterbegin', completeHtml);	
 						
 						//계약서 오류 모달창 보여주기
 						$(".contractSearchErrorModal").modal('show');
 					}
 				});					
+									
+				//모달창 닫기 전에, 모달창안에 넣었던 값들 초기화 시키기
+				$("#searchContractListModal").html(searchContractListModalcloneObj.html());
+				$("#searchContractListErrorModal").html(searchContractListErrorModalcloneObj.html());
+				console.log("계약서 찾기 버튼 후, 막바지 html 리셋 된 후 태그 정보 보자",searchContractListModalTag);
 			});	
 			
 			console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchContractTR);
@@ -394,6 +408,10 @@
 				
 			});		
 			
+			//등록확인 모달창 -> 본문내용 넣을 태그 찾기 
+			const ppRegisterCheckModalTag = document.querySelector("#ppRegisterCheckModal");
+			var ppRegisterCheckModalcloneObj = $("#ppRegisterCheckModal").clone();			//버튼 클릭전, 태그 안에 모든 정보
+			//console.log("태그를 못 읽는건가?? 등록체크 태그~~",ppRegisterCheckModalTag);	
 						
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			var ppRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
@@ -476,8 +494,8 @@
 	   				//console.log("완성된 문장보자",sentence);
 	   				
 	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
-	   				//document.querySelector("#ppRegisterCheckModal").insertAdjacentHTML('afterbegin', sentence);
-	   				document.querySelector("#ppRegisterCheckModal").innerHTML = sentence;;
+	   				ppRegisterCheckModalTag.insertAdjacentHTML('afterbegin', sentence);
+	   				//console.log("태그 넣고나서 체크해보자~ 등록체크 태그~~",ppRegisterCheckModalTag);
 	   				   				
 	   				//등록확인 모달창 보여주기
 					$(".ppRegisterConfirmModal").modal('show');	   				
@@ -497,10 +515,33 @@
 				e.preventDefault();					
 				//폼태그에 실어서 등록하기
 				$("#ppRegisterForm").submit();
+				//모달창 닫기 전에, 모달창안에 넣었던 등록확인 정보 초기화 시키기
+				$("#ppRegisterCheckModal").html(ppRegisterCheckModalcloneObj.html());	
 				//그리고 자동으로 모달창 닫아주기
 				$(".ppRegisterConfirmModal").modal('hide');				
 			});	
+			
+			//등록확인 모달창의 취소 버튼 누를때
+			$(document).on("click",".ppRegisterCanaelBtn",function(e){
+				e.preventDefault();
+				//모달창 닫기 전에, 모달창안에 넣었던 등록확인 정보 초기화 시키기
+				$("#ppRegisterCheckModal").html(ppRegisterCheckModalcloneObj.html());	
+				//그리고 자동으로 모달창 닫아주기
+				$(".ppRegisterConfirmModal").modal('hide');					
+			});	
 						
+			//오류창과 모달창의 x버튼 등 값을 확인하고 닫는 버튼 누를때, 셋팅해놓은 값들 초기화시키기
+			$(document).on("click",".AllResetSetting",function(e){
+				e.preventDefault();
+				//혹시모르니 모든 값들 넣었던거 초기화 시키기				
+				$("#searchContractListErrorModal").html(searchContractListErrorModalcloneObj.html());	
+				
+				//잘됐던 거지만, 혹시몰라 한번더 초기화 시키기
+				$("#searchContractListModal").html(searchContractListModalcloneObj.html());
+				$("#ppRegisterCheckModal").html(ppRegisterCheckModalcloneObj.html());	
+				//그리고 자동으로 모달창 닫아주기
+				//$(".contractRegisterConfirmModal").modal('hide');					
+			});	
 			
 		});		
 		
