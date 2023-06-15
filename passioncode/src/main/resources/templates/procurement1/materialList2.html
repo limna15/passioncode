@@ -82,7 +82,7 @@
 			<!-- 수정 부분 시작 -->
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title" style="font-size:23px;">조달 계획 목록</p> 
+					<p class="card-title" style="font-size:23px;">품목 정보 목록</p> 
 					<br>
 					<div class="row" style="margin-bottom: 5px;">
 						<!-- 목록 내려보기 시작 -->
@@ -109,15 +109,12 @@
 						<!-- 등록, 수정, 삭제 버튼 시작 -->
 						<div class="col-md-6" >	
 							<form style="float: right;">
-								<button class="btn btn-primary" type="submit">삭제</button>
+								<button class="btn btn-primary" >삭제</button>
 							</form>
 							<form style="float: right;">
-								&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >수정</button>&nbsp;&nbsp;
+								&nbsp;&nbsp;<button class="btn btn-primary" >수정</button>&nbsp;&nbsp;
 							</form>
-							<form style="float: right;" th:action = "@{/procurement1/procurementPlanRegister}" th:method="get" id="registerForm">
-								<input type="hidden" name="mrpCodeList" id="mrpCodeList">
-								<button class="btn btn-primary" id="registerBtn" type="submit">등록</button>
-							</form>
+							<button class="btn btn-primary" style="float: right;" onclick="location.href='/procurement1/materialRegister'">등록</button>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->
 					</div>	
@@ -129,33 +126,31 @@
 									<th></th>
 									<th>품목코드</th>
 									<th>품목명</th>
-									<th>소요공정</th>
-									<th>소요일</th>
-									<th>소요량</th>
-									<th>협력회사</th>
-									<th>조달납기<br>예정일</th>
-									<th>최소<br>발주일</th>
-									<th>필요<br>수량</th>
-									<th>계약<br>상태</th>
-									<th>조달계획<br>등록상태</th>
-									<th>조달계획<br>진행사항</th>
+									<th>대</th>
+									<th>중</th>
+									<th>규격</th>
+									<th>재질</th>
+									<th>제작 사양</th>
+									<th>도면 번호</th>
+									<th>도면<br>image</th>
+									<th>공용여부</th>
+									<th>계약 상태</th>
 								</tr>
 							</thead>
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
-									<td><input type="checkbox" name="checkBox" th:value="${dto.mrpCode}" onclick="chkClicked()"></td>
-									<td>[[${dto.materialCode}]]</td>
-									<td>[[${dto.materialName}]]</td>
-									<td>[[${dto.process}]]</td>
-									<td>[[${#dates.format(dto.mrpdate, 'yyyy/MM/dd')}]]</td>
-									<td>[[${dto.mrpAmount}]]</td>
-									<td>[[${dto.companyName}]]</td>
-									<td>[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
-									<td>[[${#dates.format(dto.minimumOrderDate, 'yyyy/MM/dd')}]]</td>
-									<td>[[${dto.ppAmount}]]</td>
+									<td><input type="checkbox"></td>
+									<td>[[${dto.code}]]</td>
+									<td>[[${dto.name}]]</td>
+									<td>[[${dto.largeCategoryName}]]</td>
+									<td>[[${dto.middleCategoryName}]]</td>
+									<td>[[${dto.size}]]</td>
+									<td>[[${dto.quality}]]</td>
+									<td>[[${dto.spec}]]</td>
+									<td>[[${dto.drawingNo}]]</td>
+									<td>[[${dto.drawingFile}]]</td>
+									<td>[[${dto.shareStatus}]]</td>
 									<td>[[${dto.contractStatus}]]</td>
-									<td>[[${dto.ppRegisterStatus}]]</td>
-									<td>[[${dto.ppProgress}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -198,46 +193,6 @@
 				</div>
 			</div>
 		</div>
-		
-		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-		<script th:inline="javascript">
-		
-		//체크박스 체크한것 -> 품목코드 리스트로 만들기
-		function chkClicked(){
-			const chkChecked = 'input[name="checkBox"]:checked';
-			const selectedEls = document.querySelectorAll(chkChecked);
-			
-	 		console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
-	 		
-	 		let mrpCodeList = new Array();
-	 		
-	 		selectedEls.forEach((el) => {
-				console.log("체크된거 어떻게 찍히나 보자", el.value);
-				mrpCodeList.push(el.value);
-		 	});
-	 		
-	 		console.log("만들어진 리스트 보자",mrpCodeList);
-	 		
-	 		return mrpCodeList;
-		}
-		
-		$(document).ready(function(){
-    		$("#registerBtn").on("click",function(e){
-    			//1. 버튼 이벤트(submit)금지
-    			e.preventDefault();
-    			//2. 만든 품목코드 리스트를 input 히든에 담기
-    			let mrpCodeList = new Array();
-    			mrpCodeList = $('input[name=mrpCodeList]').attr('value',chkClicked());
-    			console.log("이렇게 만든 리스트 되는건가?",mrpCodeList);
-    			
-   				//3.담은거 submit으로 보내자
-    			$("#registerForm").submit();
-   			});
-   		});	
-			
-		
-		
-		</script>	
 		
 	</th:block>
 </th:block>

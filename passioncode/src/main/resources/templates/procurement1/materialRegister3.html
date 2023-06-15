@@ -16,33 +16,27 @@
 								<table class="table table-bordered" id="registerTable" style="text-align: center;">
 									<thead>
 										<tr>
-											<th width="11%">품목명</th>
+											<th width="10%">품목코드</th>
+											<th width="10%">품목명</th>
+											<th width="7%">대</th>
+											<th width="7%">중</th>
 											<th width="">규격</th>
 											<th width="">재질</th>
 											<th width="">제작 사양</th>
-											<th width="8%">도면 번호</th>
-											<th width="9%">도면<br>image</th>
-											<th width="8%">공용여부</th>
-											<th width="8%">대</th>
-											<th width="8%">중</th>
-											<th width="10%">품목코드</th>
+											<th width="">도면 번호</th>
+											<th width="">도면<br>image</th>
+											<th width="7%">공용여부</th>
 											<th></th> 
 										</tr>
 									</thead>
 									<tbody>	
 										<tr>									
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo"></td>
-											<td></td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
-													<option value='공용'>공용</option>
-													<option value='전용'>전용</option>
-												</select>											
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="code" class="materialCode">
+												<input type="hidden" name="contractStatus" value="미완료">
+												<input type="hidden" name="stockAmount" value="0">
 											</td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName"></td>
 											<td>
 												<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode">
 													<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
@@ -57,13 +51,19 @@
 													</th:block>
 												</select>									
 											</td>
-											<td style="padding-top:0px;">
-												<input type="text" style="width:100%; border: 0; text-align: center; " name="code" class="materialCode">
-												<input type="hidden" name="contractStatus" value="미완료">
-												<input type="hidden" name="stockAmount" value="0">
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo"></td>
+											<td></td>
+											<td>
+												<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
+													<option value='공용'>공용</option>
+													<option value='전용'>전용</option>
+												</select>											
 											</td>
 											<td>
-												<button type="button" class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px;padding-right: 10px;">
+												<button type="button" class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px;padding-right: 10px;" id='addRow'>
 													등록추가 &nbsp;&nbsp;+
 												</button>
 											</td> 
@@ -80,9 +80,6 @@
 							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="materialregisterBtn">
 								등록확인
 							</button>										
-							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="materialregisterBtn">
-								코드생성
-							</button>										
 							<!-- 등록확인, 등록취소 버튼 끝 -->
 						</div>	
 					</form>								
@@ -95,7 +92,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">품목 정보 등록 확인</h5>
+                        <h5 class="modal-title">조달 계획 등록 확인</h5>
                         <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -122,7 +119,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">품목 정보 등록 확인</h5>
+                        <h5 class="modal-title">조달 계획 등록 확인</h5>
                         <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

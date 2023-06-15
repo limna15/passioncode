@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+	
+	<!-- 여기 부분이 값을 바꿔서 대체해서 들어가는 부분! 나머지형식은 basic.html을 이용해서 하는것! 
+		그래서 basic.html이 header와 footer 가 들어가 있다고 보면됨! -->
+	<th:block th:fragment="content">
+
+		<div class="col-md-12 stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title" style="font-size:23px;">조달 시스템</p>
+					<br>
+					<div class="row" style="margin-bottom: 5px;">
+						<button class="btn btn-primary btn-lg " style="margin-right:10px" onclick="location.href='/procurement1/materialList'">
+							<h2>발주 계획</h2>
+						</button>
+						<button class="btn btn-primary btn-lg " style="margin-left:10px; margin-right:10px;" onclick="location.href='/procurement2/purchaseOrder'"><h2>구매 발주</h2></button>
+						<button class="btn btn-primary btn-lg " style="margin-left:10px; margin-right:10px;" onclick="location.href='/procurement3/materialIn'"><h2>자재 입고</h2></button>
+						<button class="btn btn-primary btn-lg " style="margin-left:10px; margin-right:10px;" onclick=""><h2>자재 출고</h2></button>
+					</div>
+					
+					<ul class="nav">
+					<li class="nav-item">
+						<a class="nav-link btn btn-primary btn-lg " data-toggle="collapse" href="#procurementPlan" aria-expanded="false" aria-controls="procurementPlan"
+								style=" display:inline-block; width:220px; height:70px; "> 							
+							<span class="menu-title" style="font-size:30px;">발주 계획</span> 							
+						</a>
+						<div class="collapse" id="procurementPlan">
+							<ul class="nav flex-column sub-menu">
+								<li class="nav-item">
+									<a class="nav-link" href="/procurement1/materialList">
+										품목 정보 등록
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link"	href="/procurement1/contractList">
+										계약 등록
+									</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link"	href="/procurement1/procurementPlanList">
+										조달 계획 등록
+									</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+					</ul>	
+					
+					
+				</div>
+			</div>
+		</div>
+
+	</th:block>
+
+</th:block>
+</html>

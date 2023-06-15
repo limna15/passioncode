@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+
+	<th:block th:fragment="content">
+
+
+<style>
+  table {
+    width: 100%;
+    border: 1px solid #444444;
+    font-size: 13px;
+
+  }
+  th, td {
+    border: 1px solid #444444;
+    padding: 10px;
+    text-align: center;
+  }
+.search-box {
+	position: relative;
+	float: right;
+}
+
+.search-box input {
+	height: 34px;
+	border-radius: 20px;
+	padding-left: 35px;
+	border-color: #ddd;
+	box-shadow: none;
+}
+
+.search-box input:focus {
+	border-color: #3FBAE4;
+}
+
+.search-box i {
+	color: #a0a5b1;
+	position: absolute;
+	font-size: 19px;
+	top: 8px;
+	left: 10px;
+}
+
+.pagination {
+	float: right;
+	margin: 0 0 5px;
+}
+
+.pagination li a {
+	border: none;
+	font-size: 95%;
+	width: 30px;
+	height: 30px;
+	color: #999;
+	margin: 0 2px;
+	line-height: 30px;
+	border-radius: 30px !important;
+	text-align: center;
+	padding: 0;
+}
+
+.pagination li a:hover {
+	color: #666;
+}
+
+.pagination li.active a {
+	background: #03A9F4;
+}
+
+.pagination li.active a:hover {
+	background: #0397d6;
+}
+
+.pagination li.disabled i {
+	color: #ccc;
+}
+
+.pagination li i {
+	font-size: 16px;
+	padding-top: 6pxrow
+}
+
+.hint-text {
+	float: left;
+	margin-top: 6px;
+	font-size: 95%;
+}
+
+</style>
+		<div class="col-md-12 stretch-card" >
+			<!-- 수정 부분 시작 -->
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title" style="font-size:23px;">자재 출고</p> 
+					<br>
+					<div class="row" style="margin-bottom: 5px;">
+						<!-- 목록 내려보기 시작 -->
+						<div class="col-md-6"> 
+							<form>
+								<div style="display:inline-block;">
+									<select class="custom-select mr-sm-2"  style="display:inline-block;">
+										<option selected>검색 조건 선택</option>
+				                        <option value="1">발주서 번호</option>
+				                        <option value="2">발주코드</option>
+				                        <option value="3">품목코드</option>
+									</select>
+								</div> 
+								&nbsp;	
+								<input type="text" style="width: 150px; height: 40px; display:inline-block;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+								&nbsp;
+								<div style="display:inline-block;"> 
+									<button type="submit" class="btn btn-primary" style="display:inline-block;">검색</button>
+								</div>
+							</form>
+						</div> 
+						<!-- 목록 내려보기 끝 -->
+						
+						<div class="col-md-6" >	
+							<button class="td-modal btn btn-primary" style="float: right;" id="stockTestModalBtn" type="button">기존재고 등록</button>							
+						</div>
+						
+					</div>	
+					<div class="table-responsive">
+						<!-- 테이블 시작 -->
+						<form action="/procurement3/materialInRegister" method="post" id="inForm">
+							<table id="recent-purchases-listing" class="listTable" style="text-align: center;">
+								<thead>
+									<tr>
+										<th></th>
+										<th>발주 코드</th>
+										<th>소요일</th>
+										<th>품목코드</th>
+										<th>품목명</th>
+										<th width="12%">소요공정</th>
+										<th>소요량</th>
+										<th>출고 상태</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
+										<td><input type="hidden" name="code" >00003</td>
+										<td><input type="hidden" name="date" >2023/06/30</td>
+										<td><input type="hidden" name="materialCode" >BSa0001</td>
+										<td><input type="hidden" name="materialName" >Gear1</td>
+										<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
+										<td><input type="hidden" name="amount" >200</td>
+										<td id= "status">
+											<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
+										</td>
+									</tr>
+									<tr>
+										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
+										<td><input type="hidden" name="code" >00004</td>
+										<td><input type="hidden" name="date" >2023/06/29</td>
+										<td><input type="hidden" name="materialCode" >BSa0001</td>
+										<td><input type="hidden" name="materialName" >Gear1</td>
+										<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
+										<td><input type="hidden" name="amount" >200</td>
+										<td id= "status">
+											<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
+										</td>
+									</tr>
+									<tr>
+										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
+										<td><input type="hidden" name="code" >00001</td>
+										<td><input type="hidden" name="date" >2023/06/18</td>
+										<td><input type="hidden" name="materialCode" >BSa0001</td>
+										<td><input type="hidden" name="materialName" >Gear1</td>
+										<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
+										<td><input type="hidden" name="amount" >200</td>
+										<td id= "status">
+											완료
+										</td>
+									</tr>
+									<tr>
+										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
+										<td><input type="hidden" name="code" >00002</td>
+										<td><input type="hidden" name="date" >2023/06/18</td>
+										<td><input type="hidden" name="materialCode" >BPa0001</td>
+										<td><input type="hidden" name="materialName" >Gear1</td>
+										<td><input type="hidden" name="amount" >1각형 E/L FILLING #1</td>
+										<td><input type="hidden" name="amount" >70</td>
+										<td id= "status">
+											완료
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+						<!-- 테이블 끝 -->
+						<!-- 페이지 번호 시작 -->
+						<div class="clearfix">
+							<div class="hint-text">
+								Showing <b>5</b> out of <b>25</b> entries
+							</div>
+							<ul class="pagination">
+								<li class="page-item disabled">
+									<a href="#"> 
+										<i class="fa fa-angle-double-left"></i>
+									</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">1</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">2</a>
+								</li>
+								<li class="page-item active">
+									<a href="#" class="page-link">3</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">4</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">5</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">
+										>> <i class="fa fa-angle-double-right"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<!-- 페이지 번호 끝 -->
+					</div>					
+				</div>
+			</div>
+		</div>
+		
+		<!-- 기존재고등록 모달창 시작 -->
+		<div class="stockTestModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">기존 재고 등록</h5>
+                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">   
+                    	
+                    	<div class="row">
+                    		<div style="margin-bottom:10px; margin-left:15px; margin-right:10px">
+                    			품목명 : <input type="text"  style="text-align: center;"> 
+                    			<button class="btn btn-primary" style="display:inline-block;">검색</button>
+                    		</div>
+                    	</div>
+                    
+                    	<div class="table-responsive" style="margin-bottom: 10px;">
+							<!-- 테이블 시작 -->
+							<table class="table table-bordered" id="searchContractListTable" style="text-align:center;">
+								<thead>
+									<tr>
+										<th width="">품목코드</th>
+										<th width="">품목명</th>
+										<th width="20%">기존재고</th>
+									</tr>
+								</thead>
+								<tbody id="searchContractListModal">
+									<tr>
+										<td>BSa0001</td>
+										<td>Sensor</td>
+										<td>
+											<input type="number" style="text-align:center; width:70px;">
+										</td>
+									</tr>
+									<tr>
+										<td>BPa0001</td>
+										<td>PLC</td>
+										<td>
+											<input type="number" style="text-align:center; width:70px;">
+										</td>
+									</tr>
+						
+								</tbody>
+							</table>
+							<!-- 테이블 끝 -->
+						</div>    
+						
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary ppRegisterConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary ppRegisterCanaelBtn" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 기존재고등록 모달창 끝 -->
+		
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script th:inline="javascript" type="text/javascript">
+
+$(document).ready(function(){
+	$("#stockTestModalBtn").on("click",function(e){
+		$(".stockTestModal").modal('show');
+	});
+});	
+	
+</script>	
+		
+	</th:block>
+</th:block>
+</html>
