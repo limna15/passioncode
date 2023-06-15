@@ -130,6 +130,7 @@
 						<div class="col-md-6" >	
 							<form action="/procurement3/materialIn" method="post">
 								<button class="td-modal btn btn-primary" data-target="#modal" data-toggle="modal" data-backdrop="static" style="float: right;">거래명세서 발행</button>
+								<input type="hidden" name="purchaseCode" th:value="code">
 							</form>
 						</div>
 						
@@ -164,7 +165,7 @@
 										<td><span th:if="${list.status} == null">
 												<input type="hidden" name="status" th:value="${list.status}">
 												<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-												<button class="btn btn-primary" name="cancle" value="취소" style="height:25px;">취소</button>
+												<button type="button" class="btn btn-primary" name="cancle" value="취소" style="height:25px;">취소</button>
 											</span>
 											<span th:if="${list.status} == true">완료</span>
 											<span th:if="${list.status} == false">취소</span>
@@ -402,7 +403,7 @@
 		var materialCode= getObjTR().querySelector("input[name=materialCode]").value;
 		var materialName= getObjTR().querySelector("input[name=materialName]").value;
 		var amount= getObjTR().querySelector("input[name=amount]").value;
-		var status= getObjTR().querySelector("input[name=status]").value;
+		//var status= getObjTR().querySelector("input[name=status]").value;
 		
 		
 		console.log("no 읽기 >>> ", no)
@@ -412,19 +413,35 @@
 		console.log("materialName 읽기 >>> ", materialName)
 		console.log("amount 읽기 >>> ", amount)
 		
-		var DTO= new Object();
-		DTO.no= no;
-		DTO.code= code;
-		DTO.materialCode= materialCode;
-		DTO.materialName= materialName;
-		DTO.amount= amount;
-		DTO.status= status;
-		console.log("DTO 읽기 >>> ", DTO)
+		var materialInDTO= new Object();
+		materialInDTO.no= no;
+		materialInDTO.code= code;
+		materialInDTO.materialCode= materialCode;
+		materialInDTO.materialName= materialName;
+		materialInDTO.amount= amount;
+		materialInDTO.status= status;
+		console.log("materialInDTO 읽기 >>> ", materialInDTO)
+		console.log("materialInDTOJSON 읽기 >>> ", JSON.stringify(materialInDTO))
 		
-		if(DTO.status == ""){
-			//$("#inForm").submit();
-		}
-		
+		$.ajax({
+			type: "post",
+			url: "/procurement3/materialInRegister",
+			data: JSON.stringify(materialInDTO),
+			contentType :"application/json; charset=UTF-8",
+			dataType: "json",
+			success: function(data){
+				console.log("받아온 데이터 : ",data);
+				
+				//입고 완료처리 해서 입고상태 바꿔주기
+				getObjTR().querySelector("input[name=status]").value = data.status;
+				console.log("넣어준 입고상태 확인해보자 : ", getObjTR().querySelector("input[name=status]").value);
+				
+				},
+				error: function(xhr,status,er){
+					if(error)
+						error(er);
+				}
+			});	
 	
 	});
 

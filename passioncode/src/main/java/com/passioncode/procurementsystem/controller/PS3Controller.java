@@ -3,6 +3,7 @@ package com.passioncode.procurementsystem.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -98,7 +99,7 @@ public class PS3Controller {
 		//log.info("amount >>> " + amount);
 		//log.info("price >>> " + price);
 		
-		
+		request.setAttribute("purchaseCode", purchaseCode);
 		model.addAttribute("tdDTOList", transactionDetailDTOList);
 		model.addAttribute("tdDTOInfo", tdDTOInfo);
 		model.addAttribute("amount", amount);
@@ -109,20 +110,21 @@ public class PS3Controller {
 	}
 	
 	@PostMapping("/materialIn")
-	public String tdInfo() {
+	public String tdInfo(@Param("purchaseCode") String purchaseCode) {
+		log.info("안읽히나 본데 " + purchaseCode);
 	
-		return "redirect:/procurement3/materialIn";
+		return "redirect:/procurement3/materialIn?purchaseCode="+purchaseCode;
 	}
 	
-	@PostMapping("/materialInRegister")
-	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-		//등록해야될 정보: 입고상태, 발행상태	
-		log.info("자재입고 화면에서 보낸 MaterialDTO 보기 >>> " + materialInDTO);
-		
-		materiallInService.register(materialInDTO);
-
-		return "redirect:/procurement3/materialIn";
-	}
+//	@PostMapping("/materialInRegister")
+//	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+//		//등록해야될 정보: 입고상태, 발행상태	
+//		log.info("자재입고 화면에서 보낸 MaterialDTO 보기 >>> " + materialInDTO);
+//		
+//		materiallInService.register(materialInDTO);
+//
+//		return "redirect:/procurement3/materialIn";
+//	}
 	
 	@GetMapping("/transactionList")
 	public void transactionList(Model model, TransactionDetailDTO transactionDetailDTO) {
