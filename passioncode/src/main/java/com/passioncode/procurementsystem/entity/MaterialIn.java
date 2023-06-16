@@ -63,7 +63,7 @@ public class MaterialIn {	//입고
 	 * 발행상태
 	 */
 	@ColumnDefault(value="0") //0: 미완료, 1: 완료
-	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
+	@Column(length = 10, columnDefinition = "TINYINT(1)")
 	private Boolean transactionStatus;
 	
 	/**

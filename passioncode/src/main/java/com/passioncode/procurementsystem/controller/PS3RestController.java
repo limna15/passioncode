@@ -20,14 +20,16 @@ public class PS3RestController {
 	
 	private final MateriallInService materialInService;
 	
-	@PostMapping(value="materialInRegister", produces=MediaType.APPLICATION_JSON_VALUE)
-	public Integer materialInRegister(@RequestBody MaterialInDTO materialInDTO) {
-		log.info("잘 보내지나 >>> "+ materialInDTO);
-		materialInDTO.setStatus(true);
-		materialInDTO.setTransactionStatus(false);
-		
-		return materialInService.register(materialInDTO);
-		//화면에 보내는 데이터? Boolean 타입이 필요한건가?
-	}
+//	@PostMapping(value="materialInRegister", produces=MediaType.APPLICATION_JSON_VALUE)
+//	public Integer materialInRegister(@RequestBody MaterialInDTO materialInDTO) {
+//		log.info("잘 보내지나 >>> "+ materialInDTO);
+//		materialInDTO.setStatus(true);
+//		materialInDTO.setTransactionStatus(false);
+//		
+//		log.info("상태값 바꾸기 >>> "+ materialInDTO);
+//		
+//		return materialInService.register(materialInDTO);
+//		//화면에 보내는 데이터? Boolean 타입이 필요한건가?
+//	}
 
 }

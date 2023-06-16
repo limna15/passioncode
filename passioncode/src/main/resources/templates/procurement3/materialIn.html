@@ -99,7 +99,6 @@
 
 </style>
 		<div class="col-md-12 stretch-card" id="no-print">
-			<!-- 수정 부분 시작 -->
 			<div class="card">
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">자재 입고</p> 
@@ -126,19 +125,20 @@
 						</div> 
 						<!-- 목록 내려보기 끝 -->
 						
-						<!-- 거래명세서 발행 모달창 버튼 -->
+						<!-- 거래명세서 발행 모달창 버튼 시작 -->
 						<div class="col-md-6" >	
 							<form action="/procurement3/materialIn" method="post">
 								<button class="td-modal btn btn-primary" data-target="#modal" data-toggle="modal" data-backdrop="static" style="float: right;">거래명세서 발행</button>
 								<input type="hidden" name="purchaseCode" th:value="code">
 							</form>
 						</div>
-						
 						<!-- 거래명세서 발행 모달창 버튼 끝 -->
 					</div>	
+					
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
-						<form action="/procurement3/materialInRegister" method="post" id="inForm">
+<!-- 						<form th:action="@{/procurement3/materialInRegister}" th:method="post" id="inForm"> -->
+							<input type="hidden" name="materialInDTO" id="materialInDTO">
 							<table id="recent-purchases-listing" class="listTable" style="text-align: center;">
 								<thead>
 									<tr>
@@ -163,7 +163,7 @@
 										<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>
 										<td><input type="hidden" name="amount" th:value="${list.amount}">[[${list.amount}]]</td>
 										<td id= "status">
-											<input type="hidden" name="status" th:value="${list.status}">
+											<input type="hidden" name="status" th:value="1">
 											<span th:if="${list.status} == null">
 												<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
 												<button type="button" class="btn btn-primary" name="cancle" value="취소" style="height:25px;">취소</button>
@@ -171,12 +171,13 @@
 											<span th:if="${list.status} == true">완료</span>
 											<span th:if="${list.status} == false">취소</span>
 										</td>
-										<td th:text="${list.transactionStatus} ? '완료' : '미완료' " id="transactionStatus"><input type="hidden" value="transactionStatus"></td>
+										<td th:text="${list.transactionStatus} ? '완료' : '미완료' " id="transactionStatus"><input type="hidden" value="0"></td>
 									</tr>
 								</tbody>
 							</table>
-						</form>
+<!-- 						</form> -->
 						<!-- 테이블 끝 -->
+						
 						<!-- 페이지 번호 시작 -->
 						<div class="clearfix">
 							<div class="hint-text">
@@ -205,7 +206,7 @@
 								</li>
 								<li class="page-item">
 									<a href="#" class="page-link">
-										>> <i class="fa fa-angle-double-right"></i>
+										<i class="fa fa-angle-double-right"></i>
 									</a>
 								</li>
 							</ul>
@@ -234,7 +235,7 @@
 				    <div class="publish">
 						<div class="card-body">
 							<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;" id="no-print">인쇄</button>
-						<br>
+							<br>
 							<p class="card-title"><b>거래명세서</b></p>
 							
 							<!--거래명세서 회사 정보-->
@@ -316,10 +317,9 @@
 										</tr>
 								</table>
 							</div>					
-								<br>
-	
+							<br>
 						</div>
-		</div>
+					</div>
 					<!-- <th:block th:replace="~{/procurement3/transactionDetail :: materialIn(~{this::publish} )}"></th:block> -->
 					<!--여기에 외부에서 작성한 테이블 들어옴-->
 				</div>
@@ -397,8 +397,9 @@
   
 	$(document).on("click", "#doneBtn", function(e){
 		e.preventDefault();
-		//console.log("완료버튼 클릭")		
-		var no= getObjTR().querySelector("input[name=no]").value;
+		console.log("완료버튼 클릭")
+		
+ 		var no= getObjTR().querySelector("input[name=no]").value;
 		var code= getObjTR().querySelector("input[name=code]").value;
 		//var dueDate= getObjTR().querySelector("input[name=dueDate]").value;
 		var materialCode= getObjTR().querySelector("input[name=materialCode]").value;
@@ -407,42 +408,105 @@
 		//var status= getObjTR().querySelector("input[name=status]").value;
 		
 		
-		console.log("no 읽기 >>> ", no)
+ 		console.log("no 읽기 >>> ", no)
 		console.log("code 읽기 >>> ", code)
 		//console.log("dueDate 읽기 >>> ", dueDate)
 		console.log("materialCode 읽기 >>> ", materialCode)
 		console.log("materialName 읽기 >>> ", materialName)
 		console.log("amount 읽기 >>> ", amount)
 		
-		var materialInDTO= new Object();
-		materialInDTO.no= no;
-		materialInDTO.code= code;
-		materialInDTO.materialCode= materialCode;
-		materialInDTO.materialName= materialName;
-		materialInDTO.amount= amount;
-		materialInDTO.status= status;
-		console.log("materialInDTO 읽기 >>> ", materialInDTO)
-		console.log("materialInDTOJSON 읽기 >>> ", JSON.stringify(materialInDTO))
+// 		var materialInDTO= new Object();
+// 		materialInDTO.no= no;
+// 		materialInDTO.code= code;
+// 		materialInDTO.materialCode= materialCode;
+// 		materialInDTO.materialName= materialName;
+// 		materialInDTO.amount= amount;
+// 		materialInDTO.status= true;
+// 		materialInDTO.transactionStatus= false;
+// 		console.log("materialInDTO 읽기 >>> ", materialInDTO)
 		
-		$.ajax({
-			type: "post",
-			url: "/procurement3/materialInRegister",
-			data: JSON.stringify(materialInDTO),
-			contentType :"application/json; charset=UTF-8",
-			dataType: "json",
-			success: function(data){
-				console.log("받아온 데이터 : ",data); //입고코드
-				//입고 완료처리 해서 입고상태 바꿔주기
-				status= true;	
-				
-				},
-				error: function(xhr,status,er){
-					if(error)
-						error(er);
-				}
-			});	
-	
+		//create element (form)
+		var inForm = $('<form></form>');
+		//set attribute (form) 
+		inForm.attr("name","inForm");
+		inForm.attr("method","post");
+		inForm.attr("action","/procurement3/materialInRegister");
+
+		// create element & set attribute (input) 
+		inForm.append($('<input/>', {type: 'hidden', name: 'no', value: no }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'code', value: code }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'materialCode', value: materialCode }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'materialName', value: materialName }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'amount', value: amount }));
+
+		// append form (to body) 
+		inForm.appendTo('body');
+
+		// submit form
+		inForm.submit();
 	});
+		
+		
+		
+		//자바스크립트 form 사용법
+// 		var inForm= document.createElement("form");
+// 		form.setAttribute("method", "Post");
+// 		form.setAttribute("action", "/procurement3/materialInRegister");
+		
+// 		var hiddenDTO= document.createElement("input");
+// 		hiddenDTO.setAttribute("type", "hidden");
+//         hiddenField.setAttribute("name", "no");
+//         hiddenField.setAttribute("value", no);
+//         inForm.appendChild(hiddenDTO);
+        
+// 		hiddenDTO= document.createElement("input");
+// 		hiddenDTO.setAttribute("type", "hidden");
+//         hiddenField.setAttribute("name", "code");
+//         hiddenField.setAttribute("value", code);
+//         inForm.appendChild(hiddenDTO);
+		
+// 		hiddenDTO= document.createElement("input");
+// 		hiddenDTO.setAttribute("type", "hidden");
+//         hiddenField.setAttribute("name", "materialCode");
+//         hiddenField.setAttribute("value", materialCode);
+//         inForm.appendChild(hiddenDTO);
+        
+// 		hiddenDTO= document.createElement("input");
+// 		hiddenDTO.setAttribute("type", "hidden");
+//         hiddenField.setAttribute("name", "materialName");
+//         hiddenField.setAttribute("value", materialName);
+//         inForm.appendChild(hiddenDTO);
+        
+// 		hiddenDTO= document.createElement("input");
+// 		hiddenDTO.setAttribute("type", "hidden");
+//         hiddenField.setAttribute("name", "amount");
+//         hiddenField.setAttribute("value", amount);
+//         inForm.appendChild(hiddenDTO);
+        
+//         document.body.appendChild(inForm);
+//         inForm.submit();
+
+		//console.log("materialInDTOJSON 읽기 >>> ", JSON.stringify(materialInDTO))
+		//ajax처리로 안해도 됨
+// 		$.ajax({
+// 			type: "post",
+// 			url: "/procurement3/materialInRegister",
+// 			data: JSON.stringify(materialInDTO),
+// 			contentType :"application/json; charset=UTF-8",
+// 			dataType: "json",
+// 			success: function(data){
+// 				console.log("받아온 데이터 : ",data); //입고코드
+// 				//입고 완료처리 해서 입고상태 바꿔주기
+// 				status= true;	
+				
+// 				},
+// 				error: function(xhr,status,er){
+// 					if(error)
+// 						error(er);
+// 				}
+// 			});	
+	
+// 	});
 
 // 	// table element 찾기
 // 	const table = document.getElementById('recent-purchases-listing');

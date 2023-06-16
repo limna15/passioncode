@@ -42,7 +42,7 @@ public class PS3Controller {
 	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
 		List<MaterialInDTO> materialInDTOList = materiallInService.getMaterialInDTOLsit();
 		//List<MaterialIn> materialInList= materiallInService.getMaterialInLsit();
-		log.info("materialInDTOlist............." + materialInDTOList);
+		//log.info("materialInDTOlist............." + materialInDTOList);
 		//log.info("purchaseCode >>> " + purchaseCode);
 		//log.info("materialInDTOList >>> " + materialInDTOList);
 		
@@ -116,17 +116,43 @@ public class PS3Controller {
 //	
 //		return "redirect:/procurement3/materialIn?purchaseCode="+purchaseCode;
 //	}
-//	
-//	@PostMapping(value="materialInRegister", produces=MediaType.APPLICATION_JSON_VALUE)
-//	public String materialInRegister(@RequestBody MaterialInDTO materialInDTO) {
-//		log.info("잘 보내지나 >>> "+ materialInDTO);
-//		materialInDTO.setStatus(true);
-//		materialInDTO.setTransactionStatus(false);
+	
+	@PostMapping(value="materialInRegister")
+	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		log.info("잘 보내지나 >>> "+ materialInDTO);
+		
+		Integer purchaseOrderNo= Integer.parseInt(request.getParameter("no"));
+		Integer detailPurchaseOrderCode= Integer.parseInt(request.getParameter("code"));
+		String materialCode= request.getParameter("materialCode");
+		String materialName= request.getParameter("materialName");
+		Integer amount= Integer.parseInt(request.getParameter("amount"));
+		
+		log.info("js로 만들어 보낸 form 데이터 purchaseOrderNo 잘 받아오나 >>> " + purchaseOrderNo);
+		log.info("js로 만들어 보낸 form 데이터 detailPurchaseOrderCode잘 받아오나 >>> " + detailPurchaseOrderCode);
+		log.info("js로 만들어 보낸 form 데이터 materialCode 잘 받아오나 >>> " + materialCode);
+		log.info("js로 만들어 보낸 form 데이터 materialName 잘 받아오나 >>> " + materialName);
+		log.info("js로 만들어 보낸 form 데이터 amount 잘 받아오나 >>> " + amount);
+		
+		materialInDTO.setCode(purchaseOrderNo);
+		materialInDTO.setCode(detailPurchaseOrderCode);
+		materialInDTO.setMaterialCode(materialCode);
+		materialInDTO.setMaterialName(materialName);
+		materialInDTO.setAmount(amount);
+		materialInDTO.setStatus(true);
+		materialInDTO.setTransactionStatus(false);
+		log.info("materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
+		materiallInService.register(materialInDTO);
+
+		return "redirect:/procurement3/materialIn";
+		//return "/procurement3/materialInRegister";
+	}
+	
+	//form으로 묶인 input이 전부 보내짐, 각각 배열로 오기 때문에 code 배열 찍어본 것
+//		String[] code = request.getParameterValues("code");
 //		
-//		materiallInService.register(materialInDTO);
-//
-//		return "redirect:/procurement3/materialIn";
-//	}
+//		for(String test : code) {
+//		log.info("code 읽기 >>>> " + test);
+//		}
 	
 	@GetMapping("/transactionList")
 	public void transactionList(Model model, TransactionDetailDTO transactionDetailDTO) {
