@@ -63,8 +63,7 @@ public class MaterialSeviceTests {
 		//기존재고 수량 화면에는 없지만 숨겨서!! 0으로 기본값 세팅해주자
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드").size("PC001").quality("ABC")
 														.spec("10*10cm").drawingNo("PC3333").drawingFile("서비스로 입력 테스트중").shareStatus("공용")
-														.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
-														.contractStatus(materialService.contractStatusCheck(materialService.getMaterial("PCa0001")))
+														.largeCategoryName("플라스틱").middleCategoryName("케이스")
 														.largeCategoryCode("PP0001")
 														.middleCategoryCode("CC0001").build();
 		log.info("만들어진 materialDTO 보자 : "+materialDTO);
@@ -77,8 +76,7 @@ public class MaterialSeviceTests {
 	public void modifyTest() {
 		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드수정").size("PC001수정").quality("ABC수정")
 														.spec("10*10cm수정").drawingNo("PC3333수정").drawingFile("서비스로 입력 테스트중 수정3").shareStatus("공용")
-														.largeCategoryName("플라스틱").middleCategoryName("케이스").stockAmount(0)
-														.contractStatus(materialService.contractStatusCheck(materialService.getMaterial("PCa0001")))
+														.largeCategoryName("플라스틱").middleCategoryName("케이스")
 														.largeCategoryCode("PP0001")
 														.middleCategoryCode("CC0001").build();
 		log.info("만들어진 materialDTO 보자 : "+materialDTO);
