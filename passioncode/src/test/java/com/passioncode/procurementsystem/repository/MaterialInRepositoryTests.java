@@ -62,8 +62,8 @@ public class MaterialInRepositoryTests {
 		//입고일 현재시간으로 읽기 
 		//log.info("입고일, localdatetime 현재시간 읽기 : "+LocalDateTime.now());
 	
-		//입고상태, 발행상태 기본값이 세팅되어있지만 null이 허용이 안되있어서 null을 넣으면 에러가 남
-		MaterialIn materialIn= MaterialIn.builder().date(LocalDateTime.now()).status(true).transactionStatus(false).detailPurchaseOrder(detailPurchaseOrder).build();
+		//입고상태 기본값이 세팅되어있지만 null이 허용이 안되있어서 null을 넣으면 에러가 남
+		MaterialIn materialIn= MaterialIn.builder().date(LocalDateTime.now()).status(true).transactionStatus("발행 예정").detailPurchaseOrder(detailPurchaseOrder).build();
 		
 		materialInRepository.save(materialIn);
 	}
@@ -113,35 +113,35 @@ public class MaterialInRepositoryTests {
 				materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-						.status(null).transactionStatus(false).inDate(null).build();
+						.status(null).transactionStatus(null).inDate(null).build();
 				materialInDTOList.add(materialInDTO);
-				log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
+				//log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
 				}else { //materialIn에 존재할 때 설정
 					if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태 완료
 						if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //발행상태 완료
 							materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-									.status(miList.get(i).getStatus()).transactionStatus(true)
+									.status(miList.get(i).getStatus()).transactionStatus("발행 완료")
 									.inDate(miList.get(i).getDate()).build();
 							materialInDTOList.add(materialInDTO);
-							log.info(i + "번 입고상태+발행상태 완료 miDTO 보기 >>> " + materialInDTO);
+							//log.info(i + "번 입고상태+발행상태 완료 miDTO 보기 >>> " + materialInDTO);
 						}else { //발행상태 미완료
 							materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-									.status(miList.get(i).getStatus()).transactionStatus(false)
+									.status(miList.get(i).getStatus()).transactionStatus("발행 예정")
 									.inDate(miList.get(i).getDate()).build();
 							materialInDTOList.add(materialInDTO);
-							log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
+							//log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
 						}
 					}else { //입고상태 취소
 						materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 								.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 								.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-								.status(null).transactionStatus(false).inDate(null).build();
+								.status(null).transactionStatus("발행 불가").inDate(null).build();
 						materialInDTOList.add(materialInDTO);
-						log.info(i + "번 입고상태 취소 miDTO 보기 >>> " + materialInDTO);
+						//log.info(i + "번 입고상태 취소 miDTO 보기 >>> " + materialInDTO);
 					}
 				
 			} 
@@ -171,7 +171,7 @@ public class MaterialInRepositoryTests {
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder.getPurchaseOrder().getNo()).code(detailPurchaseOrder.getCode())
 									.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
 									.materialName(pp.getMrp().getMaterial().getName())
-									.amount(pp.getDetailPurchaseOrder().getAmount()).status(mi.getStatus()).transactionStatus(false)
+									.amount(pp.getDetailPurchaseOrder().getAmount()).status(mi.getStatus()).transactionStatus(mi.getTransactionStatus())
 									.inDate(mi.getDate()).build();
 		
 		log.info("DTO 하나는 어케 가져오는거죠 " + materialInDTO);
@@ -186,9 +186,9 @@ public class MaterialInRepositoryTests {
 		
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(7).code(7)
 				.dueDate(date).materialCode("BSa0001").materialName("Sensor")
-				.amount(200).status(null).transactionStatus(false).build();
+				.amount(200).status(null).transactionStatus(null).build();
 		
-		MaterialIn materialIn= MaterialIn.builder().date(LocalDateTime.now()).status(true).transactionStatus(false)
+		MaterialIn materialIn= MaterialIn.builder().date(LocalDateTime.now()).status(true).transactionStatus("발행 예정")
 				.detailPurchaseOrder(detailPurchaseOrderRepository.findById(materialInDTO.getCode()).get()).build();
 		
 		log.info("DTO를 이용해서 엔티티에 넣어지는걸까 " + materialIn);

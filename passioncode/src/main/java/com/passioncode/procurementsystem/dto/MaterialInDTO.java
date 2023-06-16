@@ -56,15 +56,17 @@ public class MaterialInDTO {
 	private LocalDateTime inDate;
 	
 	/**
-	 * 입고상태
-	 * False(0): 미완료, True(1): 완료
+	 * 입고상태 <br>
+	 * False(0): 취소, True(1): 완료
 	 */
 	private Boolean status;
 	
 	/**
-	 * 거래명세서 발행상태
-	 * False(0): 미완료, True(1): 완료
+	 * 거래명세서 발행상태 <br>
+	 * 입고 취소: 발행 불가 <br>
+	 * 입고 완료: 발행 예정 <br>
+	 * 입고 완료 + 거래명세서 발행: 발행 완료
 	 */
-	private Boolean transactionStatus;
+	private String transactionStatus;
 
 }

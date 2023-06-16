@@ -57,7 +57,7 @@ public class MaterialInServiceTests {
 		
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(2).code(5)
 				.dueDate(date).materialCode("BSa0001").materialName("Sensor")
-				.amount(200).status(true).transactionStatus(false).build();
+				.amount(200).status(true).transactionStatus("발행 예정").build();
 		log.info("만들어진 materialInDTO 보자 >>> "+materialInDTO);
 
 		log.info("등록이 되었는지 보자(등록된 세부구매발주서코드) >>> "+materialInService.register(materialInDTO));

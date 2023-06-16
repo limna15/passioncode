@@ -149,7 +149,7 @@ public class ProgressCheckRepositoryTests {
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder2.getPurchaseOrder().getNo()).code(detailPurchaseOrder2.getCode())
 				.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
 				.materialName(pp.getMrp().getMaterial().getName())
-				.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus(false)
+				.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus("발행 예정")
 				.inDate(mi.getDate()).build();
 		
 		log.info("DTO 하나는 어케 가져오는거죠 " + materialInDTO);
