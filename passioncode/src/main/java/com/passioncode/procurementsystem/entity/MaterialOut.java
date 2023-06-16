@@ -48,14 +48,14 @@ public class MaterialOut {
 	 * 출고상태
 	 */
 	@ColumnDefault(value="1") //null: 완료/취소 버튼, 0: 미완료, 1: 완료
-	@Column(length = 10, columnDefinition = "TINYINT(1)")
+	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
 	private Integer status;
 	
 	/**
 	 * 출고일
 	 */
 	@CreatedDate
-	@Column(columnDefinition = "DATETIME", updatable = false)
+	@Column(columnDefinition = "DATETIME", nullable = false, updatable = false)
 	private LocalDateTime date;
 	
 	/**
