@@ -148,7 +148,10 @@ public class PS3Controller {
 			log.info("입고 상태가 취소일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
 			materiallInService.register(materialInDTO);
 		}
-		//materiallInService.updatePPCompletionDate(materialInDTO.getCode());
+		
+		materiallInService.updatePPCompletionDate(materialInDTO.getCode());
+		
+		//테스트용 맵핑 url
 		//return "/procurement3/materialInRegister";
 		return "redirect:/procurement3/materialIn";
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.hibernate.mapping.Array;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,9 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
+import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
+import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
@@ -36,6 +39,12 @@ public class MaterialInRepositoryTests {
 	
 	@Autowired
 	TransactionDetailRepository transactionDetailRepository;
+	
+	@Autowired
+	ContractRepository contractRepository;
+	
+	@Autowired
+	MRPRepository mrpRepository;
 	
 	@Autowired
 	EntityManager entityManager;
@@ -208,10 +217,11 @@ public class MaterialInRepositoryTests {
 	}
 	
 	//입고등록할 때 조달계획 완료일 업데이트 하기
+	//엔티티에 @Setter를 넣고 직접 접근할때 가능한 코드
 	@Transactional
 	@Commit
 	@Test
-	public void updatePPCompletionDate() {
+	public void updatePPCompletionDate2() {
 		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(3).get();
 		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		procurementPlan= entityManager.find(ProcurementPlan.class, procurementPlan.getCode()); //id로 조회해야함
@@ -223,6 +233,28 @@ public class MaterialInRepositoryTests {
 		materialInRepository.save(materialIn);
 		
 		log.info("이게 조회가 되는건가...? >>> " + entityManager.find(ProcurementPlan.class, procurementPlan.getCode()));
+	}
+	
+	//입고상태가 존재 = 조달계획 완료 -> 완료일 업데이트 시켜야함
+	@Transactional
+	@Commit
+	@Test
+	public void updatePPCompletionDate() {
+		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(3).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		
+		log.info("materialIn 어떻게 읽히나 >>>  " + materialIn);
+
+		procurementPlan= ProcurementPlan.builder().code(procurementPlan.getCode())
+				.mrp(procurementPlan.getMrp()).contract(procurementPlan.getContract()).amount(procurementPlan.getAmount())
+				.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
+				.registerDate(procurementPlan.getRegisterDate()).completionDate(materialIn.getDate())
+				.detailPurchaseOrder(detailPurchaseOrder).build();
+		
+		procurementPlanRepository.save(procurementPlan);
+		
+		log.info("procurementPlan 어떻게 읽히죠 >>> " + procurementPlan);
 	}
 	
 }
