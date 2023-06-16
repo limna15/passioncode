@@ -14,6 +14,7 @@ import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -58,8 +59,15 @@ public class MaterialInServiceTests {
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(2).code(5)
 				.dueDate(date).materialCode("BSa0001").materialName("Sensor")
 				.amount(200).status(true).transactionStatus("발행 예정").build();
-		log.info("만들어진 materialInDTO 보자 >>> "+materialInDTO);
+		log.info("만들어진 materialInDTO 보자 >>> " + materialInDTO);
 
-		log.info("등록이 되었는지 보자(등록된 세부구매발주서코드) >>> "+materialInService.register(materialInDTO));
+		log.info("등록이 되었는지 보자(등록된 세부구매발주서코드) >>> " + materialInService.register(materialInDTO));
 	}
+	
+//	@Transactional
+//	@Commit
+//	@Test
+//	public void updatePPCompletionDate() {
+//		materialInService.updatePPCompletionDate(2);
+//	}
 }

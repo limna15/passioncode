@@ -18,6 +18,7 @@ import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
+import jakarta.persistence.EntityManager;
 import lombok.extern.log4j.Log4j2;
 
 @SpringBootTest
@@ -35,6 +36,9 @@ public class MaterialInRepositoryTests {
 	
 	@Autowired
 	TransactionDetailRepository transactionDetailRepository;
+	
+	@Autowired
+	EntityManager entityManager;
 	
 	@Test
 	public void getList() {
@@ -115,37 +119,38 @@ public class MaterialInRepositoryTests {
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 						.status(null).transactionStatus(null).inDate(null).build();
 				materialInDTOList.add(materialInDTO);
-				//log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
+				log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
 				}else { //materialIn에 존재할 때 설정
-					if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태 완료
-						if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //발행상태 완료
+					if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태가 null이 아닐 때
+						if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //입고상태 완료 + 발행상태 완료
 							materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 									.status(miList.get(i).getStatus()).transactionStatus("발행 완료")
 									.inDate(miList.get(i).getDate()).build();
 							materialInDTOList.add(materialInDTO);
-							//log.info(i + "번 입고상태+발행상태 완료 miDTO 보기 >>> " + materialInDTO);
+							log.info(i + "번 입고상태+발행상태 완료 miDTO 보기 >>> " + materialInDTO);
 						}else { //발행상태 미완료
-							materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
-									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
-									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-									.status(miList.get(i).getStatus()).transactionStatus("발행 예정")
-									.inDate(miList.get(i).getDate()).build();
-							materialInDTOList.add(materialInDTO);
-							//log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
-						}
-					}else { //입고상태 취소
-						materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
-								.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
-								.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-								.status(null).transactionStatus("발행 불가").inDate(null).build();
-						materialInDTOList.add(materialInDTO);
-						//log.info(i + "번 입고상태 취소 miDTO 보기 >>> " + materialInDTO);
-					}
-				
-			} 
-			
+							if(miList.get(i).getStatus()) { //입고상태 완료 + 발행상태 미완료
+								materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+										.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+										.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
+										.status(miList.get(i).getStatus()).transactionStatus("발행 예정")
+										.inDate(miList.get(i).getDate()).build();
+								materialInDTOList.add(materialInDTO);
+								log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
+							
+							}else { //입고상태 취소 + 발행상태 "발행 불가"
+								materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+										.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+										.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
+										.status(miList.get(i).getStatus()).transactionStatus("발행 불가").inDate(null).build();
+								materialInDTOList.add(materialInDTO);
+								log.info(i + "번 입고상태 취소 miDTO 보기 >>> " + materialInDTO);					
+							}
+						} //두번째 else 끝(발행상태 미완료)
+					} //두번째 if문 끝 (입고상태가 null이 아닐 때)
+			} //else 끝(materialIn에 존재할 때) 
 		} //for문 끝
 		log.info("materialDTOList 한번 보자! " + materialInDTOList + "materialDTOList 사이즈 한번 보자! " + materialInDTOList.size());
 	}
@@ -200,6 +205,24 @@ public class MaterialInRepositoryTests {
 	public void miListTest() {
 		List<MaterialIn> materialInList= materialInRepository.findAll();
 		log.info("List >>> " + materialInList);
+	}
+	
+	//입고등록할 때 조달계획 완료일 업데이트 하기
+	@Transactional
+	@Commit
+	@Test
+	public void updatePPCompletionDate() {
+		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(3).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		procurementPlan= entityManager.find(ProcurementPlan.class, procurementPlan.getCode()); //id로 조회해야함
+		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		
+		//procurementPlan.setCompletionDate(materialIn.getDate());
+		entityManager.merge(procurementPlan);
+		
+		materialInRepository.save(materialIn);
+		
+		log.info("이게 조회가 되는건가...? >>> " + entityManager.find(ProcurementPlan.class, procurementPlan.getCode()));
 	}
 	
 }

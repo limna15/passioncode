@@ -2,9 +2,10 @@ package com.passioncode.procurementsystem.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
-import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 
 public interface MateriallInService {
@@ -48,6 +49,13 @@ public interface MateriallInService {
 	 * @param MaterialInDTO
 	 */
 	Integer register(MaterialInDTO materialInDTO);
-
+	
+	/**
+	 * 코드번호(detailPurchaseOrder)를 이용해 자재입고 테이블이 생길때 조달계획의 조달계획 완료일 업데이트하기
+	 * @param code
+	 */
+	// 직접 entity에 접근해서(엔티티에 @Setter가 있어야함) 언니가 싫다함, DTO로 하는거 찾아서 바꾸기!
+//	@Transactional
+//	void updatePPCompletionDate(Integer code);
 	
 }
