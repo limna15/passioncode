@@ -44,14 +44,14 @@
 												</select>											
 											</td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode">
+												<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode" id="largeCategoryCode">
 													<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
 														<option th:value="${LCDTO.code}">[[${LCDTO.category}]]</option>
 													</th:block>
 												</select>
 											</td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode">
+												<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode" id="middleCategoryCode">
 													<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
 														<option th:value="${MCDTO.middleCode}">[[${MCDTO.middleCategory}]]</option>
 													</th:block>
@@ -286,7 +286,55 @@
 				
 				$(".materialInfoAndErrorModal").modal('show');    					
 				
+			
 			});	
+			
+			//대분류코드 변경될때마다 처리되는 함수
+			//대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수
+			$("#largeCategoryCode").change(function(){
+				//let test1 = $(this).val();
+				//console.log("change 함수 써서, 그 함수 자체의 값 보자 : ",test1); -> 이렇게 가져와도 선택된 값이 보여주지만, 확실하게 하기 위해 선택된 값 가져오는걸로 쓰자
+				//console.log("text 값 테스트1 : ",$(this).text()); -> 그해당 셀렉트의 모든 값을 가져온다.
+				
+				//선택된 대분류코드
+				let selectedLCCode = $("#largeCategoryCode > option:selected").val();
+				let selectedLCName = $("#largeCategoryCode > option:selected").text();
+				console.log("선택된 대분류 코드 : ",selectedLCCode);
+				console.log("선택된 대분류 이름 : ",selectedLCName);
+								
+				
+				//대분류코드로 중분류리스트 찾는 Ajax처리
+				$.ajax({
+					type : "post" ,
+					url : "/procurement1/getMiddleCategoryByLargeCategory" ,     	//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : selectedLCCode ,                							//보내는 데이터!(요청 데이터)
+					contentType :"text/plain; charset=UTF-8" ,  					//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "json" ,							 					//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        								//가져오는 데이터! (응답데이터)
+						console.log("받아온 데이터 : ",data);
+						console.log("json 리스트 사이즈 보자 : ",data.length);
+						
+						//data를 이용해서, 중분류 셀렉트 옵션에 넣을 옵션들 -> html 만들기
+						let completeHtml =``;    	
+								
+						data.forEach(function(item){
+							completeHtml = completeHtml + makeOption(item.middleCode,item.middleCategory);							
+						});						
+						console.log("완성된 html 보자",completeHtml);								
+						
+						//완성된 옵션들은 기존의 중분류코드 셀렉트에 바꿔주기
+						$("#middleCategoryCode option").remove();
+						$("#middleCategoryCode").append(completeHtml);							
+						
+					},
+					error : function(jqXHR,textStatus,errorThrown){    
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);	
+						console.log("대분류코드를 이용해서 중분류리스트 가져오는데 Ajax 오류 발생!!!!!!");
+					}
+				});		
+			});
 		
 		});
 		
@@ -312,7 +360,7 @@
     	//option 넣어서, 넣어야할 대분류 html 문장 만들기
     	function makeLCHtml(option){
     		let temp_html = `<td>
-					 			<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode">
+					 			<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode" id="largeCategoryCode">
 									${option}
 								</select>
 							</td>`;
@@ -355,7 +403,7 @@
     	//option 넣어서, 넣어야할 대분류 html 문장 만들기
     	function makeMCHtml(option){
     		let temp_html = `<td>
-					 			<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode">
+					 			<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode" id="middleCategoryCode">
 									${option}
 								</select>
 							</td>`;

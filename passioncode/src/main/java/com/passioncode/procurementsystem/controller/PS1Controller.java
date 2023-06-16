@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
+import com.passioncode.procurementsystem.dto.LargeCategoryDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
+import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
+import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MRP;
+import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.service.ContractService;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialService;
@@ -59,8 +63,20 @@ public class PS1Controller {
 	public void MaterialRegister(Model model) {
 		log.info("품목정보 등록 화면 보기.....");
 		
-		model.addAttribute("LargeCategoryDTOList", largeCategoryService.getDTOList());
-		model.addAttribute("MiddleCategoryDTOList", middleCategoryService.getDTOList());
+		//대분류 셀렉트 정보는 모든 정보 다 보내주기
+		List<LargeCategoryDTO> LargeCategoryDTOList = largeCategoryService.getDTOList();
+		model.addAttribute("LargeCategoryDTOList", LargeCategoryDTOList );
+		
+		//중분류 셀렉트 정보는 대분류 리스트에서 처음보여주게 되는거에 해당되는 중분류만 보여주기
+		//나머지 중분류는 화면에서 바뀔때마다 불러오기 때문에!
+		LargeCategory largeCategory = middleCategoryService.getLargeCategory(LargeCategoryDTOList.get(0).getCode());
+		List<MiddleCategory> MiddleCategoryListByLC1 = middleCategoryService.getMiddleCategoryByLargeCategory(largeCategory);
+		
+		List<MiddleCategoryDTO> MiddleCategoryDTOListByLC1 = new ArrayList<>();
+		for(MiddleCategory middleCategory:MiddleCategoryListByLC1) {
+			MiddleCategoryDTOListByLC1.add(middleCategoryService.entityToDTO(middleCategory));
+		}		
+		model.addAttribute("MiddleCategoryDTOList", MiddleCategoryDTOListByLC1);
 	}
 	
 	/**

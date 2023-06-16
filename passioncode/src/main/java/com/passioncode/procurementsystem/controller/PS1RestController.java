@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
+import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
+import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.service.ContractService;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialService;
@@ -117,6 +119,26 @@ public class PS1RestController {
 		log.info("계산된 값 확인해 보자 : "+result);
 		
 		return result;
+	}
+	
+	/**
+	 * 품목정보 등록 화면에서, 대분류코드에 따른 중분류코드 바꿔주기 <br>
+	 * @param Code
+	 * @return
+	 */
+	@PostMapping(value="getMiddleCategoryByLargeCategory",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<MiddleCategoryDTO> getMiddleCategoryByLargeCategory(@RequestBody String Code){
+		//화면에서 대분류코드를 받아서, 그에 해당하는 중분류 리스트를 찾아서 돌려주기
+		List<MiddleCategory> middleCategoryList = middleCategoryService.getMiddleCategoryByLargeCategory(middleCategoryService.getLargeCategory(Code));
+		
+		List<MiddleCategoryDTO> middleCategoryDTOList = new ArrayList<>();
+		for(MiddleCategory middleCategory:middleCategoryList) {
+			middleCategoryDTOList.add(middleCategoryService.entityToDTO(middleCategory));
+		}
+		
+		log.info("만들어진 중분류 DTO리스트 보자 : "+middleCategoryDTOList);
+		
+		return	middleCategoryDTOList;
 	}
 	
 	
