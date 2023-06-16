@@ -3,7 +3,9 @@ package com.passioncode.procurementsystem.service;
 import java.util.List;
 
 import com.passioncode.procurementsystem.dto.MaterialDTO;
+import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.Material;
+import com.passioncode.procurementsystem.entity.MiddleCategory;
 
 public interface MaterialService {
 	

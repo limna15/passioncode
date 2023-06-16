@@ -72,8 +72,8 @@ public class PS1Controller {
 	 */
 	@PostMapping("materialRegister")
 	public String MaterialRegister2(MaterialDTO materialDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
-		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부, 계약상태 <br>
-		//대분류코드, 중분류코드, 기존재고수량
+		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
+		//대분류코드, 중분류코드
 		
 		log.info("품목정보 등록 처리.....");
 		
@@ -113,8 +113,6 @@ public class PS1Controller {
 			materialDTO2.setMiddleCategoryCode(middleCategoryCode[i]);
 			materialDTO2.setMiddleCategoryName(middleCategoryService.getMiddleCategory(middleCategoryCode[i]).getCategory());
 			materialDTO2.setShareStatus(shareStatus[i]);
-			materialDTO2.setContractStatus("미완료");
-			materialDTO2.setStockAmount(0);
 			if(size != null) {										//받아온 size가 존재 O
 				if(!size[i].equals("")) {							//빈값이 아닐때
 					materialDTO2.setSize(size[i]);					
