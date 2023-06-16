@@ -299,8 +299,8 @@
 				//선택된 대분류코드
 				let selectedLCCode = $("#largeCategoryCode > option:selected").val();
 				let selectedLCName = $("#largeCategoryCode > option:selected").text();
-				console.log("선택된 대분류 코드 : ",selectedLCCode);
-				console.log("선택된 대분류 이름 : ",selectedLCName);
+				//console.log("선택된 대분류 코드 : ",selectedLCCode);
+				//console.log("선택된 대분류 이름 : ",selectedLCName);
 								
 				
 				//대분류코드로 중분류리스트 찾는 Ajax처리
@@ -311,8 +311,8 @@
 					contentType :"text/plain; charset=UTF-8" ,  					//보내는 데이터 형식 (전송 데이터,요청데이터)
 					dataType : "json" ,							 					//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
 					success : function(data){        								//가져오는 데이터! (응답데이터)
-						console.log("받아온 데이터 : ",data);
-						console.log("json 리스트 사이즈 보자 : ",data.length);
+						//console.log("받아온 데이터 : ",data);
+						//console.log("json 리스트 사이즈 보자 : ",data.length);
 						
 						//data를 이용해서, 중분류 셀렉트 옵션에 넣을 옵션들 -> html 만들기
 						let completeHtml =``;    	
@@ -320,7 +320,7 @@
 						data.forEach(function(item){
 							completeHtml = completeHtml + makeOption(item.middleCode,item.middleCategory);							
 						});						
-						console.log("완성된 html 보자",completeHtml);								
+						//console.log("완성된 html 보자",completeHtml);								
 						
 						//완성된 옵션들은 기존의 중분류코드 셀렉트에 바꿔주기
 						$("#middleCategoryCode option").remove();

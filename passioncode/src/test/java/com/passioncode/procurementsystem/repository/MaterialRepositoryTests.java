@@ -110,8 +110,7 @@ public class MaterialRepositoryTests {
 	}
 	
 	@Test
-	public void readMateralBycode() {
-		
+	public void readMateralBycode() {		
 		log.info("이게 안되는건가,,? : "+materialRepository.findById("PCa0001").orElse(null));
 	}
 	
@@ -178,10 +177,26 @@ public class MaterialRepositoryTests {
 				
 		materialRepository.deleteById(materialDTO.getCode());
 		
+	}
+	
+	@Test
+	public void makeMaterialCodeTEst() {
+		//대분류 CC0001 철, 중분류 GG0001 기어 -> 현재 품목 CG0002 까지 있는 상태
+		String largeCategoryCode = "CC0001";
+		String middleCategoryCode = "GG0001";
+		String getLC = largeCategoryCode.substring(0,1);
+		String getMC = middleCategoryCode.substring(0,1);
+		String getLCWithMC = getLC + getMC;
+		
+		List<Material> materialList = materialRepository.findAll(Sort.by(Sort.Direction.ASC, "code"));
+		
+		
+		log.info("문자 추출 봐보자 : "+getLCWithMC);
+//		String test = largeCategoryCode+middleCategoryCode;
+//		log.info("문자합치기.. 이게 되나?? : "+test);
 		
 		
 	}
-	
 	
 	
 	

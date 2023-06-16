@@ -30,5 +30,6 @@ public interface MaterialRepository extends JpaRepository<Material, String> {
 	@Query(value="SELECT CODE,NAME,share_status,stock_amount,size,quality,spec,drawing_no,drawing_file,middle_category_code FROM material "
 			+ "left outer JOIN contract ON CODE=material_code WHERE material_code IS NULL ORDER BY NO,code ", nativeQuery = true)
 	public List<Material> getListNoContract();
-
+	
+	
 }
