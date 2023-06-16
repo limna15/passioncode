@@ -45,8 +45,8 @@ public class MaterialIn {	//입고
 	private Integer code;
 	
 	/**
-	 * 입고상태
-	 * False(0): 미완료, True(1): 완료(기본값)
+	 * 입고상태 <br>
+	 * False(0): 취소, True(1): 완료(기본값)
 	 */
 	@ColumnDefault(value="1") //0: 미완료, 1: 완료
 	@Column(length = 10, columnDefinition = "TINYINT(1)", nullable = false)
@@ -60,11 +60,13 @@ public class MaterialIn {	//입고
 	private LocalDateTime date;
 	
 	/**
-	 * 발행상태
+	 * 거래명세서 발행상태 <br>
+	 * 입고 취소: 발행 불가 <br>
+	 * 입고 완료: 발행 예정 <br>
+	 * 입고 완료 + 거래명세서 발행: 발행 완료
 	 */
-	@ColumnDefault(value="0") //0: 미완료, 1: 완료
-	@Column(length = 10, columnDefinition = "TINYINT(1)")
-	private Boolean transactionStatus;
+	@Column(length = 6)
+	private String transactionStatus;
 	
 	/**
 	 * 발주코드(외래키)(세부구매발주서)

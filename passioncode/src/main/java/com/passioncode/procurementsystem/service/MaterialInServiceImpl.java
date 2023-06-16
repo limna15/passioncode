@@ -42,7 +42,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 		MaterialInDTO materialInDTO= MaterialInDTO.builder().no(detailPurchaseOrder.getPurchaseOrder().getNo()).code(detailPurchaseOrder.getCode())
 									.dueDate(pp.getDueDate()).materialCode(pp.getMrp().getMaterial().getCode())
 									.materialName(pp.getMrp().getMaterial().getName())
-									.amount(pp.getDetailPurchaseOrder().getAmount()).status(mi.getStatus()).transactionStatus(false)
+									.amount(pp.getDetailPurchaseOrder().getAmount()).status(mi.getStatus()).transactionStatus(null)
 									.inDate(mi.getDate()).build();
 		return materialInDTO;
 	}
@@ -84,7 +84,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 				materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-						.status(null).transactionStatus(false).inDate(null).build();
+						.status(null).transactionStatus(null).inDate(null).build();
 				materialInDTOList.add(materialInDTO);
 				//log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
 				}else { //materialIn에 존재할 때 설정
@@ -93,7 +93,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 							materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-									.status(miList.get(i).getStatus()).transactionStatus(true)
+									.status(miList.get(i).getStatus()).transactionStatus("발행 완료")
 									.inDate(miList.get(i).getDate()).build();
 							materialInDTOList.add(materialInDTO);
 							//log.info(i + "번 입고상태+발행상태 완료 miDTO 보기 >>> " + materialInDTO);
@@ -101,7 +101,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 							materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-									.status(miList.get(i).getStatus()).transactionStatus(false)
+									.status(miList.get(i).getStatus()).transactionStatus("발행 예정")
 									.inDate(miList.get(i).getDate()).build();
 							materialInDTOList.add(materialInDTO);
 							//log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
@@ -110,7 +110,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 						materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
 								.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 								.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-								.status(null).transactionStatus(false).inDate(null).build();
+								.status(null).transactionStatus("발행 불가").inDate(null).build();
 						materialInDTOList.add(materialInDTO);
 						//log.info(i + "번 입고상태 취소 miDTO 보기 >>> " + materialInDTO);
 					}
