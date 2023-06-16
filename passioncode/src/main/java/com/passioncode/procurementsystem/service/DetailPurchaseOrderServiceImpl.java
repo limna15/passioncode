@@ -44,8 +44,8 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		
 		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
 			log.info("222>>" + Arrays.toString(arr));
-			// 출력 모양[2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0]
-
+			// 출력 모양[2, (주)경도전자, 2023-06-10, 200, CN0001, Bolt1, 100]
+			
 			DetailPublishDTO detailpDTO = new DetailPublishDTO();
 			detailpDTO.setPpcode((Integer) arr[0]);
 			detailpDTO.setCname((String) arr[1]);
@@ -53,12 +53,11 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 			detailpDTO.setUnit_price((Integer) arr[3]);
 			detailpDTO.setMcode((String) arr[4]);
 			detailpDTO.setMname((String) arr[5]);
-			detailpDTO.setMamount((Integer) arr[6]);
-			detailpDTO.setPpamount(((Integer) arr[7]) - ((Integer) arr[6]));
+			detailpDTO.setPpamount(((Integer) arr[6]));
 			detailpDTO.setPurchaseOrderDate(LocalDateTime.now());
 			detailpDTO.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			detailpDTO.setPocode(detailPurchaseOrderRepository.findMaxCode());
-			detailpDTO.setSupply_price((((Integer) arr[7])) * ((Integer) arr[3]));// 필요수량 * 단가
+			detailpDTO.setSupply_price((((Integer) arr[6])) * ((Integer) arr[3]));// 필요수량 * 단가
 			
 			ProcurementPlan pp = procurementPlanRepository.findById((Integer)arr[0]).get();//조달계획에 저장
 			

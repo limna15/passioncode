@@ -112,8 +112,6 @@ public class ProgressCheckRepositoryTests {
 	public void entityToDTO() {//이게 가져와 지는 것
 		//발주서 목록 갖고오기
 		//ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
-		//조달계획으로 갖고와서 테스트 하기
-		
 		//DetailPurchaseOrder detailPurchaseOrder2 = detailPurchaseOrderRepository.findById(1).get();
 		//1번 세구부매 발주서로 테스트
 		
@@ -127,11 +125,12 @@ public class ProgressCheckRepositoryTests {
 		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
 		  .companyName(procurementPlan.getContract().getCompany().getName())
 		  .purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
+		  .orderAmount(procurementPlan.getDetailPurchaseOrder().getAmount())
 		  .dueDate(procurementPlan.getDueDate())
 		  .materialName(procurementPlan.getContract().getMaterial().getName())
 		  .orderAmount(procurementPlan.getAmount())
 		  .unitPrice(procurementPlan.getContract().getUnitPrice())
-		  .diliveryStatus("미완료") .diliveryPercent(20) .inspectionComplete("미완료")
+		  .diliveryPercent(20).inspectionComplete("미완료")
 		  .purchaseOrderDeadlineStatus("미완료") .build();
 		  
 		  log.info(">> 목록 보여주세요 >>>"+progressCheckDTO); 

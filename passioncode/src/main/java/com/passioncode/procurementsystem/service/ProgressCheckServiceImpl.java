@@ -44,10 +44,11 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
 		  .companyName(procurementPlan.getContract().getCompany().getName())
 		  .purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
+		  .orderAmount(procurementPlan.getDetailPurchaseOrder().getAmount())
 		  .dueDate(procurementPlan.getDueDate())
 		  .materialName(procurementPlan.getContract().getMaterial().getName())
 		  .unitPrice(procurementPlan.getContract().getUnitPrice())
-		  .diliveryStatus("미완료") .diliveryPercent(20) .inspectionComplete("미완료")
+		  .diliveryPercent(20) .inspectionComplete("미완료")
 		  .purchaseOrderDeadlineStatus("미완료") .build();
 		
 		

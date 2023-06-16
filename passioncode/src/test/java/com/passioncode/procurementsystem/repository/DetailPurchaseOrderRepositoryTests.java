@@ -15,14 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.DetailPublishDTO;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
-import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
-import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
-import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
-import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
-import com.passioncode.procurementsystem.service.ProcurementPlanService;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -67,12 +62,12 @@ public class DetailPurchaseOrderRepositoryTests {
 		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(9);// 조달계획 2번
 		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
 			log.info("222>>" + Arrays.toString(arr));
-			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
+			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 100]
 			// ==>조달 계획 번호만 가져오면 된다.
 			//PurchaseOrder purchaseOrder = new PurchaseOrder(null);// 구매 발주서 발행
 			//DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(purchaseOrder.getNo(),((Integer) arr[7]) - ((Integer) arr[6]), LocalDateTime.now(), purchaseOrder);
 			PurchaseOrder po = PurchaseOrder.builder().build();
-			DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().date(LocalDateTime.now()).amount(((Integer) arr[7]) - ((Integer) arr[6])).purchaseOrder(po).build();
+			DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().date(LocalDateTime.now()).amount(((Integer) arr[6])).purchaseOrder(po).build();
 			//detailPurchaseOrderRepository.save(detailPurchaseOrder);
 			//detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(), ((Integer) arr[0]));// 앞 발주번호, 뒤 조달 코드
 			purchaseOrderRepository.save(po);
@@ -104,12 +99,12 @@ public class DetailPurchaseOrderRepositoryTests {
 		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(1);// 조달계획 2번
 		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
 			log.info("222>>" + Arrays.toString(arr));
-			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
+			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 100]
 			// ==>조달 계획 번호만 가져오면 된다.
 			//PurchaseOrder purchaseOrder = new PurchaseOrder(null);// 구매 발주서 발행
 			//DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(purchaseOrder.getNo(),((Integer) arr[7]) - ((Integer) arr[6]), LocalDateTime.now(), purchaseOrder);
 			PurchaseOrder po = PurchaseOrder.builder().build();
-			DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().date(LocalDateTime.now()).amount(((Integer) arr[7]) - ((Integer) arr[6])).purchaseOrder(po).build();
+			DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder().date(LocalDateTime.now()).amount(((Integer) arr[6])).purchaseOrder(po).build();
 			//detailPurchaseOrderRepository.save(detailPurchaseOrder);
 			detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(), ((Integer) arr[0]));// 앞 발주번호, 뒤 조달 코드
 			purchaseOrderRepository.save(po);
@@ -133,14 +128,14 @@ public class DetailPurchaseOrderRepositoryTests {
 			// dto 데이터DetailPublishDTO(pono=8, pocode=8, ppcode=2, cname=(주)경도전자,
 			// due_date=2023-06-10, mcode=CNa0001, mname=Bolt1, unit_price=200,
 			// supply_price=20000,
-			// purchaseOrderDate=2023-06-14T20:23:29.881289800, mamount=0, ppamount=100)
+			// purchaseOrderDate=2023-06-14T20:23:29.881289800, ppamount=100)
 
-			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
+			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 100]
 			// ==>조달 계획 번호만 가져오면 된다.
 			DetailPublishDTO dto = new DetailPublishDTO();
 			PurchaseOrder purchaseOrder = new PurchaseOrder(null);// 구매 발주서 발행
 			DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null,
-					((Integer) arr[7]) - ((Integer) arr[6]), LocalDateTime.now(), purchaseOrder);
+					((Integer) arr[7]), LocalDateTime.now(), purchaseOrder);
 			log.info("저장 되어라==>22" + purchaseOrder);
 			log.info("저장 되어라==>" + detailPurchaseOrder);
 
@@ -150,12 +145,11 @@ public class DetailPurchaseOrderRepositoryTests {
 			dto.setUnit_price((Integer) arr[3]);
 			dto.setMcode((String) arr[4]);
 			dto.setMname((String) arr[5]);
-			dto.setMamount((Integer) arr[6]);
-			dto.setPpamount(((Integer) arr[7]) - ((Integer) arr[6]));// 필요수량 - 재고수량
+			dto.setPpamount(((Integer) arr[6]));// 필요수량 
 			dto.setPurchaseOrderDate(LocalDateTime.now());
 			dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
-			dto.setSupply_price((((Integer) arr[7])) * ((Integer) arr[3]));// 필요수량 * 단가
+			dto.setSupply_price((((Integer) arr[6])) * ((Integer) arr[3]));// 필요수량 * 단가
 
 			// 발주수량과 공급 가격 구하기 위해서 조달계획 가져옴
 			// ProcurementPlan procurementPlan =
@@ -189,7 +183,7 @@ public class DetailPurchaseOrderRepositoryTests {
 			// supply_price=20000,
 			// purchaseOrderDate=2023-06-14T20:23:29.881289800, mamount=0, ppamount=100)
 
-			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
+			// [2, (주)경도전자, 2023-06-10, 200, CN0001, Bolt1, 100]
 			DetailPublishDTO dto = new DetailPublishDTO();
 			dto.setPpcode((Integer) arr[0]);
 			dto.setCname((String) arr[1]);
@@ -197,12 +191,11 @@ public class DetailPurchaseOrderRepositoryTests {
 			dto.setUnit_price((Integer) arr[3]);
 			dto.setMcode((String) arr[4]);
 			dto.setMname((String) arr[5]);
-			//dto.setMamount((Integer) arr[6]);
-			dto.setPpamount(((Integer) arr[7]));// 필요수량 - 재고수량 -> 재수 수량 다 지우기 
+			dto.setPpamount(((Integer) arr[6]));// 필요수량
 			dto.setPurchaseOrderDate(LocalDateTime.now());
 			dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
-			dto.setSupply_price((((Integer) arr[7])) * ((Integer) arr[3]));// 필요수량 * 단가
+			dto.setSupply_price((((Integer) arr[6])) * ((Integer) arr[3]));// 필요수량 * 단가
 
 			// 발주수량과 공급 가격 구하기 위해서 조달계획 가져옴
 			// ProcurementPlan procurementPlan =
@@ -246,7 +239,7 @@ public class DetailPurchaseOrderRepositoryTests {
 			// supply_price=20000,
 			// purchaseOrderDate=2023-06-14T20:23:29.881289800, mamount=0, ppamount=100)
 
-			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
+			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 100]
 			DetailPublishDTO dto = new DetailPublishDTO();
 			dto.setPpcode((Integer) arr[0]);
 			dto.setCname((String) arr[1]);
@@ -254,12 +247,11 @@ public class DetailPurchaseOrderRepositoryTests {
 			dto.setUnit_price((Integer) arr[3]);
 			dto.setMcode((String) arr[4]);
 			dto.setMname((String) arr[5]);
-			//dto.setMamount((Integer) arr[6]);
-			dto.setPpamount(((Integer) arr[7]));// 필요수량 - 재고수량 -> 재수 수량 다 지우기 
+			dto.setPpamount(((Integer) arr[6]));// 필요수량 
 			dto.setPurchaseOrderDate(LocalDateTime.now());
 			dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
-			dto.setSupply_price((((Integer) arr[7])) * ((Integer) arr[3]));// 필요수량 * 단가
+			dto.setSupply_price((((Integer) arr[6])) * ((Integer) arr[3]));// 필요수량 * 단가
 
 			// 발주수량과 공급 가격 구하기 위해서 조달계획 가져옴
 			// ProcurementPlan procurementPlan =

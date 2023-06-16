@@ -69,11 +69,6 @@ public class DetailPublishDTO {
 	 * 발주일
 	 */
 	private LocalDateTime purchaseOrderDate;
-	
-	/**
-	 * 기존재고수량 -> 사용하지 않음
-	 */
-	private Integer mamount;
 
 	/**
 	 * 필요수량
