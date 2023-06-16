@@ -31,7 +31,7 @@ public class Material {		//품목
 	 * 품목코드
 	 */
 	@Id
-	@Column(length = 7, columnDefinition = "CHAR(7)")
+	@Column(length = 6, columnDefinition = "CHAR(6)")
 	private String code;	
 	
 	/**
@@ -47,13 +47,6 @@ public class Material {		//품목
 	@ColumnDefault(value = "1")  //0 : 공용, 1 : 전용
 	@Column(length = 1, columnDefinition = "TINYINT(1)", nullable = false)
 	private Integer shareStatus;	
-	
-	/**
-	 * 기존재고수량
-	 */
-	@ColumnDefault(value = "0")
-	@Column(length = 10, columnDefinition = "INT(10)")
-	private Integer stockAmount;
 	
 	/**
 	 * 규격
