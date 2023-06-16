@@ -69,7 +69,7 @@
 		<div class="col-md-12 stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title">조달 예정 품목</p>
+					<p class="card-title">발주서 발행</p>
                   <form>
                     <div class="form-row align-items-center">
                     <div class="col-auto my-1">
@@ -106,8 +106,6 @@
 								</th>
 								<th>품목 코드</th>
 								<th>품목명</th>
-								<th>기존 재고<br> 수량
-								</th>
 								<th>필요 수량</th>
 								<th>발주 수량</th>
 								<th>단가</th>
@@ -133,7 +131,6 @@
 								<td>[[${#dates.format(dto.minimumOrderDate, 'yyyy/MM/dd')}]]</td>
 								<td>[[${dto.materialCode}]]</td>
 								<td>[[${dto.materialName}]]</td>
-								<td>[[${dto.stockAmount}]]</td>
 								<td>[[${dto.needAmount}]]</td>
 								<td>[[${dto.orderAmount}]]</td>
 								<td>[[${dto.unitPrice}]]</td>

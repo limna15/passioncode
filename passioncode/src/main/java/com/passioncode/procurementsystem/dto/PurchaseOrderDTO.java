@@ -58,7 +58,7 @@ public class PurchaseOrderDTO {
 	private String materialName;//품목명
 	
 	/**
-	 * 기존재고수량
+	 * 기존재고수량 <- 사용하지 않기로함
 	 */
 	private Integer stockAmount;//기존재고수량
 	

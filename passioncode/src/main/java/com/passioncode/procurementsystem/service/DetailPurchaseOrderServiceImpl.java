@@ -26,10 +26,13 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderService {
 
+	private final PurchaseOrderRepository purchaseOrderRepository;
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	private final ProcurementPlanRepository procurementPlanRepository;
 
 	// 발주서 번호 생성하면서 조달 계획 등록
+	 
+	
 	
 
 	@Override
@@ -37,6 +40,8 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(no);
 
 		List<DetailPublishDTO> detailList = new ArrayList<>();// 저장하는 곳
+		ProcurementPlan pp3 =new ProcurementPlan();
+		
 		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
 			log.info("222>>" + Arrays.toString(arr));
 			// 출력 모양[2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0]
@@ -54,11 +59,12 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 			detailpDTO.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			detailpDTO.setPocode(detailPurchaseOrderRepository.findMaxCode());
 			detailpDTO.setSupply_price((((Integer) arr[7])) * ((Integer) arr[3]));// 필요수량 * 단가
-
+			
 			ProcurementPlan pp = procurementPlanRepository.findById((Integer)arr[0]).get();//조달계획에 저장
+			
 			procurementPlanRepository.save(pp);
 			detailList.add(detailpDTO);
-
+			
 		}
 
 		return detailList;
@@ -111,7 +117,7 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 				.dueDate(procurementPlan.getDueDate()).purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
 				.purchaseOrderAmount(
-						(procurementPlan.getAmount()) - (procurementPlan.getMrp().getMaterial().getStockAmount()))
+						(procurementPlan.getAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();

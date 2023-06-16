@@ -71,7 +71,7 @@ public class DetailPublishDTO {
 	private LocalDateTime purchaseOrderDate;
 	
 	/**
-	 * 기존재고수량
+	 * 기존재고수량 -> 사용하지 않음
 	 */
 	private Integer mamount;
 

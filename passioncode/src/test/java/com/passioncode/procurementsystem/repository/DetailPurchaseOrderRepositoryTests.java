@@ -45,6 +45,16 @@ public class DetailPurchaseOrderRepositoryTests {
 	@Autowired
 	ContractRepository contractRepository;
 
+	@Transactional
+	@Commit
+	@Test
+	public void updatePp2() {//구매 발주서를 업데이트 시키기
+		
+		
+		
+	}	
+	
+	
 	// 앞에 들어가는걸 생성 뒤 넣어주기
 	// 1. 구매 발주서 -> 2. 세부 구매발주서 -> 3. 조달 계획코드에 들어감
 	// DetailPurchaseOrder에 저장
@@ -166,12 +176,12 @@ public class DetailPurchaseOrderRepositoryTests {
 		// detailPurchaseOrderRepository.myDetailList(2);
 		// detailPurchaseOrderRepository.myDetailList();
 		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(2);// 조달계획 2번
-
+		
 		log.info("중요한 나의 정보>>" + result);
 
 		// 아래 리스트에 더하기
 		List<DetailPublishDTO> list = new ArrayList<>();
-
+		
 		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
 			log.info("222>>" + Arrays.toString(arr));
 			// dto 데이터DetailPublishDTO(pono=8, pocode=8, ppcode=2, cname=(주)경도전자,
@@ -187,8 +197,8 @@ public class DetailPurchaseOrderRepositoryTests {
 			dto.setUnit_price((Integer) arr[3]);
 			dto.setMcode((String) arr[4]);
 			dto.setMname((String) arr[5]);
-			dto.setMamount((Integer) arr[6]);
-			dto.setPpamount(((Integer) arr[7]) - ((Integer) arr[6]));// 필요수량 - 재고수량
+			//dto.setMamount((Integer) arr[6]);
+			dto.setPpamount(((Integer) arr[7]));// 필요수량 - 재고수량 -> 재수 수량 다 지우기 
 			dto.setPurchaseOrderDate(LocalDateTime.now());
 			dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
@@ -222,9 +232,50 @@ public class DetailPurchaseOrderRepositoryTests {
 	}
 	
 	@Test
-	public void aaa() {
-		log.info("gogogo");
-		;
+	public void aaa2() {
+		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(2);// 조달계획 2번
+		
+		log.info("중요한 나의 정보>>" + result);
+
+		// 아래 리스트에 더하기
+		List<DetailPublishDTO> list = new ArrayList<>();
+		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
+			log.info("222>>" + Arrays.toString(arr));
+			// dto 데이터DetailPublishDTO(pono=8, pocode=8, ppcode=2, cname=(주)경도전자,
+			// due_date=2023-06-10, mcode=CNa0001, mname=Bolt1, unit_price=200,
+			// supply_price=20000,
+			// purchaseOrderDate=2023-06-14T20:23:29.881289800, mamount=0, ppamount=100)
+
+			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 0, 100]
+			DetailPublishDTO dto = new DetailPublishDTO();
+			dto.setPpcode((Integer) arr[0]);
+			dto.setCname((String) arr[1]);
+			dto.setDue_date((Date) arr[2]);
+			dto.setUnit_price((Integer) arr[3]);
+			dto.setMcode((String) arr[4]);
+			dto.setMname((String) arr[5]);
+			//dto.setMamount((Integer) arr[6]);
+			dto.setPpamount(((Integer) arr[7]));// 필요수량 - 재고수량 -> 재수 수량 다 지우기 
+			dto.setPurchaseOrderDate(LocalDateTime.now());
+			dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
+			dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
+			dto.setSupply_price((((Integer) arr[7])) * ((Integer) arr[3]));// 필요수량 * 단가
+
+			// 발주수량과 공급 가격 구하기 위해서 조달계획 가져옴
+			// ProcurementPlan procurementPlan =
+			// procurementPlanRepository.findById((Integer)arr[0]).get();
+
+			list.add(dto);
+
+		}
+		// 잘 들어갔는지 확인
+		for (DetailPublishDTO dto : list) {
+			log.info("dto 데이터" + dto);
+			// dto 데이터DetailPublishDTO(ppcode=2, cname=(주)경도전자, due_date=2023-06-10,
+			// mcode=CNa0001,
+			// mname=Bolt1, unit_price=200, purchaseOrderDate=2023-06-14T19:26:53.218694900,
+			// mamount=null);
+		}
 
 	}
 
@@ -414,7 +465,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
 				.purchaseOrderAmount(
-						(procurementPlan.getAmount()) - (procurementPlan.getMrp().getMaterial().getStockAmount()))
+						(procurementPlan.getAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();
@@ -442,8 +493,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
-				.purchaseOrderAmount(
-						(procurementPlan.getAmount()) - (procurementPlan.getMrp().getMaterial().getStockAmount()))
+				.purchaseOrderAmount((procurementPlan.getAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();
@@ -476,8 +526,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
-				.purchaseOrderAmount(
-						(procurementPlan.getAmount()) - (procurementPlan.getMrp().getMaterial().getStockAmount()))
+				.purchaseOrderAmount((procurementPlan.getAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();
