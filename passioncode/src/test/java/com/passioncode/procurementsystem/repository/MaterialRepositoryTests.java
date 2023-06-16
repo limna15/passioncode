@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -187,11 +189,17 @@ public class MaterialRepositoryTests {
 		String getLC = largeCategoryCode.substring(0,1);
 		String getMC = middleCategoryCode.substring(0,1);
 		String getLCWithMC = getLC + getMC;
+		//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
+		List<Material> materialList=materialRepository.findByCodeContaining(getLCWithMC);
+		//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
+		List<Integer> onlyNumList = new ArrayList<>();
+		for(Material m:materialList) {
+			onlyNumList.add(Integer.parseInt(m.getCode().substring(2)));
+		}
 		
-		List<Material> materialList = materialRepository.findAll(Sort.by(Sort.Direction.ASC, "code"));
+	
 		
-		
-		log.info("문자 추출 봐보자 : "+getLCWithMC);
+		log.info("숫자 리스트 보자 : "+	Collections.max(onlyNumList));
 //		String test = largeCategoryCode+middleCategoryCode;
 //		log.info("문자합치기.. 이게 되나?? : "+test);
 		

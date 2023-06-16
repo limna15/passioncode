@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -125,5 +126,10 @@ public class ProcurementPlanDTO {
 	 * 조달납기 예정일 - 소요일
 	 */
 	private Integer freePeriod;
+		
+	/**
+	 * 조달계획 완료일
+	 */
+	private LocalDateTime completionDate;
 	
 }

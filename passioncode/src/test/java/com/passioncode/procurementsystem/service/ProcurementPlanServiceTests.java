@@ -41,7 +41,7 @@ public class ProcurementPlanServiceTests {
 	@Transactional
 	@Test
 	public void dtoToEntityTest() {
-		ProcurementPlanDTO procurementPlanDTO = procurementPlanService.ppEntityToDTO(procurementPlanService.getProcurementPlan(1));
+		ProcurementPlanDTO procurementPlanDTO = procurementPlanService.ppEntityToDTO(procurementPlanService.getProcurementPlan(2));
 		log.info("조달계획DTO를 이용해서 조달계획 엔티티 만들기 : "+procurementPlanService.dtoToEntity(procurementPlanDTO));
 	}
 	
@@ -123,8 +123,8 @@ public class ProcurementPlanServiceTests {
 	public void registerTest() {
 		//품목코드, 품목명, 소요공정, 소요일, 소요량, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항
 		//조달계획코드, 자재소요계획코드, 사업자등록번호, 계약서번호  // 기본 여유기간
-		MRP mrp = procurementPlanService.getMRP(16); 
-		Contract contract = procurementPlanService.getContract(5);
+		MRP mrp = procurementPlanService.getMRP(17); 
+		Contract contract = procurementPlanService.getContract(9);
 		
 		//기본여유기간 화면에 숨겨뒀다가 값 받아오자!
 		Integer freePeriod = 2;
@@ -161,8 +161,8 @@ public class ProcurementPlanServiceTests {
 	public void modifyTest() {
 		//품목코드, 품목명, 소요공정, 소요일, 소요량, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항
 		//조달계획코드, 자재소요계획코드, 사업자등록번호, 계약서번호  // 기본 여유기간
-		MRP mrp = procurementPlanService.getMRP(16); 
-		Contract contract = procurementPlanService.getContract(5);
+		MRP mrp = procurementPlanService.getMRP(17); 
+		Contract contract = procurementPlanService.getContract(9);
 		
 		//기본여유기간 화면에 숨겨뒀다가 값 받아오자!
 		Integer freePeriod = 3;
@@ -173,7 +173,7 @@ public class ProcurementPlanServiceTests {
 		//화면에서 계약상태, 조달계획 등록상태 숨겨서 완료 로 보내주자, 조달계획 진행사항 발주 예정 으로 보내주자
 		
 		//조달계획 수정하는 상황이라, 조달계획 코드값이 들어간다!
-		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(15).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(18).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
 																			.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
@@ -191,7 +191,7 @@ public class ProcurementPlanServiceTests {
 	@Commit
 	@Test
 	public void deleteTest() {
-		ProcurementPlan procurementPlan = procurementPlanService.getProcurementPlan(15);
+		ProcurementPlan procurementPlan = procurementPlanService.getProcurementPlan(18);
 		ProcurementPlanDTO procurementPlanDTO = procurementPlanService.ppEntityToDTO(procurementPlan); 	//이때 DTO로 만들면서 외래키 지연로딩 쓰기 때문에 @Transactional 필요
 		procurementPlanService.delete(procurementPlanDTO);												//하지만 테스트환경에서는 @Transactional 쓰면 자동롤백 되기때문에, 삭제 테스틀르 위해 @Commit 필요
 	}

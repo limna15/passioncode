@@ -31,5 +31,11 @@ public interface MaterialRepository extends JpaRepository<Material, String> {
 			+ "left outer JOIN contract ON CODE=material_code WHERE material_code IS NULL ORDER BY NO,code ", nativeQuery = true)
 	public List<Material> getListNoContract();
 	
+	/**
+	 * 품목코드(앞에 두문자 CG)를 이용해서 품목 찾기 (대소문자 구별함)
+	 * @param code
+	 * @return
+	 */
+	List<Material> findByCodeContaining(String code);
 	
 }

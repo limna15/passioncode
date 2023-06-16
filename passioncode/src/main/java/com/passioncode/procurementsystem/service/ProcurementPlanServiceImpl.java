@@ -117,7 +117,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 															.companyName(procurementPlan.getContract().getCompany().getName())
 															.supplyLt(procurementPlan.getContract().getSupplyLt())
 															.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
-															.ppAmount(procurementPlan.getAmount())
+															.ppAmount(procurementPlan.getAmount()).completionDate(procurementPlan.getCompletionDate())
 															.contractStatus(contractStatusCheck(procurementPlan.getMrp().getMaterial()))
 															.ppRegisterStatus("완료").ppProgress(ppProgressCheck(procurementPlan))
 															.mrpCode(procurementPlan.getMrp().getCode()).companyNo(procurementPlan.getContract().getCompany().getNo())
@@ -141,7 +141,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 																			.companyName(procurementPlan.getContract().getCompany().getName())
 																			.supplyLt(procurementPlan.getContract().getSupplyLt())
 																			.dueDate(procurementPlan.getDueDate()).minimumOrderDate(procurementPlan.getMinimumOrderDate())
-																			.ppAmount(procurementPlan.getAmount())
+																			.ppAmount(procurementPlan.getAmount()).completionDate(procurementPlan.getCompletionDate())
 																			.contractStatus(contractStatusCheck(procurementPlan.getMrp().getMaterial()))
 																			.ppRegisterStatus("완료").ppProgress(ppProgressCheck(procurementPlan))
 																			.mrpCode(procurementPlan.getMrp().getCode())
@@ -165,7 +165,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 													.amount(procurementPlanDTO.getPpAmount())
 													.dueDate(procurementPlanDTO.getDueDate()).minimumOrderDate(procurementPlanDTO.getMinimumOrderDate())
 													.registerDate(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getRegisterDate())
-													.completionDate(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getCompletionDate())
+													.completionDate(procurementPlanDTO.getCompletionDate())
 													.detailPurchaseOrder(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getDetailPurchaseOrder())
 													.build();		
 		}else {		//조달계획코드가 존재X -> 새로운 DTO로 엔티티로 바꾸어서 등록할때!
