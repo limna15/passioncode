@@ -45,6 +45,16 @@ public class DetailPurchaseOrderRepositoryTests {
 	@Autowired
 	ContractRepository contractRepository;
 
+	@Transactional
+	@Commit
+	@Test
+	public void updatePp2() {//구매 발주서를 업데이트 시키기
+		
+		
+		
+	}	
+	
+	
 	// 앞에 들어가는걸 생성 뒤 넣어주기
 	// 1. 구매 발주서 -> 2. 세부 구매발주서 -> 3. 조달 계획코드에 들어감
 	// DetailPurchaseOrder에 저장
@@ -166,7 +176,7 @@ public class DetailPurchaseOrderRepositoryTests {
 		// detailPurchaseOrderRepository.myDetailList(2);
 		// detailPurchaseOrderRepository.myDetailList();
 		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(2);// 조달계획 2번
-
+		
 		log.info("중요한 나의 정보>>" + result);
 
 		// 아래 리스트에 더하기
@@ -187,8 +197,8 @@ public class DetailPurchaseOrderRepositoryTests {
 			dto.setUnit_price((Integer) arr[3]);
 			dto.setMcode((String) arr[4]);
 			dto.setMname((String) arr[5]);
-			dto.setMamount((Integer) arr[6]);
-			dto.setPpamount(((Integer) arr[7]) - ((Integer) arr[6]));// 필요수량 - 재고수량
+			//dto.setMamount((Integer) arr[6]);
+			dto.setPpamount(((Integer) arr[7]));// 필요수량 - 재고수량 -> 재수 수량 다 지우기 
 			dto.setPurchaseOrderDate(LocalDateTime.now());
 			dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
@@ -414,7 +424,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
 				.purchaseOrderAmount(
-						(procurementPlan.getAmount()) - (procurementPlan.getMrp().getMaterial().getStockAmount()))
+						(procurementPlan.getAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();
@@ -442,8 +452,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
-				.purchaseOrderAmount(
-						(procurementPlan.getAmount()) - (procurementPlan.getMrp().getMaterial().getStockAmount()))
+				.purchaseOrderAmount((procurementPlan.getAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();
@@ -476,8 +485,7 @@ public class DetailPurchaseOrderRepositoryTests {
 				.purchaseOrderDate(LocalDateTime.now()).dueDate(procurementPlan.getDueDate())
 				.purchaseOrderCode(detailPurchaseOrderRepository.findMaxCode())
 				.materialCode(procurementPlan.getMrp().getMaterial().getCode())
-				.purchaseOrderAmount(
-						(procurementPlan.getAmount()) - (procurementPlan.getMrp().getMaterial().getStockAmount()))
+				.purchaseOrderAmount((procurementPlan.getAmount()))
 				.unitPrice(procurementPlan.getContract().getUnitPrice())
 				.suppluPrice((procurementPlan.getAmount()) * (procurementPlan.getContract().getUnitPrice()))
 				.procurementPlan(procurementPlan.getCode()).build();
