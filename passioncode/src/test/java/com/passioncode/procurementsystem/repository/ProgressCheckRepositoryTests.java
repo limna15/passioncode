@@ -116,14 +116,14 @@ public class ProgressCheckRepositoryTests {
 		//1번 세구부매 발주서로 테스트
 		
 		//세부구매발주서 -> 조달계획 -> ..
-		DetailPurchaseOrder detailPurchaseOrder2= detailPurchaseOrderRepository.findById(1).get();
-		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder2);
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
 		//MRP mrp = mrpRepository.findBymaterialCode(null);
 		//log.info("발주 계획 보기>>"+pp);		
 		//만약에로 발주 코드가 널이 아닌것 으로 불러오기
 		
 		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
-		  .companyName(procurementPlan.getContract().getCompany().getName())
+		.companyName(procurementPlan.getContract().getCompany().getName())
 		  .purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
 		  .orderAmount(procurementPlan.getDetailPurchaseOrder().getAmount())
 		  .dueDate(procurementPlan.getDueDate())
@@ -131,7 +131,8 @@ public class ProgressCheckRepositoryTests {
 		  .orderAmount(procurementPlan.getAmount())
 		  .unitPrice(procurementPlan.getContract().getUnitPrice())
 		  .diliveryPercent(20).inspectionComplete("미완료")
-		  .purchaseOrderDeadlineStatus("미완료") .build();
+		  .purchaseOrderDeadlineStatus(null) 
+		  .build();
 		  
 		  log.info(">> 목록 보여주세요 >>>"+progressCheckDTO); 
 		 		
@@ -155,35 +156,18 @@ public class ProgressCheckRepositoryTests {
 	}
 	
 	
-	@Transactional
-	@Test
-	public void purchaseOrderDTOTest() {//조달 계획 가져오기
-		//협력회사, 발주일, 조달납기 예정일, 품목공급LT, 최소 발주일, 품목코드, 품목명
-		//, 기존재고수량, 필요수량, 발주수량, 단가, 공급가격, 발주서 발행상태
-		//총 13개 DTO
-		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
-		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder().companyName(procurementPlan.getContract().getCompany().getName())
-				.purchaseOrderDate(extistPurchaseOrderDate(procurementPlan)).dueDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())
-				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getMrp().getMaterial().getName())
-				.materialName(procurementPlan.getContract().getMaterial().getName())
-				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount()))
-				.unitPrice(procurementPlan.getContract().getUnitPrice()).procuremnetPlan(procurementPlan.getCode())
-				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder(procurementPlan)).build();
-			
-			log.info(">>>>>>>>>>>"+purchaseOrderDTO);
-	}
 	
-	public String existPurchaseOrder(ProcurementPlan procurementPlan) {//조달 계획을 가져와야 하기 때문에 리턴이 필요하다. 
-		String detailStatus = null;
-		if (procurementPlan.getDetailPurchaseOrder() == null) {// 발주서 번호 존재X
-			detailStatus = "미완료";
-			
-		} else {
-			detailStatus = "완료";
-		}
-		
-		return detailStatus;
-	}
+//	public String existMInStatus(DetailPurchaseOrder detailPO) {//조달 계획을 가져와야 하기 때문에 리턴이 필요하다. 
+//		String detailStatus = null;
+//		if (detailPO.getCode() == null) {//입고상태 존재X
+//			detailStatus = "미완료";
+//			
+//		} else {
+//			detailStatus = "완료";
+//		}
+//		
+//		return detailStatus;
+//	}
 	
 	public LocalDateTime extistPurchaseOrderDate(ProcurementPlan procurementPlan) {//조달 계획을 가져와야 하기 때문에 리턴이 필요하다. 
 		//세부 구매발주서에 있는 발주 번호 갖고 오기
@@ -191,7 +175,7 @@ public class ProgressCheckRepositoryTests {
 		if(procurementPlan.getDetailPurchaseOrder() != null) {
 			detailPurchaseOrderDate=procurementPlan.getDetailPurchaseOrder().getDate();
 		}
-
+		
 		return detailPurchaseOrderDate;
 		
 	}

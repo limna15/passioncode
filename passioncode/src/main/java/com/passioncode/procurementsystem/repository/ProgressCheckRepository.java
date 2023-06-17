@@ -6,4 +6,5 @@ import com.passioncode.procurementsystem.entity.ProgressCheck;
 
 public interface ProgressCheckRepository extends JpaRepository<ProgressCheck, Integer> {
 
+	
 }
