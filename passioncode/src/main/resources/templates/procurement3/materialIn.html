@@ -171,7 +171,7 @@
 											<span th:if="${list.status} == true">완료</span>
 											<span th:if="${list.status} == false">취소</span>
 										</td>
-										<td th:text="${list.transactionStatus} ? '완료' : '미완료' " id="transactionStatus"><input type="hidden" value="0"></td>
+										<td>[[${list.transactionStatus}]]</td>
 									</tr>
 								</tbody>
 							</table>

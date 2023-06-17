@@ -42,7 +42,7 @@ public class PS3Controller {
 	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
 		List<MaterialInDTO> materialInDTOList = materiallInService.getMaterialInDTOLsit();
 		//List<MaterialIn> materialInList= materiallInService.getMaterialInLsit();
-		//log.info("materialInDTOlist............." + materialInDTOList);
+		log.info("materialInDTOlist............." + materialInDTOList);
 		//log.info("purchaseCode >>> " + purchaseCode);
 		//log.info("materialInDTOList >>> " + materialInDTOList);
 		
@@ -148,6 +148,10 @@ public class PS3Controller {
 			log.info("입고 상태가 취소일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
 			materiallInService.register(materialInDTO);
 		}
+		
+		materiallInService.updatePPCompletionDate(materialInDTO.getCode());
+		
+		//테스트용 맵핑 url
 		//return "/procurement3/materialInRegister";
 		return "redirect:/procurement3/materialIn";
 	}
