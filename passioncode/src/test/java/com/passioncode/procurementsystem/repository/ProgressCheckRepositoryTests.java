@@ -2,6 +2,7 @@ package com.passioncode.procurementsystem.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,14 +99,6 @@ public class ProgressCheckRepositoryTests {
 		
 	}
 	
-	@Test
-	public void getList() {
-		Optional<DetailPurchaseOrder> list = detailPurchaseOrderRepository.findById(1);
-		//ProgressCheck pcheckList = pcheckList.get();
-		List<PurchaseOrder> list2 = purchaseOrderRepository.findAll();
-		log.info("발주서 가져오기>>"+list2);
-		
-	}
 	
 	@Transactional
 	@Test
@@ -130,7 +123,8 @@ public class ProgressCheckRepositoryTests {
 		  .materialName(procurementPlan.getContract().getMaterial().getName())
 		  .orderAmount(procurementPlan.getAmount())
 		  .unitPrice(procurementPlan.getContract().getUnitPrice())
-		  .diliveryPercent(20).inspectionComplete("미완료")
+		  .diliveryPercent(22)
+		  .inspectionComplete("미완료")
 		  .purchaseOrderDeadlineStatus(null) 
 		  .build();
 		  
@@ -180,8 +174,64 @@ public class ProgressCheckRepositoryTests {
 		
 	}
 	
+	@Test
+	public void showPercent() {//해당하는 것의 진척 평가를 갖고오기
+		Optional<ProgressCheck> list = progressCheckRepository.findById(1);
+		//ProgressCheck pcheckList = pcheckList.get();
+		List<ProgressCheck> list2 = progressCheckRepository.findAll();
+		List<ProgressCheckDTO> progressCheckDTOlList = new ArrayList<>();
+		List<DetailPurchaseOrder> dp = detailPurchaseOrderRepository.findAll();
+		Optional<DetailPurchaseOrder> dp2 = detailPurchaseOrderRepository.findById(1);
+		Integer aa=  list.get().getRate();
+		LocalDateTime bb = list.get().getDate();
+		String cc = list.get().getEtc();
+		Integer dd = list.get().getDetailPurchaseOrder().getCode();//진척검수에서 가져온 발주코드
+		log.info("*******이건 진척검수에서 가져온 발주코드"+dd);
+		
+		progressCheckDTOlList.add(null);
+		log.info("DTO보기>>"+progressCheckDTOlList);
+		Optional<ProgressCheck> pcL= progressCheckRepository.findById(2);
+		
+		log.info("조달계획 가져오기>>"+pcL);
+		log.info("조달계획 1번 퍼센트 가져오기>>"+aa);
+		log.info("조달계획 1번 진척검수일 가져오기>>"+bb);
+		log.info("조달계획 1번 기타사항 가져오기>>"+cc);
+		log.info("조달계획 1번 가져오기>>"+list);
+		log.info("조달계획 전부 다 가져오기>>"+list2);
+		
+		Integer nono= dp2.get().getCode();
+		if(nono==dd) {//만약 발주코드와 진척검수 발주 코드가 같다면
+			Integer aa2=  list.get().getRate();
+			
+			log.info("이건 해당하는 납기 진도율"+aa2);			
+		}
+	}
 	
+	@Test
+	public void getCompateList() {//여기에서 for이용해서 비교하기
+		Optional<DetailPurchaseOrder> list = detailPurchaseOrderRepository.findById(1);
+		List<DetailPurchaseOrder> detailList = detailPurchaseOrderRepository.findAll();
+		//ProgressCheck pcheckList = pcheckList.get();
+		List<PurchaseOrder> list2 = purchaseOrderRepository.findAll();
+		List<ProgressCheckDTO> pcDTOList = new ArrayList<>();
+		for(int i=0;i<detailList.size();i++) {
+			
+		}
+		log.info("발주서 가져오기>>"+list2);
+		
+	}
 	
+	public String existMIn(MaterialIn mIn) {
+		String inStatus = null;
+		if (mIn.getStatus()== null) {// 입고 상태 존재X
+			inStatus = "미완료";
+			
+		} else {
+			inStatus = "완료";
+		}
+		
+		return inStatus;
+	}
 	
 }
 	
