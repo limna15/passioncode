@@ -125,57 +125,50 @@
 						</div> 
 						<!-- 목록 내려보기 끝 -->
 						
-						<!-- 거래명세서 발행 모달창 버튼 시작 -->
 						<div class="col-md-6" >	
-							<form action="/procurement3/materialIn" method="post">
-								<button class="td-modal btn btn-primary" data-target="#modal" data-toggle="modal" data-backdrop="static" style="float: right;">거래명세서 발행</button>
-								<input type="hidden" name="purchaseCode" th:value="code">
-							</form>
+							<button class="td-modal btn btn-primary" id="transactionBtn" style="float: right;">거래명세서 발행</button>
 						</div>
-						<!-- 거래명세서 발행 모달창 버튼 끝 -->
 					</div>	
 					
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
-<!-- 						<form th:action="@{/procurement3/materialInRegister}" th:method="post" id="inForm"> -->
-							<input type="hidden" name="materialInDTO" id="materialInDTO">
-							<table id="recent-purchases-listing" class="listTable" style="text-align: center;">
-								<thead>
-									<tr>
-										<th></th>
-										<th>발주서 번호</th>
-										<th>발주 코드</th>
-										<th>조달납기<br>예정일</th>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>발주 수량</th>
-										<th>입고 상태</th>
-										<th>발행 상태</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="list: ${DTOList}" id="trList">
-										<td><input type="checkbox" name="checkBox" th:value="${list.code}" onclick="chkClicked()"></td>
-										<td><input type="hidden" name="no" th:value="${list.no}">[[${list.no}]]</td>
-										<td><input type="hidden" name="code" th:value="${list.code}">[[${list.code}]]</td>
-										<td><input type="hidden" name="date" th:value="${list.dueDate}">[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
-										<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
-										<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>
-										<td><input type="hidden" name="amount" th:value="${list.amount}">[[${list.amount}]]</td>
-										<td id= "status">
-											<input type="hidden" name="status" th:value="1">
-											<span th:if="${list.status} == null">
-												<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-												<button class="btn btn-primary" id="cancleBtn" name="cancle" value="취소" style="height:25px;">취소</button>
-											</span>
-											<span th:if="${list.status} == true">완료</span>
-											<span th:if="${list.status} == false">취소</span>
-										</td>
-										<td>[[${list.transactionStatus}]]</td>
-									</tr>
-								</tbody>
-							</table>
-<!-- 						</form> -->
+						<input type="hidden" name="materialInDTO" id="materialInDTO">
+						<table id="recent-purchases-listing" class="listTable" style="text-align: center;">
+							<thead>
+								<tr>
+									<th></th>
+									<th>발주서 번호</th>
+									<th>발주 코드</th>
+									<th>조달납기<br>예정일</th>
+									<th>품목코드</th>
+									<th>품목명</th>
+									<th>발주 수량</th>
+									<th>입고 상태</th>
+									<th>발행 상태</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="list: ${DTOList}" id="trList">
+									<td><input type="checkbox" id="checkBox" name="checkBox" th:value="${list.no}"></td>
+									<td><input type="hidden" name="no" th:value="${list.no}">[[${list.no}]]</td>
+									<td><input type="hidden" name="code" th:value="${list.code}">[[${list.code}]]</td>
+									<td><input type="hidden" name="date" th:value="${list.dueDate}">[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
+									<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
+									<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>
+									<td><input type="hidden" name="amount" th:value="${list.amount}">[[${list.amount}]]</td>
+									<td id= "status">
+										<input type="hidden" name="status" th:value="1">
+										<span th:if="${list.status} == null">
+											<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
+											<button class="btn btn-primary" id="cancleBtn" name="cancle" value="취소" style="height:25px;">취소</button>
+										</span>
+										<span th:if="${list.status} == true">완료</span>
+										<span th:if="${list.status} == false">취소</span>
+									</td>
+									<td>[[${list.transactionStatus}]]</td>
+								</tr>
+							</tbody>
+						</table>
 						<!-- 테이블 끝 -->
 						
 						<!-- 페이지 번호 시작 -->
@@ -217,166 +210,272 @@
 			</div>
 		</div>
 
-<!-- 모달창 -->
-<div class="myPrint">
-	<div class="modal" id="modal" >
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-	            <!-- header title -->
-					<h4 class="modal-title">거래명세서 발행</h4>
-	             <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal">×</button>
-				</div>
-							
-				<!-- body -->
-				<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
-				<div class="modal-body">
-				    <div class="publish">
-						<div class="card-body">
-							<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;" id="no-print">인쇄</button>
-							<br>
-							<p class="card-title"><b>거래명세서</b></p>
-							
-							<!--거래명세서 회사 정보-->
-							<div>
-								<table id="transactionInfo">
-										<tr th:each="info: ${tdDTOInfo}">
-											<th>발주 회사</th>
-											<td>[[${info.company}]]</td>
-											<th rowspan="4">공<br><br>급<br><br>자</th>
-											<th>사업자 등록번호</th>
-											<td colspan="3">[[${info.companyNo}]]</td>
-										</tr>
-										<tr th:each="info: ${tdDTOInfo}">
-											<th>발주서 번호</th>
-											<td>[[${info.purchaseOrderNo}]]</td>
-											<th>상호(법인명)</th>
-											<td>[[${info.companyName}]]</td>
-											<th>성명(대표자)</th>
-											<td>[[${info.CEO}]]</td>
-										</tr>
-										<tr th:each="info: ${tdDTOInfo}">
-											<th>납기일자</th>
-											<td>[[${#temporals.format(info.date, 'yyyy/MM/dd')}]]</td>
-											<th>주소</th>
-											<td colspan="3">[[${info.companyAddress}]]</td>
-										</tr>
-										<tr th:each="info: ${tdDTOInfo}">
-											<th>총 가격</th>
-											<td>[[${price}+${price}/10]]</td>
-											<th>담당자</th>
-											<td>[[${info.manager}]]</td>
-											<th>연락처</th>
-											<td>[[${info.managerTel}]]</td>
-										</tr>
-								</table>
+		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
+		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">발주서 번호 체크하기</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>거래명세서 발행할 발주서 번호를 선택해주세요.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 끝 -->
+		
+		<!-- 발주서 번호가 다를 때 뜨는 모달창 시작 -->
+		<div class="purchaseNoCheckModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">발주서 번호 확인하기</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>선택한 발주서 번호가 다릅니다.</span><br>
+						<span>선택한 발주서 번호를 확인해주세요.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 발주서 번호가 다를 때 뜨는 모달창 끝 -->
+	
+		<!-- 거래명세서 세부 내용 모달창 시작 -->
+		<div class="myPrint">
+			<div class="transactionDetailModal modal">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header">
+			            <!-- header title -->
+							<h4 class="modal-title">거래명세서 발행</h4>
+			             <!-- 닫기(x) 버튼 -->
+							<button type="button" class="close" data-dismiss="modal">×</button>
+						</div>
+									
+						<!-- body -->
+						<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
+						<div class="modal-body">
+						    <div class="publish">
+								<div class="card-body">
+									<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;" id="no-print">인쇄</button>
+									<br>
+									<p class="card-title"><b>거래명세서</b></p>
+									
+									<!--거래명세서 회사 정보-->
+									<div>
+										<table id="transactionInfo">
+												<tr>
+													<th>발주 회사</th>
+													<td></td>
+													<th rowspan="4">공<br><br>급<br><br>자</th>
+													<th>사업자 등록번호</th>
+													<td colspan="3"></td>
+												</tr>
+												<tr>
+													<th>발주서 번호</th>
+													<td></td>
+													<th>상호(법인명)</th>
+													<td></td>
+													<th>성명(대표자)</th>
+													<td></td>
+												</tr>
+												<tr>
+													<th>납기일자</th>
+													<td></td>
+													<th>주소</th>
+													<td colspan="3"></td>
+												</tr>
+												<tr>
+													<th>총 가격</th>
+													<td></td>
+													<th>담당자</th>
+													<td></td>
+													<th>연락처</th>
+													<td></td>
+												</tr>
+										</table>
+									</div>
+									<br>
+									
+									<!--거래명세서 품목 정보-->
+									<div class="table-responsive">
+										<table id="transactionDetail">
+											<thead>
+												<tr>
+													<th>품목코드</th>
+													<th>품목명</th>
+													<th>수량</th>
+													<th>단가</th>
+													<th>공급가격</th>
+													<th>부가세</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="list: ${tdDTOList}">
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+												</tr>
+												
+											</tbody>
+										</table>
+									</div>
+									<br>
+									
+									<!--거래명세서 품목 정리 요약-->
+									<div class="table-responsive">
+										<table id="transactionResult" style="border: 1px solid ; font-size: 13px;">
+												<tr>
+													<th>수량</th>
+													<td></td>
+													<th>공급가격</th>
+													<td></td>
+													<th>VAT</th>
+													<td></td>
+													<th>합계</th>
+													<td></td>
+												</tr>
+										</table>
+									</div>					
+									<br>
+								</div>
 							</div>
-							<br>
-							
-							<!--거래명세서 품목 정보-->
-							<div class="table-responsive">
-								<table id="transactionDetail">
-									<thead>
-										<tr>
-											<th>품목코드</th>
-											<th>품목명</th>
-											<th>수량</th>
-											<th>단가</th>
-											<th>공급가격</th>
-											<th>부가세</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr th:each="list: ${tdDTOList}">
-											<td>[[${list.materialCode}]]</td>
-											<td>[[${list.materialName}]]</td>
-											<td>[[${list.amount}]]</td>
-											<td>[[${list.unitPrice}]]</td>
-											<td>[[${list.amount}*${list.unitPrice}]]</td>
-											<td>[[${list.amount}*${list.unitPrice}/10]]</td>
-										</tr>
-										
-									</tbody>
-								</table>
-							</div>
-							<br>
-							
-							<!--거래명세서 품목 정리 요약-->
-							<div class="table-responsive">
-								<table id="transactionResult" style="border: 1px solid ; font-size: 13px;">
-										<tr>
-											<th>수량</th>
-											<td>[[${amount}]]</td>
-											<th>공급가격</th>
-											<td>[[${price}]]</td>
-											<th>VAT</th>
-											<td>[[${price}/10]]</td>
-											<th>합계</th>
-											<td>[[${price}+${price}/10]]</td>
-										</tr>
-								</table>
-							</div>					
-							<br>
+							<!-- <th:block th:replace="~{/procurement3/transactionDetail :: materialIn(~{this::publish} )}"></th:block> -->
+							<!--여기에 외부에서 작성한 테이블 들어옴-->
+						</div>
+									
+						<!-- Footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 						</div>
 					</div>
-					<!-- <th:block th:replace="~{/procurement3/transactionDetail :: materialIn(~{this::publish} )}"></th:block> -->
-					<!--여기에 외부에서 작성한 테이블 들어옴-->
-				</div>
-							
-				<!-- Footer -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-<!-- 모달창 끝 -->
+		<!-- 거래명세서 세부 내용 모달창 끝 -->
 
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
-
-	var DTOList = [[${DTOList}]];
-	console.log("DTOList 읽기 >>> ", DTOList);
-	
-	let codeList= new Array();
-	let dpoCode= new Object();
-	
-	DTOList.forEach(function(item){
-		dpoCode= item.code
-		codeList.push(dpoCode);
-		//console.log("dpoCode가 제대로 오나 >>> ", dpoCode);
-	});
-
-	console.log("codeList가 제대로 오나 >>> ", codeList)
-	
-	let purchaseCode = '';
-	function chkClicked(){
-		const chkChecked = 'input[name="checkBox"]:checked';
-		const selectedEls = document.querySelectorAll(chkChecked);
-		purchaseCode = '';
+/*	
+	//각 행의 데이터값을 읽기
+	$("#transactionBtn").click(function(){ 	
+	var rowData = new Array();
+	var tdArr = new Array();
+	var checkbox = $("input[name=checkBox]:checked");
 		
-		selectedEls.forEach((el) => {
-			purchaseCode += el.value + ' ';
-	  });
- 		console.log("purchaseCode >>> ", purchaseCode)
- 		
- 		return purchaseCode;
-	}
+		// 체크된 체크박스 값을 가져온다
+		checkbox.each(function(i) {
+			// checkbox.parent() : checkbox의 부모는 <td>이다.
+			// checkbox.parent().parent() : <td>의 부모이므로 <tr>이다.
+			var tr= checkbox.parent().parent().eq(i);
+			var td= tr.children();
+			
+			// 체크된 row의 모든 값을 배열에 담는다.
+			rowData.push(tr.text());
+			
+			// td.eq(0)은 체크박스 이므로  td.eq(1)의 값부터 가져온다.
+			let no= td.eq(1).text();
+			let code= td.eq(2).text();
+			//let dueDate= td.eq(3).text();
+			//let materialCode= td.eq(4).text();
+			//let materialName = td.eq(5).text();
+			//let amount= td.eq(6).text();
+			let status= td.eq(7).text();
+			let transactionStatus= td.eq(8).text();
+			
 	
-	function sendPurchaseCode(){
-		console.log("purchaseCode 찍히나 >>> ", purchaseCode)
-		//purchaseCode= purchaseCode.replaceAll(" ","");
-		//console.log("purchaseCode 찍히나 >>> ", purchaseCode)		
-		location.href="/procurement3/materialIn?purchaseCode="+purchaseCode;
- 	};
- 	
- 	$('.td-modal').on('click', function(e){
-	  e.preventDefault();
-	  sendPurchaseCode();
-	});
+			// 가져온 값을 배열에 담는다.
+			tdArr.push(no);
+			tdArr.push(code);
+			//tdArr.push(dueDate);
+			//tdArr.push(materialCode);
+			//tdArr.push(materialName);
+			//tdArr.push(amount);
+			tdArr.push(status);
+			tdArr.push(transactionStatus);
+			
+			console.log("tdArr: " + tdArr[1] + tdArr[5]);
+			console.log("rowData : " + rowData);			
+		});
+	});	
+*/		
+	// 선택버튼 클릭시 체크된 행의 발주서 번호 가져오기
+	$("#transactionBtn").click(function(){ 
+		
+		$("input[name=checkBox]:checked").each(function(){
+			let no= $(this).val();			
+		})
+		
+		let noList= new Array(); //발주서번호 리스트
+		
+		$("input[name=checkBox]:checked").each(function(){
+			let no= $(this).val();
+			noList.push(no);					
+		})
+		
+		noList.forEach((i) => console.log("noList >>> " + i));	
+		console.log("길이가 어떻게 찍히는거지 >>> " + noList.length)
+		console.log("번호 리스트 >>> ", noList);
+		
+		//모달창: 체크박스 선택을 아예 안했을 경우
+		if(noList.length===0){
+			$(".noPurchaseNoModal").modal('show');	
+		}else if(noList.length===1 || noList.length<1){
+			$(".transactionDetailModal").modal('show');
+			console.log("이게 보이는건가?")
+			
+								
+			$.ajax({
+				type: "post",
+				url: "/procurement3/getTransactionDetail",
+				data: JSON.stringify(noList),
+				contentType :"application/json; charset=UTF-8",
+				dataType: "json",
+				success: function(data){
+					console.log("받아온 데이터 : ",data);
 
+					},
+					error: function(xhr,status,er){
+						if(error)
+							error(er);
+					}
+				});	
+		}
+
+		for(let i=0; i<noList.length-1; i++){
+			for(let j=0; j<noList.length; j++){
+				//모달창: 체크박스로 선택한 발주서 번호가 다를 경우
+				if(noList[i]!==noList[j]){
+					$(".purchaseNoCheckModal").modal('show');
+					$(".transactionDetailModal").modal('hide'); //위에 한개이상일 때도 뜨게 설정해뒀기 때문에 같이 뜸
+					console.log("둘다 걸리는것같다?")
+				}else if(noList[i]===noList[j]){//모달창: 체크박스로 선택한 발주서 번호가 같을 경우
+/////////같은것도 있고, 다른것도 있을때 거래명세서 디테일모당창이 안나와야함. 어뜨케 해야하쥬..?/////////
+//반복문 돌리다 보면 같은 숫자가 겹쳐서 비교되기 때문에 생기는 문제
+					$(".transactionDetailModal").modal('show');
+					$(".purchaseNoCheckModal").modal('hide');
+					console.log("같을 경우 뜨는건가?")
+				}
+			}
+		}
+	});
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	
 	//이벤트 발생한 요소의 상위의 TD 객체 찾기
     function getObj(){
         var obj = event.srcElement
@@ -395,23 +494,23 @@
         return obj
     }
   
-  	//입고 상태 "완료" 눌렀을 경우
+  	//입고 상태 "완료"버튼 눌렀을 경우 -> DB등록 + 화면 입고 상태 '완료' 표시 + 발행 상태 '발행 예정' 표시
 	$(document).on("click", "#doneBtn", function(e){
 		e.preventDefault();
 		console.log("완료버튼 클릭")
 		
+		//완료 버튼을 누른 행의 데이터 세팅
  		var no= getObjTR().querySelector("input[name=no]").value;
 		var code= getObjTR().querySelector("input[name=code]").value;
 		var materialCode= getObjTR().querySelector("input[name=materialCode]").value;
 		var materialName= getObjTR().querySelector("input[name=materialName]").value;
 		var amount= getObjTR().querySelector("input[name=amount]").value;
 		
- 		console.log("no 읽기 >>> ", no)
-		console.log("code 읽기 >>> ", code)
-		//console.log("dueDate 읽기 >>> ", dueDate)
-		console.log("materialCode 읽기 >>> ", materialCode)
-		console.log("materialName 읽기 >>> ", materialName)
-		console.log("amount 읽기 >>> ", amount)
+// 		console.log("no 읽기 >>> ", no)
+//		console.log("code 읽기 >>> ", code)
+//		console.log("materialCode 읽기 >>> ", materialCode)
+//		console.log("materialName 읽기 >>> ", materialName)
+//		console.log("amount 읽기 >>> ", amount)
 
 		//create element (form)
 		var inForm = $('<form></form>');
@@ -436,32 +535,25 @@
 		inForm.submit();
 	});
   	
-  	//입고 상태 "취소" 눌렀을 경우
+  	//입고 상태 "취소"버튼 눌렀을 경우 -> DB등록 + 화면 입고 상태 '취소' 표시 + 발행 상태 '발행 불가' 표시
 	$(document).on("click", "#cancleBtn", function(e){
 		e.preventDefault();
 		console.log("완료버튼 클릭")
 		
- 		var no= getObjTR().querySelector("input[name=no]").value;
-		var code= getObjTR().querySelector("input[name=code]").value;
-		var materialCode= getObjTR().querySelector("input[name=materialCode]").value;
-		var materialName= getObjTR().querySelector("input[name=materialName]").value;
-		var amount= getObjTR().querySelector("input[name=amount]").value;
-		
- 		console.log("no 읽기 >>> ", no)
-		console.log("code 읽기 >>> ", code)
-		//console.log("dueDate 읽기 >>> ", dueDate)
-		console.log("materialCode 읽기 >>> ", materialCode)
-		console.log("materialName 읽기 >>> ", materialName)
-		console.log("amount 읽기 >>> ", amount)
+ 		let no= getObjTR().querySelector("input[name=no]").value;
+		let code= getObjTR().querySelector("input[name=code]").value;
+		let materialCode= getObjTR().querySelector("input[name=materialCode]").value;
+		let materialName= getObjTR().querySelector("input[name=materialName]").value;
+		let amount= getObjTR().querySelector("input[name=amount]").value;
 
 		//create element (form)
-		var inForm = $('<form></form>');
+		let inForm = $('<form></form>');
 		//set attribute (form) 
 		inForm.attr("name","inForm");
 		inForm.attr("method","post");
 		inForm.attr("action","/procurement3/materialInRegister");
 
-		// create element & set attribute (input)
+		//create element & set attribute (input)
 		inForm.append($('<input/>', {type: 'hidden', name: 'no', value: no }));
 		inForm.append($('<input/>', {type: 'hidden', name: 'code', value: code }));
 		inForm.append($('<input/>', {type: 'hidden', name: 'materialCode', value: materialCode }));
@@ -470,12 +562,13 @@
 		//입고 상태가 취소일 경우 = false
 		inForm.append($('<input/>', {type: 'hidden', name: 'status', value: "0" }));
 
-		// append form (to body) 
+		//append form (to body) 
 		inForm.appendTo('body');
 
-		// submit form
+		//submit form
 		inForm.submit();
 	});
+		
 </script>	
 		
 	</th:block>

@@ -135,4 +135,10 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 
 	}
 
+	@Override
+	public List<DetailPurchaseOrder> getDetailByPurchaseNo(PurchaseOrder purchaseOrder) {
+		
+		return detailPurchaseOrderRepository.findByPurchaseOrder(purchaseOrder);
+	}
+
 }

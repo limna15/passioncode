@@ -41,72 +41,10 @@ public class PS3Controller {
 	@GetMapping("/materialIn")
 	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
 		List<MaterialInDTO> materialInDTOList = materiallInService.getMaterialInDTOLsit();
-		//List<MaterialIn> materialInList= materiallInService.getMaterialInLsit();
-		log.info("materialInDTOlist............." + materialInDTOList);
-		//log.info("purchaseCode >>> " + purchaseCode);
-		//log.info("materialInDTOList >>> " + materialInDTOList);
-		
-		List<String> dpoCodeList= new ArrayList<>();
-		if(purchaseCode!=null) {
-			String[] splitdpoCode= purchaseCode.split(" ");
-			for(int i=0; i<splitdpoCode.length; i++) {
-				dpoCodeList.add(splitdpoCode[i].trim());
-			}
-		}
-		//log.info("dpoCodeList >>> " + dpoCodeList);
-		
-		//String으로 넘어온 코드 Integer로 변환
-		List<Integer> dpoCode= new ArrayList<>();
-		for(int i=0; i<dpoCodeList.size(); i++) {
-			dpoCode.add(Integer.parseInt(dpoCodeList.get(i)));
-		}
-		//log.info("dpoCode >>> " + dpoCode);
-		
-		DetailPurchaseOrder detailPurchaseOrder= null;
-		TransactionDetailDTO transactionDetailDTO= null;
-		List<TransactionDetailDTO> transactionDetailDTOList= new ArrayList<>();
-		
-		for(int i=0; i<dpoCode.size(); i++) {
-			detailPurchaseOrder = detailPurchaseOrderService.get(dpoCode.get(i));
-			//log.info("detailPurchaseOrder >>> " + detailPurchaseOrder);
-			transactionDetailDTO= transactionDetailService.transactionDetailToDTO(detailPurchaseOrder);
-			transactionDetailDTOList.add(transactionDetailDTO);
-		}
-		//log.info("transactionDetailDTOList >>> " + transactionDetailDTOList);
-		
-		//하나의 발주서 번호에 여러개의 발주 코드가 있을 경우: 품목정보를 제외하고는 한번씩만 표시되면 되기때문에 따로 객체 설정해줌
-		TransactionDetailDTO tdDTOInfo = null;
-		for(int i=0; i<transactionDetailDTOList.size(); i++) {
-			for(int j=0; j<transactionDetailDTOList.size(); j++) {
-				if(transactionDetailDTOList.get(i).getCompanyName().equals(transactionDetailDTOList.get(j).getCompanyName())){
-					tdDTOInfo= TransactionDetailDTO.builder().company(transactionDetailDTOList.get(0).getCompany())
-							.purchaseOrderNo(transactionDetailDTOList.get(0).getPurchaseOrderNo()).date(transactionDetailDTOList.get(0).getDate())
-							.companyNo(transactionDetailDTOList.get(0).getCompanyNo()).companyName(transactionDetailDTOList.get(0).getCompanyName())
-							.CEO(transactionDetailDTOList.get(0).getCEO()).companyAddress(transactionDetailDTOList.get(0).getCompanyAddress())
-							.manager(transactionDetailDTOList.get(0).getManager()).managerTel(transactionDetailDTOList.get(0).getManagerTel()).build();
-				};
 
-			}
-		}
-		//log.info("tdDTOInfo >>> " + tdDTOInfo);
-		
-		//하나의 발주서 번호에 여러개의 발주 코드가 있을 경우: 수량/공급가격 정보
-		int amount= 0;
-		int price= 0;
-		
-		for(int i=0; i<transactionDetailDTOList.size(); i++) {
-			amount += transactionDetailDTOList.get(i).getAmount();
-			price += transactionDetailDTOList.get(i).getUnitPrice()*transactionDetailDTOList.get(i).getAmount();;
-		}
-		//log.info("amount >>> " + amount);
-		//log.info("price >>> " + price);
-		
-		model.addAttribute("tdDTOList", transactionDetailDTOList);
-		model.addAttribute("tdDTOInfo", tdDTOInfo);
-		model.addAttribute("amount", amount);
-		model.addAttribute("price", price);
+		log.info("materialInDTOlist............." + materialInDTOList);
+
 		model.addAttribute("DTOList", materialInDTOList);
-		//model.addAttribute("purchaseCode", purchaseCode);
 	}
 	
 	@PostMapping(value="materialInRegister")

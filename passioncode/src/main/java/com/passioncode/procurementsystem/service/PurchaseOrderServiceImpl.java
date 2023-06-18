@@ -99,5 +99,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return detailPurchaseOrderDate;
 		
 	}
+
+	@Override
+	public PurchaseOrder getPurchaseOrder(Integer no) {
+	
+		return purchaseOrderRepository.findById(no).get();
+	}
 		
 }

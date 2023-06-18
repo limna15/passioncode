@@ -20,6 +20,7 @@ import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.log4j.Log4j2;
@@ -47,7 +48,7 @@ public class MaterialInRepositoryTests {
 	MRPRepository mrpRepository;
 	
 	@Autowired
-	EntityManager entityManager;
+	PurchaseOrderRepository purchaseOrderRepository;
 	
 	@Test
 	public void getList() {
@@ -216,25 +217,6 @@ public class MaterialInRepositoryTests {
 		log.info("List >>> " + materialInList);
 	}
 	
-	//입고등록할 때 조달계획 완료일 업데이트 하기
-	//엔티티에 @Setter를 넣고 직접 접근할때 가능한 코드
-	@Transactional
-	@Commit
-	@Test
-	public void updatePPCompletionDate2() {
-		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(3).get();
-		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
-		procurementPlan= entityManager.find(ProcurementPlan.class, procurementPlan.getCode()); //id로 조회해야함
-		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
-		
-		//procurementPlan.setCompletionDate(materialIn.getDate());
-		entityManager.merge(procurementPlan);
-		
-		materialInRepository.save(materialIn);
-		
-		log.info("이게 조회가 되는건가...? >>> " + entityManager.find(ProcurementPlan.class, procurementPlan.getCode()));
-	}
-	
 	//입고상태가 존재 = 조달계획 완료 -> 완료일 업데이트 시켜야함
 	@Transactional
 	@Commit
@@ -257,4 +239,10 @@ public class MaterialInRepositoryTests {
 		log.info("procurementPlan 어떻게 읽히죠 >>> " + procurementPlan);
 	}
 	
+	//발주서 번호로 세부발주서 내용 가져오기
+	@Test
+	public void getDetail() {
+		PurchaseOrder po= purchaseOrderRepository.findById(1).get();
+		log.info("세부구매발주서 내용 가져와보자 >>> " + detailPurchaseOrderRepository.findByPurchaseOrder(po));
+	}
 }
