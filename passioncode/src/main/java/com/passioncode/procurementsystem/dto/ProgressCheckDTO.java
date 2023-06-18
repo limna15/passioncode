@@ -69,12 +69,12 @@ public class ProgressCheckDTO {
 	/**
 	 *다음 진척 검수 일정
 	 */
-	//private Date nextCheckDate;
+	private String nextCheckDate;
 	
 	/**
 	 *납기 진도율
 	 */
-	private Integer diliveryPercent;
+	private String diliveryPercent;//미완료도 있어서 스트링으로
 	
 	/**
 	 *검수완료

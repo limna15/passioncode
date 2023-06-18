@@ -112,9 +112,10 @@
                             <td>[[${dto.materialName}]]</td>
                             <td>[[${dto.orderAmount}]]</td>
                             <td>[[${dto.unitPrice}]]</td>
-                            <td>다음 일정</td>
+                            <td>[[${dto.nextCheckDate}]]</td>
                             <!-- 조달계획의 버튼 <button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button> -->
                             <td><a name="myPlan" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="schedule" th:value="100">일정등록</a></td>
+								
                             <td><a name="myAvg" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" th:id="checkBox" th:value="101" onclick="myCheckBox()">평가</a></td>
                             <td>[[${dto.diliveryPercent}]]</td>
                             <td>[[${dto.inspectionComplete}]]</td>
@@ -171,7 +172,7 @@
 		</div>
 	</div>
 </div>
-		
+
 <script type="text/javascript">
 	//var companyname=document.getElementByID('');
 	//var cc = tr.getElementsByTagName('a');
@@ -227,6 +228,40 @@ function aaa(){
 };
 	
 	
+</script>
+
+						<!--진척 평가 시작-->
+						<div class="progressCheckStart modal">
+								<thead>
+									<tr>
+										<th>-</th>
+										<th>날짜</th>
+										<th>납기 진도율</th>
+										<th>기타사항</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+								</tbody>
+							<br>
+						***** 회사의 *****  제작 진척도를 입력합니다.
+							<br>
+								<input type="text"><input type="text">
+							<br>
+							<button>등록</button>
+						</div>
+						<!--진척 평가 끝-->
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script th:inline="javascript">
+$(document).on("click",".myPlan")//일정 등록 버튼을 누르면
+$(".progressCheckStart").modal('show');
+
 </script>
 
 	</th:block>

@@ -111,9 +111,8 @@ public class ProgressCheckRepositoryTests {
 		//세부구매발주서 -> 조달계획 -> ..
 		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
 		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
-		//MRP mrp = mrpRepository.findBymaterialCode(null);
-		//log.info("발주 계획 보기>>"+pp);		
-		//만약에로 발주 코드가 널이 아닌것 으로 불러오기
+		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(detailPO);
+		
 		
 		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
 		.companyName(procurementPlan.getContract().getCompany().getName())
@@ -123,9 +122,10 @@ public class ProgressCheckRepositoryTests {
 		  .materialName(procurementPlan.getContract().getMaterial().getName())
 		  .orderAmount(procurementPlan.getAmount())
 		  .unitPrice(procurementPlan.getContract().getUnitPrice())
-		  .diliveryPercent(22)
+		  .diliveryPercent("미등록")
 		  .inspectionComplete("미완료")
-		  .purchaseOrderDeadlineStatus(null) 
+		  .purchaseOrderDeadlineStatus(null)
+		  .nextCheckDate(null)
 		  .build();
 		  
 		  log.info(">> 목록 보여주세요 >>>"+progressCheckDTO); 
@@ -214,6 +214,15 @@ public class ProgressCheckRepositoryTests {
 		//ProgressCheck pcheckList = pcheckList.get();
 		List<PurchaseOrder> list2 = purchaseOrderRepository.findAll();
 		List<ProgressCheckDTO> pcDTOList = new ArrayList<>();
+		Optional<MaterialIn> ma = materialInRepository.findById(1);
+		log.info("발주서 마감: "+ma.get().getStatus());//true라고 나옴
+		if(ma.get().getStatus()==false) {
+			log.info("존재하지 않으면");
+			
+		}else {
+			log.info("발주서 마감이라면");
+			
+		}
 		for(int i=0;i<detailList.size();i++) {
 			
 		}
@@ -221,17 +230,77 @@ public class ProgressCheckRepositoryTests {
 		
 	}
 	
-	public String existMIn(MaterialIn mIn) {
+	@Test
+	public void existMIn() {
 		String inStatus = null;
-		if (mIn.getStatus()== null) {// 입고 상태 존재X
+		Optional<MaterialIn> ma = materialInRepository.findById(1);
+		log.info("발주서 마감: "+ma.get().getStatus());//true라고 나옴
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
+		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(detailPO);
+		log.info("뭐라고 출력되는지? 입고>> "+maIn);
+		//MaterialIn(code=1, status=true, date=2023-06-16T11:45:17, transactionStatus=발행 완료)
+		log.info("발주서 마감 상태**>>"+maIn.getStatus());
+		if(ma.get().getStatus()==false) {//발주서가 존재하면
+			log.info("발주서 마감이라면");
 			inStatus = "미완료";
+		}else {
+			log.info("존재하고 있음");
+			inStatus = "완료";
 			
-		} else {
+		}
+		log.info("발주서 마감 상태: "+inStatus);
+		//return inStatus;
+	}
+	
+	@Transactional
+	@Test
+	public String existMIn2(DetailPurchaseOrder dp) {
+		//발주서 마감 상태 잘 보내줌
+		String inStatus = null;
+		Optional<MaterialIn> ma = materialInRepository.findById(1);
+		log.info("발주서 마감: "+ma.get().getStatus());//true라고 나옴
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
+		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(dp);
+		log.info("뭐라고 출력되는지? 입고>> "+maIn);
+		//MaterialIn(code=1, status=true, date=2023-06-16T11:45:17, transactionStatus=발행 완료)
+		if(maIn!=null) {
+			
+		if(ma.get().getStatus()==false) {//발주서가 존재하면
+			log.info("발주서 마감이라면");
+			inStatus = "미완료";
+		}else {
+			log.info("존재하고 있음");
 			inStatus = "완료";
 		}
-		
+		}else {
+			inStatus = "미완료";
+			
+		}
+		log.info("발주서 마감 상태: "+inStatus);
 		return inStatus;
 	}
+	@Test
+	public void getPercent() {//해당하는 발주번호 찾아서 진척검수 보여주기
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		//Optional<ProgressCheck> pgCheck = progressCheckRepository.findById(detailPO.getCode());
+		ProgressCheck pg = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
+		
+		log.info("납기 진도율 퍼센트"+pg.getRate());//납기 진도율
+		String aa= pg.getRate()+"%";
+		log.info(aa);
+		log.info("");
+	}
+	//여러개 등록되어 있을 경우 마지막의 것으로 가져오는 조건 
+	//추가하기
+	
+	@Test
+	public void nextCheckDate() {
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(2).get();
+		ProgressCheck pg = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
+		log.info(pg.getDate());
+		}
 	
 }
 	
