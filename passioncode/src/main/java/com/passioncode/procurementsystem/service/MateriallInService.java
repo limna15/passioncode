@@ -57,5 +57,10 @@ public interface MateriallInService {
 	@Transactional
 	void updatePPCompletionDate(Integer code);
 	
-	
+	/**
+	 * 세부구매발주서 코드를 이용해서 MaterialIn 엔티티 가져오기
+	 * @param code
+	 * @return
+	 */
+	MaterialIn getMeterialInByDetailPurchaseOrder(Integer code);
 }

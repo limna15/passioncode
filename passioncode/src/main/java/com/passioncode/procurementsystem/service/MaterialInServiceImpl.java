@@ -157,16 +157,10 @@ public class MaterialInServiceImpl implements MateriallInService {
 		procurementPlanRepository.save(procurementPlan);
 	}
 
-//	@Override
-//	public void updatePPCompletionDate(Integer code) {
-//		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(code).get();
-//		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
-//		procurementPlan= entityManager.find(ProcurementPlan.class, procurementPlan.getCode()); //id로 조회해야함
-//		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
-//		
-//		procurementPlan.setCompletionDate(materialIn.getDate());
-//		entityManager.merge(procurementPlan);
-//		
-//		materialInRepository.save(materialIn);
-//	}	
+	@Override
+	public MaterialIn getMeterialInByDetailPurchaseOrder(Integer code) {
+		DetailPurchaseOrder dpo= detailPurchaseOrderRepository.findById(code).get();
+		return	materialInRepository.findByDetailPurchaseOrder(dpo);
+	}
+
 }
