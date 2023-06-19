@@ -175,6 +175,7 @@
 						<h4> 협력 회사 : [[${dto.cname}]]</h4>
 						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
 						<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
+						
 						<br>
                     <table id="transactionDetail" border="1">
 								<thead>
@@ -202,7 +203,7 @@
 							<br>
                     </div>
                     <div class="modal-footer">
-                       <button  href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
+                       <button id="publishBtn22" href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
                        </button>
                       <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
@@ -241,6 +242,9 @@
 if(window.location.search!=''){
 var mych=window.location.search;
 console.log(" 값>>>>>>>>>>>>>>> " + mych);
+console.log("길이 보여줘 제발", mych.length);
+const last2 = mych.substring(10);//0부터 
+console.log("길이??????????~~~@", last2);
 $(document).ready(function(){
 	//데이터가 있을때만뜨게 해라
 	$(".myPublish").modal("show");
@@ -250,6 +254,21 @@ $(document).ready(function(){
 }
 ;
 
+$("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을 누르면
+	console.log("발주서 진짜 발행을 눌러봐요>>> ");
+	//여기에서 체크번호 받고 그 번호를 전달하기
+	//발주서 발행 버튼을 클릭했을때 
+	var mych=window.location.search;
+	const last2 = mych.substring(10);//0부터 
+	//?checkBox=
+	
+	//const last = mych.substr(-1);//문자의 마지막 글자
+	
+	//console.log(last); //이 문자를 보내기
+	//여기서 checkBox라는 이름으로 보내기
+	location.href="/procurement2/purchaseNo?checkBox2="+last2;//리다이렉트 잘 된다. 
+	
+});
 
 $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 	$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
@@ -278,7 +297,7 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 		console.log("발주서 발행 시작")
 		
 		//발주서 발행 버튼을 클릭했을때 
-		location.href="http://localhost:8080/procurement2/purchaseOrder?checkBox="+cList[0];
+		location.href="/procurement2/purchaseOrder?checkBox="+cList[0];
 		
 /*  		$.ajax({
 			type: "get",

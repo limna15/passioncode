@@ -69,4 +69,7 @@ public interface DetailPurchaseOrderService {
 	 * @return
 	 */
 	List<DetailPurchaseOrder> getDetailList();
+	
+
+	void updataePp(Integer num1);
 }
