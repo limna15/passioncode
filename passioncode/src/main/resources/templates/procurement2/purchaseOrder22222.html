@@ -85,15 +85,9 @@
                     <div class="col-auto my-1">
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
-                    </div>
-                    </form>
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="aaa()" data-target="#modal" style="float:right;" onclick="aaa()">발행</a>&nbsp;
+					<button type="submit" id="data" class="ls-modal btn btn-primary" data-toggle="modal" href="/procurement2/purchaseOrder?purchaseNo" data-target="#modal" style="float:right;" onclick="aaa()">발행 테스트</button>&nbsp;
 					<!--<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;-->
-					<!-- 발주서 발행 버튼 시작 -->
-					<div class="col-md-6" >	
-							<button class="td-modal btn btn-primary" id="publishBtn" style="float: right;">발주서 발행</button>
-						</div>
-					<!-- 발주서 발행 버튼  끝-->
-					
 					 <button class="btn btn-primary" onclick="print();">인쇄</button>&nbsp;
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
@@ -125,8 +119,10 @@
 							<tbody>
 								<tr th:each="dto: ${purchaseOrderList}">
 								<td>
-									<input type="checkbox" name="checkBox" id="checkBox" th:value="${dto.procuremnetPlan}">
+									<div class="custom-control custom-checkbox mr-sm-2">
+									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" onclick="myCheckBox()">
 											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
+									</div>
 								</td>
 								<td>[[${dto.companyName}]]</td>
 								<td>[[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</td>
@@ -163,129 +159,83 @@
 				</div>
 			</div>
 		</div>
-	</div>
-				<!-- 발주서 발행 모달창 시작 -->
-		<div class="myPublish modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title">발주서 발행 시작~</h5>
-                    </div>
-                    <div class="modal-body" >
-                    <table id="transactionDetail" border="1">
-								<thead>
-									<tr>
-										<th>발주코드</th>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>발주 수량</th>
-										<th>단가</th>
-										<th>공급<br>가격</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="dto: ${myPublishDTO}">
-									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
-										<td>[[${dto.pocode}]]</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-										<td>-</td>
-									</tr>
-								</tbody>
-							</table>
-							<br>
-                    </div>
-                    <div class="modal-footer">
-                       <button class="btn btn-primary">발행
-                       </button>
-                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-                        	닫기
-                       </button>
-                    </div>
-                    </div>
-                </div>
-            </div>
+
+<div class="modal fade" id="modal" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
 		
-		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
-		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">발주서 번호 체크하기</h5>
-                    </div>
-                    <div class="modal-body" >
-						<span>선택된 발주회사가 없습니다. <br>발주하고 싶은 발주서 번호를 선택해주세요.</span><br>
-                    </div>
-                    <div class="modal-footer">
-                    
-                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-                        	닫기
-                       </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <!-- header title -->
+				<h4 class="modal-title">구매발주서 발행</h4>
+             <!-- 닫기(x) 버튼 -->
+					<button type="button" class="close" data-dismiss="modal">×</button>
+			
+			</div>
+						
+			<!-- body -->
+			<div class="modal-body">
+				<div class="modal-body">
+      <th:block th:replace="~{/procurement2/purchaseOrderPublish :: purchaseOrder(~{this::publish} )}"></th:block>
+     </div>
+     </div>
+		</div>
+	</div>
+</div>
 
 		
 <!-- 체크박스 시작 -->
 
-<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
-<script th:inline="javascript" type="text/javascript">
-
-$("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
-	$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
-		
-	})
-	let cList =new Array();//체크한 번호를 담을 리스트
-	
-	$("input[name=checkBox]:checked").each(function(){
-		let no= $(this).val();
-		cList.push(no);					
-	})
-	
-	cList.forEach((i) => console.log("cList >>> " + i));	
-	console.log("길이가 어떻게 찍히는거지 >>> " + cList.length)
-	console.log("번호 리스트 >>> ", cList);
-	
-	if(cList.length===0){//체크하지 않고 버튼을 클릭한 경우
-		$(".noPurchaseNoModal").modal('show');
-	
-		
-	}else if(cList.length===1 ||cList.length<1){//한개 선택된 경우
-		$(".myPublish").modal('show');//발주서 발행 모달
-		console.log("발주서 발행 시작")
-		
-		$.ajax({
-			type: "post",
-			url: "/procurement2/publish",
-			data: JSON.stringfy(cList),
-			contentType :"application/json; charset=UTF-8",
-			dataType: "json",
-			success: function(data){
-				console.log("받아온 데이터 : ",data);
-
-				},
-				error: function(xhr,status,er){
-					if(error)
-						error(er);
-				}
-			
-		});
-	}
-	
-/* 	for(let i=0;cList.lenth-1;i++){
-		$(".myPublish").modal('show');
-		$(".noPurchaseNoModal").modal('hide');
-	} */
-	
-	
-		
-	});
-
+<script type="text/javascript">
+let printPurchaseOrder;
+function print(){
+	function myCheckBox(){
+	aaa();
+	printPurchaseOrder = window.open('/procurement2/print','thePopup','width=722,height=600')
+};
 </script>
+<!-- 체크박스 시작 -->
+<script th:inline="javascript" type="text/javascript">
+var purchaseOrderList = [[${purchaseOrderList}]];
+console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
 
+var codeList= new Array();
+var dtoCode= new Object();
+
+purchaseOrderList.forEach(function(item){
+	dtoCode= item.code;
+	codeList.push(dtoCode);
+});
+
+console.log("codeList가 제대로 오나 >>> ", codeList);
+
+var purchaseNo = '';
+function myCheckBox(){
+	const chkChecked = 'input[name="checkBox"]:checked';
+	const selectedEls = document.querySelectorAll(chkChecked);
+	purchaseNo = '';
+	
+	selectedEls.forEach((el) => {
+		purchaseNo += el.value + ' ';
+  });
+		console.log("purchaseNo 조달계획번호 여기>>> ", purchaseNo);
+		
+//	aaa();
+	
+	
+
+};
+
+function aaa(){
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	purchaseNo = purchaseNo.replaceAll(" ","");
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	//아래 두개 없어도 잘됨
+	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
+	//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
+};
+	
+	
+</script>
 	</th:block>
 
 </th:block>

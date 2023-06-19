@@ -67,14 +67,9 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		String inStatus=null;
 		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(dp);
 		if(maIn!=null) {//입고 상태가 존재할 경우
-			
+			inStatus="완료";//거짓이여도 존재하는 것
 		//발주코드를 통해 입고상태 갖고오기 
-		if(maIn.getStatus()==false) {//존재하지 않으면
-			inStatus="미완료";
-			
-		}else {
-			inStatus="완료";
-		}
+		
 		}else {
 			inStatus="미완료";//입고 상태도 없을 경우
 		}

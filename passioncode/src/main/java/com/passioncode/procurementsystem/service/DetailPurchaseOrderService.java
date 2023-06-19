@@ -63,4 +63,10 @@ public interface DetailPurchaseOrderService {
 	 * @return
 	 */
 	List<DetailPurchaseOrder> getDetailByPurchaseNo(PurchaseOrder purchaseOrder);
+
+	/**
+	 * 구매발주서에 보여줄 발주서세부 리스트
+	 * @return
+	 */
+	List<DetailPurchaseOrder> getDetailList();
 }

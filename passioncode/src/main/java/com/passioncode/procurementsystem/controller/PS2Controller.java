@@ -41,9 +41,13 @@ public class PS2Controller {
 		log.info("제가 보고 싶은 값 입니다>>>>>>==="+checkBox);
 		
 		
-		
-		
 	}
+	
+	@GetMapping("/publishDetail")//발주서 발행 버튼 누르면
+	public void DetailList(Model model, DetailPurchaseOrderDTO deailDTO) {
+		model.addAttribute("",detailPurchaseOrderService.getDetailList());
+	}
+	
 	
 	@GetMapping("/progressCheck")
 	public void PS2Test2(Model model ,PurchaseOrderDTO purchaseOrderDTO) {
