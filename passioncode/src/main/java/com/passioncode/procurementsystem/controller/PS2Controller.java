@@ -45,7 +45,7 @@ public class PS2Controller {
 	
 	@GetMapping("/publishDetail")//발주서 발행 버튼 누르면
 	public void DetailList(Model model, DetailPurchaseOrderDTO deailDTO) {
-		model.addAttribute("",detailPurchaseOrderService.getDetailList());
+		model.addAttribute("list",detailPurchaseOrderService.getDetailList());
 	}
 	
 	

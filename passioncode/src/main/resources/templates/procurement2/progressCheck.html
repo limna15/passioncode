@@ -85,6 +85,8 @@
                     <div class="col-auto my-1">
                       <button type="submit" class="btn btn-primary">검색</button>
                     </div>
+                    </div>
+                    </form>
 					<div class="table-responsive">
 						<table id="recent-purchases-listing" class="table"
 							style="text-align: center;">
@@ -114,9 +116,12 @@
                             <td>[[${dto.unitPrice}]]</td>
                             <td>[[${dto.nextCheckDate}]]</td>
                             <!-- 조달계획의 버튼 <button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button> -->
-                            <td><a name="myPlan" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" id="schedule" th:value="100">일정등록</a></td>
-								
-                            <td><a name="myAvg" class="ls-modal btn btn-primary" data-toggle="modal" href="#" data-target="#modal" th:id="checkBox" th:value="101" onclick="myCheckBox()">평가</a></td>
+                            <td>
+                            <button class="td-modal btn btn-primary" id="addDateBtn" >일정 등록</button>
+                            </td>
+                            <td>
+                            <button class="td-modal btn btn-primary" id="avgBtn" >평가</button>
+                            </td>
                             <td>[[${dto.diliveryPercent}]]</td>
                             <td>[[${dto.inspectionComplete}]]</td>
                             <td>[[${dto.purchaseOrderDeadlineStatus}]]</td>
@@ -142,96 +147,90 @@
 				</div>
 			</div>
 		</div>
-
-<div class="modal fade" id="modal" >
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-		
-            <!-- header title -->
-				<h4 class="modal-title">진척검수 일정등록</h4>
-             <!-- 닫기(x) 버튼 -->
-					<button type="button" class="close" data-dismiss="modal">×</button>
-			
-			</div>
+<!-- 일정 등록을 눌렀을때 모달창 시작 -->
+		<div class="addDate modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">발주서 번호 체크하기</h5>
+                    </div>
+                    <div class="modal-body" >
+						<body>
+***** (여기에 회사 이름이 들어감)회사의 ***** 일정 등록입니다.<br>
+&nbsp;<br>
+<div id="myplan"></div>
+<script>
+var arrInput = new Array(0);
+  var arrInputValue = new Array(0);
+ 
+function addInput() {
+  arrInput.push(arrInput.length);
+  arrInputValue.push("");
+  display();
+}
+ 
+function display() {
+  document.getElementById('myplan').innerHTML="";
+  for (intI=0;intI<arrInput.length;intI++) {
+    document.getElementById('myplan').innerHTML+=createInput(arrInput[intI], arrInputValue[intI]);
+  }
+}
+ 
+function saveValue(intId,strValue) {
+  arrInputValue[intId]=strValue;
+}  
+ 
+function createInput(id,value) {
+  return "<input type='date' id='test "+ id +"' onChange='javascript:saveValue("+ id +",this.value)' value='"+ 
+ 
+value +"'>"+"&nbsp;"+"<input type='button' id='test2' value='삭제' onclick='deleteInput(this);'>"+"<br>"+"<br>";
+//value +"'><br>"; ->이게 원본
+}
+ 
+function deleteInput() {
+  if (arrInput.length > 0) { 
+     arrInput.pop(); 
+     arrInputValue.pop();
+  }
+  display(); 
+}
+</script>
+<form method="post" action="test.jsp">
+<input type="button" value="추가" onclick="addInput();" />
+<input type="submit" value="전송"/>
+</form>
+</body>
 						
-			<!-- body -->
-			
-				<div class="modal-body">
-				  <th:block th:if="${list == 100}">
-				  	<th:block th:replace="~{/procurement2/progressCheckAvg :: setPlan(~{this::newPlan} )}"></th:block>
-				  </th:block>
-				  
-				  <th:block th:if="${list == 101}">
-				  	<th:block th:replace="~{/procurement2/progressCheckAvg :: setAvg(~{this::newAvg} )}"></th:block>
-				  </th:block>
-  
-  
-     			</div>
-			
-		</div>
-	</div>
-</div>
-
-<script type="text/javascript">
-	//var companyname=document.getElementByID('');
-	//var cc = tr.getElementsByTagName('a');
-	//document.getElementById("schedule2")
-	 $('.ls-modal').on('click', function(e){
-		 const chkChecked = 'input[name="myAvg"]:checked';
-		  e.preventDefault();
-		  $('#modal').modal('show').find('.modal-body').load($(this).attr('href'));
-		});
-	
-</script>
+                    </div>
+                    <div class="modal-footer">
+                    
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 <!-- 체크박스 시작 -->
-<!-- 체크박스 시작 -->
-<script th:inline="javascript" type="text/javascript">
-var purchaseOrderList = [[${purchaseOrderList}]];
-console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
 
-var codeList= new Array();
-var dtoCode= new Object();
 
-purchaseOrderList.forEach(function(item){
-	dtoCode= item.code;
-	codeList.push(dtoCode);
-});
-
-console.log("codeList가 제대로 오나 >>> ", codeList);
-
-var purchaseNo = '';
-function myCheckBox(){
-	const chkChecked = 'input[name="checkBox"]:checked';
-	const selectedEls = document.querySelectorAll(chkChecked);
-	purchaseNo = '';
-	
-	selectedEls.forEach((el) => {
-		purchaseNo += el.value + ' ';
-  });
-		console.log("purchaseNo 조달계획번호 여기>>> ", purchaseNo);
-		
-//	aaa();
-	
-	
-
-};
-
-function aaa(){
-	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
-	purchaseNo = purchaseNo.replaceAll(" ","");
-	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
-	//아래 두개 없어도 잘됨
-	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
-	//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
-};
-	
-	
-</script>
-
-						<!--진척 평가 시작-->
-						<div class="progressCheckStart modal">
+<!--진척 평가 시작-->
+		<div class="addAvg modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">진척 평가</h5>
+                    </div>
+                    <div class="modal-body" >
+                   <br>
+						<p class="card-title"><b>진척 평가</b></p>
+						지난 검사 기록
+						<br>
+						
+						<!--거래명세서 품목 정보-->
+						<div class="table-responsive">
+							<table id="transactionDetail">
 								<thead>
 									<tr>
 										<th>-</th>
@@ -249,6 +248,7 @@ function aaa(){
 										<td>-</td>
 									</tr>
 								</tbody>
+							</table>
 							<br>
 						***** 회사의 *****  제작 진척도를 입력합니다.
 							<br>
@@ -256,11 +256,32 @@ function aaa(){
 							<br>
 							<button>등록</button>
 						</div>
-						<!--진척 평가 끝-->
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-<script th:inline="javascript">
-$(document).on("click",".myPlan")//일정 등록 버튼을 누르면
-$(".progressCheckStart").modal('show');
+						<br>
+						<br>
+                    </div>
+                    <div class="modal-footer">
+                       <button  href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
+                       </button>
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+	<!--진척 평가 끝-->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script th:inline="javascript" type="text/javascript">
+//일정 등록 버튼을 누르면
+$("#addDateBtn").click(function(){
+	$(".addDate").modal('show');
+});
+
+$("#avgBtn").click(function(){
+	$(".addDate").modal('hide');
+	$(".addAvg").modal('show');
+});
+
 
 </script>
 
