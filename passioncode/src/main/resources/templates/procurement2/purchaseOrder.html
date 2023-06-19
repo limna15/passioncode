@@ -124,7 +124,7 @@
 							<tbody>
 								<tr th:each="dto: ${purchaseOrderList}">
 								<td>
-									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" onclick="myCheckBox()">
+									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" >
 											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
 								</td>
 								<td>[[${dto.companyName}]]</td>
@@ -239,7 +239,7 @@
 
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
-if(window.location.search!=''){
+if(window.location.search!=''){//테이터가 있을 경우에만
 var mych=window.location.search;
 console.log(" 값>>>>>>>>>>>>>>> " + mych);
 console.log("길이 보여줘 제발", mych.length);
@@ -299,6 +299,12 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 		//발주서 발행 버튼을 클릭했을때 
 		location.href="/procurement2/purchaseOrder?checkBox="+cList[0];
 		
+	}//이미 발주서가 발행되어 있는 경우 발행할 수 없다고 하기
+	//발주서 여러개를 한 번에 발행하는 경우
+	//cList에 담아서 가능할듯
+	
+	
+	
 /*  		$.ajax({
 			type: "get",
 			url: "/procurement2/purchaseOrder",
@@ -313,7 +319,6 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 				}
 			
 		}); */
-	}
 	
 /* 	for(let i=0;cList.lenth-1;i++){
 		$(".myPublish").modal('show');

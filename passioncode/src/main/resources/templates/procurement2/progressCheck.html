@@ -117,7 +117,7 @@
                             <td>[[${dto.nextCheckDate}]]</td>
                             <!-- 조달계획의 버튼 <button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button> -->
                             <td>
-                            <button class="td-modal btn btn-primary" id="addDateBtn" >일정 등록</button>
+                            <button name="checkBox" value="${dto.purchaseOrderCode}" class="td-modal btn btn-primary" th:id="addDateBtn" >일정 등록</button>
                             </td>
                             <td>
                             <button class="td-modal btn btn-primary" id="avgBtn" >평가</button>
@@ -275,10 +275,14 @@ function deleteInput() {
 //일정 등록 버튼을 누르면
 $("#addDateBtn").click(function(){
 	$(".addDate").modal('show');
+	console.log("일정 추가 버튼을 누름");
+	//location.href="/procurement2/progressCheck?checkBox="+cList[0];
+	
 });
 
 $("#avgBtn").click(function(){
 	$(".addDate").modal('hide');
+	console.log("평가 버튼을 누름");
 	$(".addAvg").modal('show');
 });
 

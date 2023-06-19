@@ -62,9 +62,9 @@ public class PS2Controller {
 	
 	
 	@GetMapping("/progressCheck")
-	public void PS2Test2(Model model ,PurchaseOrderDTO purchaseOrderDTO) {
+	public void PS2Test2(Model model ,PurchaseOrderDTO purchaseOrderDTO, Integer checkBox) {
 		log.info("progressCheck>>>>>>>"+purchaseOrderDTO);
-		
+		log.info("progressCheck일정등록 위해>>==="+checkBox);
 		
 		model.addAttribute("pCheckList", progressCheckService.getProgressCheckDTOList());
 		
