@@ -62,6 +62,7 @@ public class PS3RestController {
 		log.info("발주서 번호에 맞는 거래명세서DTO를 가지고 오나? >>> " + transactionDetailDTO);
 		
 		tdService.register(transactionDetailDTO);
+		materialInService.updateTransactionStatus(dpo.getCode());
 		
 		return transactionDetailDTO;
 	}
@@ -104,8 +105,9 @@ public class PS3RestController {
 				transactionDetailDTOList.add(transactionDetailDTO);
 				
 				tdService.register(transactionDetailDTO);
+				materialInService.updateTransactionStatus(dpoList.get(i).getCode());
 			}
-		}
+		}		
 		log.info("거래명세서DTOList >>> " + transactionDetailDTOList);
 		
 		return transactionDetailDTOList;

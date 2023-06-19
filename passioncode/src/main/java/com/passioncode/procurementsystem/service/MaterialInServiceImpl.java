@@ -163,4 +163,15 @@ public class MaterialInServiceImpl implements MateriallInService {
 		return	materialInRepository.findByDetailPurchaseOrder(dpo);
 	}
 
+	@Override
+	public void updateTransactionStatus(Integer code) {
+		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(code).get();
+		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+		
+		materialIn= MaterialIn.builder().code(materialIn.getCode()).date(materialIn.getDate())
+					.status(materialIn.getStatus()).transactionStatus("발행 완료").detailPurchaseOrder(detailPurchaseOrder).build();
+		
+		materialInRepository.save(materialIn);
+	}
+
 }
