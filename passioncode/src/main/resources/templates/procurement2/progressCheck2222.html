@@ -156,19 +156,9 @@
                     </div>
                     <div class="modal-body" >
 						<body>
-<h4><span id="companyName2">(여기에 회사 이름이 들어감)</span>의 진척검수 일정 등록입니다.&nbsp;<br>
-진척검수일을 입력해 주세요</h4>
+<h4><span id="companyName2">(여기에 회사 이름이 들어감)</span>의 일정 등록입니다.</h4><br>
 &nbsp;<br>
-<div>
-<input type="date" name="namemydate" id="idmydate">
-</div>
-
-&nbsp;<br>
-<div class="sendDate22">
- <button id="pg22" class="btn btn-primary sendDate" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">등록
-  </button>
-</div>
-<!--  <div id="myplan"></div>
+<div id="myplan"></div>
 <script>
 var arrInput = new Array(0);
   var arrInputValue = new Array(0);
@@ -205,12 +195,12 @@ function deleteInput() {
   display(); 
 }
 </script>
-<form method="post" action="/procurement2/progressCheck">
+<form method="post" action="progressCheck">
 <input type="button" value="추가" onclick="addInput();" />
 <input type="submit" value="전송"/>
 </form>
--->
-</body>		
+</body>
+						
                     </div>
                     <div class="modal-footer">
                     
@@ -262,8 +252,7 @@ function deleteInput() {
 							</table>
 							<br>
 							<br>
-								납기 진도율: <input name="mypercent" type="text" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:28px;">
-								<br> 기타 사항: <input name="myetc" type="text" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:28px;">
+								<input type="text"><input type="text">
 						</div>
 						<br>
 						<br>
@@ -282,7 +271,6 @@ function deleteInput() {
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 //일정 등록 버튼을 누르면
-var codeNo='';
 $(".addClass").click(function(){
 	$(".addDate").modal('show');
 	console.log("일정 추가 버튼을 누름");
@@ -305,18 +293,15 @@ $(".addClass").click(function(){
 	console.log("주문수량: ",oAmount);
 	console.log("단가: ",uPrice);
 	console.log("다음 진척검수일: ",nDate);
-	codeNo=getObjTR().querySelector("input[name=purchaseOrderCode]").value;//여기에서 값 넣어서 날짜등록으로 보내보기
-	console.log("등록할때 필요한 발주번호: ",codeNo);//잘나옴
+	
 	document.querySelector("#companyName2").innerHTML = cName;
 	
 	//create element (form)
-	//var inForm = $('<form></form>');
-	
+	var inForm = $('<form></form>');
 	//set attribute (form) 
-	
-	//inForm.attr("name","inForm");
-	//inForm.attr("method","post");
-	//inForm.attr("action","/procurement2/progressCheck");
+	inForm.attr("name","inForm");
+	inForm.attr("method","post");
+	inForm.attr("action","/procurement2/progressCheck");
 	
 	
 });
@@ -345,31 +330,6 @@ $(".avgClass").click(function(){
 	document.querySelector("#companyName2").innerHTML = cName;
 });
 
-//진척검수 일정등록의 등록 버튼
-$(".sendDate").click(function(){
-	console.log("날짜 등록 버튼을 누름");
-	//날짜를 찍어 보자 
-	//날짜, 발주 코드
-	var cDate=document.getElementById('idmydate').value;
-	console.log("날짜 나와라: ", cDate); //잘 나온다
-	
-	let myList= new Array(); //여기에 두개 넣어서 보낼 생각
-	//let no= $(this).val();
-	myList.push(cDate);
-	myList.push(codeNo);//여기에 발주 코드 넣어서 보내기
-	console.log("리스트 : ", myList);
-	$.ajax({
-		type:"post",
-		url:"/procurement2/progressCheck2",
-		data: JSON.stringify(myList),
-		contentType :"application/json; charset=UTF-8",
-		dataType: "json",
-		success: function(data){
-			console.log("받아온 데이터 : ",data);
-		}
-	})
-	
-});
 
 ////////////////////////////////////////////////////////////////////////////////////
 //이벤트 발생한 요소의 상위의 TD 객체 찾기

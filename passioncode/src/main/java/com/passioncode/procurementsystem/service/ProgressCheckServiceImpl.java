@@ -92,6 +92,7 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		return myPercent;
 		
 	}
+	
 	//다음 진척검수 일정
 	public String nextCheckDate(DetailPurchaseOrder dp) {
 		LocalDateTime nextDate=null;
@@ -105,6 +106,18 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		
 		
 		return nextDate+"";
+		
+	}
+	
+	//발주 계획 등록
+	@Override
+	public void nextCheckDate(LocalDateTime date, Integer code) {
+		//날짜와 조달 계획을 넣어서 빌드 저장
+		DetailPurchaseOrder dp = detailPurchaseOrderRepository.findById(code).get();
+		ProgressCheck pc = ProgressCheck.builder().date(date).detailPurchaseOrder(dp).build();
+		progressCheckRepository.save(pc);
+		
+		
 		
 	}
 }
