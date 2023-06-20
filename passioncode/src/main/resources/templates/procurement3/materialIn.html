@@ -438,7 +438,6 @@
 
 //6.19 모달창 문제
 //- 다른번호 체크할 때 떠야할 모달창이 안뜸
-//- 완료+완료+취소인경우 모달창이 뜨는데 2배양이 뜸
 
 	// 선택버튼 클릭시 체크된 행의 발주서 번호 가져오기
 	$("#transactionBtn").click(function(){ 
@@ -460,11 +459,12 @@
 		
 		//모달창: 체크박스 선택을 아예 안했을 경우
 		if(noList.length===0){
-			$(".noPurchaseNoModal").modal('show');	
-		}else if(noList.length===1){ //체크박스 한개만 선택했을 경우
+			$(".noPurchaseNoModal").modal('show');
 			
+		//체크박스 한개만 선택했을 경우			
+		}else if(noList.length===1){
 			$(".transactionDetailModal").modal('show');
-			console.log("이게 보이는건가?")		
+			console.log("체크박스 한개만 선택했을 경우 보이는건가?")		
 								
 			var rowData = new Array();
 			var tdArr = new Array();
@@ -488,22 +488,25 @@
 					//가져온 값을 배열에 담는다.
 					tdArr.push(status);
 					tdArr.push(transactionStatus);
-					console.log("같을 경우 뜨는건가? " + tdArr[1])
+					console.log("같을 경우 뜨는건가? " + tdArr[0])
 				
 					//모달창: 입고상태가 취소일 경우 
-					if(tdArr[1].includes('불가') || (tdArr[0].includes('취소')) ){
+					if(tdArr[1].includes('불가') && tdArr[0].includes('취소')){
 						$(".cancleMaterialInModal").modal('show');
 						$(".transactionDetailModal").modal('hide');
+						console.log("취소+불가일 경우")
 						tdStatus= false;
 					}else if((tdArr[1].includes('완료')) && (tdArr[0].includes('완료'))){
 						//모달창: 발행상태가 이미 완료된 경우
 						$(".doneTransactionModal").modal('show');
 						$(".transactionDetailModal").modal('hide');
+						console.log("완료+완료일 경우")
 						tdStatus= false;
-					}else if(tdArr[1].includes("") && tdArr[0] === null){
+					}else if(tdArr[0].includes('완료') && tdArr[0].includes('취소')){
 						//모달창: 입고가 되지 않은 경우
 						$(".noMaterialInModal").modal('show');
 						$(".transactionDetailModal").modal('hide');
+						console.log("아직 입고가 되지 않아 상태가 완료, 취소 버튼일 경우")
 						tdStatus= false;
 					}
 				});
@@ -558,16 +561,20 @@
 		
 		}else if(noList.length>1){ //noList가 2개이상일 경우
 			for(let i=0; i<noList.length-1; i++){
-				for(let j=0; j<noList.length-1; j++){
+				for(let j=1; j<noList.length; j++){
 					//모달창: 체크박스로 선택한 발주서 번호가 다를 경우   -> 지금 이게 작동이 아예 안됨
 					if(noList[i]!=noList[j]){
+						console.log("noList[i] >>> ", noList[i])
+						console.log("noList[j] >>> ", noList[j])
 						$(".purchaseNoCheckModal").modal('show');
 						$(".transactionDetailModal").modal('hide');
-						console.log("둘다 걸리는것같다?")
+						console.log("발주서 번호가 다를 경우가 왜 안 나오지")
 					}else if(noList[i]==noList[j]){//모달창: 체크박스로 선택한 발주서 번호가 같을 경우
+						console.log("noList[i] >>> ", noList[i])
+						console.log("noList[j] >>> ", noList[j])
 						$(".transactionDetailModal").modal('show');
 						$(".purchaseNoCheckModal").modal('hide');
-						console.log("같을 경우 뜨는건가?")
+						console.log("발주서 번호가 같을 경우 뜨는건가?")
 						//어차피 같은 발주서 번호이기 때문에 하나만 보내도 괜찮음
 						console.log("noList 어떻게 보내야되지? " , noList[0])
 						
