@@ -8,5 +8,5 @@ public interface ProgressCheckRepository extends JpaRepository<ProgressCheck, In
 	
 	public ProgressCheck findByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
 	
-	
+	public ProgressCheck findByCode(Integer code);
 }

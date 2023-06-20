@@ -124,6 +124,18 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		progressCheckRepository.save(pc);
 		
 		
+	}
+	
+	@Override
+	public void addAvg(Integer num1, String etc, Integer num2) {
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num2).get();
+		ProgressCheck pc = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
+		log.info("업데이트 할 평가: " + pc);
+		ProgressCheck pc2 = ProgressCheck.builder().code(pc.getCode()).date(pc.getDate())
+				.detailPurchaseOrder(pc.getDetailPurchaseOrder()).etc(etc).rate(num1).build();
+		log.info("업데이트된 내용: " + pc2);
+		log.info("num2의 값: " + num2);
 		
+		 progressCheckRepository.save(pc2);
 	}
 }

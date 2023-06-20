@@ -53,7 +53,31 @@ public class PS2RestController {
 			e.printStackTrace();
 			log.info("리다이렉트 실패");
 		}
+	}
 		
+		@PostMapping(value ="/progressCheck3")
+		public void addAvg(@RequestBody String[] percentAndEct, HttpServletResponse response) {
+			//4가지를 보낼 예정: 퍼센트, 기타(안쓰면 없음이라고 내가 넣기), 진척검수코드 업데이트, 발주코드 ?
+			log.info("이상하게 찍히는 >>"+percentAndEct);
+			log.info("퍼센트 >>> " + percentAndEct[0]);
+			log.info("기타사항 >>> " + percentAndEct[1]);
+			log.info("발주 코드 >>> " + percentAndEct[2]);
+			Integer mypercent = Integer.parseInt(percentAndEct[0]);
+			String myetc = percentAndEct[1]+"";
+			Integer mycode = Integer.parseInt(percentAndEct[2]);
+			//여기서 서비스 해서 저장하기
+			progressCheckService.addAvg(mypercent, myetc, mycode);
+			
+			//log.info("등록되는 검수일정:  ");
+			
+			String redirect_url="/procurement2/progressCheck";
+			try {
+				response.sendRedirect(redirect_url);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				log.info("리다이렉트 실패");
+			}
 		
 	}
 

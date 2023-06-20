@@ -235,7 +235,7 @@ function deleteInput() {
                     <div class="modal-body" >
 					<span id="companyName3">(여기에 회사 이름이 들어감)</span>  제작 진척도를 입력합니다.
                    <br>
-						<p class="card-title"><b>진척 평가</b></p>
+						<p class="card-title"><b></b></p>
 						지난 검사 기록
 						<br>
 						
@@ -262,14 +262,14 @@ function deleteInput() {
 							</table>
 							<br>
 							<br>
-								<div>납기 진도율: <input name="mypercent" type="text" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:28px;"></div>
-								<br> <div>기타 사항: <input name="myetc" type="text" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:28px;"></div>
+								<div>납기 진도율: <input id="idpercent" type="number"></div>
+								<br> <div>기타 사항: <input id="idetc" type="text"></div>
 						</div>
 						<br>
 						<br>
                     </div>
                     <div class="modal-footer">
-                       <button  href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">입력
+                       <button class="btn btn-primary sendAvg" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">입력
                        </button>
                       <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
@@ -344,6 +344,35 @@ $(".avgClass").click(function(){
 	
 	document.querySelector("#companyName3").innerHTML = cName;
 	//날짜는 형태가 다르다 함document.querySelector("lastDate").innerHTML = nDate;
+	//입력 버튼을 누르면
+	$(".sendAvg").click(function(){
+		console.log("평가 입력 버튼을 누름");
+		var percent=document.getElementById('idpercent').value;
+		var etc=document.getElementById('idetc').value;
+		console.log("보낼 퍼센트: ", percent); 
+		console.log("보낼 기타사항: ", etc); //여기까지 잘됨
+		let myAvgList= new Array(); //여기에 4개 정도 보낼 생각
+		myAvgList.push(percent);
+		if(etc==''){
+			myAvgList.push("없음");
+		}else{
+			myAvgList.push(etc);
+			
+		}
+		myAvgList.push(pCode);//발주 코드
+		console.log("발주번호", pCode);
+		console.log("리스트 : ", myAvgList);
+		$.ajax({
+			type:"post",
+			url:"/procurement2/progressCheck3",
+			data: JSON.stringify(myAvgList),
+			contentType :"application/json; charset=UTF-8",
+			dataType: "json",
+			success: function(data){
+			console.log("받아온 데이터 : ",data);
+		}
+	})
+	})
 });
 
 //진척검수 일정등록의 등록 버튼

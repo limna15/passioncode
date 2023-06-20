@@ -282,7 +282,7 @@ public class ProgressCheckRepositoryTests {
 	// 추가하기
 
 	@Test
-	public void nextCheckDate() {//발주코드를 통해 계획 만들기 잘됨**
+	public void nextCheckDate() {// 발주코드를 통해 계획 만들기 잘됨**
 		// 세부구매발주서 번호를 통해 갖고오는 진척 검수일정
 		// 구매발주서 번호 2번의 진척검수일을 갖고 온다
 		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(4).get();
@@ -296,22 +296,48 @@ public class ProgressCheckRepositoryTests {
 		log.info("저장할 일정: " + pc);
 		progressCheckRepository.save(pc);
 	}
-	
+
 	@Test
-	public void addAvg() {//평가를 등록함
-		//3번의 조달계획을 가져옴
+	public void addAvg() {// ******평가를 등록함
+		// 3번의 조달계획을 가져옴
+		//발주코드가 존재하는 것만 가져옴
 		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(3).get();
 		ProgressCheck pc = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
-		log.info("업데이트 할 평가: "+pc);
-		//업데이트 해야 할 것 코드, 날짜, 비율, 기타, 외래키(발주코드) 총 5개
-		ProgressCheck pc2 = ProgressCheck.builder().code(pc.getCode()).date(pc.getDate()).detailPurchaseOrder(pc.getDetailPurchaseOrder())
-				.etc("많이 느림").rate(30).build();
-		log.info("업데이트된 내용: "+pc2);//저장을 다시 해줘야함
-		//만약에 한개의 발주코드에 여러개의 일정이 있는 경우는? 
-		//다른 곳에서 그 날짜의 조건을 불러오는 것을 해 보자 
-		//progressCheckRepository.save(pc2);
+		log.info("업데이트 할 평가: " + pc);
+		// 업데이트 해야 할 것 코드, 날짜, 비율, 기타, 외래키(발주코드) 총 5개
+		ProgressCheck pc2 = ProgressCheck.builder().code(pc.getCode()).date(pc.getDate())
+				.detailPurchaseOrder(pc.getDetailPurchaseOrder()).etc("많이 느림").rate(30).build();
+		log.info("업데이트된 내용: " + pc2);// 저장을 다시 해줘야함
+		// 만약에 한개의 발주코드에 여러개의 일정이 있는 경우는?
+		// 다른 곳에서 그 날짜의 조건을 불러오는 것을 해 보자
+		// progressCheckRepository.save(pc2);
+
+		// List<ProgressCheck> pcList = progressCheckRepository
+	}
+	
+	@Test
+	public void pgCheck() {
+		// 발주서 번호중에 진척검수가 있는걸 갖고오기
 		
-		//List<ProgressCheck> pcList = progressCheckRepository
+		List<ProgressCheck> pcList = progressCheckRepository.findAll();
+		boolean pcList2 = progressCheckRepository.existsById(10);//존재하지 않는다면 표를 만들어 보여주기
+		boolean pcList3 = progressCheckRepository.findByCode(1).getDetailPurchaseOrder() == null;//존재하지 않는다면 표를 만들어 보여주기
+		boolean pcList6 = progressCheckRepository.findByCode(1)!=null;//존재한다면 표를 만들어 보여주기
+		//이 위에 
+		
+		//List<ProgressCheck> pcList4 = progressCheckRepository.findAllById(null);
+		//ProgressCheck pcList5 = progressCheckRepository.findByCode(null);
+		log.info("진척검수 리스트: "+pcList);
+		log.info("존재하는지 진실 거짓: "+pcList2);
+		log.info("조달코드 1번의 발주코드 존재 진실 거짓: "+pcList3);
+		log.info("존재하는지 진실 거짓: "+pcList6);
+		//log.info("존재하는지 진실 거짓: "+pcList4);
+		//log.info("존재하는지 진실 거짓: "+pcList5);
+		
+		//ProgressCheck pc = progressCheckRepository.findByDetailPurchaseOrder();
+		//List<ProgressCheckDTO> progressCheckDTOlList = new ArrayList<>();
+		
+		
 	}
 
 }

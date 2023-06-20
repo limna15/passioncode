@@ -17,8 +17,11 @@ public interface ProgressCheckService {
 	//발주서 갖고오기
 	List<ProgressCheckDTO> getProgressCheckDTOList();
 	
-	//발주 계획 등록
+	//진척검수 계획 등록
 	void nextCheckDate(LocalDateTime date, Integer code);
+	
+	//진척 검수 평가
+	void addAvg(Integer num1, String etc, Integer num2);
 	
 	
 
