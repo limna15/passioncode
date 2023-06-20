@@ -44,20 +44,20 @@
 												</select>											
 											</td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode" id="largeCategoryCode">
+												<select style="width:100%; border: 0; text-align: center;" class="largeCategoryCode" name="largeCategoryCode" >
 													<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
 														<option th:value="${LCDTO.code}">[[${LCDTO.category}]]</option>
 													</th:block>
 												</select>
 											</td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode" id="middleCategoryCode">
+												<select style="width:100%; border: 0; text-align: center;" class="middleCategoryCode" name="middleCategoryCode" >
 													<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
 														<option th:value="${MCDTO.middleCode}">[[${MCDTO.middleCategory}]]</option>
 													</th:block>
 												</select>									
 											</td>
-											<td style="padding-top:0px;">
+											<td>
 												<input type="text" style="width:100%; border: 0; text-align: center; " name="code" class="materialCode" readonly>
 											</td>
 											<td>
@@ -161,8 +161,11 @@
 		
 		$(document).ready(function(){
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
-			var materialRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
-			console.log("등록체크 전역변수 확인하기1 : ",materialRegisterValueCheck);
+			//품목코드와 품목명 2개 각각 체크하기
+			var materialCodeRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
+			console.log("등록체크 전역변수 품목코드 확인하기1 : ",materialCodeRegisterValueCheck);
+			var materialNameRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
+			console.log("등록체크 전역변수 품목명 확인하기1 : ",materialNameRegisterValueCheck);
 			
 			//등록확인 버튼 누를때 -> 등록확인 모달창 보여주기
 			$(document).on("click","#materialregisterBtn",function(e){
@@ -173,7 +176,8 @@
     			//2. 입력창으로 값을 받기
     			
     			//2-1. 등록확인 모달창에 띄울 값 받기(품목코드, 품목명)
-    			console.log("등록체크 전역변수 확인하기(체크하기 전) : ",materialRegisterValueCheck);
+    			console.log("등록체크 전역변수 품목코드 확인하기(체크하기 전) : ",materialCodeRegisterValueCheck);
+    			console.log("등록체크 전역변수 품목명 확인하기(체크하기 전) : ",materialNameRegisterValueCheck);
 				    			
     			//입력받은 품목코드 -> 품목코드 리스트에 담기
     			let codeList = new Array();
@@ -182,11 +186,12 @@
     				//console.log("이거 잘 code 읽어온건가!!",code);
     				if(code != ""){				//빈값이 아닐때, 값이 존재하면
     					codeList.push(code);
-    				}else{						//빈값 상태, materialRegisterValueCheck 전역변수 -> false 바꾸기
-    					materialRegisterValueCheck = false;
+    				}else{						//빈값 상태, materialCodeRegisterValueCheck 전역변수 -> false 바꾸기
+    					materialCodeRegisterValueCheck = false;
     				}
     			});
-    			console.log("등록체크 전역변수 확인하기(품목코드 체크 후) : ",materialRegisterValueCheck);
+    			console.log("등록체크 전역변수 품목코드 확인하기(품목코드 체크 후) : ",materialCodeRegisterValueCheck);
+    			console.log("등록체크 전역변수 품목명 확인하기(품목코드 체크 후) : ",materialNameRegisterValueCheck);
     			
     			//입력받은 품목명 -> 품목명 리스트에 담기
     			let nameList = new Array();
@@ -195,11 +200,12 @@
     				//console.log("이거 잘 code 읽어온건가!!",name);
     				if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
     					nameList.push(name);
-    				}else{						//빈값 상태, materialRegisterValueCheck 전역변수 -> false 바꾸기
-    					materialRegisterValueCheck = false;
+    				}else{						//빈값 상태, materialNameRegisterValueCheck 전역변수 -> false 바꾸기
+    					materialNameRegisterValueCheck = false;
     				}    	
     			});    			
-    			console.log("등록체크 전역변수 확인하기(품목명 체크 후) : ",materialRegisterValueCheck);
+    			console.log("등록체크 전역변수 품목코드 확인하기(품목명 체크 후) : ",materialCodeRegisterValueCheck);
+    			console.log("등록체크 전역변수 품목명 확인하기(품목명 체크 후) : ",materialNameRegisterValueCheck);
     			
     			//각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
     			let codenameList = new Array();
@@ -223,11 +229,11 @@
     			let sentence = ``;
     			
     			function makeSentence(code,name){
-    				let sentence =`<span>품목코드 : ${code}, 품목명 : ${name}</span><br>`;
+    				let sentence =`<span>품목코드 : ${code},&nbsp;&nbsp; 품목명 : ${name}</span><br>`;
     				return sentence;    				
     			}	
     			
-    			if(materialRegisterValueCheck){		//등록체크 값이=>true 일때, 등록하려는 값들이 모두 들어간 상태 ->등록확인 모달창 보여주기
+    			if(materialCodeRegisterValueCheck==true && materialNameRegisterValueCheck==true){		//품목코드, 품목명 등록체크 값이=>둘다 true 일때, 등록하려는 값들이 모두 들어간 상태 ->등록확인 모달창 보여주기
 	   				codenameList.forEach(function(item){
 	   					sentence=sentence+makeSentence(item.code,item.name);
 	   				});
@@ -243,7 +249,23 @@
 	   				   				
 	   				//등록확인 모달창 보여주기
 					$(".materialRegisterConfirmModal").modal('show');	
-    			}else{								//등록체크 값이=>false 일때, 등록하려는 값들 중 하나라도 빠진 상태 ->오류 모달창 보여주기
+    			}else if(materialCodeRegisterValueCheck==false && materialNameRegisterValueCheck==true){	//품목코드 =>false, 품목명=>true 일때! -> 값을 다 입력했는데, 품목코드 생성 안한 상태!
+    				//오류 모달창 보여주기
+    				//1. 제목 -> 품목 정보 등록 확인 넣어주고
+    				//2. 내용 -> <span>품목코드가 생성되지 않았습니다.</span>
+    				//			 <span>코드생성 버튼을 누른 후, 등록확인 버튼을 눌러주세요.</span>
+    				document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목 정보 등록 확인`;
+					sentence = `<span>품목코드가 생성되지 않았습니다.</span><br>
+	    			 		    <span>코드생성 버튼을 눌러서 품목코드를 생성해주세요.</span>`;
+					
+           			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					
+					$(".materialInfoAndErrorModal").modal('show');    					
+					//그리고 다시 등록체크 값 true로 다시 세팅해주기
+					materialCodeRegisterValueCheck = true;
+					materialNameRegisterValueCheck = true;
+    				
+    			}else{					//품목코드=true,품목명=flase 일수는 없고, 둘다 false 일때, 등록하려는 값들 중 하나라도 빠진 상태 ->오류 모달창 보여주기
 					//오류 모달창 보여주기
 					//1. 제목 -> 품목 정보 등록 확인 넣어주고
 					//2. 내용 -><span>등록해야할 값들이 누락되어있습니다.</span><br>
@@ -256,13 +278,16 @@
 					
 					$(".materialInfoAndErrorModal").modal('show');    					
 					//그리고 다시 등록체크 값 true로 다시 세팅해주기
-					materialRegisterValueCheck = true;
+					materialCodeRegisterValueCheck = true;
+					materialNameRegisterValueCheck = true;
     			}
-				console.log("등록체크 전역변수 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",materialRegisterValueCheck);
+				console.log("등록체크 전역변수 품목코드 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",materialCodeRegisterValueCheck);
+				console.log("등록체크 전역변수 품목명 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",materialNameRegisterValueCheck);
 								
 			});	
 			
-			console.log("등록체크 전역변수 확인하기(중간에 확인) : ",materialRegisterValueCheck);
+			console.log("등록체크 전역변수 품목코드 확인하기(중간에 확인) : ",materialCodeRegisterValueCheck);
+			console.log("등록체크 전역변수 품목명 확인하기(중간에 확인) : ",materialNameRegisterValueCheck);
 						
 			//등록확인 모달창의 확인 버튼 누를때
 			$(document).on("click",".materialRegisterConfirmBtn",function(e){
@@ -277,31 +302,153 @@
 			$(document).on("click","#materialcodeGenerateBtn",function(e){
 				console.log("코드생성 버튼 누름");
 				
-				document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목코드 생성 안내`;
+				//대분류코드 값들 전부 읽어서 리스트에 담기
+				var allLCCodeList = document.querySelectorAll(".largeCategoryCode");
+				let allLCCodevalue = new Array();
 				
-				sentence = `<span>등록해야할 값들이 누락되어있습니다.</span><br>
-           					<span>다시 작성해주시길 바랍니다.</span>`;
-		
-				document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;	
+				allLCCodeList.forEach(function(item){
+					//console.log("대분류코드 값들 보자",item.value);
+					allLCCodevalue.push(item.value);
+				});
+				console.log("대분류코드 값들...",allLCCodevalue);
 				
-				$(".materialInfoAndErrorModal").modal('show');    					
+				//중분류코드 값들 전부 읽어서 리스트에 담기
+				var allMCCodeList = document.querySelectorAll(".middleCategoryCode");
+				let allMCCodevalue = new Array();
 				
-			
+				allMCCodeList.forEach(function(item){
+					//console.log("대분류코드 값들 보자",item.value);
+					allMCCodevalue.push(item.value);
+				});
+				console.log("중분류코드 값들...",allMCCodevalue);
+				
+				//Ajax에 보내기 위한, 위에 코드들 List<MiddleCategoryDTO> 만들어서 담기
+				let middleCategoryDTOSendList = new Array();
+				
+				for(var i=0; i<allLCCodevalue.length;i++){
+					let MCDTO = new Object();
+					MCDTO.largeCode = allLCCodevalue[i];
+					MCDTO.middleCode = allMCCodevalue[i];
+					middleCategoryDTOSendList.push(MCDTO);
+				}
+				console.log("어디 보낼 MCDTO리스트 값 보자 : ",middleCategoryDTOSendList);
+				
+				//Json 타입으로 변환시키기
+				var changeJsonData = JSON.stringify(middleCategoryDTOSendList);	
+				console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",changeJsonData);
+				
+				
+				//대분류코드, 중분류코드를 보내서 품목코드를 생성해준 값을 받아오는 Ajax처리
+				//materialDTO리스트 형식으로 받아옴
+				$.ajax({
+					type : "post" ,
+					url : "/procurement1/generateMaterialCode" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : changeJsonData ,                					//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "json" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        						//가져오는 데이터! (응답데이터)
+					//console.log("받아온 데이터 : ",data);
+					
+					//1. 생성한 품목코드 -> 품목코드 리스트에 담기
+					let codeList = new Array();
+					
+					for(var i=0; i<data.length; i++){
+						codeList.push(data[i].code);
+					}
+					//console.log("코드리스트 안만들어지나?",codeList);
+				
+					
+					//2. 입력받은 품목명 -> 품목명 리스트에 담기
+					let nameList = new Array();
+					$('.materialName').each(function(){
+						let name = $(this).val();
+						//console.log("이거 잘 code 읽어온건가!!",name);
+						if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
+						nameList.push(name);
+						}   	
+					});
+					
+					//3. 각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
+	    			let codenameList = new Array();
+	    			
+	    			for(var i = 0; i<codeList.length; i++){
+	    				let codenameObj = new Object();
+	    				codenameObj.code = codeList[i];
+	    				codenameObj.name = nameList[i];
+	    				codenameList.push(codenameObj);
+	    			} 
+					
+					//html에 넣어줄 문장과,쉽게 넣어줄 함수 만들기
+					let sentence = ``;
+	    			
+					function makeSentence(code,name){
+						let sentence =`<span>품목명 : ${name},&nbsp;&nbsp; 품목코드 : ${code}</span><br>`;
+						return sentence;    				
+					}
+					
+					//품목명이 기입되어 있을때만! 품목코드 생성한것 넣어주기!
+					//품목명 리스트 길이가 0이면 -> 품목명 기입하고 와라! 창 띄어주기
+					if(nameList.length==0){
+						document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목코드 생성 안내`;
+						
+						sentence = `<span>품목명이 누락되어있습니다.</span><br>
+									<span>품목명과 그 외 항목들을 기입 후, 코드생성 버튼을 눌러주세요.</span>`;
+						
+						document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;	
+						$(".materialInfoAndErrorModal").modal('show'); 
+						
+					}else{	 //품목명 리스트 길이 1이상일때, 품목명 기입되어있을때, 품목코드 값 넣어주기
+						//품목코드 생성해서 받아온 품목코드 리스트를, 테이블의 품목코드 값에 넣어주기
+						var inputMaterialCodeList = document.querySelectorAll(".materialCode");
+											
+						for(var i=0; i<data.length; i++){
+							inputMaterialCodeList[i].value = data[i].code;
+						}
+						
+						codenameList.forEach(function(item){
+		   					sentence=sentence+makeSentence(item.code,item.name);
+		   				});
+		   				//console.log("현재까지 만들어진 문장보자",sentence);
+		   									
+						sentence=sentence+`<br><span>해당 품목의 품목코드가 위와 같이 생성되었습니다.</span>`;   				
+						//console.log("완성된 문장보자",sentence);
+						
+						document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목코드 생성 안내`;
+						document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;	
+						$(".materialInfoAndErrorModal").modal('show');
+					}
+										
+					},
+					error : function(jqXHR,textStatus,errorThrown){    
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);					
+						console.log("품목코드 생성 Ajax 에러발생~~!!!!!");						
+					}
+				});					
+				
 			});	
 			
 			//대분류코드 변경될때마다 처리되는 함수
 			//대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수
-			$("#largeCategoryCode").change(function(){
-				//let test1 = $(this).val();
-				//console.log("change 함수 써서, 그 함수 자체의 값 보자 : ",test1); -> 이렇게 가져와도 선택된 값이 보여주지만, 확실하게 하기 위해 선택된 값 가져오는걸로 쓰자
-				//console.log("text 값 테스트1 : ",$(this).text()); -> 그해당 셀렉트의 모든 값을 가져온다.
+			$(document).on("change",".largeCategoryCode",function(){
+				let selectedLCCode = $(this).val();
+				//console.log("선택된 대분류 코드 : ",selectedLCCode); 
 				
+				//console.log("text 값 테스트1 : ",$(this).text()); 
+				//-> 그해당 셀렉트의 모든 값을 가져온다.
+				
+				//지금 변하는 것의 td의 다음 td에서 중분류 클래스 찾기 -> 여기에 넣을 option 만들어서 넣기
+				var middleCategoryCodeOptions = getObj().nextElementSibling.querySelector('.middleCategoryCode');
+				//console.log("중분류 select",middleCategoryCodeOptions);
+				
+				/*
 				//선택된 대분류코드
-				let selectedLCCode = $("#largeCategoryCode > option:selected").val();
-				let selectedLCName = $("#largeCategoryCode > option:selected").text();
-				//console.log("선택된 대분류 코드 : ",selectedLCCode);
-				//console.log("선택된 대분류 이름 : ",selectedLCName);
-								
+				let selectedLCCode = $(".largeCategoryCode > option:selected").val();
+				let selectedLCName = $(".largeCategoryCode > option:selected").text();
+				console.log("선택된 대분류 코드 : ",selectedLCCode);
+				console.log("선택된 대분류 이름 : ",selectedLCName);
+				*/				
 				
 				//대분류코드로 중분류리스트 찾는 Ajax처리
 				$.ajax({
@@ -322,9 +469,12 @@
 						});						
 						//console.log("완성된 html 보자",completeHtml);								
 						
+						/*
 						//완성된 옵션들은 기존의 중분류코드 셀렉트에 바꿔주기
 						$("#middleCategoryCode option").remove();
-						$("#middleCategoryCode").append(completeHtml);							
+						$("#middleCategoryCode").append(completeHtml);		
+						*/
+						middleCategoryCodeOptions.innerHTML = completeHtml;
 						
 					},
 					error : function(jqXHR,textStatus,errorThrown){    
@@ -333,7 +483,8 @@
 						//console.log(errorThrown);	
 						console.log("대분류코드를 이용해서 중분류리스트 가져오는데 Ajax 오류 발생!!!!!!");
 					}
-				});		
+				});	
+				
 			});
 		
 		});
@@ -360,7 +511,7 @@
     	//option 넣어서, 넣어야할 대분류 html 문장 만들기
     	function makeLCHtml(option){
     		let temp_html = `<td>
-					 			<select style="width:100%; border: 0; text-align: center;" name="largeCategoryCode" id="largeCategoryCode">
+					 			<select style="width:100%; border: 0; text-align: center;" class="largeCategoryCode" name="largeCategoryCode">
 									${option}
 								</select>
 							</td>`;
@@ -403,7 +554,7 @@
     	//option 넣어서, 넣어야할 대분류 html 문장 만들기
     	function makeMCHtml(option){
     		let temp_html = `<td>
-					 			<select style="width:100%; border: 0; text-align: center;" name="middleCategoryCode" id="middleCategoryCode">
+					 			<select style="width:100%; border: 0; text-align: center;" class="middleCategoryCode" name="middleCategoryCode">
 									${option}
 								</select>
 							</td>`;
@@ -414,6 +565,24 @@
     	//console.log("최종 합친 중분류 옵션 전체 문장",makeMCHtml(MCoptionList));
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    	
+    	//이벤트 발생한 요소의 상위의 TD 객체 찾기
+        function getObj(){
+            var obj = event.srcElement
+            while (obj.tagName !='TD'){  //TD가 나올때까지의 Object추출
+                obj = obj.parentElement
+            }
+            return obj
+        }
+    	
+    	//이벤트 발생한 요소의 상위의 TR 객체 찾기
+        function getObjTR(){
+            var obj = event.srcElement
+            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+                obj = obj.parentElement
+            }
+            return obj
+        }
 	    
 	    //등록추가 + 버튼 누를때, 행 추가
 	    document.getElementById('addRow').addEventListener('click', () => {

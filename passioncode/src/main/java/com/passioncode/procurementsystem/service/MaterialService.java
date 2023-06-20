@@ -17,6 +17,13 @@ public interface MaterialService {
 	Material getMaterial(String code);
 	
 	/**
+	 * 품목코드(앞에 두문자 CG)를 이용해서 품목 찾기 (대소문자 구별함)
+	 * @param code
+	 * @return
+	 */
+	List<Material> getMaterialListByCodeContaining(String code);
+	
+	/**
 	 * 품목 엔티티를 이용해서 MaterialDTO로 만들기(Material -> MaterialDTO)
 	 * @param material
 	 * @return
