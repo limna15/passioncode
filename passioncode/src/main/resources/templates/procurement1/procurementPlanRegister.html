@@ -45,20 +45,19 @@
 											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="mrpAmount" class="mrpAmount" th:value="${dto.mrpAmount}" readonly></td>
 											<td>
 												<div class="row" style="margin-left: 0px;" >
-													<input type="hidden" name="companyNo" class="companyNo">
-													<input type="hidden" name="contractNo" class="contractNo">
-													<input type="hidden" name="freePeriod" class="freePeriod">
-													<input type="text" style="float:left; width:65%; border: 0; text-align: center;" name=companyName class="companyName">
-													&nbsp;&nbsp;
 													<button type="button" class="btn btn-primary btn-rounded btn-icon contractSearchBtn" style="float:right" >
 														<i class="mdi mdi-magnify"></i>
 													</button>
+													<input type="hidden" name="companyNo" class="companyNo">
+													<input type="hidden" name="contractNo" class="contractNo">
+													<input type="hidden" name="freePeriod" class="freePeriod">
+													<input type="text" style="float:left; width:65%; border: 0; text-align: center;" name=companyName class="companyName" readonly>
 												</div>
 											</td>
-											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt" ></td>
-											<td><input type="date" style="width:100%; border: 0; text-align: center;" name="dueDate" class="dueDate"></td>
-											<td><input type="date" style="width:100%; border: 0; text-align: center;" name="minimumOrderDate" class="minimumOrderDate"></td>
-											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="ppAmount" class="ppAmount"></td>											
+											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt" readonly></td>
+											<td><input type="date" style="width:100%; border: 0; text-align: center;" name="dueDate" class="dueDate" readonly></td>
+											<td><input type="date" style="width:100%; border: 0; text-align: center;" name="minimumOrderDate" class="minimumOrderDate" readonly></td>
+											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="ppAmount" class="ppAmount" readonly></td>											
 										</tr>
 									</tbody>
 								</table>
@@ -81,7 +80,7 @@
 		
 		<!-- 계약서 찾기 모달창 시작 -->
 		<div class="contractSearchModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">계약서 찾기</h5>
@@ -105,7 +104,7 @@
 							<table class="table table-bordered" id="searchContractListTable" style="text-align:center;">
 								<thead>
 									<tr>
-										<th width="11%">계약서<br>번호</th>
+										<th width="9%">계약서<br>번호</th>
 										<th width="17%">협력회사</th>
 										<th>담당자</th>
 										<th>담당자<br>연락처</th>
@@ -133,30 +132,6 @@
             </div>
         </div>
 		<!-- 계약서 찾기 모달창 끝 -->
-		
-		<!-- 계약서 찾았는데, 없을시와 오류시 보여줄 모달창 시작 -->
-		<div class="contractSearchErrorModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">계약서 찾기</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="searchContractListErrorModal">
-                    	<!-- 협력회사 찾은 후에, 회사가 없을 시와 오류시 보여줄 내용 -->    
-                    	
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary AllResetSetting" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
-                        	확인
-                       	</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-		<!-- 계약서 찾았는데, 없을시와 오류시 보여줄 모달창 끝 -->
 				
 		<!-- 등록확인 모달창 시작-->
 		<div class="ppRegisterConfirmModal modal" tabindex="-2" role="dialog">
@@ -226,27 +201,17 @@
 				searchContractTR=getObjTR();
 				console.log("계약서 찾기 버튼 누르고 난 후 해당 TR의 값 세팅 : ",searchContractTR);
 				
-				//검색 버튼위의 td위에 tr을 통해서 회사이름과 품목코드 찾기 -> 즉 검색버튼 누른 행에서 회사이름과 품목코드 찾기
+				//검색 버튼위의 td위에 tr을 통해서 품목코드 찾기 -> 즉 검색버튼 누른 행에서 품목코드 찾기
 				//위에서 셋팅 해놓은 searchContractTR 이용하기
-				var companyName = searchContractTR.querySelector("input[name=companyName]").value;				
-				console.log("회사이름 : ",companyName);
 				var materialCode = searchContractTR.querySelector("input[name=materialCode]").value;	
 				console.log("품목코드 : ",materialCode);
 				
-				//보내는 데이터가 2개를 contractDTO 객체의 속성이니까 -> contractDTO 객체로 읽게 json 처리 해주기
-				var contractDTOObj = {}; 
-				contractDTOObj.companyName = companyName;
-				contractDTOObj.materialCode = materialCode;
-				//console.log("자바스크립트로 만든 객체 한번 봐보자 : ",contractDTOObj);	//contractDTOObj 자바스크립트 객체
-				var changeJsonData = JSON.stringify(contractDTOObj);					//contractDTOObj 자바스크립트 객체를 json포맷으로 변경
-				//console.log("변경된 제이슨 타입 데이터 보자 : "+changeJsonData);
-				
-				//협력회사이름, 품목코드 로 계약서 찾는 Ajax처리
+				//품목코드 로 계약서 찾는 Ajax처리
 				$.ajax({
 					type : "post" ,
-					url : "/procurement1/contractSearch" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
-					data : changeJsonData ,                					//보내는 데이터!(요청 데이터)
-					contentType :"application/json; charset=UTF-8" ,  	//보내는 데이터 형식 (전송 데이터,요청데이터)
+					url : "/procurement1/contractSearch2" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : materialCode ,                				//보내는 데이터!(요청 데이터)
+					contentType :"text/plain; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
 					dataType : "json" ,							 		//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
 					success : function(data){        					//가져오는 데이터! (응답데이터)
 						//console.log("받아온 데이터 : ",data);
@@ -255,44 +220,25 @@
 						//data를 이용해서, 모달창에 넣을 tr 행 html 만들기
 						let completeHtml =``;    	
 						
-						if(data.length!=0){		//받아온 데이터가 존재 O, 즉 검색되서 찾은 협력회사가 O
-							data.forEach(function(item){
-								completeHtml = completeHtml + makeContractSearchList(item.companyNo,item.contractNo,item.companyName,item.manager,item.managerTel,item.supplyLt,item.unitPrice,item.dealCondition);						
-							});						
-							//console.log("완성된 html 보자",completeHtml);								
-							
-							//시작 태그 바로 뒤에, 계약서 찾기 모달창 -> 본문에 html 넣기
-							//document.querySelector("#searchContractListModal").insertAdjacentHTML('afterbegin', completeHtml);	
-							document.querySelector("#searchContractListModal").innerHTML = completeHtml;	
-							
-							//계약서 찾기 모달 창 보여주기
-							$(".contractSearchModal").modal('show');	
-							
-						}else{					//받아온 데이터가 존재 X, 즉 검색되서 찾은 계약서가 X
-							completeHtml = `<span>해당 품목에 계약한 협력회사를 찾을 수 없습니다.</span><br>
-											<span>다시 검색해 주시기바랍니다.</span>`;
-											
-							//시작 태그 바로 뒤에, 계약서 오류 모달창 -> 본문 html 넣기
-							//document.querySelector("#searchContractListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
-							document.querySelector("#searchContractListErrorModal").innerHTML = completeHtml;
-							
-							//계약서 오류 모달창 보여주기
-							$(".contractSearchErrorModal").modal('show');
-						}
+						//계약이 완료된 품목을 조달계획등록 할수 있기때문에, 품목코드로 검색해서 계약서를 찾을때! 받아온 데이터가 없을 수가 없다!!						
+						data.forEach(function(item){
+							completeHtml = completeHtml + makeContractSearchList(item.companyNo,item.contractNo,item.companyName,item.manager,item.managerTel,item.supplyLt,item.unitPrice,item.dealCondition);						
+						});						
+						//console.log("완성된 html 보자",completeHtml);	
+						
+						//시작 태그 바로 뒤에, 계약서 찾기 모달창 -> 본문에 html 넣기
+						//document.querySelector("#searchContractListModal").insertAdjacentHTML('afterbegin', completeHtml);	
+						document.querySelector("#searchContractListModal").innerHTML = completeHtml;	
+						
+						//계약서 찾기 모달 창 보여주기
+						$(".contractSearchModal").modal('show');							
+						
 					},
 					error : function(jqXHR,textStatus,errorThrown){    //검색어 입력 안했을 시!
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
-						//console.log(errorThrown);						
-						completeHtml = `<span>검색한 내용이 없습니다.</span><br>
-										<span>다시 검색해 주시기바랍니다.</span>`;
-						
-						//시작 태그 바로 뒤에, 계약서 오류 모달창 -> 본문 html 넣기
-						//document.querySelector("#searchContractListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
-						document.querySelector("#searchContractListErrorModal").innerHTML = completeHtml;
-						
-						//계약서 오류 모달창 보여주기
-						$(".contractSearchErrorModal").modal('show');
+						//console.log(errorThrown);	
+						console.log("계약서 찾기 Ajax 오류 발생~!!!");
 					}
 				});					
 			});	

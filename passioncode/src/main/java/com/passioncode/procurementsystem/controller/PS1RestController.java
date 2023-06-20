@@ -63,6 +63,7 @@ public class PS1RestController {
 		
 		return searchContractDTOs;
 	}
+	
 	/**
 	 * 조달계획 등록 화면에서, 회사이름을 통해 계약서 찾기 <br>
 	 * 이때, 해당 품목코드를 읽어와서, 그 해당되는 계약서롤 찾기
@@ -95,6 +96,40 @@ public class PS1RestController {
 				}
 				searchContractDTOs.add(contractDTO2);
 			}				
+		}		
+		
+		log.info("만들어진 계약서 리스트 보자 : "+searchContractDTOs);
+		
+		return searchContractDTOs;		
+	}
+	
+	
+	/**
+	 * 조달계획 등록 화면에서, 품목코드를 통해 계약서 찾기 <br>
+	 * 이때, 해당 품목코드를 읽어와서, 그 해당되는 계약서롤 찾기
+	 * @param companyName
+	 * @return
+	 */
+	@PostMapping(value="contractSearch2",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<ContractDTO> contractSearch2(@RequestBody String materialCode){
+		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
+		//사업자등록번호
+		
+		//받아온 품목코드 읽어보자
+		log.info("화면에서 보낸 품목코드 : "+materialCode); 
+				
+		List<ContractDTO> searchContractDTOs = new ArrayList<>();
+		
+		List<Contract> contractList = contractService.searchContractByMaterialCode(materialCode);
+		log.info("잘 검색해서 왔나 계약서 보자 : "+contractList);
+		
+		//거래조건은 null일경우 null 이라고 화면에 그대로 찍히기 때문에, 거래조건이 null일때 "" 빈값으로 셋팅 바꿔주자
+		for(Contract contract:contractList) {
+			ContractDTO contractDTO = contractService.contractEntityToDTO(contract);
+			if(contractDTO.getDealCondition()==null) {
+				contractDTO.setDealCondition("");
+			}
+			searchContractDTOs.add(contractDTO);
 		}		
 		
 		log.info("만들어진 계약서 리스트 보자 : "+searchContractDTOs);

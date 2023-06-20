@@ -18,7 +18,7 @@ public interface MaterialRepository extends JpaRepository<Material, String> {
 	 * 계약서 테이블과 조인해서, 계약상태 미완료가 상단으로, 그리고 기본 품목코드 오름차순 정렬으로 세팅
 	 * @return
 	 */
-	@Query(value="SELECT distinct CODE,NAME,share_status,stock_amount,size,quality,spec,drawing_no,drawing_file,middle_category_code FROM material "
+	@Query(value="SELECT distinct CODE,NAME,share_status,size,quality,spec,drawing_no,drawing_file,middle_category_code FROM material "
 			+ "left outer JOIN contract ON CODE=material_code ORDER BY material_code,code " , nativeQuery = true)
 	public List<Material> getListWithSort();
 	
@@ -27,7 +27,7 @@ public interface MaterialRepository extends JpaRepository<Material, String> {
 	 * 계약서 테이블과 조인해서, 계약상태 미완료인것만 + 품목코드 오름차순 정렬
 	 * @return
 	 */
-	@Query(value="SELECT CODE,NAME,share_status,stock_amount,size,quality,spec,drawing_no,drawing_file,middle_category_code FROM material "
+	@Query(value="SELECT CODE,NAME,share_status,size,quality,spec,drawing_no,drawing_file,middle_category_code FROM material "
 			+ "left outer JOIN contract ON CODE=material_code WHERE material_code IS NULL ORDER BY NO,code ", nativeQuery = true)
 	public List<Material> getListNoContract();
 	

@@ -56,6 +56,11 @@ public class ContractServiceImpl implements ContractService {
 	public List<Contract> searchContractByCompanyNameAndMaterialCode(String companyName, String materialCode) {
 		return contractRepository.findByCompanyNameAndMaterialCode(companyName, materialCode);
 	}
+	
+	@Override
+	public List<Contract> searchContractByMaterialCode(String materialCode) {
+		return contractRepository.findByMaterialCode(materialCode);
+	}
 
 		
 	@Override
@@ -197,8 +202,6 @@ public class ContractServiceImpl implements ContractService {
 		log.info("삭제된 계약서(contract) 정보 : "+dtoToEntity(contractDTO));
 		contractRepository.deleteById(contractDTO.getContractNo());
 	}
-
-	
 
 
 	

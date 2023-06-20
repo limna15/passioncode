@@ -140,7 +140,7 @@
 							</thead>
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
-									<td><input type="checkbox" name="checkBox" th:value="${dto.materialCode}" onclick="chkClicked()"></td>
+									<td><input type="checkbox" name="checkBox" th:value="${dto.materialCode}" onclick="chkClicked(); getContractStatus();"></td>
 									<td>[[${dto.contractNo}]]</td>
 									<td>[[${dto.materialCode}]]</td>
 									<td>[[${dto.materialName}]]</td>
@@ -195,6 +195,30 @@
 			</div>
 		</div>
 		
+		<!-- 등록버튼 누를때, 미완료 건만 안눌렀을때 뜨는 모달창 시작 -->
+		<div class="contractRegisterErrorModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">계약 등록</h5>
+                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">   
+                    	<span>계약상태가 <span style='color:red;'>'미완료'</span>인 것만 계약등록이 가능합니다.</span><br>
+                    	<span>다시 선택해주시길 바랍니다.</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 등록버튼 누를때, 미완료 건만 안눌렀을때 뜨는 모달창 끝 -->
+		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
 		
@@ -202,36 +226,82 @@
 		function chkClicked(){
 			const chkChecked = 'input[name="checkBox"]:checked';
 			const selectedEls = document.querySelectorAll(chkChecked);
-			
-	 		console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+	 		//console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
 	 		
 	 		let materialCodeList = new Array();
 	 		
 	 		selectedEls.forEach((el) => {
-				console.log("체크된거 어떻게 찍히나 보자", el.value);
+				//console.log("체크된거 어떻게 찍히나 보자", el.value);
 				materialCodeList.push(el.value);
 		 	});
-	 		
-	 		console.log("만들어진 리스트 보자",materialCodeList);
+	 		//console.log("만들어진 리스트 보자",materialCodeList);
 	 		
 	 		return materialCodeList;
 		}
 		
+		//체크박스 체크 한것 -> 그 해당 행의 계약상태 값 리스트로 만들기
+		function getContractStatus(){
+			const chkChecked = $('input[name="checkBox"]:checked');			
+			var contractStatusList = new Array();
+			
+			// 체크된 체크박스 값을 가져온다
+			chkChecked.each(function(i) {	
+				// chkChecked.parent() : checkbox의 부모는 <td>이다.
+				// chkChecked.parent().parent() : <td>의 부모이므로 <tr>이다.
+				var tr = chkChecked.parent().parent().eq(i);
+				var td = tr.children();
+								
+				// td.eq(0)은 체크박스 이므로  td.eq(11)의 값인 계약상태를 리스트에 넣어준다.
+				contractStatusList.push(td.eq(11).text());
+			});
+			//console.log("어디 만들어진 계약상태 리스트 봐보자 : ",contractStatusList);		
+			return contractStatusList;
+		}
+				
 		$(document).ready(function(){
+			
+			//계약상태 값에 완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
+			var contractStatusValueCheck = true;		//-> 하나라도 완료 일 경우에 false로 바꿔주기 
+			console.log("계약상태 전역변수 확인하기1 : ",contractStatusValueCheck);
+			
+			//등록버튼 눌렀을때, 계약상태 미완료인것만! 등록가능하게!
     		$("#registerBtn").on("click",function(e){
     			//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
-    			//2. 만든 품목코드 리스트를 input 히든에 담기
-    			let materialCodeList = new Array();
-    			materialCodeList = $('input[name=materialCodeList]').attr('value',chkClicked());
-    			console.log("이렇게 만든 리스트 되는건가?",materialCodeList);
     			
-    			//var test = $('input[name=materialCodeList]').attr('value');
-    			//console.log("값을 봐보자.. 흠",test);
-    			//alert(test);
+    			//2. 계약상태 값 리스트 가져와서, 하나라도 완료일경우 false로 바꿔주기
+    			let contractStatusList = new Array();
+    			contractStatusList = getContractStatus();
+    			contractStatusList.forEach(function(item){
+   					if(item=="완료"){
+   						contractStatusValueCheck = false;
+   					}   					
+   				});
+    			console.log("계약상태 전역변수 확인하기(체크한 후) : ",contractStatusValueCheck);
     			
-   				//3.담은거 submit으로 보내자
-    			$("#registerForm").submit();
+    			
+    			//3. 계약상태 전역변수가 true 일때만, 등록가능~
+    			if(contractStatusValueCheck){			//현재 계약상태 미완료인것만! ->등록가능하게
+	    			//만든 품목코드 리스트를 input 히든에 담기
+	    			let materialCodeList = new Array();
+	    			materialCodeList = $('input[name=materialCodeList]').attr('value',chkClicked());
+	    			//console.log("이렇게 만든 리스트 되는건가?",materialCodeList);
+	    			
+	    			//var test = $('input[name=materialCodeList]').attr('value');
+	    			//console.log("값을 봐보자.. 흠",test);
+	    			//alert(test);
+	    			
+	   				//담은거 submit으로 보내자
+	    			$("#registerForm").submit();
+    			}else{								//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
+    				//오류 모달창 보여주기
+					$(".contractRegisterErrorModal").modal('show');    					
+					//그리고 다시 등록체크 값 true로 다시 세팅해주기
+					contractStatusValueCheck = true;   
+					//그리고 체크된 값들 전부 체크 해제 해주기
+					$("input:checkbox").prop("checked", false);
+    			}
+    			
    			});
    		});	
 		

@@ -34,7 +34,7 @@ public interface ContractService {
 	 * @param name
 	 * @return
 	 */
-	List<Company> searchCompany(String name);
+	List<Company> searchCompany(String name);	
 	
 	/**
 	 * 협력회사명을 포함한 name을 이용하여 거래가능한 협력회사 찾기
@@ -50,6 +50,13 @@ public interface ContractService {
 	 * @return
 	 */
 	List<Contract> searchContractByCompanyNameAndMaterialCode(String companyName,String materialCode);
+	
+	/**
+	 * 품목코드를 이용하여 계약서 찾기 
+	 * @param materialCode
+	 * @return
+	 */
+	List<Contract> searchContractByMaterialCode(String materialCode);
 	
 	/**
 	 * 품목 엔티티를 이용해서 List<ContractDTO>로 만들기(Material -> List<ContractDTO>) <br> 

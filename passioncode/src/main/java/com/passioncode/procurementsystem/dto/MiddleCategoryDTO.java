@@ -1,6 +1,5 @@
 package com.passioncode.procurementsystem.dto;
 
-import com.passioncode.procurementsystem.entity.LargeCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
