@@ -140,6 +140,10 @@ public class PS3Controller {
 			}
 		}
 		
+		//구매발주서 번호가 존재하지 않으면(=false) 거래명세서 등록하기
+		if(!transactionDetailService.checkDone(po)) {
+			transactionDetailService.register(transactionDetailDTO);
+		}
 		model.addAttribute("tdList", transactionDetailDTOList);
 	}
 	

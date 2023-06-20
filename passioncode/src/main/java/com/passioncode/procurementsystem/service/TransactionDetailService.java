@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.passioncode.procurementsystem.dto.TransactionDetailDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 import com.passioncode.procurementsystem.entity.TransactionDetail;
 
 public interface TransactionDetailService {
@@ -42,4 +43,10 @@ public interface TransactionDetailService {
 	 */
 	List<TransactionDetailDTO> getTransactionDetailDTOLsit();
 	
+	/**
+	 * 구매발주서 존재여부로 거래명세서 테이블에 존재하는지 확인하기
+	 * @param purchaseOrder
+	 * @return
+	 */
+	Boolean checkDone(PurchaseOrder purchaseOrder);
 }

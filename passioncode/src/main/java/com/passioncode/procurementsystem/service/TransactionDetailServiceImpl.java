@@ -1,6 +1,5 @@
 package com.passioncode.procurementsystem.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 import com.passioncode.procurementsystem.entity.TransactionDetail;
 import com.passioncode.procurementsystem.repository.CompanyRepository;
 import com.passioncode.procurementsystem.repository.DetailPurchaseOrderRepository;
@@ -113,6 +113,11 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 			transactionDetailDTOList.add(transactionDetailDTO);
 		}			
 		return transactionDetailDTOList;
+	}
+
+	@Override
+	public Boolean checkDone(PurchaseOrder purchaseOrder) {
+		return transactionDetailRepository.existsByPurchaseOrder(purchaseOrder);
 	}
 
 }

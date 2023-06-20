@@ -14,6 +14,7 @@ import com.passioncode.procurementsystem.dto.TransactionDetailDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 import com.passioncode.procurementsystem.entity.TransactionDetail;
 
 import lombok.extern.log4j.Log4j2;
@@ -62,5 +63,13 @@ public class TransactionDetailServiceTests {
 	@Test
 	public void DTOListTest() {
 		log.info("거래명세서 detailDTO 보자 >>> " + transactionDetailService.getTransactionDetailDTOLsit());
+	}
+	
+	@Transactional
+	@Commit
+	@Test
+	public void checkDoneTest() {
+		PurchaseOrder po= purchaseOrderService.getPurchaseOrder(2);
+		log.info("존재여부로 테이블 확인하기 >>> " + transactionDetailService.checkDone(po));
 	}
 }

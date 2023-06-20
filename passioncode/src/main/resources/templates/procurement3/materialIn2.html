@@ -461,8 +461,8 @@
 		if(noList.length===0){
 			$(".noPurchaseNoModal").modal('show');
 			
-		//체크박스 선택했을 경우	
-		}else if(noList.length>0){
+		//체크박스 한개만 선택했을 경우			
+		}else if(noList.length===1){
 			$(".transactionDetailModal").modal('show');
 			console.log("체크박스 한개만 선택했을 경우 보이는건가?")		
 								
@@ -512,22 +512,162 @@
 				});
 		
 			if(tdStatus){
-				//같은 발주서 번호를 눌렀는데 발주 코드가 여러개인 경우: 중복값을 제거하고 발주서 번호를 하나로 만듬	
-				var setNoList= new Set(noList);
-				var purchaseNo= [...setNoList];
-				console.log("purchaseNo는 어떻게 찍히는 거지 >>> ", purchaseNo, ", 타입은 ", typeof(purchaseNo))
-				
-				if(purchaseNo.length != 1){
-					$(".purchaseNoCheckModal").modal('show');
-					$(".transactionDetailModal").modal('hide');
-				}else{			
-					location.href="/procurement3/transactionDetail?purchaseNo="+purchaseNo
-				}
+			$.ajax({
+				type: "post",
+				url: "/procurement3/getTransactionDetail",
+				data: JSON.stringify(noList),
+				contentType :"application/json; charset=UTF-8",
+				dataType: "json",
+				success: function(data){
+					console.log("받아온 데이터 : ",data);
+					//본문에 html 넣기
+					//transactionInfo 거래명세서 회사 정보(첫번째 테이블)
+					document.querySelector("#company").innerHTML = data.company; //발주회사(= 우리회사)
+					document.querySelector("#purchaseOrderNo").innerHTML = data.purchaseOrderNo; //발주서 번호
+					document.querySelector("#date").innerHTML = data.date; //납기일자(= 입고일)
+					document.querySelector("#totalPrice").innerHTML = (data.unitPrice*data.amount) + (data.unitPrice*data.amount/10); //총가격(= 합계)
+					document.querySelector("#companyNo").innerHTML = data.companyNo; //사업자등록번호
+					document.querySelector("#companyName").innerHTML = data.companyName; //협력회사 이름
+					document.querySelector("#CEO").innerHTML = data.ceo; //협력회사 ceo
+					document.querySelector("#companyAddress").innerHTML = data.companyAddress; //협력회사 주소
+					document.querySelector("#manager").innerHTML = data.manager; //담당자
+					document.querySelector("#managerTel").innerHTML = data.managerTel; //담당자 번호
+					
+					//transactionDetail 거래명세서 세부 정보(두번째 테이블)	
+		            var tableTd = '<tr>';
+		            tableTd += '<td>' + data.materialCode + '</td>';
+		            tableTd += '<td>' + data.materialName + '</td>';
+		            tableTd += '<td>' + data.amount + '</td>';
+		            tableTd += '<td>' + data.unitPrice + '</td>';
+		            tableTd += '<td>' + data.amount*data.unitPrice + '</td>';
+		            tableTd += '<td>' + data.amount*data.unitPrice/10 + '</td>';
+		            tableTd += '</tr>';
+		            
+		            $('#detail').append(tableTd);
+					
+					//transactionResult 거래명세서 결론(세번째 테이블)
+					document.querySelector("#amountResult").innerHTML = data.amount; //수량
+					document.querySelector("#priceResult").innerHTML = data.unitPrice*data.amount; //공급가격
+					document.querySelector("#vatResult").innerHTML = data.unitPrice*data.amount/10; //vat
+					document.querySelector("#totalPriceResult").innerHTML = (data.unitPrice*data.amount) + (data.unitPrice*data.amount/10); //합계
+					},
+					error: function(xhr,status,er){
+						if(error)
+							error(er);
+					}
+				});//ajax 끝
 			}//if(거래명세서 tdStatus) 끝	
-		//else 끝
+		//else if(체크박스를 한개 선택했을 때) 끝
 		
-		}
-	});	
+		}else if(noList.length>1){ //noList가 2개이상일 경우
+			for(let i=0; i<noList.length-1; i++){
+				for(let j=1; j<noList.length; j++){
+					//모달창: 체크박스로 선택한 발주서 번호가 다를 경우   -> 지금 이게 작동이 아예 안됨
+					if(noList[i]!=noList[j]){
+						console.log("noList[i] >>> ", noList[i])
+						console.log("noList[j] >>> ", noList[j])
+						$(".purchaseNoCheckModal").modal('show');
+						$(".transactionDetailModal").modal('hide');
+						console.log("발주서 번호가 다를 경우가 왜 안 나오지")
+					}else if(noList[i]==noList[j]){//모달창: 체크박스로 선택한 발주서 번호가 같을 경우
+						console.log("noList[i] >>> ", noList[i])
+						console.log("noList[j] >>> ", noList[j])
+						$(".transactionDetailModal").modal('show');
+						$(".purchaseNoCheckModal").modal('hide');
+						console.log("발주서 번호가 같을 경우 뜨는건가?")
+						//어차피 같은 발주서 번호이기 때문에 하나만 보내도 괜찮음
+						console.log("noList 어떻게 보내야되지? " , noList[0])
+						
+						$.ajax({
+							type: "post",
+							url: "/procurement3/getTransactionDetail2",
+							data: JSON.stringify(noList[0]),
+							contentType :"application/json; charset=UTF-8",
+							dataType: "json",
+							success: function(data){
+								console.log("받아온 데이터 : ",data);
+								//본문에 html 넣기
+
+								//transactionDetail 거래명세서 세부 정보(두번째 테이블)			
+						        for(var a= 0; a<data.length; a++) {
+						            var tableTd = '<tr>';
+						            tableTd += '<td>' + data[a].materialCode + '</td>';
+						            tableTd += '<td>' + data[a].materialName + '</td>';
+						            tableTd += '<td id="amount' + a + '">' + data[a].amount + '</td>';
+						            tableTd += '<td id="price' + a + '">' + data[a].unitPrice + '</td>';
+						            tableTd += '<td>' + data[a].amount*data[a].unitPrice + '</td>';
+						            tableTd += '<td>' + data[a].amount*data[a].unitPrice/10 + '</td>';
+						            tableTd += '</tr>';
+
+						            $('#detail').append(tableTd);
+						        }
+								
+							    //transactionResult 거래명세서 결론(세번째 테이블)
+							    const table = document.getElementById('detail');
+							      
+							    // 수량, 단가 합계 계산
+							    let amountSum= 0;
+							    let priceSum= 0;
+							    let vatSum= 0;
+							    for(let i = 0; i < table.rows.length; i++)  {
+							      amountSum += parseInt(table.rows[i].cells[2].innerHTML);
+							      priceSum += parseInt(table.rows[i].cells[4].innerHTML);
+							      vatSum += parseInt(table.rows[i].cells[5].innerHTML);
+							    }
+							    
+							    // 합계 출력
+							    document.getElementById('amountResult').innerText = amountSum;
+							    document.getElementById('priceResult').innerText = priceSum;
+							    document.getElementById('vatResult').innerText = vatSum;
+							    document.getElementById('totalPriceResult').innerText = priceSum+vatSum;
+								
+								//transactionInfo 거래명세서 회사 정보(첫번째 테이블)
+								//총가격(=합계)에서 동적으로 바뀐 데이터를 읽어 세팅해야 해서 맨밑에서 값을 받게함
+								document.querySelector("#company").innerHTML = data[0].company; //발주회사(= 우리회사)
+								document.querySelector("#purchaseOrderNo").innerHTML = data[0].purchaseOrderNo; //발주서 번호
+								document.querySelector("#date").innerHTML = data[0].date; //납기일자(= 입고일)
+								document.querySelector("#totalPrice").innerHTML = $('#totalPriceResult').html();//총가격(= 합계)
+								document.querySelector("#companyNo").innerHTML = data[0].companyNo; //사업자등록번호
+								document.querySelector("#companyName").innerHTML = data[0].companyName; //협력회사 이름
+								document.querySelector("#CEO").innerHTML = data[0].ceo; //협력회사 ceo
+								document.querySelector("#companyAddress").innerHTML = data[0].companyAddress; //협력회사 주소
+								document.querySelector("#manager").innerHTML = data[0].manager; //담당자
+								document.querySelector("#managerTel").innerHTML = data[0].managerTel; //담당자 번호			
+							},
+							error : function(jqXHR,textStatus,errorThrown){
+								//console.log(jqXHR);  //응답 메시지
+								//console.log(textStatus); //"error"로 고정인듯함
+								//console.log(errorThrown);
+							}
+						});//ajax 끝
+						break;
+					}//else if 끝: 체크박스로 선택한 발주서 번호가 같을 경우
+				}//for(j)문 끝
+			}//for(i)문 끝
+			
+			//모달창 닫으면 테이블 데이터 초기화 -> 일반적인 테이블형식이 아니기 때문에 각각의 값을 세팅줌
+			$('.modal').on('hidden.bs.modal', function (e) {
+			    console.log('modal close');
+			  $(this).find('#company').empty();
+			  $(this).find('#purchaseOrderNo').empty();
+			  $(this).find('#companyNo').empty();
+			  $(this).find('#companyCode').empty();
+			  $(this).find('#companyName').empty();
+			  $(this).find('#CEO').empty();
+			  $(this).find('#manager').empty();
+			  $(this).find('#managerTel').empty();
+			  
+			  $(this).find('#detail').empty();
+			  
+			  $(this).find('#amountResult').empty();
+			  $(this).find('#priceResult').empty();			  
+			  $(this).find('#vatResult').empty();			  
+			  $(this).find('#totalPriceResult').empty();			  
+			});
+			
+		}//else if 끝: noList길이가 2이상인 경우
+	});
+	
 	
 	////////////////////////////////////////////////////////////////////////////////////
   
