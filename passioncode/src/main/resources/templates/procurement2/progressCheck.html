@@ -107,20 +107,20 @@
                         </tr>
                       </thead>
                       <tbody>
-                      <tr th:each="dto: ${pCheckList}">
-                            <td>[[${dto.purchaseOrderCode}]]</td>
-                            <td>[[${dto.companyName}]]</td>
-                            <td>[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
-                            <td>[[${dto.materialName}]]</td>
-                            <td>[[${dto.orderAmount}]]</td>
-                            <td>[[${dto.unitPrice}]]</td>
-                            <td>[[${dto.nextCheckDate}]]</td>
+                      <tr th:each="dto: ${pCheckList}" id="trList">
+                            <td><input type="hidden" name="purchaseOrderCode" th:value="${dto.purchaseOrderCode}">[[${dto.purchaseOrderCode}]]</td>
+                            <td><input type="hidden" name="companyName" th:value="${dto.companyName}">[[${dto.companyName}]]</td>
+                            <td><input type="hidden" name="dueDate" th:value="${dto.dueDate}">[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
+                            <td><input type="hidden" name="materialName" th:value="${dto.materialName}">[[${dto.materialName}]]</td>
+                            <td><input type="hidden" name="orderAmount" th:value="${dto.orderAmount}">[[${dto.orderAmount}]]</td>
+                            <td><input type="hidden" name="unitPrice" th:value="${dto.unitPrice}">[[${dto.unitPrice}]]</td>
+                            <td><input type="hidden" name="nextCheckDate" th:value="${dto.nextCheckDate}">[[${dto.nextCheckDate}]]</td>
                             <!-- 조달계획의 버튼 <button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button> -->
-                            <td>
-                            <button name="checkBox" value="${dto.purchaseOrderCode}" class="td-modal btn btn-primary" th:id="addDateBtn" >일정 등록</button>
+                            <td id="myadd">
+                            <button name="checkBox" class="td-modal btn btn-primary addClass" id="addDateBtn" >일정 등록</button>
                             </td>
                             <td>
-                            <button class="td-modal btn btn-primary" id="avgBtn" >평가</button>
+                            <button class="td-modal btn btn-primary avgClass" id="avgBtn" >평가</button>
                             </td>
                             <td>[[${dto.diliveryPercent}]]</td>
                             <td>[[${dto.inspectionComplete}]]</td>
@@ -152,11 +152,11 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">발주서 번호 체크하기</h5>
+                        <h5 class="modal-title">진척검수 일정 등록</h5>
                     </div>
                     <div class="modal-body" >
 						<body>
-***** (여기에 회사 이름이 들어감)회사의 ***** 일정 등록입니다.<br>
+<h4><span id="companyName2">(여기에 회사 이름이 들어감)</span>의 일정 등록입니다.</h4><br>
 &nbsp;<br>
 <div id="myplan"></div>
 <script>
@@ -223,6 +223,7 @@ function deleteInput() {
                     <h5 class="modal-title">진척 평가</h5>
                     </div>
                     <div class="modal-body" >
+					<span id="companyName2">(여기에 회사 이름이 들어감)</span>  제작 진척도를 입력합니다.
                    <br>
 						<p class="card-title"><b>진척 평가</b></p>
 						지난 검사 기록
@@ -250,17 +251,14 @@ function deleteInput() {
 								</tbody>
 							</table>
 							<br>
-						***** 회사의 *****  제작 진척도를 입력합니다.
 							<br>
 								<input type="text"><input type="text">
-							<br>
-							<button>등록</button>
 						</div>
 						<br>
 						<br>
                     </div>
                     <div class="modal-footer">
-                       <button  href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
+                       <button  href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">등록
                        </button>
                       <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
@@ -273,20 +271,84 @@ function deleteInput() {
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 //일정 등록 버튼을 누르면
-$("#addDateBtn").click(function(){
+$(".addClass").click(function(){
 	$(".addDate").modal('show');
 	console.log("일정 추가 버튼을 누름");
 	//location.href="/procurement2/progressCheck?checkBox="+cList[0];
+	//var searchCompanyTR = new Object();
+	//console.log("tr 전역변수 만들고 난 값 : ",searchCompanyTR);
+	//순서: 발주번호, 회사이름, 납기일, 물품이름, 주문수량, 단가, 다음 진척검수일
+	//총 7개
+	var pCode= getObjTR().querySelector("input[name=purchaseOrderCode]").value;
+	var cName= getObjTR().querySelector("input[name=companyName]").value;
+	var dDate= getObjTR().querySelector("input[name=dueDate]").value;
+	var mName= getObjTR().querySelector("input[name=materialName]").value;
+	var oAmount= getObjTR().querySelector("input[name=orderAmount]").value;
+	var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
+	var nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
+	console.log("발주코드: ",pCode);//잘나옴
+	console.log("회사이름: ",cName);
+	console.log("납기일,: ",dDate);
+	console.log("물품이름: ",mName);
+	console.log("주문수량: ",oAmount);
+	console.log("단가: ",uPrice);
+	console.log("다음 진척검수일: ",nDate);
+	
+	document.querySelector("#companyName2").innerHTML = cName;
+	
+	//create element (form)
+	var inForm = $('<form></form>');
+	//set attribute (form) 
+	inForm.attr("name","inForm");
+	inForm.attr("method","post");
+	inForm.attr("action","/procurement2/progressCheck");
+	
 	
 });
 
-$("#avgBtn").click(function(){
+$(".avgClass").click(function(){
 	$(".addDate").modal('hide');
 	console.log("평가 버튼을 누름");
 	$(".addAvg").modal('show');
+	//순서: 발주번호, 회사이름, 납기일, 물품이름, 주문수량, 단가, 다음 진척검수일
+	//총 7개
+	var pCode= getObjTR().querySelector("input[name=purchaseOrderCode]").value;
+	var cName= getObjTR().querySelector("input[name=companyName]").value;
+	var dDate= getObjTR().querySelector("input[name=dueDate]").value;
+	var mName= getObjTR().querySelector("input[name=materialName]").value;
+	var oAmount= getObjTR().querySelector("input[name=orderAmount]").value;
+	var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
+	var nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
+	console.log("발주코드: ",pCode);//잘나옴
+	console.log("회사이름: ",cName);
+	console.log("납기일,: ",dDate);
+	console.log("물품이름: ",mName);
+	console.log("주문수량: ",oAmount);
+	console.log("단가: ",uPrice);
+	console.log("다음 진척검수일: ",nDate);
+	
+	document.querySelector("#companyName2").innerHTML = cName;
 });
 
 
+////////////////////////////////////////////////////////////////////////////////////
+//이벤트 발생한 요소의 상위의 TD 객체 찾기
+function getObj(){
+    var obj = event.srcElement
+    while (obj.tagName !='TD'){  //TD가 나올때까지의 Object추출
+        obj = obj.parentElement
+    }
+    return obj
+}
+
+	//이벤트 발생한 요소의 상위의 TR 객체 찾기
+function getObjTR(){
+    var obj = event.srcElement
+    while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+        obj = obj.parentElement
+    }
+    return obj
+}
 </script>
 
 	</th:block>

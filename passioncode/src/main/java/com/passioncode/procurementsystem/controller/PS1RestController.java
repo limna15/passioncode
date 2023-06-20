@@ -1,6 +1,7 @@
 package com.passioncode.procurementsystem.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
+import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
+import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.service.ContractService;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
@@ -139,6 +142,66 @@ public class PS1RestController {
 		log.info("만들어진 중분류 DTO리스트 보자 : "+middleCategoryDTOList);
 		
 		return	middleCategoryDTOList;
+	}
+	
+	/**
+	 * 품목정보 등록 화면에서, 품목코드 생성해주기 <br>
+	 * 보낸 대분류코드, 중분류코드를 받아서, 품목코드 만들어서 보내주기
+	 * @param middleCategoryDTOList
+	 * @return
+	 */
+	@PostMapping(value="generateMaterialCode",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<MaterialDTO> generateMaterialCode(@RequestBody List<MiddleCategoryDTO> middleCategoryDTOList){
+		//화면에서 대분류코드, 중분류코드를 받아서, 품목코드를 만들어서 보내주기
+		//코드생성 버튼 누를때마다, 모든 대분류코드, 중분류코드 받아서, 각각 품목코드 만들어주기
+		log.info("일단 제대로 받아오나 함 보자 : "+middleCategoryDTOList);
+		
+		//받은 대분류코드, 중분류코드 문자만 추출해서 만들고, 만든거 리스트에 넣어주기 
+		// -> 생성된 품목코드의 문자부분의 리스트
+		List<String> getLCWithMCList = new ArrayList<>();
+		for(MiddleCategoryDTO middleCategoryDTO:middleCategoryDTOList) {
+			String getLC = middleCategoryDTO.getLargeCode().substring(0,1);
+			String getMC = middleCategoryDTO.getMiddleCode().substring(0,1);
+			getLCWithMCList.add(getLC + getMC);
+		}
+		log.info("대분류,중분류 코드 문자부분만 합쳐서 만든 문자 코드 리스트 보자 : ",getLCWithMCList);
+		
+		//생성된 품목코드의 숫자부분 리스트로 만들기
+		List<String> maxOnlyNumByStringList = new ArrayList<>();
+		
+		//생성된 품목코드의 문자부분 리스트를 통해서, 모든 품목 찾아와서, 숫자부분만 추출후 최대값 가져오고, 최대값 +1 문자로 만들어서 리스트로 만들기
+		for(String getLCWithMC:getLCWithMCList) {			
+			//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
+			List<Material> materialList=materialService.getMaterialListByCodeContaining(getLCWithMC);
+			
+			//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
+			List<Integer> onlyNumList = new ArrayList<>();
+			for(Material m:materialList) {
+				onlyNumList.add(Integer.parseInt(m.getCode().substring(2)));
+			}
+			
+			//뽑아낸 숫자 리스트 중에서 최고값 (ex> 2)
+			Integer maxOnlyNumByInt = Collections.max(onlyNumList);
+			
+			//최고 숫자에 +1 하고, 4자릿수로 맞춰서 문자로 만들기 (ex> 2+1 =3 -> 0003)
+	        String maxOnlyNumByString = String.format("%04d",maxOnlyNumByInt+1);
+			
+			//만든 숫자리스트 -> 위에서 선언한, 생성된 품목코드의 숫자부분 리스트에 넣기
+	        maxOnlyNumByStringList.add(maxOnlyNumByString);			
+		}
+		log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
+		
+		List<MaterialDTO> finalGenerateMaterialCodeList = new ArrayList<>();
+		
+		for(int i=0;i<getLCWithMCList.size();i++) {
+			MaterialDTO materialDTO = new MaterialDTO();
+			materialDTO.setCode(getLCWithMCList.get(i)+maxOnlyNumByStringList.get(i));
+			finalGenerateMaterialCodeList.add(materialDTO);
+		}
+		log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
+		
+		return finalGenerateMaterialCodeList;		
+		
 	}
 	
 	
