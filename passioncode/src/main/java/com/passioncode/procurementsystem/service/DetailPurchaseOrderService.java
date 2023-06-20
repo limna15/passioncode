@@ -5,6 +5,7 @@ import com.passioncode.procurementsystem.dto.DetailPublishDTO;
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
+import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 public interface DetailPurchaseOrderService {
 	/**
@@ -56,5 +57,19 @@ public interface DetailPurchaseOrderService {
 
 	void detailPurchaseOrderDTO();
 
+	/**
+	 * 구매발주서 번호로 세부구매발주서 가져오기
+	 * @param purchaseOrder
+	 * @return
+	 */
+	List<DetailPurchaseOrder> getDetailByPurchaseNo(PurchaseOrder purchaseOrder);
 
+	/**
+	 * 구매발주서에 보여줄 발주서세부 리스트
+	 * @return
+	 */
+	List<DetailPurchaseOrder> getDetailList();
+	
+
+	void updataePp(Integer num1);
 }

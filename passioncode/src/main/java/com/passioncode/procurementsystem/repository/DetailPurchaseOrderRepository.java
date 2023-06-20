@@ -65,4 +65,10 @@ public interface DetailPurchaseOrderRepository extends JpaRepository<DetailPurch
 	public static String my() {
 		return null;
 	}
+	
+	/**
+	 * 구매발주서 번호를 이용해 세부구매발주서 내용 가져오기
+	 * @param purchaseOrder
+	 */
+	List<DetailPurchaseOrder> findByPurchaseOrder(PurchaseOrder purchaseOrder);
 }

@@ -89,7 +89,9 @@
                     </form>
 					<!--<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;-->
 					<!-- 발주서 발행 버튼 시작 -->
-					<div class="col-md-6" >		<button class="td-modal btn btn-primary" id="publishBtn" style="float: right;">발주서 발행</button>
+					<div class="col-md-6" >	
+					<button type="submit" id="data" class="ls-modal btn btn-primary" data-toggle="modal" href="/procurement2/purchaseOrder?purchaseNo" data-target="#modal" style="float:right;" onclick="aaa()">발행 테스트</button>&nbsp;
+							<button class="td-modal btn btn-primary" id="publishBtn" style="float: right;">발주서 발행</button>
 						</div>
 					<!-- 발주서 발행 버튼  끝-->
 					
@@ -124,7 +126,7 @@
 							<tbody>
 								<tr th:each="dto: ${purchaseOrderList}">
 								<td>
-									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" >
+									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" onclick="myCheckBox()">
 											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
 								</td>
 								<td>[[${dto.companyName}]]</td>
@@ -170,13 +172,6 @@
                     <h5 class="modal-title">발주서 발행 시작~</h5>
                     </div>
                     <div class="modal-body" >
-                    <div class="table-responsive" th:each="dto: ${myPublishDTO}">
-						<h4> 발주서 번호: [[${dto.pono}]]</h4>
-						<h4> 협력 회사 : [[${dto.cname}]]</h4>
-						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
-						<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
-						
-						<br>
                     <table id="transactionDetail" border="1">
 								<thead>
 									<tr>
@@ -192,23 +187,22 @@
 									<tr th:each="dto: ${myPublishDTO}">
 									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
 										<td>[[${dto.pocode}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.ppamount}]]</td>
-										<td>[[${dto.unit_price}]]</td>
-										<td>[[${dto.supply_price}]]</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
 									</tr>
 								</tbody>
 							</table>
 							<br>
                     </div>
                     <div class="modal-footer">
-                       <button id="publishBtn22" href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
+                       <button  href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
                        </button>
                       <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        </button>
-                       </div>
                     </div>
                     </div>
                 </div>
@@ -239,36 +233,6 @@
 
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
-if(window.location.search!=''){//테이터가 있을 경우에만
-var mych=window.location.search;
-console.log(" 값>>>>>>>>>>>>>>> " + mych);
-console.log("길이 보여줘 제발", mych.length);
-const last2 = mych.substring(10);//0부터 
-console.log("길이??????????~~~@", last2);
-$(document).ready(function(){
-	//데이터가 있을때만뜨게 해라
-	$(".myPublish").modal("show");
-});
-}else{
-	
-}
-;
-
-$("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을 누르면
-	console.log("발주서 진짜 발행을 눌러봐요>>> ");
-	//여기에서 체크번호 받고 그 번호를 전달하기
-	//발주서 발행 버튼을 클릭했을때 
-	var mych=window.location.search;
-	const last2 = mych.substring(10);//0부터 
-	//?checkBox=
-	
-	//const last = mych.substr(-1);//문자의 마지막 글자
-	
-	//console.log(last); //이 문자를 보내기
-	//여기서 checkBox라는 이름으로 보내기
-	location.href="/procurement2/purchaseNo?checkBox2="+last2;//리다이렉트 잘 된다. 
-	
-});
 
 $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 	$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
@@ -293,32 +257,27 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 		
 		
 	}else if(cList.length===1 ||cList.length<1){//한개 선택된 경우
-		//$(".myPublish").modal('show');//발주서 발행 모달
+		$(".myPublish").modal('show');//발주서 발행 모달
 		console.log("발주서 발행 시작")
 		
-		//발주서 발행 버튼을 클릭했을때 
-		location.href="/procurement2/purchaseOrder?checkBox="+cList[0];
 		
-	}//이미 발주서가 발행되어 있는 경우 발행할 수 없다고 하기
-	//발주서 여러개를 한 번에 발행하는 경우
-	//cList에 담아서 가능할듯
-	
-	
-	
-/*  		$.ajax({
-			type: "get",
-			url: "/procurement2/purchaseOrder",
-			data: {aaa:aaa}, //보낼데이터
+		$.ajax({
+			type: "post",
+			url: "/procurement2/publish",
+			data: JSON.stringfy(cList),
+			contentType :"application/json; charset=UTF-8",
+			dataType: "json",
 			success: function(data){
 				console.log("받아온 데이터 : ",data);
-				
+
 				},
 				error: function(xhr,status,er){
 					if(error)
 						error(er);
 				}
 			
-		}); */
+		});
+	}
 	
 /* 	for(let i=0;cList.lenth-1;i++){
 		$(".myPublish").modal('show');
@@ -352,10 +311,12 @@ function myCheckBox(){
 		purchaseNo += el.value + ' ';
   });
 		console.log("purchaseNo 조달계획번호 여기>>> ", purchaseNo);
-
+		
+//	aaa();
+	
+	
 
 };	
-
 function aaa(){
 	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
 	purchaseNo = purchaseNo.replaceAll(" ","");

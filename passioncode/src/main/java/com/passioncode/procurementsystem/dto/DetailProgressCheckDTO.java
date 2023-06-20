@@ -52,7 +52,7 @@ public class DetailProgressCheckDTO {
 	private Integer diliveryPercent;
 	
 	/**
-	 *검수완료
+	 *검수완료 -> String 으로 바꿀까..?
 	 */
 	private Integer inspectionComplete;
 	

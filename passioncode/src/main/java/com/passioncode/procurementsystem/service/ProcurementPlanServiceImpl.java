@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
+import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.repository.ContractRepository;
+import com.passioncode.procurementsystem.repository.DetailPurchaseOrderRepository;
 import com.passioncode.procurementsystem.repository.MRPRepository;
 import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	private final ProcurementPlanRepository procurementPlanRepository;
 	private final MRPRepository mrpRepository;
 	private final ContractRepository contractRepository;
+	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	
 	
 	@Override
@@ -402,11 +405,9 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		return procurementPlanDTO;
 	}
 
-
-
-	
-
-	
-	
-	
+	@Override
+	public ProcurementPlan getPpByDetailPurchaseOrder(Integer code) {
+		DetailPurchaseOrder dpo= detailPurchaseOrderRepository.findById(code).get();
+		return	procurementPlanRepository.findByDetailPurchaseOrder(dpo);
+	}	
 }

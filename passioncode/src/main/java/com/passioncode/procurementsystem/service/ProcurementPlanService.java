@@ -85,6 +85,11 @@ public interface ProcurementPlanService {
 	 */
 	ProcurementPlanDTO getProcurementPlanCalculate(ProcurementPlanDTO procurementPlanDTO);
 	
-	
+	/**
+	 * 세부구매발주서 코드를 이용해서 ProcurementPlan 조달계획 엔티티 가져오기
+	 * @param code
+	 * @return
+	 */
+	ProcurementPlan getPpByDetailPurchaseOrder(Integer code);
 
 }

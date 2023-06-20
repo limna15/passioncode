@@ -2,6 +2,7 @@ package com.passioncode.procurementsystem.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,14 +99,6 @@ public class ProgressCheckRepositoryTests {
 		
 	}
 	
-	@Test
-	public void getList() {
-		Optional<DetailPurchaseOrder> list = detailPurchaseOrderRepository.findById(1);
-		//ProgressCheck pcheckList = pcheckList.get();
-		List<PurchaseOrder> list2 = purchaseOrderRepository.findAll();
-		log.info("발주서 가져오기>>"+list2);
-		
-	}
 	
 	@Transactional
 	@Test
@@ -116,22 +109,24 @@ public class ProgressCheckRepositoryTests {
 		//1번 세구부매 발주서로 테스트
 		
 		//세부구매발주서 -> 조달계획 -> ..
-		DetailPurchaseOrder detailPurchaseOrder2= detailPurchaseOrderRepository.findById(1).get();
-		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder2);
-		//MRP mrp = mrpRepository.findBymaterialCode(null);
-		//log.info("발주 계획 보기>>"+pp);		
-		//만약에로 발주 코드가 널이 아닌것 으로 불러오기
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
+		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(detailPO);
+		
 		
 		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
-		  .companyName(procurementPlan.getContract().getCompany().getName())
+		.companyName(procurementPlan.getContract().getCompany().getName())
 		  .purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
 		  .orderAmount(procurementPlan.getDetailPurchaseOrder().getAmount())
 		  .dueDate(procurementPlan.getDueDate())
 		  .materialName(procurementPlan.getContract().getMaterial().getName())
 		  .orderAmount(procurementPlan.getAmount())
 		  .unitPrice(procurementPlan.getContract().getUnitPrice())
-		  .diliveryPercent(20).inspectionComplete("미완료")
-		  .purchaseOrderDeadlineStatus("미완료") .build();
+		  .diliveryPercent("미등록")
+		  .inspectionComplete("미완료")
+		  .purchaseOrderDeadlineStatus(null)
+		  .nextCheckDate(null)
+		  .build();
 		  
 		  log.info(">> 목록 보여주세요 >>>"+progressCheckDTO); 
 		 		
@@ -155,35 +150,18 @@ public class ProgressCheckRepositoryTests {
 	}
 	
 	
-	@Transactional
-	@Test
-	public void purchaseOrderDTOTest() {//조달 계획 가져오기
-		//협력회사, 발주일, 조달납기 예정일, 품목공급LT, 최소 발주일, 품목코드, 품목명
-		//, 기존재고수량, 필요수량, 발주수량, 단가, 공급가격, 발주서 발행상태
-		//총 13개 DTO
-		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
-		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder().companyName(procurementPlan.getContract().getCompany().getName())
-				.purchaseOrderDate(extistPurchaseOrderDate(procurementPlan)).dueDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())
-				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getMrp().getMaterial().getName())
-				.materialName(procurementPlan.getContract().getMaterial().getName())
-				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount()))
-				.unitPrice(procurementPlan.getContract().getUnitPrice()).procuremnetPlan(procurementPlan.getCode())
-				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder(procurementPlan)).build();
-			
-			log.info(">>>>>>>>>>>"+purchaseOrderDTO);
-	}
 	
-	public String existPurchaseOrder(ProcurementPlan procurementPlan) {//조달 계획을 가져와야 하기 때문에 리턴이 필요하다. 
-		String detailStatus = null;
-		if (procurementPlan.getDetailPurchaseOrder() == null) {// 발주서 번호 존재X
-			detailStatus = "미완료";
-			
-		} else {
-			detailStatus = "완료";
-		}
-		
-		return detailStatus;
-	}
+//	public String existMInStatus(DetailPurchaseOrder detailPO) {//조달 계획을 가져와야 하기 때문에 리턴이 필요하다. 
+//		String detailStatus = null;
+//		if (detailPO.getCode() == null) {//입고상태 존재X
+//			detailStatus = "미완료";
+//			
+//		} else {
+//			detailStatus = "완료";
+//		}
+//		
+//		return detailStatus;
+//	}
 	
 	public LocalDateTime extistPurchaseOrderDate(ProcurementPlan procurementPlan) {//조달 계획을 가져와야 하기 때문에 리턴이 필요하다. 
 		//세부 구매발주서에 있는 발주 번호 갖고 오기
@@ -191,13 +169,138 @@ public class ProgressCheckRepositoryTests {
 		if(procurementPlan.getDetailPurchaseOrder() != null) {
 			detailPurchaseOrderDate=procurementPlan.getDetailPurchaseOrder().getDate();
 		}
-
+		
 		return detailPurchaseOrderDate;
 		
 	}
 	
+	@Test
+	public void showPercent() {//해당하는 것의 진척 평가를 갖고오기
+		Optional<ProgressCheck> list = progressCheckRepository.findById(1);
+		//ProgressCheck pcheckList = pcheckList.get();
+		List<ProgressCheck> list2 = progressCheckRepository.findAll();
+		List<ProgressCheckDTO> progressCheckDTOlList = new ArrayList<>();
+		List<DetailPurchaseOrder> dp = detailPurchaseOrderRepository.findAll();
+		Optional<DetailPurchaseOrder> dp2 = detailPurchaseOrderRepository.findById(1);
+		Integer aa=  list.get().getRate();
+		LocalDateTime bb = list.get().getDate();
+		String cc = list.get().getEtc();
+		Integer dd = list.get().getDetailPurchaseOrder().getCode();//진척검수에서 가져온 발주코드
+		log.info("*******이건 진척검수에서 가져온 발주코드"+dd);
+		
+		progressCheckDTOlList.add(null);
+		log.info("DTO보기>>"+progressCheckDTOlList);
+		Optional<ProgressCheck> pcL= progressCheckRepository.findById(2);
+		
+		log.info("조달계획 가져오기>>"+pcL);
+		log.info("조달계획 1번 퍼센트 가져오기>>"+aa);
+		log.info("조달계획 1번 진척검수일 가져오기>>"+bb);
+		log.info("조달계획 1번 기타사항 가져오기>>"+cc);
+		log.info("조달계획 1번 가져오기>>"+list);
+		log.info("조달계획 전부 다 가져오기>>"+list2);
+		
+		Integer nono= dp2.get().getCode();
+		if(nono==dd) {//만약 발주코드와 진척검수 발주 코드가 같다면
+			Integer aa2=  list.get().getRate();
+			
+			log.info("이건 해당하는 납기 진도율"+aa2);			
+		}
+	}
 	
+	@Test
+	public void getCompateList() {//여기에서 for이용해서 비교하기
+		Optional<DetailPurchaseOrder> list = detailPurchaseOrderRepository.findById(1);
+		List<DetailPurchaseOrder> detailList = detailPurchaseOrderRepository.findAll();
+		//ProgressCheck pcheckList = pcheckList.get();
+		List<PurchaseOrder> list2 = purchaseOrderRepository.findAll();
+		List<ProgressCheckDTO> pcDTOList = new ArrayList<>();
+		Optional<MaterialIn> ma = materialInRepository.findById(1);
+		log.info("발주서 마감: "+ma.get().getStatus());//true라고 나옴
+		if(ma.get().getStatus()==false) {
+			log.info("존재하지 않으면");
+			
+		}else {
+			log.info("발주서 마감이라면");
+			
+		}
+		for(int i=0;i<detailList.size();i++) {
+			
+		}
+		log.info("발주서 가져오기>>"+list2);
+		
+	}
 	
+	@Test
+	public void existMIn() {
+		String inStatus = null;
+		Optional<MaterialIn> ma = materialInRepository.findById(1);
+		log.info("발주서 마감: "+ma.get().getStatus());//true라고 나옴
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
+		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(detailPO);
+		log.info("뭐라고 출력되는지? 입고>> "+maIn);
+		//MaterialIn(code=1, status=true, date=2023-06-16T11:45:17, transactionStatus=발행 완료)
+		log.info("발주서 마감 상태**>>"+maIn.getStatus());
+		if(ma.get().getStatus()==false) {//발주서가 존재하면
+			log.info("발주서 마감이라면");
+			inStatus = "미완료";
+		}else {
+			log.info("존재하고 있음");
+			inStatus = "완료";
+			
+		}
+		log.info("발주서 마감 상태: "+inStatus);
+		//return inStatus;
+	}
+	
+	@Transactional
+	@Test
+	public String existMIn2(DetailPurchaseOrder dp) {
+		//발주서 마감 상태 잘 보내줌
+		String inStatus = null;
+		Optional<MaterialIn> ma = materialInRepository.findById(1);
+		log.info("발주서 마감: "+ma.get().getStatus());//true라고 나옴
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
+		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(dp);
+		log.info("뭐라고 출력되는지? 입고>> "+maIn);
+		//MaterialIn(code=1, status=true, date=2023-06-16T11:45:17, transactionStatus=발행 완료)
+		if(maIn!=null) {
+			
+		if(ma.get().getStatus()==false) {//발주서가 존재하면
+			log.info("발주서 마감이라면");
+			inStatus = "미완료";
+		}else {
+			log.info("존재하고 있음");
+			inStatus = "완료";
+		}
+		}else {
+			inStatus = "미완료";
+			
+		}
+		log.info("발주서 마감 상태: "+inStatus);
+		return inStatus;
+	}
+	@Test
+	public void getPercent() {//해당하는 발주번호 찾아서 진척검수 보여주기
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(1).get();
+		//Optional<ProgressCheck> pgCheck = progressCheckRepository.findById(detailPO.getCode());
+		ProgressCheck pg = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
+		
+		log.info("납기 진도율 퍼센트"+pg.getRate());//납기 진도율
+		String aa= pg.getRate()+"%";
+		log.info(aa);
+		log.info("");
+	}
+	//여러개 등록되어 있을 경우 마지막의 것으로 가져오는 조건 
+	//추가하기
+	
+	@Test
+	public void nextCheckDate() {
+		DetailPurchaseOrder detailPO= detailPurchaseOrderRepository.findById(2).get();
+		ProgressCheck pg = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
+		log.info(pg.getDate());
+		}
 	
 }
 	

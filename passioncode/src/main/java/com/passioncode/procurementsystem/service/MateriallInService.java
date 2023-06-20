@@ -57,14 +57,17 @@ public interface MateriallInService {
 	@Transactional
 	void updatePPCompletionDate(Integer code);
 	
-//	/**
-//	 * 코드번호(detailPurchaseOrder)를 이용해 자재입고 테이블이 생길때 조달계획의 조달계획 완료일 업데이트하기
-//	 * @param code
-//	 */
-//	// 직접 entity에 접근해서(엔티티에 @Setter가 있어야함) -> 직접 엔티티에 접근 안하고 바꾸기
-//	@Transactional
-//	void updatePPCompletionDate(Integer code);
+	/**
+	 * 세부구매발주서 코드를 이용해서 MaterialIn 엔티티 가져오기
+	 * @param code
+	 * @return
+	 */
+	MaterialIn getMeterialInByDetailPurchaseOrder(Integer code);
 	
-	
-	
+	/**
+	 * 코드번호(detailPurchaseOrder)를 이용해 거래명세서 테이블이 생길때 발행상태 업데이트하기
+	 * @param code
+	 */
+	@Transactional
+	void updateTransactionStatus(Integer code);
 }

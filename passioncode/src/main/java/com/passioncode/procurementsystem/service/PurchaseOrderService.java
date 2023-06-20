@@ -26,5 +26,12 @@ public interface PurchaseOrderService {
 	 * @return
 	 */
 	List<PurchaseOrderDTO> getDTOList();
+	
+	/**
+	 * 구매발주서 번호로 구매발주서 엔티티 가져오기
+	 * @param procurementPlan
+	 * @return
+	 */
+	PurchaseOrder getPurchaseOrder(Integer no);
 
 }

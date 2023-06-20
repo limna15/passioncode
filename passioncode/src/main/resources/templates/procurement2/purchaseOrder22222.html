@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+	<th:block th:fragment="content">
+
+<style>
+.search-box {
+    position: relative;        
+    float: right;
+}
+.search-box input {
+    height: 34px;
+    border-radius: 20px;
+    padding-left: 35px;
+    border-color: #ddd;
+    box-shadow: none;
+}
+.search-box input:focus {
+    border-color: #3FBAE4;
+}
+.search-box i {
+    color: #a0a5b1;
+    position: absolute;
+    font-size: 19px;
+    top: 8px;
+    left: 10px;
+}
+
+   
+.pagination {
+    float: right;
+    margin: 0 0 5px;
+}
+.pagination li a {
+    border: none;
+    font-size: 95%;
+    width: 30px;
+    height: 30px;
+    color: #999;
+    margin: 0 2px;
+    line-height: 30px;
+    border-radius: 30px !important;
+    text-align: center;
+    padding: 0;
+}
+.pagination li a:hover {
+    color: #666;
+}	
+.pagination li.active a {
+    background: #03A9F4;
+}
+.pagination li.active a:hover {        
+    background: #0397d6;
+}
+.pagination li.disabled i {
+    color: #ccc;
+}
+.pagination li i {
+    font-size: 16px;
+    padding-top: 6pxrow
+}
+.hint-text {
+    float: left;
+    margin-top: 6px;
+    font-size: 95%;
+}    
+</style>
+
+		<div class="col-md-12 stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title">발주서 발행</p>
+                  <form>
+                    <div class="form-row align-items-center">
+                    <div class="col-auto my-1">
+                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                        <option selected>검색 조건 선택</option>
+                        <option value="1">발주서 번호</option>
+                        <option value="2">발주코드</option>
+                        <option value="3">품목코드</option>
+                        </select>
+                    </div>
+                    
+                    <input type="text" style="width:150px;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+                    <div class="col-auto my-1">
+                      <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+					<a class="ls-modal btn btn-primary" data-toggle="modal" href="aaa()" data-target="#modal" style="float:right;" onclick="aaa()">발행</a>&nbsp;
+					<button type="submit" id="data" class="ls-modal btn btn-primary" data-toggle="modal" href="/procurement2/purchaseOrder?purchaseNo" data-target="#modal" style="float:right;" onclick="aaa()">발행 테스트</button>&nbsp;
+					<!--<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;-->
+					 <button class="btn btn-primary" onclick="print();">인쇄</button>&nbsp;
+					<div class="table-responsive">
+						<table id="recent-purchases-listing" class="table"
+							style="text-align: center;">
+							<thead>
+								<tr>
+								<th>ch</th>
+								<th>협력<br> 회사
+								</th>
+								<th>발주일</th>
+								<th>조달납기<br> 예정일
+								</th>
+								<th>품목 공급<br> L/T
+								</th>
+								<th>최소<br> 발주일
+								</th>
+								<th>품목 코드</th>
+								<th>품목명</th>
+								<th>필요 수량</th>
+								<th>발주 수량</th>
+								<th>단가</th>
+								<th>공급<br>가격
+								</th>
+								<th>발주서<br>발행 상태
+								</th>
+								<th>보낼정보(조달계획코드)</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="dto: ${purchaseOrderList}">
+								<td>
+									<div class="custom-control custom-checkbox mr-sm-2">
+									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" onclick="myCheckBox()">
+											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
+									</div>
+								</td>
+								<td>[[${dto.companyName}]]</td>
+								<td>[[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</td>
+								<td>[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
+								<td>[[${dto.supplyLT}]]</td>
+								<td>[[${#dates.format(dto.minimumOrderDate, 'yyyy/MM/dd')}]]</td>
+								<td>[[${dto.materialCode}]]</td>
+								<td>[[${dto.materialName}]]</td>
+								<td>[[${dto.needAmount}]]</td>
+								<td>[[${dto.orderAmount}]]</td>
+								<td>[[${dto.unitPrice}]]</td>
+								<td>[[${dto.supplyPrice}]]</td>
+								<td>[[${dto.purchaseOrderStatus}]]</td>
+								<td>[[${dto.procuremnetPlan}]]</td>
+							</tr>
+							</tbody>
+						</table>
+						<!--페이지 번호 시작-->
+                    <div class="clearfix">
+                      <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                      <ul class="pagination">
+                          <li class="page-item disabled"><a href="#"> << <i class="fa fa-angle-double-left"></i></a></li>
+                          <li class="page-item"><a href="#" class="page-link">1</a></li>
+                          <li class="page-item"><a href="#" class="page-link">2</a></li>
+                          <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                          <li class="page-item"><a href="#" class="page-link">4</a></li>
+                          <li class="page-item"><a href="#" class="page-link">5</a></li>
+                          <li class="page-item"><a href="#" class="page-link">>><i class="fa fa-angle-double-right"></i></a></li>
+                      </ul>
+                  </div>
+                  <!--페이지 번호 끝-->
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+<div class="modal fade" id="modal" >
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+		
+            <!-- header title -->
+				<h4 class="modal-title">구매발주서 발행</h4>
+             <!-- 닫기(x) 버튼 -->
+					<button type="button" class="close" data-dismiss="modal">×</button>
+			
+			</div>
+						
+			<!-- body -->
+			<div class="modal-body">
+				<div class="modal-body">
+      <th:block th:replace="~{/procurement2/purchaseOrderPublish :: purchaseOrder(~{this::publish} )}"></th:block>
+     </div>
+     </div>
+		</div>
+	</div>
+</div>
+
+		
+<!-- 체크박스 시작 -->
+
+<script type="text/javascript">
+let printPurchaseOrder;
+function print(){
+	function myCheckBox(){
+	aaa();
+	printPurchaseOrder = window.open('/procurement2/print','thePopup','width=722,height=600')
+};
+</script>
+<!-- 체크박스 시작 -->
+<script th:inline="javascript" type="text/javascript">
+var purchaseOrderList = [[${purchaseOrderList}]];
+console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
+
+var codeList= new Array();
+var dtoCode= new Object();
+
+purchaseOrderList.forEach(function(item){
+	dtoCode= item.code;
+	codeList.push(dtoCode);
+});
+
+console.log("codeList가 제대로 오나 >>> ", codeList);
+
+var purchaseNo = '';
+function myCheckBox(){
+	const chkChecked = 'input[name="checkBox"]:checked';
+	const selectedEls = document.querySelectorAll(chkChecked);
+	purchaseNo = '';
+	
+	selectedEls.forEach((el) => {
+		purchaseNo += el.value + ' ';
+  });
+		console.log("purchaseNo 조달계획번호 여기>>> ", purchaseNo);
+		
+//	aaa();
+	
+	
+
+};
+
+function aaa(){
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	purchaseNo = purchaseNo.replaceAll(" ","");
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	//아래 두개 없어도 잘됨
+	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
+	//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
+};
+	
+	
+</script>
+	</th:block>
+
+</th:block>
+</html>

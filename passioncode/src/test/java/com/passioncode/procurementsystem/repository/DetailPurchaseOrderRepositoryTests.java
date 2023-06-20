@@ -44,8 +44,39 @@ public class DetailPurchaseOrderRepositoryTests {
 	@Commit
 	@Test
 	public void updatePp2() {//구매 발주서를 업데이트 시키기
+		//조달계획 번호를 받으면 
+		//빌드를 해 줘야 한다. 
+		//세부의 3가지를 넣어서 + 구매발주서
+		log.info(procurementPlanRepository.findById(8).get().getAmount());
+		ProcurementPlan pp = procurementPlanRepository.findById(8).get();
 		
+		Integer amount = procurementPlanRepository.findById(6).get().getAmount();
+		PurchaseOrder po = PurchaseOrder.builder().build();
+		purchaseOrderRepository.save(po);//발주서 번호 생성 후 저장
+		DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder()
+				.amount(amount).date(LocalDateTime.now())
+				.purchaseOrder(po).build();
+		//세부구매발주서 저장
 		
+		detailPurchaseOrderRepository.save(detailPurchaseOrder);
+		
+		procurementPlanRepository.save(pp);
+		//총 9개
+		ProcurementPlan pp2 = ProcurementPlan.builder()
+				.amount(pp.getAmount())
+				.code(pp.getCode())
+				.completionDate(pp.getCompletionDate())
+				.contract(pp.getContract())
+				.detailPurchaseOrder(detailPurchaseOrder)
+				.dueDate(pp.getDueDate())
+				.minimumOrderDate(pp.getMinimumOrderDate())
+				.mrp(pp.getMrp())
+				.registerDate(pp.getRegisterDate()).build();
+				
+		procurementPlanRepository.save(pp2);
+		
+		log.info("조달계획8번  >>" + pp2);
+		log.info("22288888888>>" + detailPurchaseOrder);
 		
 	}	
 	
@@ -59,7 +90,7 @@ public class DetailPurchaseOrderRepositoryTests {
 	public void updatePp() {
 		//조달품목 리스트를 다 불러와서 널값이면 확인해서 저장해 주기
 		
-		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(9);// 조달계획 2번
+		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(17);// 조달계획 17번
 		for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
 			log.info("222>>" + Arrays.toString(arr));
 			// [2, (주)경도전자, 2023-06-10, 200, CNa0001, Bolt1, 100]

@@ -69,27 +69,35 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		return detailList;
 
 	}
-
+	
+	
+	
 	@Override
 	public DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
 		// 구매발주서번호, 발주 코드는 자동으로 만들어져서 여기서는 만들지 않는다.
 		// 발주코드 발주수량, 발주일자, 발주서 번호(외래키) (총 4개)
 		// Integer code, PurchaseOrder purchaseOrder
-
+		//List<Object[]> result = detailPurchaseOrderRepository.myDetailList(no);
+		
+		PurchaseOrder po = PurchaseOrder.builder().build();
 		DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder()
-				.amount(detailPurchaseOrderDTO.getPurchaseOrderAmount()).date(LocalDateTime.now()).code(null)
-				.purchaseOrder(null).build();
-
+				.amount(detailPurchaseOrderDTO.getPurchaseOrderAmount()).date(LocalDateTime.now())
+				.purchaseOrder(po).build();
+		
 		return detailPurchaseOrder;
 
 	}
-
+	
 	@Override
 	public Integer register(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
 		DetailPurchaseOrder detailPurchaseOrder = dtoToEntity(detailPurchaseOrderDTO);
+		
+		
+		
+		
 		return null;
 	}
-
+	
 	@Override
 	public List<DetailPurchaseOrderDTO> getDTOList() {
 		List<ProcurementPlan> procurmentPlanList = procurementPlanRepository.findAll();
@@ -133,6 +141,56 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	public void detailPurchaseOrderDTO() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<DetailPurchaseOrder> getDetailByPurchaseNo(PurchaseOrder purchaseOrder) {
+		
+		return detailPurchaseOrderRepository.findByPurchaseOrder(purchaseOrder);
+	}
+	
+	@Override
+	public List<DetailPurchaseOrder> getDetailList(){
+		List<DetailPurchaseOrder> detailList = detailPurchaseOrderRepository.findAll();
+		return detailList;
+		
+	}
+
+
+
+	@Override
+	public void updataePp(Integer num1) {
+		ProcurementPlan pp = procurementPlanRepository.findById(num1).get();
+		Integer amount = procurementPlanRepository.findById(num1).get().getAmount();
+		PurchaseOrder po = PurchaseOrder.builder().build();
+		purchaseOrderRepository.save(po);//발주서 번호 생성 후 저장
+		DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder()
+				.amount(amount).date(LocalDateTime.now())
+				.purchaseOrder(po).build();
+		//세부구매발주서 저장
+		
+		detailPurchaseOrderRepository.save(detailPurchaseOrder);
+		
+		procurementPlanRepository.save(pp);
+		//총 9개
+		ProcurementPlan pp2 = ProcurementPlan.builder()
+				.amount(pp.getAmount())
+				.code(pp.getCode())
+				.completionDate(pp.getCompletionDate())
+				.contract(pp.getContract())
+				.detailPurchaseOrder(detailPurchaseOrder)
+				.dueDate(pp.getDueDate())
+				.minimumOrderDate(pp.getMinimumOrderDate())
+				.mrp(pp.getMrp())
+				.registerDate(pp.getRegisterDate()).build();
+				
+		procurementPlanRepository.save(pp2);
+		
+		log.info("저장하는 조달계획번호  ~~~>>" + pp2);
+		log.info("22288888888>>" + detailPurchaseOrder);
+		
+		
+		
 	}
 
 }
