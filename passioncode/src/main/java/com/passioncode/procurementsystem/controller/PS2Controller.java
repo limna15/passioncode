@@ -68,8 +68,6 @@ public class PS2Controller {
 		
 		model.addAttribute("pCheckList", progressCheckService.getProgressCheckDTOList());
 		
-		//만약에 보내준 값이 100이라면 이거 101
-		model.addAttribute("list",100);
 		
 		
 	}

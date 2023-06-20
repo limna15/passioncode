@@ -81,9 +81,15 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 	public String getPercent(DetailPurchaseOrder dp) {
 		String myPercent=null;
 		ProgressCheck pg = progressCheckRepository.findByDetailPurchaseOrder(dp);
+		log.info("내가 보고싶은 값"+pg);
 		if(pg!=null) {//납기 진도율이 존재한다면
-			myPercent = pg.getRate()+"%";
-			
+			if(pg.getRate()==null) {//검수 일정은 등록되어 있지만 아직 검사하지 않은 경우
+				myPercent = "미등록";
+			}else {
+				myPercent = pg.getRate()+"%";
+				
+			}
+						
 		}else {
 			myPercent = "미등록";
 		}
