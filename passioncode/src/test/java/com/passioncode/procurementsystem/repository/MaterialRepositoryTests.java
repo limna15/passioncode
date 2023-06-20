@@ -189,17 +189,26 @@ public class MaterialRepositoryTests {
 		String getLC = largeCategoryCode.substring(0,1);
 		String getMC = middleCategoryCode.substring(0,1);
 		String getLCWithMC = getLC + getMC;
+		
 		//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
 		List<Material> materialList=materialRepository.findByCodeContaining(getLCWithMC);
+		
 		//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
 		List<Integer> onlyNumList = new ArrayList<>();
 		for(Material m:materialList) {
 			onlyNumList.add(Integer.parseInt(m.getCode().substring(2)));
 		}
 		
-	
+		//뽑아낸 숫자 리스트 중에서 최고값 (ex> 2)
+		Integer maxOnlyNumByInt = Collections.max(onlyNumList);
 		
-		log.info("숫자 리스트 보자 : "+	Collections.max(onlyNumList));
+		//최고 숫자에 +1 하고, 4자릿수로 맞춰서 문자로 만들기 (ex> 2+1 =3 -> 0003)
+        String maxOnlyNumByString = String.format("%04d",maxOnlyNumByInt+1);
+
+		//대분류+중분류 합친 문자 + 위에서 만든 4자릿수 합치기
+        String finalGenerateMaterialCode = getLCWithMC+maxOnlyNumByString;
+		
+		log.info("최종 생성된 품목코드 : "+	finalGenerateMaterialCode);
 //		String test = largeCategoryCode+middleCategoryCode;
 //		log.info("문자합치기.. 이게 되나?? : "+test);
 		
