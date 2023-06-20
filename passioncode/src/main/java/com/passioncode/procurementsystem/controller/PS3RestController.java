@@ -21,7 +21,6 @@ import com.passioncode.procurementsystem.service.ProcurementPlanService;
 import com.passioncode.procurementsystem.service.PurchaseOrderService;
 import com.passioncode.procurementsystem.service.TransactionDetailService;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -103,11 +102,12 @@ public class PS3RestController {
 						.materialCode(ppList.get(i).getContract().getMaterial().getCode()).materialName(ppList.get(i).getContract().getMaterial().getName())
 						.amount(dpoList.get(i).getAmount()).unitPrice(ppList.get(i).getContract().getUnitPrice()).build();
 				transactionDetailDTOList.add(transactionDetailDTO);
-				
-				tdService.register(transactionDetailDTO);
-				materialInService.updateTransactionStatus(dpoList.get(i).getCode());
 			}
 		}		
+		tdService.register(transactionDetailDTO);
+		for(int i=0; i<miList.size(); i++) {
+			materialInService.updateTransactionStatus(dpoList.get(i).getCode());
+		}
 		log.info("거래명세서DTOList >>> " + transactionDetailDTOList);
 		
 		return transactionDetailDTOList;

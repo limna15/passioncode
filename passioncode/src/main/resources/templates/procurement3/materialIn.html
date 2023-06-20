@@ -17,6 +17,7 @@
     padding: 10px;
     text-align: center;
   }
+
 .search-box {
 	position: relative;
 	float: right;
@@ -87,14 +88,17 @@
 	font-size: 95%;
 }
 
-
-@media print
-{
+@media print {
+    html, body { -webkit-print-color-adjust:exact; width: 210mm; height: 297mm; }
+    table { page-break-inside:auto; }
+    tr    { page-break-inside:avoid; page-break-after:auto; }
+    thead { display:table-header-group; }
+    tfoot { display:table-footer-group; }
+    
     #no-print, #no-print * {
         display: none !important;
     }
     @page { margin: 0; }/* for 크롬 Headers and footers 없애기 */
-
 }
 
 </style>
@@ -312,7 +316,7 @@
 		<!-- 발주서 번호가 다를 때 뜨는 모달창 끝 -->
 	
 		<!-- 거래명세서 세부 내용 모달창 시작 -->
-		<div class="myPrint">
+		<div>
 			<div class="transactionDetailModal modal">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
@@ -326,9 +330,9 @@
 						<!-- body -->
 						<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
 						<div class="modal-body">
-						    <div class="publish">
+						    <div class="publish"  id="transactionPrint">
 								<div class="card-body">
-									<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;" id="no-print">인쇄</button>
+									<button type="submit" class="btn btn-primary" onclick="transactionPrint();"  style="float: right; margin: 0 5px;" id="none">인쇄</button>
 									<br>
 									<p class="card-title"><b>거래명세서</b></p>
 									
@@ -549,7 +553,7 @@
 							error(er);
 					}
 				});//ajax 끝
-			}//if(거래명세서 tdStatus) 끝
+			}//if(거래명세서 tdStatus) 끝	
 		//else if(체크박스를 한개 선택했을 때) 끝
 		
 		}else if(noList.length>1){ //noList가 2개이상일 경우
@@ -754,6 +758,17 @@
         }
         return obj
     }
+  	
+<!--    function transactionPrint(){-->
+<!--    	var initBody = document.body.innerHTML; //body영역 저장-->
+<!--    	window.onbeforeprint = function () { //프린터 출력 전 이벤트-->
+<!--    		document.body.innerHTML = document.getElementById('transactionPrint').innerHTML; //원하는 영역 지정 'transactionPrint'-->
+<!--    	}-->
+<!--    	window.onafterprint = function () { //프린터 출력 후 이벤트-->
+<!--    		document.body.innerHTML = initBody;-->
+<!--    	}-->
+<!--    	window.print();-->
+<!--    }-->
 </script>	
 		
 	</th:block>

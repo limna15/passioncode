@@ -1,120 +1,157 @@
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="setLogin(login)">
-
 <style>
-  table {
-    width: 100%;
-    border: 1px solid #444444;
-    font-size: 13px;
+html,body {
+	margin:5px;
+	padding:5px;
+}
 
-  }
-  th, td {
-    border: 1px solid #444444;
-    padding: 10px;
-    text-align: center;
-  }
+table {
+  width: 100%;
+  border: 1px solid #444444;
+  border-collapse : collapse;
+  font-size: 13px;
+
+}
+
+th, td {
+  border: 1px solid #444444;
+  padding: 10px;
+  text-align: center;
+}
+
+@media print {
+  #noprint { 
+	display:none;
+	}
+}	
 </style>
-<body>
-	<div class="publish">
-		<form th:action="@{/procurement3/materialIn}" th:method="POST">
-					<div class="card-body">
-						<button type="submit" class="btn btn-primary" style="float: right;">취소</button>
-						<button type="submit" class="btn btn-primary" onclick="print();"  style="float: right; margin: 0 5px;">인쇄</button>
-					<br>
-						<p class="card-title"><b>거래명세서</b></p>
-						
-						<!--거래명세서 회사 정보-->
-						<div>
-							<table id="transactionInfo">
-								<tr th:each="list: ${tdDTOList}">
-									<th>발주 회사</th>
-									<td>---</td>
-									<th rowspan="4">공<br><br>급<br><br>자</th>
-									<th>사업자 등록번호</th>
-									<td colspan="3"></td>
-								</tr>
-								<tr>
-									<th>발주서 번호</th>
-									<td>[[${purchaseCode}]]</td>
-									<th>상호(법인명)</th>
-									<td></td>
-									<th>성명(대표자)</th>
-									<td>-</td>
-								</tr>
-								<tr>
-									<th>납기일자</th>
-									<td>-</td>
-									<th>주소</th>
-									<td colspan="3">-</td>
-								</tr>
-								<tr>
-									<th>총 가격</th>
-									<td>-</td>
-									<th>담당자</th>
-									<td>-</td>
-									<th>연락처</th>
-									<td>-</td>
-								</tr>
-						</table>
-					</div>
-					<br>
-					
-					<!--거래명세서 품목 정보-->
-					<div class="table-responsive">
-						<table id="transactionDetail">
-							<thead>
-								<tr>
-									<th>품목코드</th>
-									<th>품목명</th>
-									<th>수량</th>
-									<th>단가</th>
-									<th>공급가격</th>
-									<th>부가세</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="list: ${tdDTOList}">
-									<td>[[${list.materialCode}]]</td>
-									<td>[[${list.materialName}]]</td>
-									<td>[[${list.amount}]]</td>
-									<td>[[${list.unitPrice}]]</td>
-									<td>[[${list.amount}*${list.unitPrice}]]</td>
-									<td>[[${list.amount}*${list.unitPrice}/10]]</td>
-								</tr>
-								
-							</tbody>
-						</table>
-					</div>
-					<br>
-					
-					<!--거래명세서 품목 정리 요약-->
-					<div class="table-responsive">
-						<table id="transactionResult" style="border: 1px solid ; font-size: 13px;">
-								<tr>
-									<th>수량</th>
-									<td></td>
-									<th>공급가격</th>
-									<td></td>
-									<th>VAT</th>
-									<td></td>
-									<th>합계</th>
-									<td></td>
-								</tr>
-						</table>
-					</div>					
-						<br>
-
-				</div>
-
-		</form>
+<div class="card-body" style="width: 210mm; height:297mm;">
+	<button type="submit" class="btn btn-primary"  id="noprint" style="float: right;">취소</button>
+	<button type="submit" class="btn btn-primary" id="noprint" onclick="print();"  style="float: right; margin: 0 5px;">인쇄</button>
+	<br>
+	<p class="card-title"><b>거래명세서</b></p>
+				
+	<div>
+		<table id="transactionInfo">
+			<tr>
+				<th>발주 회사</th>
+				<td id="company"></td>
+				<th rowspan="4">공<br><br>급<br><br>자</th>
+				<th>사업자 등록번호</th>
+				<td colspan="3" id="companyNo"></td>
+			</tr>
+			<tr>
+				<th>발주서 번호</th>
+				<td id="purchaseOrderNo"></td>
+				<th>상호(법인명)</th>
+				<td id="companyName"></td>
+				<th>성명(대표자)</th>
+				<td id="CEO"></td>
+			</tr>
+			<tr>
+				<th>납기일자</th>
+				<td id="date"></td>
+				<th>주소</th>
+				<td colspan="3" id="companyAddress"></td>
+			</tr>
+			<tr>
+				<th>총 가격</th>
+				<td id="totalPrice"></td>
+				<th>담당자</th>
+				<td id="manager"></td>
+				<th>연락처</th>
+				<td id="managerTel"></td>
+			</tr>
+		</table>
 	</div>
+	<br>
+
+	<!--거래명세서 품목 정보-->
+	<div class="table-responsive">
+		<table id="transactionDetail">
+			<thead>
+				<tr>
+					<th>품목코드</th>
+					<th>품목명</th>
+					<th>수량</th>
+					<th>단가</th>
+					<th>공급가격</th>
+					<th>부가세</th>
+				</tr>
+			</thead>
+			<tbody id="detail">
+			<!-- 동적 테이블 생성해서 들어가는 위치-->		
+			</tbody>
+		</table>
+		</div>
+		<br>
+
+	<!--거래명세서 결론-->
+	<div class="table-responsive">
+		<table id="transactionResult" style="border: 1px solid ; font-size: 13px;">
+			<tr>
+				<th>수량</th>
+				<td id="amountResult"></td>
+				<th>공급가격</th>
+				<td id="priceResult"></td>
+				<th>VAT</th>
+				<td id="vatResult"></td>
+				<th>합계</th>
+				<td id="totalPriceResult"></td>
+			</tr>
+		</table>
+	</div>					
+	<br>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
-let printPurchaseOrder;
-function print(){
-	printPurchaseOrder = window.open('/procurement3/transactionPrint','thePopup','width=722,height=600')
-};
-
-
+	
+	var tdList= [[${tdList}]];
+	console.log("tdDTO 읽어오나? ", tdList);
+	
+	//transactionDetail 거래명세서 세부 정보(두번째 테이블)			
+	for(var i= 0; i<tdList.length; i++) {
+	    var tableTd = '<tr>';
+	    tableTd += '<td>' + tdList[i].materialCode + '</td>';
+	    tableTd += '<td>' + tdList[i].materialName + '</td>';
+	    tableTd += '<td id="amount' + i + '">' + tdList[i].amount + '</td>';
+	    tableTd += '<td id="price' + i + '">' + tdList[i].unitPrice + '</td>';
+	    tableTd += '<td>' + tdList[i].amount*tdList[i].unitPrice + '</td>';
+	    tableTd += '<td>' + tdList[i].amount*tdList[i].unitPrice/10 + '</td>';
+	    tableTd += '</tr>';
+	
+	    $('#detail').append(tableTd);
+	}
+	
+	//transactionResult 거래명세서 결론(세번째 테이블)
+	const table = document.getElementById('detail');
+	  
+	// 수량, 단가 합계 계산
+	let amountSum= 0;
+	let priceSum= 0;
+	let vatSum= 0;
+	for(let i = 0; i < table.rows.length; i++)  {
+	  amountSum += parseInt(table.rows[i].cells[2].innerHTML);
+	  priceSum += parseInt(table.rows[i].cells[4].innerHTML);
+	  vatSum += parseInt(table.rows[i].cells[5].innerHTML);
+	}
+	
+	// 합계 출력
+	document.getElementById('amountResult').innerText = amountSum;
+	document.getElementById('priceResult').innerText = priceSum;
+	document.getElementById('vatResult').innerText = vatSum;
+	document.getElementById('totalPriceResult').innerText = priceSum+vatSum;
+	
+	//transactionInfo 거래명세서 회사 정보(첫번째 테이블)
+	//총가격(=합계)에서 동적으로 바뀐 데이터를 읽어 세팅해야 해서 맨밑에서 값을 받게함
+	document.querySelector("#company").innerHTML = tdList[0].company; //발주회사(= 우리회사)
+	document.querySelector("#purchaseOrderNo").innerHTML = tdList[0].purchaseOrderNo; //발주서 번호
+	document.querySelector("#date").innerHTML = tdList[0].date; //납기일자(= 입고일)
+	document.querySelector("#totalPrice").innerHTML = $('#totalPriceResult').html();//총가격(= 합계)
+	document.querySelector("#companyNo").innerHTML = tdList[0].companyNo; //사업자등록번호
+	document.querySelector("#companyName").innerHTML = tdList[0].companyName; //협력회사 이름
+	document.querySelector("#CEO").innerHTML = tdList[0].ceo; //협력회사 ceo
+	document.querySelector("#companyAddress").innerHTML = tdList[0].companyAddress; //협력회사 주소
+	document.querySelector("#manager").innerHTML = tdList[0].manager; //담당자
+	document.querySelector("#managerTel").innerHTML = tdList[0].managerTel; //담당자 번호			
 </script>
-</body>
-</th:block>
