@@ -122,10 +122,21 @@ public class ProgressCheckRepositoryTests {
 				.materialName(procurementPlan.getContract().getMaterial().getName())
 				.orderAmount(procurementPlan.getAmount()).unitPrice(procurementPlan.getContract().getUnitPrice())
 				.diliveryPercent("미등록").inspectionComplete("미완료").purchaseOrderDeadlineStatus(null).nextCheckDate(null)
+				.showPurchaseOrderCode(addBlank(procurementPlan.getDetailPurchaseOrder().getCode()))				
 				.build();
 
 		log.info(">> 목록 보여주세요 >>>" + progressCheckDTO);
 
+	}
+	
+	//발주코드에 문자를 넣어서 보내기
+	@Test
+	public String addBlank(Integer num1) {
+		String pNum = String.format("%05d", num1);
+		log.info("잘 찍어 보낼 문자"+pNum);
+		
+		return pNum;
+		
 	}
 
 	@Transactional

@@ -171,7 +171,7 @@
                     </div>
                     <div class="modal-body" >
                     <div class="table-responsive" th:each="dto: ${myPublishDTO}">
-						<h4> 발주서 번호: [[${dto.pono}]]</h4>
+						<h4> 발주서 번호: PO [[${dto.pono}]]</h4>
 						<h4> 협력 회사 : [[${dto.cname}]]</h4>
 						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
 						<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
@@ -191,7 +191,7 @@
 								<tbody>
 									<tr th:each="dto: ${myPublishDTO}">
 									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
-										<td>[[${dto.pocode}]]</td>
+										<td>DPO [[${dto.pocode}]]</td>
 										<td>[[${dto.mname}]]</td>
 										<td>[[${dto.mname}]]</td>
 										<td>[[${dto.ppamount}]]</td>

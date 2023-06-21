@@ -22,6 +22,11 @@ public class DetailProgressCheckDTO {
 	//외래키로 사용할 것들 추가하기
 	
 	/**
+	 * 보여지는 발주코드
+	 */
+	private Integer purchaseOrderCode2;
+	
+	/**
 	 * 발주코드
 	 */
 	private Integer purchaseOrderCode;

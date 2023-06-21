@@ -30,6 +30,11 @@ public class ProgressCheckDTO {
 	//private String etc;
 	
 	/**
+	 * 보여지는 발주코드
+	 */
+	private String showPurchaseOrderCode;
+	
+	/**
 	 * 발주코드, 외래키
 	 */
 	private Integer purchaseOrderCode;
