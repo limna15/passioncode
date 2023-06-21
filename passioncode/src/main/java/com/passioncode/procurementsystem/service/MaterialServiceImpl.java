@@ -64,7 +64,6 @@ public class MaterialServiceImpl implements MaterialService {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부
 		MaterialDTO materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
 														.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
-														.imageDTO(new UploadResultDTO(material.getDrawingFile()))
 														.shareStatus(shareStatusChangeToString(material.getShareStatus()))
 														.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
 														.middleCategoryName(material.getMiddleCategory().getCategory())
@@ -74,7 +73,7 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 	
 	/**
-	 * 도면이미지 첨부한거..
+	 * 도면이미지 첨부한거..흠 아냐
 	 * @param material
 	 * @return
 	 */

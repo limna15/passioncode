@@ -33,12 +33,7 @@ public class UploadResultDTO {
      * 파일경로
      */
     private String folderPath;
-    
-    /**
-     * uuid + fileName 합친거!
-     */
-    private String uuidAndFileName;
-
+ 
     public String getImageURL(){
         try {
             return URLEncoder.encode(folderPath+"/"+uuid+"_"+fileName,"UTF-8");
@@ -57,23 +52,6 @@ public class UploadResultDTO {
         return "";
     }
 
-	public UploadResultDTO(String drawingFile) {
-		super();
-		String uploadPath = drawingFile.substring(0,20);
-		//log.info("어디어디 보자~~~~~~~ : "+uploadPath);
-		// \PassionCode\ upload\
-		String folderPath = drawingFile.substring(20,31);
-		//log.info("어디어디 보자2~~~~~~~ : "+folderPath);
-		// 2023\06\21\
-		String uuidAndFileName = drawingFile.substring(31);
-		//log.info("어디어디 보자3~~~~~~~ : "+uuidAndFileName);
-		// 97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
-		// thumb_97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
-		
-		this.folderPath = folderPath;
-		this.uuidAndFileName = uuidAndFileName;
-	}
-    
     
     
 

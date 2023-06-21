@@ -156,14 +156,13 @@
 			
 			var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$");
 	        var maxSize = 10485760; //10MB
-
+			
+	        //파일의 확장여부 체크하는 함수(파일종류,크기)
 	        function checkExtension(fileName, fileSize){
-
 	            if(fileSize >= maxSize){
 	                alert("파일 사이즈 초과");
 	                return false;
 	            }
-
 	            if(regex.test(fileName)){
 	                alert("해당 종류의 파일은 업로드할 수 없습니다.");
 	                return false;
@@ -171,8 +170,8 @@
 	            return true;
 	        }
 			
+	        //input file이 변할때, 파일확장 체크해서 업로드 하기
 	        $(".custom-file-input").on("change", function() {
-
 	            var fileName = $(this).val().split("\\").pop();
 	            console.log("인풋 체인지 함수의 fileName : ",fileName);
 	            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
@@ -185,11 +184,9 @@
 	            var appended = false;
 
 	            for (var i = 0; i < files.length; i++) {
-
 	                if(!checkExtension(files[i].name, files[i].size) ){
 	                    return false;
 	                }
-
 	                console.log("인풋 체인지 함수의 files[i] : ",files[i]);
 	                formData.append("uploadFile", files[i]);
 	                appended = true;
@@ -205,15 +202,22 @@
 	            //실제 업로드 부분
 	            //upload ajax
 	            $.ajax({
-	                url: '/procurement1/uploadAjax',
+	                url: '/procurement1/drawing/uploadAjax',
 	                processData: false,
 	                contentType: false,
 	                data: formData,
 	                type: 'POST',
 	                dataType:'json',
-	                success: function(result){
+	                success: function(result,textStatus, request){
 	                    console.log("인풋 체인지 함수의 Ajax 결과 : ",result);
-	                    showResult(result);
+	                    console.log("이미지 파일 읽어오나? 이거 테스트 맞게 되나?? : ",result.image);
+	                    if(result.image){
+	                    	showResultByImage(result);
+	                    }else{
+	                    	showResultByNoImage(result);
+	                    }
+	                    var drawingFile = result.drawingFile;
+	                    console.log("파일이름 잘 읽어오나 보자 : ",drawingFile);
 	                },
 	                error: function(jqXHR, textStatus, errorThrown){
 	                    console.log("인풋 체인지 함수의 Ajax 에러",textStatus);
@@ -221,26 +225,47 @@
 	            }); //$.ajax
 	        }); //end change event
 	        
-	        
-	        function showResult(uploadResultArr){
+	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
+	        function showResultByImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
+	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
 	            
 	           //파일을 업로드 해주세요. 글귀 지우기 
 	           $("#h3Text").text("");
+	           //ul에 넣을 li 만들기
 	            var str ="";
-
-	            $(uploadResultArr).each(function(i, obj) {
-	                str += "<li class='liUpload' data-name='" + obj.fileName + "' data-path='"+obj.folderPath+"' data-uuid='"+obj.uuid+"'>";
-	                str + " <div>";
-	                str += "<button type='button' data-file=\'" + obj.imageURL + "\' "
-	                str += "class='btn-warning btn-sm'>X</button><br>";
-	                str += "<img src='/procurement1/display?fileName=" + obj.thumbnailURL + "'>";
-	                str += "</div>";
-	                str + "</li>";
-	            });
+                str += "<li class='liUpload' data-name='" + uploadResult.fileName + "' data-path='"+uploadResult.folderPath+"' data-uuid='"+uploadResult.uuid+"'>";
+                str + " <div>";
+                str += "<button type='button' data-file=\'" + uploadResult.imageURL + "\' ";
+                str += "class='btn-warning btn-sm'>X</button><br>";
+                str += "<img src='/procurement1/drawing/display?fileName=" + uploadResult.thumbnailURL + "'>";
+                str += "</div>";
+                str + "</li>";
 	            uploadUL.append(str);
-	        }        
-
+	        }      
+	        
+	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
+	        function showResultByNoImage(uploadResult){
+	            var uploadUL = $(".uploadResult ul");
+	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
+	            
+	           //파일을 업로드 해주세요. 글귀 지우기 
+	           $("#h3Text").text("");
+	           //ul에 넣을 li 만들기
+	            var str ="";
+                str += "<li class='liUpload'>";
+                str + " <div>";
+                str += "<button type='button' data-file=\'" + uploadResult.imageURL + "\' ";
+                str += "class='btn-warning btn-sm'>X</button><br>";
+                str += "<img src='/procurement1/drawing/display?fileName=thumb_document.jpg'>";
+                str += "</div>";
+                str + "</li>";
+	            uploadUL.append(str);
+	        } 
+			
+	        //썸네일 보여준 div에서, X버튼 클릭하면, 업로드된 파일 삭제하고, 원래대로 보여주기
 	        $(".uploadResult ").on("click", "li button", function(e){
 	            console.log("delete file");
 	            var targetFile = $(this).data("file");
@@ -249,20 +274,20 @@
 	            console.log("li 버튼 누를때 targetLi : ",targetLi);
 
 	            $.ajax({
-	                url: '/procurement1/removeFile',
+	                url: '/procurement1/drawing/removeFile',
 	                data: {fileName: targetFile},
 	                dataType:'text',
 	                type: 'POST',
 	                success: function(result){
 	                    //alert(result);
-
 	                    targetLi.remove();
 	                    checkLi();
 	                }
 	            }); //$.ajax  
 	        });
 	        
-	        //업로드할 파일을 다 지우면(liUpload 클래스가 하나도 없으면), 파일을 업로드 해주세요. 글귀 넣기
+	        //업로드할 파일을 다 지우면(liUpload 클래스가 하나도 없으면), 
+	        //파일을 업로드 해주세요. 글귀 넣기 + 도면 Image 첨부하기 글귀 넣기
 	    	function checkLi() {
 	    		var isExist = document.getElementsByClassName('liUpload');
 	 	        //console.log("모라고 찍힐까????",isExist);
@@ -272,6 +297,81 @@
 	 				$(".custom-file-label").html("도면 Image 첨부하기");
 	 			}
 	    	}
+	        
+	    	//드래그 앤 드랍 시작!! 
+	        var holder = document.getElementById("holder");
+	        var boxing = document.getElementById("boxing");
+
+	        //파일을 마우스로 드래그over, 드래그leave 할때, 보여주는 박스의 스타일설정하는 함수
+	        function fileDragDrop(event){        	
+	        	event.stopPropagation();
+	        	event.preventDefault();
+	        	if (event.type == "dragover"){ // Drag Over        		
+	        		//event.target.style.border = '5px dashed #c00';
+	        		//holder.style.border = '5px dashed #c00';
+	        		boxing.style.border = '5px dashed #c00';
+	        	}else{  // File Drop        		
+	        		//event.target.style.border = '';
+	        		//holder.style.border = '';
+	        		boxing.style.border = '';
+	        	}
+	        }
+			
+	        //파일을 드랍했을때, Ajax 처리 되면서 업로드하게 하는 함수
+	        function fileUpload(e){        	
+	        	e.stopPropagation();
+	        	e.preventDefault();
+	        	fileDragDrop(e); // (e.type != "dragover") 캔슬을위해 [여기서 별도로 작업해줘도 상관없음]
+	        	
+	        	var files = e.target.files || e.dataTransfer.files; 
+	        	
+	        	var formData = new FormData();
+	            var appended = false;
+	            
+	            for (var i = 0; i < files.length; i++) {
+	                if(!checkExtension(files[i].name, files[i].size) ){
+	                    return false;
+	                }
+	                console.log(files[i]);
+	                formData.append("uploadFile", files[i]);
+	                appended = true;
+	            }
+
+	            //upload를 하지 않는다.
+	            if (!appended) {return;}
+
+	            for (var value of formData.values()) {
+	                console.log("value of formData.values() 이거야 어디 보자",value);
+	            }
+
+	            //실제 업로드 부분
+	            //upload ajax
+	            $.ajax({
+	                url: '/procurement1/drawing/uploadAjax',
+	                processData: false,
+	                contentType: false,
+	                data: formData,
+	                type: 'POST',
+	                dataType:'json',
+	                success: function(result){
+	                    console.log(result);
+	                    if(result.image){
+	                    	showResultByImage(result);
+	                    }else{
+	                    	showResultByNoImage(result);
+	                    }
+	                    document.querySelector(".custom-file-label").classList.add("selected");
+	                    $(".custom-file-label").html(result.fileName);
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+	                    console.log(textStatus);
+	                }
+	            }); //$.ajax       	
+	        }
+	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
+	        holder.addEventListener("dragleave", fileDragDrop);
+	        holder.addEventListener("drop", fileUpload);  
+	    	//드래그 앤 드랍 끝!! 
 	        
 	        
 	        
@@ -286,7 +386,7 @@
 	            }
 	            
 	            $.ajax({
-	            	url: '/procurement1/uploadAjax',
+	            	url: '/procurement1/drawing/uploadAjax',
 	                processData: false,
 	                contentType: false,
 	                data: formData,
@@ -311,7 +411,7 @@
 		        var targetDiv = $(this).closest("div");
 		        console.log("target.data('name') 이거 봐보자 : ",fileName);
 
-		        $.post('/procurement1/removeFile', {fileName: fileName}, function(result){
+		        $.post('/procurement1/drawing/removeFile', {fileName: fileName}, function(result){
 		            console.log(result);
 		            if(result === true){
 		                targetDiv.remove();
@@ -328,14 +428,14 @@
             	var divArea = $(".uploadOriginResult");
             	
             	//divArea.append("<img src='/procurement1/display?fileName="+dto.thumbnailURL+"&size=1'>");
-            	divArea.append("<img id='uploadOriginResultImg' src='/procurement1/display?fileName="+dto.imageURL+"'>");
+            	divArea.append("<img id='uploadOriginResultImg' src='/procurement1/drawing/display?fileName="+dto.imageURL+"'>");
             }
             
             function showUploadThumb(dto){
             	console.log("썸네일 보여주는 함수에 넣은 dto어디 보자",dto);
             	var divArea = $(".uploadThumbResult");
             	
-            	divArea.append("<img class='uploadThumbResultImg' src='/procurement1/display?fileName="+dto.thumbnailURL+"'>");
+            	divArea.append("<img class='uploadThumbResultImg' src='/procurement1/drawing/display?fileName="+dto.thumbnailURL+"'>");
             }
             
             function removeBtn(dto){

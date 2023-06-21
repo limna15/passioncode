@@ -66,7 +66,7 @@ public class MaterialDTO {
 	 * 도면업로드
 	 */
 	@Builder.Default
-	private UploadResultDTO imageDTO = new UploadResultDTO();
+	private DrawingFileDTO drawingFileDTO = new DrawingFileDTO();
 	
 	/**
 	 * 대분류 종류 (대분류)

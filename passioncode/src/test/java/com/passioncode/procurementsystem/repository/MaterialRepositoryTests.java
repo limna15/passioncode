@@ -220,14 +220,15 @@ public class MaterialRepositoryTests {
 	public void fileTest() {
 //		String drawingFile = "\\PassionCode\\upload\\2023\\06\\21\\97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg";
 		String drawingFile = "\\PassionCode\\upload\\drawing\\2023\\06\\21\\65334b3a-f3c2-4d06-92b4-7850e2ede958_HappyLunch~.jpg";
+//		String drawingFile = "\\PassionCode\\upload\\drawing\\2023\\06\\21\\thumb_65334b3a-f3c2-4d06-92b4-7850e2ede958_HappyLunch~.jpg";
 //		String drawingFile = "\\PassionCode\\upload\\2023\\06\\21\\thumb_97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg";
 		String uploadPath = drawingFile.substring(0,28);
 		log.info("어디어디 보자~~~~~~~ : "+uploadPath);
-		// \PassionCode\ upload\
+		// \PassionCode\ upload\drawing\
 		String folderPath = drawingFile.substring(28,39);
 		log.info("어디어디 보자2~~~~~~~ : "+folderPath);
 		// 2023\06\21\
-		String uuidAndFileName = drawingFile.substring(31);
+		String uuidAndFileName = drawingFile.substring(39);
 		log.info("어디어디 보자3~~~~~~~ : "+uuidAndFileName);
 		// 97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
 		// thumb_97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg

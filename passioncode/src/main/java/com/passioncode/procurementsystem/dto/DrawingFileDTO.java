@@ -1,7 +1,10 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +22,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class DrawingFileDTO {
 	
+	@Builder.Default
+    private String drawingUploadPath = "/PassionCode/upload/drawing";
+	
 	/**
 	 * 파일이름
 	 */
@@ -35,10 +41,11 @@ public class DrawingFileDTO {
     private String folderPath;
     
     /**
-     * uuid + fileName 합친거!
+     * 이미지 여부
      */
-    private String uuidAndFileName;
-
+    private boolean image;
+    
+       
     public String getImageURL(){
         try {
             return URLEncoder.encode(folderPath+"/"+uuid+"_"+fileName,"UTF-8");
@@ -56,22 +63,18 @@ public class DrawingFileDTO {
         }
         return "";
     }
-
-	public DrawingFileDTO(String drawingFile) {
-		super();
-		String uploadPath = drawingFile.substring(0,20);
-		//log.info("어디어디 보자~~~~~~~ : "+uploadPath);
-		// \PassionCode\ upload\
-		String folderPath = drawingFile.substring(20,31);
-		//log.info("어디어디 보자2~~~~~~~ : "+folderPath);
-		// 2023\06\21\
-		String uuidAndFileName = drawingFile.substring(31);
-		//log.info("어디어디 보자3~~~~~~~ : "+uuidAndFileName);
-		// 97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
-		// thumb_97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
-		
-		this.folderPath = folderPath;
-		this.uuidAndFileName = uuidAndFileName;
+    
+    public String getDrawingFile() {    	
+        return drawingUploadPath+"/"+folderPath+"/"+uuid+"_"+fileName;
+    }
+	
+//	public void setDrawingFile(String drawingFile) {
+//		this.drawingFile = drawingFile;
+//	}
+	
+	public boolean isImage() {
+		return image;
 	}
+    
 
 }
