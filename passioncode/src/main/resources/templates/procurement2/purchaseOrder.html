@@ -286,9 +286,7 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 		var num4 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
 		console.log("num1번호 나와라: ", num1);//숫자로 잘 나옴
 		var num2 = purchaseOrderList[num1];//번째가 아니라 procurementPlan이 같은게 나와야함
-		console.log("num2번호 나와라: ", num2);//잘 나온다 ==> ???? ==값이 널일때는 나오지 않는다.
-		
-		console.log("안에 있는 purchaseOrderList[1] 입니다===>>",purchaseOrderList[1].purchaseOrderDate);//이거 나옴, []없으면 안나옴
+		//console.log("num2번호 나와라: ", num2);//잘 나온다 ==> ???? ==값이 널일때는 나오지 않는다.
 		
 		purchaseOrderList.forEach(function(item){
 			dtoOrderDate= item.purchaseOrderDate;
@@ -301,17 +299,17 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 		var needNum=1;//여기에 원하는 자리수 숫자의 날짜 담기
 		for(let num3 = 0;num3<num1; num3++){
 			needNum =num3;
-			console.log("needNum >>> ",needNum);
-			console.log("orderDateList의 ", num3," 번째의 값: ",orderDateList[num3]);
+			//console.log("needNum >>> ",needNum);
+			//console.log("orderDateList의 ", num3," 번째의 값: ",orderDateList[num3]);
 			//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
 			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
 			
 		}
 		//내가 원하는 조달 번호와 같으면 안된다. 중간에 빈 숫자 있음
-		console.log("밖에 나오는 needNum >>> ",needNum);
+		//console.log("밖에 나오는 needNum >>> ",needNum);
 		
 		const purchaseOrderList2 = [[${purchaseOrderList}]];
-		console.log("두 번째 purchaseOrderList2 입니다===>>",purchaseOrderList2);
+		//console.log("두 번째 purchaseOrderList2 입니다===>>",purchaseOrderList2);
 		
 		
 		function findppPlan(element){
@@ -323,14 +321,6 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 		
 		const nn = purchaseOrderList2.find(findppPlan);
 		//console.log("이상한 것만 나옴,, 회사이름: ",nn);//왜 고정값이 나오지?
-	
-		//다른 방법
-		const b =[];
-		for(key in purchaseOrderList){
-			b.push(purchaseOrderList[key].procurementPlan);
-			
-		}
-		console.log("이것도 이상함 널값이 들어있는 조달계획의 번호~~~~ ",b);
 		
 		//다른 방법
 		//function makeMyppList(){
@@ -338,7 +328,7 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 		//	for
 		//}
 		const bb = purchaseOrderList;
-		console.log("00000000purchaseOrderList2 입니다===>>",bb);
+		//console.log("00000000purchaseOrderList2 입니다===>>",bb);
 		//변수명 너무 기니까 bb로 쓰기 
 		var codeList2= new Array();
 		var orderDateList2= new Array();
@@ -350,21 +340,33 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 		var dtoCode3= new Object();
 		var nullList4= new Array();//널값인 계획 번호를 넣을 것이다. 
 		
-		bb.forEach(function(item){
-			dtoOrderDate2= item.purchaseOrderDate;
-			dtoprocurementPlan3=item.procurementPlan;
-			orderDateList2.push({dtoOrderDate2, dtoprocurementPlan3});
-			//log.info();
+		
+		////////////
+		var needNum2=1;//여기에 원하는 자리수 숫자의 날짜 담기
+		for(let num6 = 0;num6<bb.length; num6++){
+			var check = bb[num6];
+			var ppNo = check.procurementPlan;
+			if(ppNo==num1){//내가 원하는 조달번호
+				if(check.purchaseOrderDate==null){
+					console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check.procurementPlan);
+					$(".myPublish").modal("show");
+				}else{
+					console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
+					$(".existPurchaseOrderModal").modal("show");
+				}
 			
+			}
 			
-		});
-		console.log("orderDateList22가 제대로 오나 >>> ", orderDateList2)//현재 길이 16
-		//console.log("orderDateList333가 제대로 오나 >>> ", codeList3)//현재 길이 16 조달계획 번호만 들어있음, 필요없음 
-		//날짜랑 계획번호랑 순서대로 배열에 넣어서 새로운 배열을 만든 다음 null값인 번호만 발주할 수 있도록 하기 
+			//needNum2 =num6;
+			//console.log("needNum2 >>> ",needNum2);
+			//console.log("orderDateList의 ", num6," 번째의 값: ",orderDateList[num6]);
+			//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
+			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
+			
+		}
 		
+		///////////
 		
-		
-		$(".myPublish").modal("show");
 	});
 }else{
 };
@@ -438,7 +440,7 @@ var dtoCode= new Object();
 
 purchaseOrderList.forEach(function(item){
 	dtoCode= item.code;
-	codeList.push(dtoCode);
+	codeList9.push(dtoCode);
 });
 
 //purchaseOrderList.forEach(function(item){
@@ -449,7 +451,7 @@ purchaseOrderList.forEach(function(item){
 //console.log("orderDateList가 제대로 오나 >>> ", orderDateList)
 //console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
 
-console.log("codeList가 제대로 오나 >>> ", codeList);//발주 번호만 나옴
+console.log("codeList가 제대로 오나 >>> ", codeList9);//발주 번호만 나옴
 //poDate2= getObjTR().querySelector("input[name=poDate]").value;//이게 날짜 tr갖고오는 부분
 //console.log("발주일: ",poDate2);
 
