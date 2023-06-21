@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
+import com.passioncode.procurementsystem.entity.ProgressCheck;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +32,19 @@ public class PurchaseOrderRepositoryTests {
 	@Autowired
 	DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	
+	@Autowired
+	ProgressCheckRepository progressCheckRepository;
+	
+	@Test
+	public void myRecord() {//지난 검수 기록 가져오기
+		Optional<PurchaseOrder> list = purchaseOrderRepository.findById(1);
+		Optional<DetailPurchaseOrder> dlist = detailPurchaseOrderRepository.findById(1);
+		ProgressCheck pc = progressCheckRepository.findByDetailPurchaseOrder(dlist.get());
+		
+		log.info("pc 가져오기>>"+pc);
+		
+		
+	}
 	
 	@Test
 	public void getList() {
@@ -61,7 +75,7 @@ public class PurchaseOrderRepositoryTests {
 				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getMrp().getMaterial().getName())
 				.materialName(procurementPlan.getContract().getMaterial().getName())
 				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount()))
-				.unitPrice(procurementPlan.getContract().getUnitPrice()).procuremnetPlan(procurementPlan.getCode())
+				.unitPrice(procurementPlan.getContract().getUnitPrice()).procurementPlan(procurementPlan.getCode())
 				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder(procurementPlan)).build();
 			
 			log.info(">>>>>>>>>>>"+purchaseOrderDTO);

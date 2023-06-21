@@ -305,9 +305,6 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
 			
 		}
-		//내가 원하는 조달 번호와 같으면 안된다. 중간에 빈 숫자 있음
-		//console.log("밖에 나오는 needNum >>> ",needNum);
-		
 		const purchaseOrderList2 = [[${purchaseOrderList}]];
 		//console.log("두 번째 purchaseOrderList2 입니다===>>",purchaseOrderList2);
 		
@@ -352,7 +349,7 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 					$(".myPublish").modal("show");
 				}else{
 					console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
-					$(".existPurchaseOrderModal").modal("show");
+					$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
 				}
 			
 			}
@@ -362,7 +359,6 @@ if(window.location.search!=''){//테이터가 있을 경우에만
 			//console.log("orderDateList의 ", num6," 번째의 값: ",orderDateList[num6]);
 			//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
 			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
-			
 		}
 		
 		///////////
@@ -418,12 +414,50 @@ $(".mypublish").click(function(){//발주서 발행 버튼을 누르면, 클래�
 		
 	}else if(cList.length===1 || cList.length<1){//한개 선택된 경우
 		//$(".myPublish").modal('show');//발주서 발행 모달
-		console.log("발주서 발행 시작")
+		console.log("발주서 발행 시작");
 		
 		//발주서 발행 버튼을 클릭했을때 
 		location.href="/procurement2/purchaseOrder?checkBox="+cList[0];
 		
-	}//이미 발주서가 발행되어 있는 경우 발행할 수 없다고 하기
+	}else if(cList.length>1){
+		console.log("체크박스가 2개 이상 선택됨");
+		//만약 같은 회사, 이미 발주된 것
+		$(".myPublish").modal('show');//조건이 없어서 빈칸으로 뜸
+		//var pCode= getObjTR().querySelector("input[name=purchaseOrderCode]").value;
+		//console.log("발주코드: ",pCode);
+		console.log("cList[0]...: ",cList[0],cList[1]);
+		cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));
+		//for 길이 구하고 
+		var codeList7= new Array();
+		var orderDateList7= new Array();
+		var dtoOrderDate7= new Object();
+		var dtoCode7= new Object();
+		
+		cList.forEach(function(item){
+		dtoCode7= item.code;
+		codeList7.push(dtoCode7);
+		});
+		location.href="/procurement2/purchaseOrder?checkBox="+cList[0]+"&checkBox3"+cList[1];
+		
+		const cc = purchaseOrderList;
+		
+		for(let num6 = 0;num6<cc.length; num6++){
+			var check2 = cc[num6];
+			var ppNo = check2.procurementPlan;
+			if(ppNo==num1){//내가 원하는 조달번호
+				if(check2.purchaseOrderDate==null){
+					console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check2.procurementPlan);
+					//$(".myPublish").modal("show");
+				}else{
+					
+				}
+			
+			}
+		//location.href="/procurement2/purchaseOrder?checkBox="+cList[0]+"";
+		
+	}
+	}
+	
 	//발주서 여러개를 한 번에 발행하는 경우
 	//cList에 담아서 가능할듯
 	

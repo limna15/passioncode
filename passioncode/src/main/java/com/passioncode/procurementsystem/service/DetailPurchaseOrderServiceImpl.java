@@ -79,7 +79,9 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		// Integer code, PurchaseOrder purchaseOrder
 		//List<Object[]> result = detailPurchaseOrderRepository.myDetailList(no);
 		
-		PurchaseOrder po = PurchaseOrder.builder().build();
+		PurchaseOrder po = PurchaseOrder.builder().build();//같은 회사라면 이거는 한 번만
+		
+		//이 아래가 같은 회사라면 여러번, 다른 회사여도 여러번
 		DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder()
 				.amount(detailPurchaseOrderDTO.getPurchaseOrderAmount()).date(LocalDateTime.now())
 				.purchaseOrder(po).build();

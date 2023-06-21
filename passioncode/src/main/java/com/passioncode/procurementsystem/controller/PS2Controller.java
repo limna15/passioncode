@@ -32,7 +32,7 @@ public class PS2Controller {
 	
 	
 	@GetMapping("/purchaseOrder")	//발주서 발행
-	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, Integer checkBox) {
+	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, Integer checkBox, Integer checkBox3) {
 		log.info("내가 원하는 발주서 번호>>"+checkBox);
 		
 		//model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
