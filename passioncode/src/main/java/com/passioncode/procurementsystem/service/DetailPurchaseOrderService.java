@@ -13,13 +13,6 @@ public interface DetailPurchaseOrderService {
 	 * @return
 	 */
 	List<DetailPublishDTO> detailToDTO(Integer no);
-
-	/**
-	 * detailPurchaseOrderDTO를 이용해서 세부구매발주서 발행
-	 * @param detailPurchaseOrderDTO
-	 * @return
-	 */
-	Integer register(DetailPurchaseOrderDTO detailPurchaseOrderDTO);
 	
 	/**
 	 * 조달계획 엔티티를 이용해 PurchaseOrderDTO로 만들기(ProcurementPlan -> DetailPurchaseOrderDTO)
@@ -54,9 +47,7 @@ public interface DetailPurchaseOrderService {
 	 * @return
 	 */
 	DetailPurchaseOrder dtoToEntity(DetailPurchaseOrderDTO detailPurchaseOrderDTO);
-
-	void detailPurchaseOrderDTO();
-
+	
 	/**
 	 * 구매발주서 번호로 세부구매발주서 가져오기
 	 * @param purchaseOrder

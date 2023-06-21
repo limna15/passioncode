@@ -31,10 +31,7 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	private final ProcurementPlanRepository procurementPlanRepository;
 
 	// 발주서 번호 생성하면서 조달 계획 등록
-	 
 	
-	
-
 	@Override
 	public List<DetailPublishDTO> detailToDTO(Integer no) {
 		List<Object[]> result = detailPurchaseOrderRepository.myDetailList(no);
@@ -58,6 +55,9 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 			detailpDTO.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			detailpDTO.setPocode(detailPurchaseOrderRepository.findMaxCode());
 			detailpDTO.setSupply_price((((Integer) arr[6])) * ((Integer) arr[3]));// 필요수량 * 단가
+			detailpDTO.setShowPono(addBlank(detailPurchaseOrderRepository.findMaxOrderNo()));
+			detailpDTO.setShowPocode(addBlank2(detailPurchaseOrderRepository.findMaxCode()));
+			
 			
 			ProcurementPlan pp = procurementPlanRepository.findById((Integer)arr[0]).get();//조달계획에 저장
 			
@@ -88,15 +88,6 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 
 	}
 	
-	@Override
-	public Integer register(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
-		DetailPurchaseOrder detailPurchaseOrder = dtoToEntity(detailPurchaseOrderDTO);
-		
-		
-		
-		
-		return null;
-	}
 	
 	@Override
 	public List<DetailPurchaseOrderDTO> getDTOList() {
@@ -137,12 +128,7 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	public DetailPurchaseOrder get(Integer code) {
 		return detailPurchaseOrderRepository.findById(code).get();
 	}
-
-	public void detailPurchaseOrderDTO() {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	@Override
 	public List<DetailPurchaseOrder> getDetailByPurchaseNo(PurchaseOrder purchaseOrder) {
 		
@@ -189,7 +175,25 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		log.info("저장하는 조달계획번호  ~~~>>" + pp2);
 		log.info("22288888888>>" + detailPurchaseOrder);
 		
+	}
+	
+	//발주코드에 문자를 넣어서 보내기
+	public String addBlank(Integer num1) {
+		String pNum = String.format("%05d", num1);
+		pNum = "DPO"+pNum;
+		log.info("발주코드에 찍어 보낼 문자"+pNum);
 		
+		return pNum;
+		
+	}
+	
+	//발주서번호에 문자를 넣어서 보내기
+	public String addBlank2(Integer num1) {
+		String pNum = String.format("%08d", num1);
+		pNum = "PO"+pNum;
+		log.info("발주서번호에 찍어 보낼 문자"+pNum);
+		
+		return pNum;
 		
 	}
 

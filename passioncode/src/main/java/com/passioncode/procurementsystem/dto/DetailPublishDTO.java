@@ -74,4 +74,14 @@ public class DetailPublishDTO {
 	 * 필요수량
 	 */
 	private Integer ppamount;
+	
+	/**
+	 * 보여지는 발주서 번호
+	 */
+	private String showPono;
+	
+	/**
+	 * 보여지는 발주 코드
+	 */
+	private String showPocode;
 }

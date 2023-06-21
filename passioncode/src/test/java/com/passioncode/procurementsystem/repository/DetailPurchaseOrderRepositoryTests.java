@@ -283,7 +283,9 @@ public class DetailPurchaseOrderRepositoryTests {
 			dto.setPono(detailPurchaseOrderRepository.findMaxOrderNo());
 			dto.setPocode(detailPurchaseOrderRepository.findMaxCode());
 			dto.setSupply_price((((Integer) arr[6])) * ((Integer) arr[3]));// 필요수량 * 단가
-
+			dto.setShowPono(addBlank(detailPurchaseOrderRepository.findMaxOrderNo()));
+			dto.setShowPocode(addBlank2(detailPurchaseOrderRepository.findMaxCode()));			
+			
 			// 발주수량과 공급 가격 구하기 위해서 조달계획 가져옴
 			// ProcurementPlan procurementPlan =
 			// procurementPlanRepository.findById((Integer)arr[0]).get();
@@ -557,5 +559,25 @@ public class DetailPurchaseOrderRepositoryTests {
 		log.info("세부 구매 발주서 발행DTO" + detailPurchaseOrderDTO);
 		return detailPurchaseOrderDTO;
 	}
+	
+	//발주코드에 문자를 넣어서 보내기
+		public String addBlank(Integer num1) {
+			String pNum = String.format("%05d", num1);
+			pNum = "DPO"+pNum;
+			log.info("발주코드에 찍어 보낼 문자"+pNum);
+			
+			return pNum;
+			
+		}
+		
+		//발주서번호에 문자를 넣어서 보내기
+		public String addBlank2(Integer num1) {
+			String pNum = String.format("%08d", num1);
+			pNum = "PO"+pNum;
+			log.info("발주서번호에 찍어 보낼 문자"+pNum);
+			
+			return pNum;
+			
+		}
 
 }

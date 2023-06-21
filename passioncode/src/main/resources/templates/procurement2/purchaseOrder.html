@@ -128,7 +128,7 @@
 											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
 								</td>
 								<td>[[${dto.companyName}]]</td>
-								<td>[[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</td>
+								<td><input type="hidden" name="poDate" th:value="${dto.purchaseOrderDate}">[[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</td>
 								<td>[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
 								<td>[[${dto.supplyLT}]]</td>
 								<td>[[${#dates.format(dto.minimumOrderDate, 'yyyy/MM/dd')}]]</td>
@@ -171,7 +171,7 @@
                     </div>
                     <div class="modal-body" >
                     <div class="table-responsive" th:each="dto: ${myPublishDTO}">
-						<h4> 발주서 번호: PO [[${dto.pono}]]</h4>
+						<h4> 발주서 번호: [[${dto.showPono}]]</h4>
 						<h4> 협력 회사 : [[${dto.cname}]]</h4>
 						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
 						<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
@@ -191,7 +191,7 @@
 								<tbody>
 									<tr th:each="dto: ${myPublishDTO}">
 									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
-										<td>DPO [[${dto.pocode}]]</td>
+										<td>[[${dto.showPocode}]]</td>
 										<td>[[${dto.mname}]]</td>
 										<td>[[${dto.mname}]]</td>
 										<td>[[${dto.ppamount}]]</td>
@@ -213,6 +213,7 @@
                     </div>
                 </div>
             </div>
+
 		
 		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
 		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
@@ -233,10 +234,29 @@
                 </div>
             </div>
         </div>
-
+				
+		<!-- 발주서가 이미 존재하는 경우 뜨는 모달창 시작 -->
+		<div class="existPurchaseOrderModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">발주서 번호 체크하기</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>선택된 발주회사가 없습니다. <br>발주하고 싶은 발주서 번호를 선택해주세요.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                    
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 		
-<!-- 체크박스 시작 -->
 
+<!-- 스크립트 시작 -->
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 if(window.location.search!=''){//테이터가 있을 경우에만
@@ -251,8 +271,7 @@ $(document).ready(function(){
 });
 }else{
 	
-}
-;
+};
 
 $("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을 누르면
 	console.log("발주서 진짜 발행을 눌러봐요>>> ");
@@ -292,7 +311,7 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 		$(".noPurchaseNoModal").modal('show');
 		
 		
-	}else if(cList.length===1 ||cList.length<1){//한개 선택된 경우
+	}else if(cList.length===1 || cList.length<1){//한개 선택된 경우
 		//$(".myPublish").modal('show');//발주서 발행 모달
 		console.log("발주서 발행 시작")
 		
@@ -302,29 +321,6 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 	}//이미 발주서가 발행되어 있는 경우 발행할 수 없다고 하기
 	//발주서 여러개를 한 번에 발행하는 경우
 	//cList에 담아서 가능할듯
-	
-	
-	
-/*  		$.ajax({
-			type: "get",
-			url: "/procurement2/purchaseOrder",
-			data: {aaa:aaa}, //보낼데이터
-			success: function(data){
-				console.log("받아온 데이터 : ",data);
-				
-				},
-				error: function(xhr,status,er){
-					if(error)
-						error(er);
-				}
-			
-		}); */
-	
-/* 	for(let i=0;cList.lenth-1;i++){
-		$(".myPublish").modal('show');
-		$(".noPurchaseNoModal").modal('hide');
-	} */
-	
 	
 		
 	});
@@ -364,6 +360,26 @@ function aaa(){
 	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
 	//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
 };
+
+////////////////////////////////////////////////////////////////////////////////////
+//이벤트 발생한 요소의 상위의 TD 객체 찾기
+function getObj(){
+  var obj = event.srcElement
+  while (obj.tagName !='TD'){  //TD가 나올때까지의 Object추출
+      obj = obj.parentElement
+  }
+  return obj
+}
+
+	//이벤트 발생한 요소의 상위의 TR 객체 찾기
+function getObjTR(){
+  var obj = event.srcElement
+  while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+      obj = obj.parentElement
+  }
+  return obj
+}
+	
 </script>
 
 	</th:block>
