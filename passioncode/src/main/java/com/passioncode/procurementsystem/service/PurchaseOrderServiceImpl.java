@@ -57,7 +57,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getMrp().getMaterial().getCode())
 				.materialName(procurementPlan.getContract().getMaterial().getName())
 				.needAmount(procurementPlan.getAmount()).orderAmount((procurementPlan.getAmount()))
-				.unitPrice(procurementPlan.getContract().getUnitPrice()).procuremnetPlan(procurementPlan.getCode())
+				.unitPrice(procurementPlan.getContract().getUnitPrice()).procurementPlan(procurementPlan.getCode())
 				.supplyPrice((procurementPlan.getAmount())*(procurementPlan.getContract().getUnitPrice())).purchaseOrderStatus(existPurchaseOrder(procurementPlan)).build();
 			
 		

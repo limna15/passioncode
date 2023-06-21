@@ -89,7 +89,11 @@
                     </form>
 					<!--<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;-->
 					<!-- 발주서 발행 버튼 시작 -->
-					<div class="col-md-6" >		<button class="td-modal btn btn-primary" id="publishBtn" style="float: right;">발주서 발행</button>
+					<div class="col-md-6" >		
+					<button class="td-modal btn btn-primary mypublish" id="publishBtn" style="float: right;">발주서 발행
+					<tr th:each="dto: ${purchaseOrderList}">
+					<input type="hidden" name="poDate" th:value="${dto.purchaseOrderDate}"></tr>
+					</button>
 						</div>
 					<!-- 발주서 발행 버튼  끝-->
 					
@@ -124,8 +128,8 @@
 							<tbody>
 								<tr th:each="dto: ${purchaseOrderList}">
 								<td>
-									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procuremnetPlan}" >
-											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procuremnetPlan}]]-->
+									<input type="checkbox" name="checkBox" th:id="checkBox" th:value="${dto.procurementPlan}" >
+											<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procurementPlan}]]-->
 								</td>
 								<td>[[${dto.companyName}]]</td>
 								<td><input type="hidden" name="poDate" th:value="${dto.purchaseOrderDate}">[[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</td>
@@ -139,7 +143,7 @@
 								<td>[[${dto.unitPrice}]]</td>
 								<td>[[${dto.supplyPrice}]]</td>
 								<td>[[${dto.purchaseOrderStatus}]]</td>
-								<td>[[${dto.procuremnetPlan}]]</td>
+								<td>[[${dto.procurementPlan}]]</td>
 							</tr>
 							</tbody>
 						</table>
@@ -240,10 +244,10 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">발주서 번호 체크하기</h5>
+                        <h5 class="modal-title">이미 발주서가 발행되었습니다.</h5>
                     </div>
                     <div class="modal-body" >
-						<span>선택된 발주회사가 없습니다. <br>발주하고 싶은 발주서 번호를 선택해주세요.</span><br>
+						<span>발주서는 한 번만 발행할 수 있습니다. <br></span><br>
                     </div>
                     <div class="modal-footer">
                     
@@ -260,17 +264,109 @@
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 if(window.location.search!=''){//테이터가 있을 경우에만
-var mych=window.location.search;
-console.log(" 값>>>>>>>>>>>>>>> " + mych);
-console.log("길이 보여줘 제발", mych.length);
-const last2 = mych.substring(10);//0부터 
-console.log("길이??????????~~~@", last2);
-$(document).ready(function(){
-	//데이터가 있을때만뜨게 해라
-	$(".myPublish").modal("show");
-});
-}else{
+	var mych=window.location.search;
+	console.log(" 값>>>>>>>>>>>>>>> " + mych);
+	console.log("길이 보여줘 제발", mych.length);
+	const last2 = mych.substring(10);//0부터 
+	console.log("길이??????????~~~@", last2);
 	
+	$(document).ready(function(){
+		//데이터가 있을때만뜨게 해라
+		console.log("여기에서 이미 발주된 거라고 검사하는 구간");
+		
+		//이 아래에 발주일 갖고오기
+		//var cDate=document.getElementById('idmydate').value;
+		//console.log("날짜 나와라: ", cDate);
+		var mych=window.location.search;
+		const last2 = mych.substring(10);//조달계획 번호
+		console.log("조달계획번호 나와라: ", last2);
+		console.log("안에 있는 purchaseOrderList 입니다===>>",purchaseOrderList);
+		//var num1 = Number(last2);
+		var num1 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
+		var num4 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
+		console.log("num1번호 나와라: ", num1);//숫자로 잘 나옴
+		var num2 = purchaseOrderList[num1];//번째가 아니라 procurementPlan이 같은게 나와야함
+		console.log("num2번호 나와라: ", num2);//잘 나온다 ==> ???? ==값이 널일때는 나오지 않는다.
+		
+		console.log("안에 있는 purchaseOrderList[1] 입니다===>>",purchaseOrderList[1].purchaseOrderDate);//이거 나옴, []없으면 안나옴
+		
+		purchaseOrderList.forEach(function(item){
+			dtoOrderDate= item.purchaseOrderDate;
+			orderDateList.push(dtoOrderDate);
+		});
+		console.log("orderDateList가 제대로 오나 >>> ", orderDateList)//현재 길이 16
+		//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])//1번 조달계획은 null 그래서 null나옴
+		
+		console.log("for문 밖에있는 숫자 num1의 값: ",num1);//이 숫자랑 비교해야 한다. 
+		var needNum=1;//여기에 원하는 자리수 숫자의 날짜 담기
+		for(let num3 = 0;num3<num1; num3++){
+			needNum =num3;
+			console.log("needNum >>> ",needNum);
+			console.log("orderDateList의 ", num3," 번째의 값: ",orderDateList[num3]);
+			//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
+			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
+			
+		}
+		//내가 원하는 조달 번호와 같으면 안된다. 중간에 빈 숫자 있음
+		console.log("밖에 나오는 needNum >>> ",needNum);
+		
+		const purchaseOrderList2 = [[${purchaseOrderList}]];
+		console.log("두 번째 purchaseOrderList2 입니다===>>",purchaseOrderList2);
+		
+		
+		function findppPlan(element){
+			if(element.procurementPlan = num4){//배열이라 다른 값 가져온다. 
+				console.log("이상한거 같은데 숫자 잘 나옴: ",num4)
+				return true;
+			}
+		}
+		
+		const nn = purchaseOrderList2.find(findppPlan);
+		//console.log("이상한 것만 나옴,, 회사이름: ",nn);//왜 고정값이 나오지?
+	
+		//다른 방법
+		const b =[];
+		for(key in purchaseOrderList){
+			b.push(purchaseOrderList[key].procurementPlan);
+			
+		}
+		console.log("이것도 이상함 널값이 들어있는 조달계획의 번호~~~~ ",b);
+		
+		//다른 방법
+		//function makeMyppList(){
+		//	let newArr2 = [];
+		//	for
+		//}
+		const bb = purchaseOrderList;
+		console.log("00000000purchaseOrderList2 입니다===>>",bb);
+		//변수명 너무 기니까 bb로 쓰기 
+		var codeList2= new Array();
+		var orderDateList2= new Array();
+		var dtoOrderDate2= new Object();
+		var dtoCode2= new Object();
+		var codeList3= new Array();//3은 계획번호
+		var orderDateList3= new Array();
+		var dtoprocurementPlan3= new Object();
+		var dtoCode3= new Object();
+		var nullList4= new Array();//널값인 계획 번호를 넣을 것이다. 
+		
+		bb.forEach(function(item){
+			dtoOrderDate2= item.purchaseOrderDate;
+			dtoprocurementPlan3=item.procurementPlan;
+			orderDateList2.push({dtoOrderDate2, dtoprocurementPlan3});
+			//log.info();
+			
+			
+		});
+		console.log("orderDateList22가 제대로 오나 >>> ", orderDateList2)//현재 길이 16
+		//console.log("orderDateList333가 제대로 오나 >>> ", codeList3)//현재 길이 16 조달계획 번호만 들어있음, 필요없음 
+		//날짜랑 계획번호랑 순서대로 배열에 넣어서 새로운 배열을 만든 다음 null값인 번호만 발주할 수 있도록 하기 
+		
+		
+		
+		$(".myPublish").modal("show");
+	});
+}else{
 };
 
 $("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을 누르면
@@ -278,8 +374,7 @@ $("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을
 	//여기에서 체크번호 받고 그 번호를 전달하기
 	//발주서 발행 버튼을 클릭했을때 
 	var mych=window.location.search;
-	const last2 = mych.substring(10);//0부터 
-	//?checkBox=
+	const last2 = mych.substring(10);//""?checkBox="이렇게 찍히면 10번 자리부터 자르기(길이는 11) 
 	
 	//const last = mych.substr(-1);//문자의 마지막 글자
 	
@@ -289,10 +384,16 @@ $("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을
 	
 });
 
-$("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
+var poDate2 ='';
+//poDate2= getObjTR().querySelector("input[name=poDate]").value;//이거 쓰면 발행안됨
+//console.log("발주일: ",poDate2);
+$(".mypublish").click(function(){//발주서 발행 버튼을 누르면, 클래스로 가져와야 tr, td정보 불러오기 가능
+	//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
+	
 	$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
 		const chkChecked = 'input[name="checkBox"]:checked';
 		const selectedEls = document.querySelectorAll(chkChecked);
+		
 	})
 	let cList =new Array();//체크한 번호를 담을 리스트
 	
@@ -304,12 +405,14 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 	cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));	
 	console.log("길이가 찍히는 값>>> " + cList.length)
 	console.log("번호 리스트 >>> ", cList);
+	console.log("purchaseOrderList 입니다===>>",purchaseOrderList[5]);//===> 잘 가져옴
+	
 	
 	var purchaseNo='';//빈값 넣기
 	
 	if(cList.length===0){//체크하지 않고 버튼을 클릭한 경우
 		$(".noPurchaseNoModal").modal('show');
-		
+		console.log("아무것도 선택하지 않음===>>");
 		
 	}else if(cList.length===1 || cList.length<1){//한개 선택된 경우
 		//$(".myPublish").modal('show');//발주서 발행 모달
@@ -326,9 +429,11 @@ $("#publishBtn").click(function(){//발주서 발행 버튼을 누르면
 	});
 	
 var purchaseOrderList = [[${purchaseOrderList}]];
-console.log("purchaseOrderList 입니다===>>",purchaseOrderList);
+console.log("purchaseOrderList 입니다===>>",purchaseOrderList);//이거 잘 나옴
 
 var codeList= new Array();
+var orderDateList= new Array();
+var dtoOrderDate= new Object();
 var dtoCode= new Object();
 
 purchaseOrderList.forEach(function(item){
@@ -336,8 +441,18 @@ purchaseOrderList.forEach(function(item){
 	codeList.push(dtoCode);
 });
 
-console.log("codeList가 제대로 오나 >>> ", codeList);
-	
+//purchaseOrderList.forEach(function(item){
+//	dtoOrderDate= item.purchaseOrderDate;
+//	orderDateList.push(dtoOrderDate);
+//});
+//아래 두줄 잘 나옴
+//console.log("orderDateList가 제대로 오나 >>> ", orderDateList)
+//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
+
+console.log("codeList가 제대로 오나 >>> ", codeList);//발주 번호만 나옴
+//poDate2= getObjTR().querySelector("input[name=poDate]").value;//이게 날짜 tr갖고오는 부분
+//console.log("발주일: ",poDate2);
+
 var purchaseNo = '';
 function myCheckBox(){
 	const chkChecked = 'input[name="checkBox"]:checked';

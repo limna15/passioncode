@@ -90,6 +90,6 @@ public class PurchaseOrderDTO {
 	/**
 	 * 조달계획코드
 	 */
-	private Integer procuremnetPlan;//세부 구매발주서를 위한 조달계획코드
+	private Integer procurementPlan;//세부 구매발주서를 위한 조달계획코드 //이전 스펠링 : procuremnetPlan
 
 }
