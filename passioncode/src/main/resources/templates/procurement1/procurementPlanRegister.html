@@ -50,6 +50,7 @@
 													</button>
 													<input type="hidden" name="companyNo" class="companyNo">
 													<input type="hidden" name="contractNo" class="contractNo">
+													<input type="hidden" name="contractNoStr" class="contractNoStr">
 													<input type="hidden" name="freePeriod" class="freePeriod">
 													<input type="text" style="float:left; width:65%; border: 0; text-align: center;" name=companyName class="companyName" readonly>
 												</div>
@@ -222,7 +223,7 @@
 						
 						//계약이 완료된 품목을 조달계획등록 할수 있기때문에, 품목코드로 검색해서 계약서를 찾을때! 받아온 데이터가 없을 수가 없다!!						
 						data.forEach(function(item){
-							completeHtml = completeHtml + makeContractSearchList(item.companyNo,item.contractNo,item.companyName,item.manager,item.managerTel,item.supplyLt,item.unitPrice,item.dealCondition);						
+							completeHtml = completeHtml + makeContractSearchList(item.companyNo,item.contractNo,item.contractNoStr,item.companyName,item.manager,item.managerTel,item.supplyLt,item.unitPrice,item.dealCondition);						
 						});						
 						//console.log("완성된 html 보자",completeHtml);	
 						
@@ -254,6 +255,7 @@
 				
 				//선택된 계약서의 정보 각각 읽기
 				var contractNo = getObjTR().querySelector("input[name=contractNo]").value;
+				var contractNoStr = getObjTR().querySelector("input[name=contractNoStr]").value;
 				var companyNo = getObjTR().querySelector("input[name=companyNo]").value;
 				var companyName = getObjTR().querySelector("input[name=companyName]").value;
 				var supplyLt = getObjTR().querySelector("input[name=supplyLt]").value;
@@ -272,6 +274,7 @@
 								
 				//선택한 계약서의 정보 -> 원래 조달계획 등록 테이블에 넣어주기
 				searchContractTR.querySelector("input[name=contractNo]").value = contractNo;
+				searchContractTR.querySelector("input[name=contractNoStr]").value = contractNoStr;
 				searchContractTR.querySelector("input[name=companyNo]").value = companyNo;
 				searchContractTR.querySelector("input[name=companyName]").value = companyName;
 				searchContractTR.querySelector("input[name=supplyLt]").value = supplyLt;
@@ -328,6 +331,7 @@
 				//선택하고 창 닫기 전에 원래 조달계획 등록 테이블에 값들 어떻게 되어있는지 보자
 				console.log("선택하고 창 닫기 전에 원래 조달계획 등록 테이블에 값들 어떻게 되어있는지 보자");
 				console.log("어디!! 계약서 번호 : ", searchContractTR.querySelector("input[name=contractNo]").value);
+				console.log("어디!! 계약서 번호 문자버전 : ", searchContractTR.querySelector("input[name=contractNoStr]").value);
 				console.log("어디!! 사업자등록번호 : ", searchContractTR.querySelector("input[name=companyNo]").value);
 				console.log("어디!! mrp코드 : ", searchContractTR.querySelector("input[name=mrpCode]").value);
 				console.log("어디!! 소요량 : ", searchContractTR.querySelector("input[name=mrpAmount]").value);
@@ -460,11 +464,12 @@
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		//모달창에 들어가는 테이블 tr 행 만들기(검색한 계약서 리스트 보여줄 tr html)
-		function makeContractSearchList(companyNo,contractNo,companyName,manager,managerTel,supplyLt,unitPrice,dealCondition){
+		function makeContractSearchList(companyNo,contractNo,contractNoStr,companyName,manager,managerTel,supplyLt,unitPrice,dealCondition){
 			return `<tr>									
 						<td>
 							<input type="hidden" name="companyNo" value=${companyNo} >
-							<input type="number" style="width:100%; border: 0; text-align: center;" name="contractNo" value=${contractNo} readonly>
+							<input type="hidden" name="contractNo" value=${contractNo} >
+							<input type="text" style="width:100%; border: 0; text-align: center;" name="contractNoStr" value=${contractNoStr} readonly>
 						</td>
 						<td><input type="text" style="width:100%; border: 0; text-align: center;" name="companyName" value=${companyName} readonly></td>
 						<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" value=${manager} readonly></td>

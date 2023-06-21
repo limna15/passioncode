@@ -57,7 +57,9 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		  .diliveryPercent(getPercent(procurementPlan.getDetailPurchaseOrder()))
 		  .inspectionComplete("미완료")
 		  .nextCheckDate(nextCheckDate(procurementPlan.getDetailPurchaseOrder()))
-		  .purchaseOrderDeadlineStatus(extistMIn(procurementPlan.getDetailPurchaseOrder())) .build();
+		  .purchaseOrderDeadlineStatus(extistMIn(procurementPlan.getDetailPurchaseOrder()))
+		  .showPurchaseOrderCode(addBlank(procurementPlan.getDetailPurchaseOrder().getCode()))
+		  .build();
 		
 		
 		return progressCheckDTO;
@@ -138,4 +140,15 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		
 		 progressCheckRepository.save(pc2);
 	}
+	
+	//발주코드에 문자를 넣어서 보내기
+	public String addBlank(Integer num1) {
+		String pNum = String.format("%05d", num1);
+		pNum = "DPO"+pNum;
+		log.info("잘 찍어 보낼 문자"+pNum);
+		
+		return pNum;
+		
+	}
+	
 }

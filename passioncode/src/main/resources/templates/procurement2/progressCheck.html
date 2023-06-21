@@ -108,7 +108,7 @@
                       </thead>
                       <tbody>
                       <tr th:each="dto: ${pCheckList}" id="trList">
-                            <td><input type="hidden" name="purchaseOrderCode" th:value="${dto.purchaseOrderCode}">[[${dto.purchaseOrderCode}]]</td>
+                            <td><input type="hidden" name="purchaseOrderCode" th:value="${dto.purchaseOrderCode}">[[${dto.showPurchaseOrderCode}]]</td>
                             <td><input type="hidden" name="companyName" th:value="${dto.companyName}">[[${dto.companyName}]]</td>
                             <td><input type="hidden" name="dueDate" th:value="${dto.dueDate}">[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
                             <td><input type="hidden" name="materialName" th:value="${dto.materialName}">[[${dto.materialName}]]</td>
