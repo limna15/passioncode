@@ -1,6 +1,5 @@
 package com.passioncode.procurementsystem.dto;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -18,7 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UploadResultDTO {
+public class DrawingFileDTO {
+	
 	/**
 	 * 파일이름
 	 */
@@ -57,7 +57,7 @@ public class UploadResultDTO {
         return "";
     }
 
-	public UploadResultDTO(String drawingFile) {
+	public DrawingFileDTO(String drawingFile) {
 		super();
 		String uploadPath = drawingFile.substring(0,20);
 		//log.info("어디어디 보자~~~~~~~ : "+uploadPath);
@@ -73,8 +73,5 @@ public class UploadResultDTO {
 		this.folderPath = folderPath;
 		this.uuidAndFileName = uuidAndFileName;
 	}
-    
-    
-    
 
 }

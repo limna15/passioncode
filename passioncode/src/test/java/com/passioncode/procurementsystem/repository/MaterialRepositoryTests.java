@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -212,10 +214,29 @@ public class MaterialRepositoryTests {
 //		String test = largeCategoryCode+middleCategoryCode;
 //		log.info("문자합치기.. 이게 되나?? : "+test);
 		
-		
 	}
 	
+	@Test
+	public void fileTest() {
+//		String drawingFile = "\\PassionCode\\upload\\2023\\06\\21\\97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg";
+		String drawingFile = "\\PassionCode\\upload\\drawing\\2023\\06\\21\\65334b3a-f3c2-4d06-92b4-7850e2ede958_HappyLunch~.jpg";
+//		String drawingFile = "\\PassionCode\\upload\\2023\\06\\21\\thumb_97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg";
+		String uploadPath = drawingFile.substring(0,28);
+		log.info("어디어디 보자~~~~~~~ : "+uploadPath);
+		// \PassionCode\ upload\
+		String folderPath = drawingFile.substring(28,39);
+		log.info("어디어디 보자2~~~~~~~ : "+folderPath);
+		// 2023\06\21\
+		String uuidAndFileName = drawingFile.substring(31);
+		log.info("어디어디 보자3~~~~~~~ : "+uuidAndFileName);
+		// 97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
+		// thumb_97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
+	}
 	
-	
+	@Test
+	public void decodeTest() throws UnsupportedEncodingException {
+		String test = URLDecoder.decode("2023%2F06%2F21%2F132d1fea-7240-4cf5-89c0-cffc758f00d4_a+a.jpg","UTF-8");
+		log.info("test 결과 : "+test);
+	}
 
 }

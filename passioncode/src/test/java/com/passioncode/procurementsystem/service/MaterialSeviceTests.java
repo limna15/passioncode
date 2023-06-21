@@ -29,14 +29,14 @@ public class MaterialSeviceTests {
 	@Transactional
 	@Test
 	public void entityToDTOTest() {
-		log.info("어디 materialDTO 잘가져오는지 결과좀 봐보자 : "+materialService.entityToDTO(materialService.getMaterial("BPa0001")));
-		log.info("어디 materialDTO 잘가져오는지 결과좀 봐보자 : "+materialService.entityToDTO(materialService.getMaterial("CGa0002")));
+		log.info("어디 materialDTO 잘가져오는지 결과좀 봐보자 : "+materialService.entityToDTO(materialService.getMaterial("BP0001")));
+		log.info("어디 materialDTO 잘가져오는지 결과좀 봐보자 : "+materialService.entityToDTO(materialService.getMaterial("CG0002")));
 	}
 	
 	@Transactional
 	@Test
 	public void dtoToEntityTest() {
-		MaterialDTO materialDTO = materialService.entityToDTO(materialService.getMaterial("BPa0001"));
+		MaterialDTO materialDTO = materialService.entityToDTO(materialService.getMaterial("BP0001"));
 		log.info("엔티티로 잘 바꾸나 봐보자 : "+materialService.dtoToEntity(materialDTO));
 	}
 	
@@ -49,7 +49,7 @@ public class MaterialSeviceTests {
 	
 	@Test
 	public void contractStatusCheckTest() {
-		log.info("이거 계약상태 존재 여부 체크좀 해보쟈 : "+materialService.contractStatusCheck(materialService.getMaterial("PCa0001")));
+		log.info("이거 계약상태 존재 여부 체크좀 해보쟈 : "+materialService.contractStatusCheck(materialService.getMaterial("PC0001")));
 	}
 	
 	
@@ -61,7 +61,7 @@ public class MaterialSeviceTests {
 	public void registerTest() {
 		//현재 등록화면에서 계약상태는 없음, 애초에 처음 등록하는 화면이라 당연히 계약상태는 미완료라서
 		//기존재고 수량 화면에는 없지만 숨겨서!! 0으로 기본값 세팅해주자
-		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드").size("PC001").quality("ABC")
+		MaterialDTO materialDTO =  MaterialDTO.builder().code("PC0001").name("PCB보드").size("PC001").quality("ABC")
 														.spec("10*10cm").drawingNo("PC3333").drawingFile("서비스로 입력 테스트중").shareStatus("공용")
 														.largeCategoryName("플라스틱").middleCategoryName("케이스")
 														.largeCategoryCode("PP0001")
@@ -74,7 +74,7 @@ public class MaterialSeviceTests {
 	
 	@Test
 	public void modifyTest() {
-		MaterialDTO materialDTO =  MaterialDTO.builder().code("PCa0001").name("PCB보드수정").size("PC001수정").quality("ABC수정")
+		MaterialDTO materialDTO =  MaterialDTO.builder().code("PC0001").name("PCB보드수정").size("PC001수정").quality("ABC수정")
 														.spec("10*10cm수정").drawingNo("PC3333수정").drawingFile("서비스로 입력 테스트중 수정3").shareStatus("공용")
 														.largeCategoryName("플라스틱").middleCategoryName("케이스")
 														.largeCategoryCode("PP0001")
