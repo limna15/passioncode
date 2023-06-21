@@ -34,16 +34,21 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Log4j2
 public class PS1UploadRestController {
 
-	@Value("${org.zerock.upload.path}")    //리소스의 설정 파일 내용(값)가져와서 셋팅
-    //application.properties 에서 org.zerock.upload.path =/Users/KSH/upload 값을 읽어오는 방법
+	@Value("${com.passioncode.procurementsystem.drawingFile.upload.path}")    //리소스의 설정 파일 내용(값)가져와서 셋팅
+    //application.properties 에서 com.passioncode.procurementsystem.drawingFile.upload.path = /PassionCode/upload/drawing 값을 읽어오는 방법
     //이렇게 설정을해야 경로가 바꼈을때 리소스에서 가서 고쳐주기만 하면 됨
-    private String uploadPath;
+    private String drawingUploadPath;
+	
+	@Value("${com.passioncode.procurementsystem.contract.upload.path}")    //리소스의 설정 파일 내용(값)가져와서 셋팅
+	//application.properties 에서 com.passioncode.procurementsystem.drawingFile.upload.path = /PassionCode/upload/drawing 값을 읽어오는 방법
+	//이렇게 설정을해야 경로가 바꼈을때 리소스에서 가서 고쳐주기만 하면 됨
+	private String contractUploadPath;
 		
 	/**
-     * 오늘날짜로 폴더만들기
+     * 오늘날짜로 도면 폴더만들기
      * @return 만든폴더이름 리턴(ex>2023/04/05)
      */
-    private String makeFolder() {
+    private String makeDrawingFolder() {
 
         //String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         //2023/04/25   -> 폴더로 하려면 윈도우는 \ 이렇게 구분자 
@@ -56,7 +61,7 @@ public class PS1UploadRestController {
         String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
         // make folder --------
-        File uploadPathFolder = new File(uploadPath, folderPath);
+        File uploadPathFolder = new File(drawingUploadPath, folderPath);
 
         if (uploadPathFolder.exists() == false) {  //파일이 존재하지 않으면 만들라!
             uploadPathFolder.mkdirs();  //디렉토리 만들기
@@ -91,12 +96,12 @@ public class PS1UploadRestController {
 
         log.info("fileName: " + fileName);
         //날짜 폴더 생성
-        String folderPath = makeFolder();
+        String folderPath = makeDrawingFolder();
         //UUID
         String uuid = UUID.randomUUID().toString();
 
         //저장할 파일 이름 중간에 "_"를 이용해서 구분
-        String saveName = uploadPath + File.separator + folderPath + File.separator + uuid +"_" + fileName;
+        String saveName = drawingUploadPath + File.separator + folderPath + File.separator + uuid +"_" + fileName;
         log.info("saveName 이름좀 봐보자 : "+saveName);
         Path savePath = Paths.get(saveName);
         log.info("savePath 이거 페스이름 봐보자 : "+savePath);
@@ -107,13 +112,13 @@ public class PS1UploadRestController {
             //원본 파일 저장
             uploadFile.transferTo(savePath);
             //섬네일 생성
-            String thumbnailSaveName = uploadPath + File.separator + folderPath + File.separator
+            String thumbnailSaveName = drawingUploadPath + File.separator + folderPath + File.separator
                     +"thumb_" + uuid +"_" + fileName;
             //섬네일 파일 이름은 중간에 s_로 시작하도록
             File thumbnailFile = new File(thumbnailSaveName);
             //섬네일 생성
             Thumbnailator.createThumbnail(savePath.toFile(), thumbnailFile,100,100 );  //Thumbnailator라이브러리 그리들에 추가
-            uploadResultDTO = new UploadResultDTO(fileName,uuid,folderPath);
+            uploadResultDTO = new UploadResultDTO(fileName,uuid,folderPath,null);
             log.info("업로드 DTO 에 넣은거 보자 : "+uploadResultDTO);
             
         } catch (IOException e) {
@@ -144,10 +149,13 @@ public class PS1UploadRestController {
         ResponseEntity<byte[]> result = null;
 
         try {
-            String srcFileName =  URLDecoder.decode(fileName,"UTF-8");
+        	//이미 위에서 받아서 올때, 디코딩을 해서 오기 때문에, 또 디코딩 처리를 해줄 필요가 없다!
+        	//특히 + 같은경우는 이미 해줬는데, 또 디코딩 해주면, +가 사라진다! 그러니까, 그냥 받아온 파일이름 그대로 쓰면된다!
+            //String srcFileName =  URLDecoder.decode(fileName,"UTF-8");
+            String srcFileName =  fileName;
             log.info("fileName: " + srcFileName);
 
-            File file = new File(uploadPath +File.separator+ srcFileName);
+            File file = new File(drawingUploadPath +File.separator+ srcFileName);
             log.info("file.getParent() 읽어보자 : "+file.getParent());
             
             //thumbnailURL & size=1 -> 원본 파일
@@ -156,11 +164,18 @@ public class PS1UploadRestController {
             }
 
             log.info("file: " + file);
+            
+//            log.info("파일을 문자로 읽어보자 : "+file.toString());
+//            String test = URLDecoder.decode(file.toString(),"UTF-8");
+//            log.info("테스트중이야~~ : "+test);
+//            File filetest = new File(test);
+//            log.info("파일 테스트 중이야~~ : "+filetest);
 
             HttpHeaders header = new HttpHeaders();
 
             //MIME타입 처리
             header.add("Content-Type", Files.probeContentType(file.toPath()));
+            log.info("보내는 타입 보자 : "+Files.probeContentType(file.toPath()));
             //파일 데이터 처리
             result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
         } catch (Exception e) {
@@ -177,7 +192,7 @@ public class PS1UploadRestController {
         String srcFileName = null;
         try {
             srcFileName = URLDecoder.decode(fileName,"UTF-8");
-            File file = new File(uploadPath +File.separator+ srcFileName);
+            File file = new File(drawingUploadPath +File.separator+ srcFileName);
             log.info("파일 봐보자... : "+file);
             boolean result = file.delete();
 
