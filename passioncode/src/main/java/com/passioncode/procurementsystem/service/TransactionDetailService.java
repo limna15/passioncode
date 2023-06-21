@@ -32,10 +32,10 @@ public interface TransactionDetailService {
 	Integer register(TransactionDetailDTO transactionDetailDTO);
 	
 	/**
-	 * 거래명세서 목록에 보여줄 거래명세서DTO 리스트
+	 * 거래명세서 목록에 보여줄 거래명세서DTO 리스트(거래명세서 번호 문자ver으로 보여주기)
 	 * @return
 	 */
-	List<TransactionDetail> getTransactionDetailList();
+	List<TransactionDetailDTO> getTdDTOList();
 	
 	/**
 	 * TransactionDetailDTO 리스트 가져오기

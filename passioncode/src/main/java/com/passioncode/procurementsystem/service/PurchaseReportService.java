@@ -1,6 +1,5 @@
 package com.passioncode.procurementsystem.service;
 
-import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.dto.PurchaseReportDTO;
 
 public interface PurchaseReportService {

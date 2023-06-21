@@ -6,10 +6,10 @@ $(function() {
   'use strict';
   
   var data = {
-    labels: ["조달 계획 개수", "발주 예정", "조달 진행 중", "조달 완료"],
+    labels: ["발주 예정", "조달 진행 중", "조달 완료"],
     datasets: [{
       label: "",
-      data: [list.procurementPlanCount, list.beforePurchase, list.ingProcurement, list.doneProcurement],
+      data: [list.beforePurchase, list.ingProcurement, list.doneProcurement],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',

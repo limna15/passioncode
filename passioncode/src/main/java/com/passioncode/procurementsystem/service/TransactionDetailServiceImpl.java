@@ -33,14 +33,30 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 	private final PurchaseOrderRepository purchaseOrderRepository;
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	
+	/**
+	 * 거래명세서 번호 문자버전으로 바꾸기 <br>
+	 * 거래명세서 번호 1 -> TD00000001 로 바꿔주기
+	 * @param no
+	 * @return
+	 */
+	public String makeNoStr(Integer no) {
+		//거래명세서 번호 1 -> TD00000001 로 바꿔주기
+		String noStr = String.format("%08d",no);
+		noStr = "TD" + noStr;
+		return noStr;
+	}
+	
 	@Override
 	public TransactionDetailDTO transactionDetailToDTO(DetailPurchaseOrder detailPurchaseOrder) {
 		ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		MaterialIn mi= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		
 		Company ourCompany= companyRepository.findById("777-77-77777").get();
+		TransactionDetail td= transactionDetailRepository.findByPurchaseOrder(pp.getDetailPurchaseOrder().getPurchaseOrder());
 		
-		TransactionDetailDTO transactionDetailDTO= TransactionDetailDTO.builder().company(ourCompany.getName()).purchaseOrderNo(detailPurchaseOrder.getPurchaseOrder().getNo())
+		TransactionDetailDTO transactionDetailDTO= TransactionDetailDTO.builder()
+				.noStr(makeNoStr(td.getNo()))
+				.company(ourCompany.getName()).purchaseOrderNo(detailPurchaseOrder.getPurchaseOrder().getNo())
 				.detailPurchaseOrderCode(detailPurchaseOrder.getCode())
 				.date(mi.getDate())
 				.companyNo(pp.getContract().getCompany().getNo())
@@ -53,7 +69,7 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 	}
 
 	@Override
-	public TransactionDetail DTOToEntity(TransactionDetailDTO transactionDetailDTO) {
+	public TransactionDetail DTOToEntity(TransactionDetailDTO transactionDetailDTO) {	
 		TransactionDetail transactionDetail= TransactionDetail.builder().no(transactionDetailDTO.getNo())
 				.purchaseOrder(purchaseOrderRepository.findById(transactionDetailDTO.getPurchaseOrderNo()).get()).build();
 		return transactionDetail;
@@ -66,13 +82,7 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 		
 		return transactionDetail.getNo();
 	}
-
-	@Override
-	public List<TransactionDetail> getTransactionDetailList() {
-		List<TransactionDetail> transactionDetailList= transactionDetailRepository.findAll();
-		return transactionDetailList;
-	}
-
+	
 	@Override
 	public List<TransactionDetailDTO> getTransactionDetailDTOLsit() {
 		List<DetailPurchaseOrder> dpoList= detailPurchaseOrderRepository.findAll();
@@ -118,6 +128,20 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 	@Override
 	public Boolean checkDone(PurchaseOrder purchaseOrder) {
 		return transactionDetailRepository.existsByPurchaseOrder(purchaseOrder);
+	}
+
+	@Override
+	public List<TransactionDetailDTO> getTdDTOList() {
+		List<TransactionDetail> tdList= transactionDetailRepository.findAll();
+		List<TransactionDetailDTO> tdDTOList= new ArrayList<>();
+		TransactionDetailDTO tdDTO= null;
+		
+		for(int i=0; i<tdList.size();i++) {
+			tdDTO= TransactionDetailDTO.builder().noStr(makeNoStr(tdList.get(i).getNo())).purchaseOrderNo(tdList.get(i).getPurchaseOrder().getNo())
+					.date(tdList.get(i).getDate()).build();
+			tdDTOList.add(tdDTO);
+		}
+		return tdDTOList;
 	}
 
 }

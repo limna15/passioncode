@@ -25,6 +25,11 @@ public class TransactionDetailDTO {
 	private Integer no;
 	
 	/**
+	 * 거래명세서 번호(문자.ver) (계약서)
+	 */
+	private String noStr;
+	
+	/**
 	 * 발주회사(=우리회사) (협력회사)
 	 */
 	private String company;

@@ -118,8 +118,8 @@
 							</thead>
 							<tbody>			
 								<tr th:each="list:${list}">
-									<td><a th:href="@{/procurement3/transactionDetail(purchaseNo=${list.getPurchaseOrder.no})}"><u>&nbsp;&nbsp;&nbsp;&nbsp;[[${list.no}]]&nbsp;&nbsp;&nbsp;&nbsp;</u></a></td>
-									<td>[[${list.getPurchaseOrder.no}]]</td>
+									<td><a th:href="@{/procurement3/transactionDetail(purchaseNo=${list.purchaseOrderNo})}"><u>&nbsp;&nbsp;&nbsp;&nbsp;[[${list.noStr}]]&nbsp;&nbsp;&nbsp;&nbsp;</u></a></td>
+									<td>[[${list.purchaseOrderNo}]]</td>
 									<td>[[${#temporals.format(list.date, 'yyyy/MM/dd HH:mm:ss')}]]</td>
 								</tr>
 							</tbody>

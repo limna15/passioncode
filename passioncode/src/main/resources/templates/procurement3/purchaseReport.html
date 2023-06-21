@@ -87,14 +87,12 @@
 					<div class="row" style="margin-bottom: 5px;">
 						<!-- 목록 내려보기 시작 -->
 						<div class="col-md-6"> 
-							<form>
-								<div>
-									<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
-									<input type="date" style="width: 150px; height: 40px;">&nbsp;&nbsp;~&nbsp;&nbsp;
-									<input type="date" style="width: 150px; height: 40px;">&nbsp;&nbsp;
-									<input type="submit" value="검색" class="btn btn-primary">
-			                    </div>
-							</form>
+							<div>
+								<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
+								<input type="date" id="startDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;~&nbsp;&nbsp;
+								<input type="date" id="endDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;
+								<input type="submit" id="dateSearch" onclick="getDate();" value="검색" class="btn btn-primary">
+		                    </div>
 						</div> 
 						<!-- 목록 내려보기 끝 -->
 					</div>	
@@ -104,16 +102,14 @@
 							<thead>
 								<tr>
 									<th>기간</th>
-									<th>조달 계획 개수</th>
 									<th>발주 예정</th>
 									<th>조달 진행 중</th>
 									<th>조달 완료</th>
 								</tr>
 							</thead>
 							<tbody>			
-									<tr th:each="list: ${list}">
+								<tr th:each="list: ${list}">
 									<td>전체</td>
-									<td id="ppCount">[[${list.procurementPlanCount}]]</td>
 									<td id="beforeCount">[[${list.beforePurchase}]]</td>
 									<td id="ingCount">[[${list.ingProcurement}]]</td>
 									<td id="doneCount">[[${list.doneProcurement}]]</td>
@@ -121,40 +117,6 @@
 							</tbody>
 						</table>
 						<!-- 테이블 끝 -->
-						<!-- 페이지 번호 시작 -->
-						<div class="clearfix">
-							<div class="hint-text">
-								Showing <b>5</b> out of <b>25</b> entries
-							</div>
-							<ul class="pagination">
-								<li class="page-item disabled">
-									<a href="#"> 
-										<i class="fa fa-angle-double-left"></i>
-									</a>
-								</li>
-								<li class="page-item">
-									<a href="#" class="page-link">1</a>
-								</li>
-								<li class="page-item">
-									<a href="#" class="page-link">2</a>
-								</li>
-								<li class="page-item active">
-									<a href="#" class="page-link">3</a>
-								</li>
-								<li class="page-item">
-									<a href="#" class="page-link">4</a>
-								</li>
-								<li class="page-item">
-									<a href="#" class="page-link">5</a>
-								</li>
-								<li class="page-item">
-									<a href="#" class="page-link">
-										>> <i class="fa fa-angle-double-right"></i>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<!-- 페이지 번호 끝 -->
 					</div>
 					<br>
 					<!-- bar chart 넣을 자리-->
@@ -168,11 +130,6 @@
 			</div>
 		</div>
 	
-<script  th:inline="javascript">
-	var list= /*[[${list}]]*/'list';
-	console.log("list 값 읽기 >>> ", list);
-	 
-</script>
 <script src="../../vendors/base/vendor.bundle.base.js"></script>
 <script src="../../vendors/chart.js/Chart.min.js"></script>
 <script src="../../js/off-canvas.js"></script>
@@ -180,6 +137,37 @@
 <script src="../../js/template.js"></script>
 <script src="../../js/chart.js"></script>
 		
+<script  th:inline="javascript">
+	var list= [[${list}]];
+	console.log("list 값 읽기 >>> ", list);
+	
+	function getDate(){
+		var start= document.querySelector("#startDate").value;
+		var end= document.querySelector("#endDate").value;
+		console.log("시작날짜 찍히나 >>> ", start)		
+		console.log("끝날짜 찍히나 >>> ", end)		
+	}
+	
+	//종료날짜가 더 작은 경우 알럿창
+	$("#dateSearch").on("click",function(){
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        
+        //-을 구분자로 연,월,일로 잘라내어 배열로 반환
+        var startArray = startDate.split('-');
+        var endArray = endDate.split('-');   
+        
+        //배열에 담겨있는 연,월,일을 사용해서 Date 객체 생성
+        var start_date = new Date(startArray[0], startArray[1], startArray[2]);
+        var end_date = new Date(endArray[0], endArray[1], endArray[2]);
+        
+        //날짜를 숫자형태의 날짜 정보로 변환하여 비교한다.
+        if(start_date.getTime() > end_date.getTime()) {
+            alert("종료날짜보다 시작날짜가 빨라야합니다.");
+            return false;
+        }
+     });
+</script>
 	</th:block>
 </th:block>
 </html>

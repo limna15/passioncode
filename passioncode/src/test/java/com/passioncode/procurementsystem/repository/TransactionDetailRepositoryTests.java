@@ -87,6 +87,13 @@ public class TransactionDetailRepositoryTests {
 	
 	}
 	
+	public String makeNoStr(Integer no) {
+		//거래명세서 번호 1 -> TD00000001 로 바꿔주기
+		String noStr = String.format("%08d",no);
+		noStr = "TD" + noStr;
+		return noStr;
+	}
+	
 	@Transactional
 	@Commit
 	@Test
@@ -101,27 +108,24 @@ public class TransactionDetailRepositoryTests {
 				miList.add(materialInRepository.findByDetailPurchaseOrder(dpoList.get(i)));		
 			}
 		}
-		
-		log.info("ppList 읽기 >>> " + ppList + "ppList 사이즈 읽기 >>> " + ppList.size());
-		log.info("miList 읽기 >>> " + miList + "miList 사이즈 읽기 >>> " + miList.size());
 
 		List<MaterialInDTO> miDTOList= new ArrayList<>();
 		MaterialInDTO materialInDTO= null;
 		
+		TransactionDetailDTO transactionDetailDTO= null;
+		TransactionDetail td= null;
+		List<TransactionDetailDTO> transactionDetailDTOList= new ArrayList<>();
+
 		for(int i=0; i<miList.size(); i++) {
+			td= transactionDetailRepository.findByPurchaseOrder(ppList.get(i).getDetailPurchaseOrder().getPurchaseOrder());
+			
 			materialInDTO= MaterialInDTO.builder().code(miList.get(i).getCode()).inDate(miList.get(i).getDate()).build();
 			miDTOList.add(materialInDTO);
-		}
-		log.info("miDTOList 읽기 >>> " + miDTOList + "miDTOList 사이즈 읽기 >>> " + miDTOList.size());
-		
-		TransactionDetailDTO transactionDetailDTO= null;
-		List<TransactionDetailDTO> transactionDetailDTOList= new ArrayList<>();
-		
-		for(int i=0; i<miList.size();i++) {
-			Company ourCompany= companyRepository.findById("777-77-77777").get();
-			log.info(i + "번째 dpoList 읽기 >>> " + dpoList.get(i));
 
-			transactionDetailDTO= TransactionDetailDTO.builder().company(ourCompany.getName()).purchaseOrderNo(dpoList.get(i).getPurchaseOrder().getNo())
+			Company ourCompany= companyRepository.findById("777-77-77777").get();
+
+			transactionDetailDTO= TransactionDetailDTO.builder()
+								.company(ourCompany.getName()).purchaseOrderNo(dpoList.get(i).getPurchaseOrder().getNo())
 								.detailPurchaseOrderCode(ppList.get(i).getDetailPurchaseOrder().getCode())
 								.date(miDTOList.get(i).getInDate())
 								.companyNo(ppList.get(i).getContract().getCompany().getNo())
@@ -132,12 +136,32 @@ public class TransactionDetailRepositoryTests {
 								.amount(ppList.get(i).getDetailPurchaseOrder().getAmount()).unitPrice(ppList.get(i).getContract().getUnitPrice()).build();
 			
 			transactionDetailDTOList.add(transactionDetailDTO);
-		}
+		}	
+
+		log.info("ppList 읽기 >>> " + ppList + "ppList 사이즈 읽기 >>> " + ppList.size());
+		log.info("miList 읽기 >>> " + miList + "miList 사이즈 읽기 >>> " + miList.size());
+
 		
+		log.info("miDTOList 읽기 >>> " + miDTOList + "miDTOList 사이즈 읽기 >>> " + miDTOList.size());
 		
+	
 		log.info("transactionDetailDTOList 어떻게 가지고 오는지 보자>>> " + transactionDetailDTOList);
 	}
 	
-	
+	@Transactional
+	@Commit
+	@Test
+	public void getTdList() {
+		List<TransactionDetail> tdList= transactionDetailRepository.findAll();
+		List<TransactionDetailDTO> tdDTOList= new ArrayList<>();
+		TransactionDetailDTO tdDTO= null;
+		
+		for(int i=0; i<tdList.size();i++) {
+			tdDTO= TransactionDetailDTO.builder().noStr(makeNoStr(tdList.get(i).getNo())).purchaseOrderNo(tdList.get(i).getPurchaseOrder().getNo())
+					.date(tdList.get(i).getDate()).build();
+			tdDTOList.add(tdDTO);
+		}
+		log.info("이렇게 보자 >>> " + tdDTOList);
+	}
 	
 }

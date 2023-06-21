@@ -37,6 +37,7 @@ public class PurchaseReportServiceTests {
 		log.info("purchaseReportDTO 한번 보자 >>> " + purchaseReportService.getCountPurchaseReportDTO());	
 	}
 	
+	//조달계획 전체 개수를 가져옴
 	@Transactional
 	@Test
 	public void getCountPurchaseReportDTOTest() {
@@ -81,5 +82,26 @@ public class PurchaseReportServiceTests {
 				.doneProcurement(doneProcurementCount).build();
 		
 		log.info("purchaseReportDTO 한번 봅시다 >>> " + purchaseReportDTO);
+	}
+	
+	//기간별로 개수 가져오기
+	@Transactional
+	@Test
+	public void getCount() {
+		List<ProcurementPlanDTO> procurementPlanDTOList= procurementPlanService.getDTOList();
+		//procurementPlanRepository.findById(null)
+		
+		int beforePurchaseCount= 0;
+		int ingProcurementCount= 0;
+		int doneProcurementCount= 0;
+		int ppCount= 0;
+		
+		for(int i=0; i<procurementPlanDTOList.size(); i++) {
+			if(procurementPlanDTOList.get(i).getPpProgress() != null){		
+				log.info("조달계획 >>> " + procurementPlanService.getProcurementPlan(i));
+				log.info("조달계획 코드 >>> " + procurementPlanService.getProcurementPlan(i).getCode());
+				log.info("조달계획 완료일 >>> " + procurementPlanService.getProcurementPlan(i).getCompletionDate());
+			}
+		}
 	}
 }

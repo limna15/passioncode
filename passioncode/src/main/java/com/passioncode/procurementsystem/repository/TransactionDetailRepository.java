@@ -14,4 +14,11 @@ public interface TransactionDetailRepository extends JpaRepository<TransactionDe
 	 * @return
 	 */	
 	public Boolean existsByPurchaseOrder(PurchaseOrder purchaseOrder);
+	
+	/**
+	 * 구매발주서 번호를 이용해 거래명세서 번호찾기<br>
+	 * @param purchaseOrder
+	 * @return
+	 */	
+	public TransactionDetail findByPurchaseOrder(PurchaseOrder purchaseOrder);
 }

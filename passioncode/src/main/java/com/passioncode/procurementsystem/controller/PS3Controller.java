@@ -94,16 +94,15 @@ public class PS3Controller {
 		}
 		
 		materialInService.updatePPCompletionDate(materialInDTO.getCode());
-		
-		//테스트용 맵핑 url
-		//return "/procurement3/materialInRegister";
+
 		return "redirect:/procurement3/materialIn";
 	}
 	
 	//거래명세서 리스트 화면
 	@GetMapping("/transactionList")
 	public void transactionList(Model model, TransactionDetailDTO transactionDetailDTO) {
-		model.addAttribute("list", transactionDetailService.getTransactionDetailList());
+		log.info("안보내지는건가 >>> " + transactionDetailService.getTdDTOList());
+		model.addAttribute("list", transactionDetailService.getTdDTOList());
 	}
 	
 	//거래명세서 번호를 눌렀을 때 해당 거래명세서의 내용 보여주는 화면
@@ -149,8 +148,7 @@ public class PS3Controller {
 	
 	@GetMapping("/purchaseReport")
 	public void purchaseReport(Model model, PurchaseReportDTO purchaseReportDTO) {
-		log.info("발주진행 현황관리");
-		
+		log.info("발주진행 현황관리");		
 		model.addAttribute("list", purchaseReportService.getCountPurchaseReportDTO());
 	}
 }
