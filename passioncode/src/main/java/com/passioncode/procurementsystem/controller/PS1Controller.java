@@ -43,6 +43,12 @@ public class PS1Controller {
 	private final ContractService contractService;
 	private final ProcurementPlanService procurementPlanService; 
 	
+	@GetMapping("test")
+	public void test() {
+		
+	}
+	
+	
 	/**
 	 * 품목정보 목록 화면 보기 <br>	  
 	 * @param model

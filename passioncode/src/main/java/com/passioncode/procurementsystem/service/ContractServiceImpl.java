@@ -61,6 +61,20 @@ public class ContractServiceImpl implements ContractService {
 	public List<Contract> searchContractByMaterialCode(String materialCode) {
 		return contractRepository.findByMaterialCode(materialCode);
 	}
+	
+	/**
+	 * 계약서번호 문자버전으로 바꾸기 <br>
+	 * 계약서번호 1 -> C00001 로 바꿔주기
+	 * @param contractNo
+	 * @return
+	 */
+	public String makeContractNoStr(Integer contractNo) {
+		//계약서번호 1 -> C00001 로 바꿔주기
+		String contractNoStr = String.format("%05d",contractNo);
+		contractNoStr = "C" + contractNoStr;
+		log.info("바꾼 계약서 번호 좀 보자 : ",contractNoStr);
+		return contractNoStr;
+	}
 
 		
 	@Override
@@ -76,6 +90,7 @@ public class ContractServiceImpl implements ContractService {
 		if(contractList.size()!=0) {
 			for(int i=0;i<contractList.size();i++) {
 				contractDTO = ContractDTO.builder().contractNo(contractList.get(i).getNo()).materialCode(contractList.get(i).getMaterial().getCode())
+													.contractNoStr(makeContractNoStr(contractList.get(i).getNo()))
 													.materialName(contractList.get(i).getMaterial().getName()).companyNo(contractList.get(i).getCompany().getNo())
 													.companyName(contractList.get(i).getCompany().getName()).manager(contractList.get(i).getCompany().getManager())
 													.managerTel(contractList.get(i).getCompany().getManagerTel()).supplyLt(contractList.get(i).getSupplyLt())
@@ -95,6 +110,7 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public ContractDTO contractEntityToDTO(Contract contract) {
 		ContractDTO contractDTO = ContractDTO.builder().contractNo(contract.getNo()).materialCode(contract.getMaterial().getCode()).materialName(contract.getMaterial().getName())
+														.contractNoStr(makeContractNoStr(contract.getNo()))
 														.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
 														.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
 														.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus("완료").build();

@@ -36,7 +36,11 @@
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo"></td>
-											<td></td>
+											<td>
+												<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
+													첨부
+												</button>
+											</td>
 											<td>
 												<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
 													<option value='공용'>공용</option>
@@ -114,6 +118,70 @@
             </div>
         </div>
 		<!-- 등록확인 모달창 끝 -->
+		
+		<!-- 첨부파일 모달창 시작-->
+		<div class="drawingUploadModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">도면 Image 첨부하기</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" >
+               			<div class="custom-file">
+		                    <input type="file" class="custom-file-input" id="customFile">
+		                    <label class="custom-file-label" for="customFile">도면 Image 첨부하기</label>
+		                </div>  
+		                <div class="box">
+
+           				</div>
+		                <style>
+							.uploadResult {
+								width: 100%;
+								background-color: gray;
+								margin-top: 10px;                    
+							}
+							
+							.uploadResult ul {
+								display: flex;
+								flex-flow: row;
+								justify-content: center;
+								align-items: center;
+								vertical-align: top;
+								overflow: auto;                           
+								height: 220px;             
+							}
+							
+							.uploadResult ul li {
+								list-style: none;
+								padding: 10px;
+								margin-left: 2em;
+							}
+							
+							.uploadResult ul li img {
+								width: 100px;
+							}
+						</style>
+                    	<div class="uploadResult" id="holder">
+			                <ul id="boxing">
+								<h3 id="h3Text">파일을 업로드 해주세요.</h3>
+			                </ul>
+			            </div>                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary drawingUploadBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 첨부파일 모달창 끝 -->
 		
 		<!-- 
 			안내와 오류시 보여줄 모달창 시작 
@@ -484,8 +552,230 @@
 						console.log("대분류코드를 이용해서 중분류리스트 가져오는데 Ajax 오류 발생!!!!!!");
 					}
 				});	
+			});
+			
+			//도면이미지 첨부버튼 클릭할때 -> 도면 첨부 모달창 보여주기
+			$(document).on("click",".attachBtn",function(e){
+				$(".drawingUploadModal").modal('show');					
 				
 			});
+			
+			var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$");
+	        var maxSize = 10485760; //10MB
+
+	        function checkExtension(fileName, fileSize){
+
+	            if(fileSize >= maxSize){
+	                alert("파일 사이즈 초과");
+	                return false;
+	            }
+
+	            if(regex.test(fileName)){
+	                alert("해당 종류의 파일은 업로드할 수 없습니다.");
+	                return false;
+	            }
+	            return true;
+	        }
+
+	        $(".custom-file-input").on("change", function() {
+
+	            var fileName = $(this).val().split("\\").pop();
+	            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+
+	            var formData = new FormData();
+	            var inputFile = $(this);
+	            var files = inputFile[0].files;
+	            var appended = false;
+
+	            for (var i = 0; i < files.length; i++) {
+	                if(!checkExtension(files[i].name, files[i].size) ){
+	                    return false;
+	                }
+	                console.log("파일 올려진거... files[i] 보기",files[i]);
+	                formData.append("uploadFiles", files[i]);
+	                appended = true;
+	            }
+
+	            //upload를 하지 않는다.
+	            if (!appended) {return;}
+
+	            for (var value of formData.values()) {
+	                console.log("value of formData.values() 이거야 어디 보자",value);
+	            }
+
+	            //실제 업로드 부분
+	            //upload ajax
+	            $.ajax({
+	                url: '/uploadAjax',
+	                processData: false,
+	                contentType: false,
+	                data: formData,
+	                type: 'POST',
+	                dataType:'json',
+	                beforeSend: function (jqXHR, settings) {
+	                    var header = $("meta[name='_csrf_header']").attr("content");
+	                    var token = $("meta[name='_csrf']").attr("content");
+	                    jqXHR.setRequestHeader(header, token);
+	         		},
+	                success: function(result){
+	                    console.log("Ajax로 받아온 데이터 결과 값 보자 : ",result);
+	                    showResult(result);
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+	                    console.log("에러일경우 그 상태 값 : ",textStatus);
+	                }
+	            }); //$.ajax
+	        }); //end change event
+			
+	        //드래그 앤 드랍!! 
+	        var holder = document.getElementById("holder");
+	        var boxing = document.getElementById("boxing");
+
+	        function fileDragDrop(event){        	
+	        	event.stopPropagation();
+	        	event.preventDefault();
+	        	if (event.type == "dragover"){ // Drag Over        		
+	        		//event.target.style.border = '5px dashed #c00';
+	        		//holder.style.border = '5px dashed #c00';
+	        		boxing.style.border = '5px dashed #c00';
+	        	}else{  // File Drop        		
+	        		//event.target.style.border = '';
+	        		//holder.style.border = '';
+	        		boxing.style.border = '';
+	        	}
+	        }
+
+	        function fileUpload(e){        	
+	        	e.stopPropagation();
+	        	e.preventDefault();
+	        	fileDragDrop(e); // (e.type != "dragover") 캔슬을위해 [여기서 별도로 작업해줘도 상관없음]
+	        	
+	        	var files = e.target.files || e.dataTransfer.files; 
+	        	var formData = new FormData();
+	            var appended = false;
+	            
+	            for (var i = 0; i < files.length; i++) {
+	                if(!checkExtension(files[i].name, files[i].size) ){
+	                    return false;
+	                }
+	                console.log(files[i]);
+	                formData.append("uploadFiles", files[i]);
+	                appended = true;
+	            }
+
+	            //upload를 하지 않는다.
+	            if (!appended) {return;}
+
+	            for (var value of formData.values()) {
+	                console.log("value of formData.values() 이거야 어디 보자",value);
+	            }
+
+	            //실제 업로드 부분
+	            //upload ajax
+	            $.ajax({
+	                url: '/uploadAjax',
+	                processData: false,
+	                contentType: false,
+	                data: formData,
+	                type: 'POST',
+	                dataType:'json',
+	                beforeSend: function (jqXHR, settings) {
+	                    var header = $("meta[name='_csrf_header']").attr("content");
+	                    var token = $("meta[name='_csrf']").attr("content");
+	                    jqXHR.setRequestHeader(header, token);
+	         		},
+	                success: function(result){
+	                    console.log(result);
+	                    showResult(result);
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+	                    console.log(textStatus);
+	                }
+	            }); //$.ajax       	
+	        }
+	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
+	        holder.addEventListener("dragleave", fileDragDrop);
+	        holder.addEventListener("drop", fileUpload);  
+	        
+
+	        function showResult(uploadResultArr){
+
+	            var uploadUL = $(".uploadResult ul");
+	            
+	           //파일을 업로드 해주세요. 글귀 지우기 
+	           $("#h3Text").text("");
+	            var str ="";
+
+	            $(uploadResultArr).each(function(i, obj) {
+	                str += "<li class='liUpload' data-name='" + obj.fileName + "' data-path='"+obj.folderPath+"' data-uuid='"+obj.uuid+"'>";
+	                str + " <div>";
+	                str += "<button type='button' data-file=\'" + obj.imageURL + "\' "
+	                str += "class='btn-warning btn-sm'>X</button><br>";
+	                str += "<img src='/display?fileName=" + obj.thumbnailURL + "'>";
+	                str += "</div>";
+	                str + "</li>";
+	            });
+	            uploadUL.append(str);
+	        }        
+
+	        $(".uploadResult ").on("click", "li button", function(e){
+	            console.log("delete file");
+	            var targetFile = $(this).data("file");
+	            var targetLi = $(this).closest("li");
+
+	            $.ajax({
+	                url: '/removeFile',
+	                data: {fileName: targetFile},
+	                dataType:'text',
+	                type: 'POST',
+	                beforeSend: function (jqXHR, settings) {
+	                    var header = $("meta[name='_csrf_header']").attr("content");
+	                    var token = $("meta[name='_csrf']").attr("content");
+	                    jqXHR.setRequestHeader(header, token);
+	         		},
+	                success: function(result){
+	                    alert(result);
+
+	                    targetLi.remove();
+	                    checkLi();
+	                }
+	            }); //$.ajax  
+	        });
+	        
+	        //업로드할 파일을 다 지우면(liUpload 클래스가 하나도 없으면), 파일을 업로드 해주세요. 글귀 넣기
+	    	function checkLi() {
+	    		var isExist = document.getElementsByClassName('liUpload');
+	 	        //console.log("모라고 찍힐까????",isExist);
+	 	        //console.log("그럼 길이를 찍어보자!!!",isExist.length); 	        
+	 			if(isExist.length==0){
+	 				$("#h3Text").text("파일을 업로드 해주세요.");
+	 			}
+	    	}
+
+	        //prevent submit
+	        $(".drawingUploadBtn").on("click", function(e) {
+	            e.preventDefault();
+	            var str = "";
+
+	            $(".uploadResult li").each(function(i,obj){
+	                var target = $(obj);
+
+	                str += "<input type='hidden' name='imageDTOList["+i+"].imgName' value='"+target.data('name') +"'>";
+	                str += "<input type='hidden' name='imageDTOList["+i+"].path' value='"+target.data('path')+"'>";
+	                str += "<input type='hidden' name='imageDTOList["+i+"].uuid' value='"+target.data('uuid')+"'>";
+	            });
+
+	            //태그들이 추가된 것을 확인한 후에 comment를 제거
+	            $(".box").html(str);
+
+	            //$("form").submit();
+
+	        });
+			
+			
+			
+			
+			
 		
 		});
 		
@@ -614,7 +904,11 @@
 	            }else if(i === 4){
 	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo"></td>`;
 	            }else if(i === 5){
-	            	temp_html = `<td></td>`;
+	            	temp_html = `<td> 
+				            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
+										첨부
+									</button>
+	            				</td>`;
 	            }else if(i === 6){
 	            	temp_html = `<td>
 				        			<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
@@ -654,6 +948,10 @@
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);
     	};	    
+    	
+    	
+    	
+    	
     	
 		
 		</script>

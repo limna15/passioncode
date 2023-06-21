@@ -141,7 +141,7 @@
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
 									<td><input type="checkbox" name="checkBox" th:value="${dto.materialCode}" onclick="chkClicked(); getContractStatus();"></td>
-									<td>[[${dto.contractNo}]]</td>
+									<td>[[${dto.contractNoStr}]]</td>
 									<td>[[${dto.materialCode}]]</td>
 									<td>[[${dto.materialName}]]</td>
 									<td>[[${dto.companyName}]]</td>

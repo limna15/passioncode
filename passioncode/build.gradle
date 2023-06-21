@@ -56,6 +56,9 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 	
+	// https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    //썸네일 라이브러리
+    implementation 'net.coobird:thumbnailator:0.4.19'
 	
 	/*
 	//Security 보안 관련설정... 그 로그인.. 그거 일단 넣어둠

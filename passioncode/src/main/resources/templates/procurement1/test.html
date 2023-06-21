@@ -75,63 +75,77 @@
 	margin-top: 6px;
 	font-size: 95%;
 }
+
+.uploadResult {
+	width: 100%;
+	background-color: gray;
+	margin-top: 10px;                    
+}
+
+.uploadResult ul {
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+	vertical-align: top;
+	overflow: auto;                           
+	height: 220px;             
+}
+
+.uploadResult ul li {
+	list-style: none;
+	padding: 10px;
+	margin-left: 2em;
+}
+
+.uploadResult ul li img {
+	width: 100px;
+}
 </style>
 
 
 		<div class="col-md-12 stretch-card">
 			<!-- 수정 부분 시작 -->
 			<div class="card">
-				<div class="card-body">
-					<p class="card-title" style="font-size:23px;">품목 정보 등록</p> 
-					<br>
-					
-					
-					
-					
-					
-					<div class="table-responsive" style="margin-bottom: 10px;">
-						<!-- 테이블 시작 -->
-							<table class="table table-bordered" id="registerTable" style="text-align: center;">
-								<thead>
-									<tr>
-										<th>사업자 등록번호</th>
-										<th>협력회사</th>
-										<th>담당자</th>
-										<th>담당자<br>연락처</th>
-										<th></th> 
-									</tr>
-								</thead>
-								<tbody>	
-									<tr th:each="dto : ${contractDTOList}" >									
-										<td><input type="hidden" name="companyNo" value=""></td>
-										<td><input type="text" style="width:100%; border: 0;" name="companyName"></td>
-										<td><input type="text" style="width:100%; border: 0;" name="manager" ></td>
-										<td><input type="text" style="width:100%; border: 0;" name="managerTel"></td>
-										<td>
-											<button type="button" class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px; padding-right: 10px;">
-												선택
-											</button>
-										</td> 
-									</tr>
-								</tbody>
-							</table>
-						<!-- 테이블 끝 -->
+				<div class="modal-body" >
+					<div class="custom-file">
+						<input type="file" class="custom-file-input" id="customFile">
+						<label class="custom-file-label" for="customFile">도면 Image 첨부하기</label>
+					</div>  
+					<div class="box">
+				
 					</div>
-						
-						
-						
-						
-					<div class="col-md-12">						
-						<!-- 등록확인, 등록취소 버튼 시작 -->
-						<form style="float: right;" action="/procurement1/materialList">
-							<button type="submit" class="btn btn-primary" style="margin-right: 200px;">등록취소</button>
-						</form>
-						<form style="float: right;">
-							&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >등록확인</button>&nbsp;&nbsp;
-						</form>						
-						<!-- 등록확인, 등록취소 버튼 끝 -->
-					</div>	
-				</div>
+					<div class="uploadResult" id="holder">
+						<ul id="boxing">
+							<h3 id="h3Text">파일을 업로드 해주세요.</h3>
+						</ul>
+					</div>                    	
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary drawingUploadBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+							확인
+						</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+							취소
+						</button>
+					</div>
+					<hr>
+					원본 파일
+					<div class="uploadOriginResult">
+					
+					</div>
+					<hr>
+					썸네일 파일
+					<div class="uploadThumbResult">
+					
+					</div>
+					<hr>
+					삭제버튼 추가
+					<div class="removeBtnAdd">
+					
+					</div>
+					
+				
 			</div>
 		</div>
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -139,14 +153,92 @@
 
 
 		$(document).ready(function() {
-			var className = $('th').attr('class');
-			console.log("th 클래스 찍히나?",className);
+			
+			$(".drawingUploadBtn").on("click", function() {
+				var formData = new FormData();
+	            var inputFile = $("input[type='file']");
+	            var files = inputFile[0].files;
+	            for (var i = 0; i < files.length; i++) {
+	                console.log("파일 올려진거... files[i] 보기",files[i]);
+	                formData.append("uploadFile", files[i]);
+	            }
+	            
+	            
+	            $.ajax({
+	            	url: '/procurement1/uploadAjax',
+	                processData: false,
+	                contentType: false,
+	                data: formData,
+	                type: 'POST',
+	                dataType:'json',
+	                success: function(result){
+	                    console.log("Ajax로 받아온 데이터 결과 값 보자 : ",result);
+	                    //showResult(result);
+	                    showUploadOrigin(result);
+	                    showUploadThumb(result);
+	                    removeBtn(result);
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+	                    console.log("에러일경우 그 상태 값 : ",textStatus);
+	                }
+	            });
+			});
+			
+			$(".removeBtnAdd").on("click",".removeBtn", function(e) {
+				
+				var target = $(this);
+		        var fileName = target.data("name");
+		        var targetDiv = $(this).closest("div");
+
+		        console.log(fileName);
+
+		        $.post('/procurement1/removeFile', {fileName: fileName}, function(result){
+		            console.log(result);
+		            if(result === true){
+		                targetDiv.remove();
+		                $(".uploadOriginResult").remove();
+		                $(".uploadThumbResult").remove();
+		            }
+		        });
+				
+			
+			});
+			
+			function showUploadOrigin(dto){
+            	console.log("원본파일 보여주는거에 넣은 dto어디 보자",dto);
+            	console.log("원본파일 imageURL 읽어보자 : ",dto.imageURL);
+            	console.log("썸네일파일 thumbnailURL 읽어보자 : ",dto.thumbnailURL);
+            	var divArea = $(".uploadOriginResult");
+            	
+            	divArea.append("<img src='/procurement1/display?fileName="+dto.thumbnailURL+"&size=1'>");
+            	//divArea.append("<img src='/procurement1/display?fileName="+dto.imageURL+"'>");
+            }
+            
+            function showUploadThumb(dto){
+            	console.log("썸네일 보여주는 함수에 넣은 dto어디 보자",dto);
+            	var divArea = $(".uploadThumbResult");
+            	
+            	divArea.append("<img src='/procurement1/display?fileName="+dto.thumbnailURL+"'>");
+            }
+            
+            function removeBtn(dto){
+            	console.log("삭제버튼 추가 함수에 넣은 dto어디 보자",dto);
+            	var divArea = $(".removeBtnAdd");
+            	var str = "";
+            	str += "<div>";
+            	str += "<button class='removeBtn' data-name='"+dto.imageURL+"'>삭제</button>";
+            	str += "</div>";
+            	
+            	divArea.append(str);
+            }
+            
+            
+            
+            
+            
+            
 		});
 
-	    
-	    var className = $('div')[2].className;
-	    console.log("div 클래스 찍히나?",className);
-		
 		</script>
 		
 	</th:block>

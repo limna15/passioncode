@@ -188,5 +188,19 @@ public class ContractRepositoryTests {
 	}
 	
 	
+	public String makeContractNoStr(Integer contractNo) {
+		//계약서번호 1 -> C00001 로 바꿔주기
+		String contractNoStr = String.format("%05d",contractNo);
+		contractNoStr = "C" + contractNoStr;
+		log.info("바꾼 계약서 번호 좀 보자 : ",contractNoStr);
+		return contractNoStr;
+	}
+	
+	@Test
+	public void makeContractNoStrTest() {
+		Contract contract = contractRepository.findById(1).get();
+		log.info("어디 보자 : "+makeContractNoStr(contract.getNo()));
+	}
+	
 	
 }

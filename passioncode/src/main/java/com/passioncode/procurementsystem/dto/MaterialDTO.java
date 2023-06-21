@@ -1,5 +1,8 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 
 import lombok.Builder;
@@ -60,6 +63,12 @@ public class MaterialDTO {
 	private String drawingFile; 	
 	
 	/**
+	 * 도면업로드 리스트
+	 */
+	@Builder.Default
+	private List<UploadResultDTO> imageDTOList = new ArrayList<>();
+	
+	/**
 	 * 대분류 종류 (대분류)
 	 */
 	private String largeCategoryName;
@@ -68,12 +77,6 @@ public class MaterialDTO {
 	 * 중분류 종류 (중분류)
 	 */
 	private String middleCategoryName;
-		
-//	/**
-//	 * 계약상태 (추가된 변수) <br>
-//	 * 완료 : 계약상태 O, 미완료 : 계약상태 X 
-//	 */
-//	private String contractStatus;
 	
 	/**
 	 * 대분류 코드 (대분류)

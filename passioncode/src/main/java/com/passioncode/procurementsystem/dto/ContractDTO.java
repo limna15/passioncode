@@ -24,6 +24,11 @@ public class ContractDTO {
 	private Integer contractNo;
 	
 	/**
+	 * 계약서번호(문자.ver) (계약서)
+	 */
+	private String contractNoStr;
+	
+	/**
 	 * 품목코드 (품목)
 	 */
 	private String materialCode;
