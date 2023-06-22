@@ -18,4 +18,5 @@ public interface PurchaseReportRepository extends JpaRepository<ProcurementPlan,
 	
 	public Boolean existsByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
 
+	public boolean existsById(Integer code);
 }

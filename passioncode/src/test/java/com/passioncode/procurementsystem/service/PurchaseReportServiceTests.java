@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -102,64 +103,87 @@ public class PurchaseReportServiceTests {
 	
 	//기간별로 개수 가져오기 ~ing
 	@Transactional
-	@Commit
 	@Test
-	public void getCount() {
-		List<ProcurementPlanDTO> procurementPlanDTOList= procurementPlanService.getDTOList();
-		List<DetailPurchaseOrder> dpoList= detailPurchaseOrderService.getDetailList();
+	public void getCount() throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<Date> dateList= new ArrayList<>();
+		  dateList.add(sdf.parse("2023-06-09")); dateList.add(sdf.parse("2023-06-10")); dateList.add(sdf.parse("2023-06-11"));
+		  dateList.add(sdf.parse("2023-06-12")); dateList.add(sdf.parse("2023-06-13")); dateList.add(sdf.parse("2023-06-14"));
+		  dateList.add(sdf.parse("2023-06-15")); dateList.add(sdf.parse("2023-06-16")); dateList.add(sdf.parse("2023-06-17"));
+		  dateList.add(sdf.parse("2023-06-18")); dateList.add(sdf.parse("2023-06-19")); dateList.add(sdf.parse("2023-06-20"));
+		  
+		//log.info("날짜가 찍히나 >>> " + dateList);
+		//log.info("날짜 첫번째 값 >>> " + dateList.get(0));
+		
+//		Date testDate= sdf.parse("2023-06-14");
+//		log.info("주어진 날짜가 테스트 날짜보다 과거인가? >>> " + dateList.get(0).before(testDate));
+		  
+		//각각의 조달 코드마다 진행 상태를 체크해주기 위한 boolean값
+		Boolean before= null;
+		Boolean ing= null;
+		Boolean done= null;
+		  
+		int beforeCount= 0;
+		int ingCount= 0;
+		int doneCount= 0;
+		
+		//등록된 조달계획 리스트
 		List<ProcurementPlan> ppList= procurementPlanRepository.findAll();
+		//log.info("ppList 읽기 >>> " + ppList + "ppList 사이즈는? >>> " + ppList.size());
+		int registerDateCompare= 0;
+		int completionDateCompare= 0;
+		int purchaseDateCompare= 0;
 		
-		int beforePurchaseCount= 0;
-		int ingProcurementCount= 0;
-		int doneProcurementCount= 0;
-		int ppCount= 0;
+		//ex> 특정 날짜에 해당하는 발주 예정 개수
+		for(int i=0; i<ppList.size(); i++) {
+			//compareTo: 비교하는 날짜가 이전이면 -1, 동일하면 0, 이후이면 1 반환
+			registerDateCompare= java.sql.Date.valueOf(ppList.get(i).getRegisterDate().toLocalDate()).compareTo(dateList.get(1));
+			log.info("등록일 비교 찍기 >>> " + i + "번째 " + registerDateCompare);
+			if(ppList.get(i).getCompletionDate() != null) {
+				completionDateCompare= java.sql.Date.valueOf(ppList.get(i).getCompletionDate().toLocalDate()).compareTo(dateList.get(1));			
+				log.info("완료일 비교 찍기 >>> " + i + "번째 " + completionDateCompare);
+			}
+			if(ppList.get(i).getDetailPurchaseOrder() != null) {
+				purchaseDateCompare= java.sql.Date.valueOf(ppList.get(i).getDetailPurchaseOrder().getDate().toLocalDate()).compareTo(dateList.get(1));	
+				log.info("발주일 비교 찍기 >>> " + i + "번째 " + purchaseDateCompare);
+			}
 		
-		log.info("조달계획DTO 사이즈 >>> " + procurementPlanDTOList.size());
-		log.info("조달계획 엔티티 사이즈 >>> " + ppList.size());
-		log.info("세부구매발주서 사이즈 >>> " + dpoList.size());
-		
-		List<Date> dpoDate= new ArrayList<>();
-		for(int i=0; i<dpoList.size();i++) {
-			dpoDate.add(Date.from(dpoList.get(i).getDate().atZone(ZoneId.systemDefault()).toInstant()));			
-		}
-		
-		log.info("세부구매발주서 발주일 Date 형식으로 변환 >>> " + dpoDate);
-		
-		//조달계획 진행사항이 없는 것만 조달계획이 등록된 것
-		for(int i=0; i<procurementPlanDTOList.size(); i++) {
-			if(procurementPlanDTOList.get(i).getPpProgress() != null) {
-				ppCount++; //총 조달계획 개수
+			if(procurementPlanRepository.existsById(i+1)) {
+				//발주 예정 -> 완료일(입고일)X + 구매발주서(발주일) X + 등록일 O
+				if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() == null  && (registerDateCompare == -1 || registerDateCompare == 0)) {
+					log.info("발주예정 >>> " + ppList.get(i));
+					before= true;
+					ing= false;
+					done= false;
+				//조달 진행 중 -> 완료일(입고일)X + 구매발주서(발주일) O + 등록일 O
+				}else if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() != null && (registerDateCompare == -1 || registerDateCompare == 0)){
+					log.info("조달 진행 중 >>> " + ppList.get(i));
+					before= false;
+					ing= true;
+					done= false;
+				//조달 완료 -> 완료일(입고일)O + 구매발주서(발주일) O + 등록일 O
+				}else if(ppList.get(i).getCompletionDate() != null && completionDateCompare == 0){
+					log.info("조달 완료 >>> " + ppList.get(i));
+					before= false;
+					ing= false;
+					done= true;
+				}else {
+					before= null;
+					ing= null;
+					done= null;
+				}
+				
+				if(before != null && before == true) {
+					beforeCount++;
+				}else if(ing != null && ing == true) {
+					ingCount++;
+				}else if(done != null && done == true) {
+					doneCount++;
+				}
 			}
 		}
-		
-		Date date= new Date(); //현재 날짜
-		//date= new Date(date.getTime()+1000*60*60*24*-1); //어제 날짜
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		String formatDate= formatter.format(date);
-		log.info("현재 날짜는 어떻게 찍히죠 >>> " + formatDate);
-		
-		///////////////////////////////////////////////////////////////////////////
-		//해당 날짜의 완료 개수 구하기
-		LocalDateTime doneDate= null;
-		List<LocalDateTime> doneList= new ArrayList<>();
-		
-		LocalDateTime ingDate= null;
-		List<LocalDateTime> ingList= new ArrayList<>();
-
-		for(int i=0; i<procurementPlanDTOList.size(); i++) {
-			doneDate= procurementPlanDTOList.get(i).getCompletionDate();
-			doneList.add(doneDate);
-			//조달계획 완료일이 존재 + 해당 날짜와 일치하면 카운트
-			if(doneList.get(i) != null && doneList.equals(date)) {
-				doneProcurementCount++;
-			}
-			//조달계획에 발주서코드가 존재X + 해당 날짜 전  -> 수정해야함 어떻게 할지 다시 확인해보기
-//			if(!purchaseReportRepository.existsByDetailPurchaseOrder(dpoList.get(i)) && date.before(dpoDate.get(i))){
-//				beforePurchaseCount++;
-//			}
-		}
-		log.info("doneList? >>> " + doneList + " 사이즈도 >>> " + doneList.size());
-		log.info("오늘 기준 완료 개수 제대로 찍히나? >>> " + doneProcurementCount);	
-		log.info("오늘 기준 발주 예정 개수 제대로 찍히나? >>> " + beforePurchaseCount);	
+		//log.info("dateList 날짜 어떻게 나오지 >>> " + dateList.get(11));
+		log.info("dateList 날짜 어떻게 나오지 >>> " + ppList.get(1));
+		log.info("카운트 세기 >>> " + beforeCount +", "+ ingCount + ", " + doneCount);	
 	}
 }
