@@ -32,8 +32,13 @@ public class PS2Controller {
 	
 	
 	@GetMapping("/purchaseOrder")	//발주서 발행
-	public void PS2Test(Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, Integer checkBox, Integer checkBox3) {
-		log.info("내가 원하는 발주서 번호>>"+checkBox);
+	public void PS2Test(Integer[] lengthList, Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, Integer checkBox, Integer checkBox3) {
+		if(lengthList!=null) { //lengthList가 존재하는 경우에만 
+		//log.info("발주서 번호들이 잘 가나..>>"+lengthList[0]);//리스트로 잘 간다. 번호? 자리수로 해줘야 함, for문 이용하기 
+			for(int i=0;i<lengthList.length;i++) {
+				log.info("발주서 번호들이 잘 가나..>>"+lengthList[i]);//잘 나온다
+			}
+		}
 		
 		//model.addAttribute("DetailPurchaseOrderList", detailPurchaseOrderService.getDTOList());
 		//model.addAttribute("list",repository.findAll());
@@ -102,17 +107,20 @@ public class PS2Controller {
 	
 	
 	@GetMapping("/purchaseNo")
-	public String purchaseNo(DetailPurchaseOrderDTO detailDTO, Model model,PurchaseOrderDTO purchaseOrderDTO, Integer checkBox2) {
+	public String purchaseNo(Integer[] lengthList, DetailPurchaseOrderDTO detailDTO, Model model,PurchaseOrderDTO purchaseOrderDTO, Integer checkBox2) {
 		log.info("내가 원하는 발주서 번호>>33333>>"+checkBox2);
 		model.addAttribute("myPublishData",detailPurchaseOrderService.dtoToEntity(detailDTO));
-		//위에서 같은 방법으로 발주해야 한다. 
-		
-		//model.addAttribute("myPublishDTO",detailPurchaseOrderService.detailToDTO(checkBox));
 		
 		
 		detailPurchaseOrderService.updataePp(checkBox2);
 		log.info("발행 합니다~~>>>>>>>"+checkBox2);
-		return "redirect:/procurement2/purchaseOrder";
+		
+		//여기에 반복문을 넣어서 하기 
+		//만약 더이상 발주할 것이 없다면
+		String replay = "redirect:/procurement2/purchaseOrder";//마지막 발주 
+		String replay2 = "redirect:/procurement2/purchaseNo?checkBox="+1;//이런 식으로 뒤에 더 붙이기
+		
+		return replay;
 		
 		
 	}

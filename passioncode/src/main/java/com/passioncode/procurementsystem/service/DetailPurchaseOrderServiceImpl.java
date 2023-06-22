@@ -159,7 +159,7 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 		
 		detailPurchaseOrderRepository.save(detailPurchaseOrder);
 		
-		procurementPlanRepository.save(pp);
+		//procurementPlanRepository.save(pp);필요 없는 것 같아 지움 없어도 잘 됨
 		//총 9개
 		ProcurementPlan pp2 = ProcurementPlan.builder()
 				.amount(pp.getAmount())

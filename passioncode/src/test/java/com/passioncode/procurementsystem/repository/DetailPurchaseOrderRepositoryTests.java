@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -339,28 +340,6 @@ public class DetailPurchaseOrderRepositoryTests {
 		log.info("저장 되어라==>" + detailPurchaseOrder);
 	}
 
-	@Test
-	public void InsertTest() { // 6월 13일 잘되던 코드
-		// 발주 코드 생성 테스트
-		// 잘 만들어 진다
-
-		// PurchaseOrder purchaseOrder = new PurchaseOrder(findMax2());
-		// Integer code, Integer amount, LocalDateTime date, Integer purchaseOrderNo
-		// 코드는 자동 생성
-		// 발주 번호는 참고해서
-
-		// DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, 200,
-		// LocalDateTime.now(),
-		// purchaseOrder);
-		// detailPurchaseOrderRepository.save(detailPurchaseOrder);
-
-		// 아래는 테스트 중
-		// 발주서 번호-> 발주 코드가 생성되고 난 뒤에 조달계획 코드 업데이트 하기
-
-		// detailPurchaseOrderRepository.myUpdate(detailPurchaseOrder.getCode(),
-		// null);//앞 발주번호, 뒤 조달 코드
-	}
-
 	@Transactional
 	@Test
 	public void purchaseOrderTest() {// 테스트는 잘 되는데 오토인크리 되어야 하는 것들이 다 널로 나온다 .
@@ -452,23 +431,7 @@ public class DetailPurchaseOrderRepositoryTests {
 		// detailPurchaseOrderRepository.save(detailPurchaseOrder);
 
 	}
-
-	// 조달계획안에 발주일자 넣는 테스트 해보기
-
-	@Test
-	public void InsertTest2(DetailPurchaseOrderDTO detailPurchaseOrderDTO) {
-		// 발주 코드 생성 테스트
-		// 조달계획에도 발주 코드가 떠야 한다.
-
-		ProcurementPlan procurementPlan = procurementPlanRepository.findById(5).get();
-
-		// 테스트 실패
-		DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder()
-				.amount(detailPurchaseOrderDTO.getPurchaseOrderAmount()).date(LocalDateTime.now()).code(null)
-				.purchaseOrder(null).build();
-
-		log.info("여러개>>>>>>>>>>" + detailPurchaseOrder);
-	}
+	
 
 	@Transactional
 	@Test
@@ -579,5 +542,143 @@ public class DetailPurchaseOrderRepositoryTests {
 			return pNum;
 			
 		}
+		
+		
+		//미리보기 발주서에 회사 이름이 같은 경우 한개의
+		@Transactional
+		@Test
+		public void oneCompanyTwoPO() {//받는 값이 리스트 
+			
+			//트루 폴스랑 비교해서 반복
+			ProcurementPlan procurementPlan = procurementPlanRepository.findById(2).get();// 조달 계획 코드
+			ProcurementPlan procurementPlan2 = procurementPlanRepository.findById(11).get();// 조달 계획 코드
+			// 발주 수량도 바꾸긴 해야 한다. 일단 이렇게
+			//String 이름 여러개 만들기
+			Integer[] lengthList = {1,2,3,4};//조달코드 여러개를 여기에 담기 
+			//ArrayList<String> compareList = new ArrayList<>();
+			//Map<String, Integer> map = new HashMap<>();
+			HashMap<Integer, String> compareList = new HashMap<>();//앞이 키로 고유값
+			//반복문 돌리기 전에 저장할 리스트 만들고 저장해 주기 
+			
+			HashMap<String, ArrayList<Integer>> sameList = new HashMap<>();//키가 회사, 벨류가 발주번호 
+			
+			
+			for(int i =0; i<lengthList.length;i++) {
+				Integer a= lengthList[i];//a는 조달계획 번호 하나
+				ProcurementPlan ppSample = procurementPlanRepository.findById(a).get();
+				String nameSample= ppSample.getContract().getCompany().getName();
+				log.info(">>lengthList배열,조달계획 번호: " + a +" 회사이름: "+ nameSample);//순서대로 잘 나온다
+				compareList.put(a, nameSample);
+				
+				
+			}
+			log.info("compareList =========>>" + compareList);
+			for(int i =0; i<compareList.size();i++) {
+				log.info("해시맵 길이 확인: ",compareList.size());//값은 안나오지만 4번 반복됨
+			}
+			
+			
+			ArrayList<Integer> mykey = new ArrayList<Integer>();
+			ArrayList<Integer> lengthList9 = new ArrayList<Integer>(Arrays.asList(1,2,3,4));
+			mykey.add(1);
+			mykey.add(2);
+			log.info("리스트 값 보자"+mykey);
+			
+			String cName= procurementPlan.getContract().getCompany().getName();
+			if(procurementPlan.getContract().getCompany().getName()==procurementPlan2.getContract().getCompany().getName()) {
+				log.info(">>같다면 회사 이름 =========>>" + cName);
+				PurchaseOrder purchaseOrder = PurchaseOrder.builder().build();
+				//purchaseOrderRepository.save(purchaseOrder);//값을 저장하기 
+				
+				
+			}else {
+				String differentName= procurementPlan2.getContract().getCompany().getName();
+				log.info(">>다르다면 회사 이름 1=========>>" + differentName);
+				log.info(">>다르다면 회사 이름 2=========>>" + cName);
+			}
+			
+			PurchaseOrder purchaseOrder = PurchaseOrder.builder().build();
+			//purchaseOrderRepository.save(purchaseOrder);//값을 저장하기 
+			
+			DetailPurchaseOrder detailPurchaseOrder = new DetailPurchaseOrder(null, procurementPlan.getAmount(),
+					LocalDateTime.now(), purchaseOrder);
+			//세부 발주값 저장
+			//detailPurchaseOrderRepository.save(detailPurchaseOrder);//값 저장
+			
+			log.info(">>발주코 =========>>" + detailPurchaseOrder);
+			
+		}
+		
+		//더하기빼기 테스트
+		@Test
+		public void miniTest() {
+			ArrayList<Integer> lengthList = new ArrayList<Integer>(Arrays.asList(1,2,3,4));
+			log.info("1리스트에 값을 바꿔 보자 : "+lengthList);
+			log.info("리스트 보자 add : "+lengthList.add(6));//왜 트루가 나오지? 값이 더해져서 나오기는 함
+			log.info("2리스트에 값을 바꿔 보자 : "+lengthList);
+			log.info("3리스트에 특정 자리 값 가져오기 : lengthList.get(0) >> "+lengthList.get(0));
+			
+		}
+		
+		//1. 발주서 번호만 만드는 곳
+		public PurchaseOrder makePONo() {
+			PurchaseOrder po = PurchaseOrder.builder().build();
+			purchaseOrderRepository.save(po);//발주서 번호 생성 후 저장
+			return po;
+		}
+		
+		//2. 발주 코드 만드는 곳(1개 이상의)
+		public DetailPurchaseOrder makePoCode(Integer num1, Integer[] num2) {
+			//여기서 반복해서 만들기
+			
+			ProcurementPlan pp = procurementPlanRepository.findById(num1).get();//갯수를 알기위해 불러옴
+			Integer amount = procurementPlanRepository.findById(num1).get().getAmount();
+			DetailPurchaseOrder detailPurchaseOrder = DetailPurchaseOrder.builder()
+					.amount(amount).date(LocalDateTime.now())
+					.purchaseOrder(makePONo())//발주서 번호 생성하는 곳
+					.build();
+			//세부구매발주서 저장
+			
+			detailPurchaseOrderRepository.save(detailPurchaseOrder);
+			
+			return null;
+			
+		}
+		
+		public List<DetailPublishDTO> detailToDTO2(Integer no) {//여러 번호를 받아서 하는 곳
+			List<Object[]> result = detailPurchaseOrderRepository.myDetailList(no);
 
+			List<DetailPublishDTO> detailList = new ArrayList<>();// 저장하는 곳
+			ProcurementPlan pp3 =new ProcurementPlan();
+			
+			for (Object[] arr : result) {// 이 아래가 변환하는 것 이다.
+				log.info("222>>" + Arrays.toString(arr));
+				// 출력 모양[2, (주)경도전자, 2023-06-10, 200, CN0001, Bolt1, 100]
+				
+				DetailPublishDTO detailpDTO = new DetailPublishDTO();
+				detailpDTO.setPpcode((Integer) arr[0]);
+				detailpDTO.setCname((String) arr[1]);
+				detailpDTO.setDue_date((Date) arr[2]);
+				detailpDTO.setUnit_price((Integer) arr[3]);
+				detailpDTO.setMcode((String) arr[4]);
+				detailpDTO.setMname((String) arr[5]);
+				detailpDTO.setPpamount(((Integer) arr[6]));
+				detailpDTO.setPurchaseOrderDate(LocalDateTime.now());
+				detailpDTO.setPono(detailPurchaseOrderRepository.findMaxOrderNo());//이거는 한 번만
+				detailpDTO.setPocode(detailPurchaseOrderRepository.findMaxCode());
+				detailpDTO.setSupply_price((((Integer) arr[6])) * ((Integer) arr[3]));// 필요수량 * 단가
+				detailpDTO.setShowPono(addBlank(detailPurchaseOrderRepository.findMaxOrderNo()));
+				detailpDTO.setShowPocode(addBlank2(detailPurchaseOrderRepository.findMaxCode()));
+				
+				
+				ProcurementPlan pp = procurementPlanRepository.findById((Integer)arr[0]).get();//조달계획에 저장
+				
+				//procurementPlanRepository.save(pp);
+				detailList.add(detailpDTO);
+				
+			}
+
+			return detailList;
+
+		}
 }
