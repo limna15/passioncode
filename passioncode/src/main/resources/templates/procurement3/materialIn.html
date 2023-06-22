@@ -508,7 +508,12 @@
 						$(".transactionDetailModal").modal('hide');
 						console.log("아직 입고가 되지 않아 상태가 완료, 취소 버튼일 경우")
 						tdStatus= false;
-					}
+					}else if(tdArr[1].includes('완료') && tdArr[0].includes('취소')){
+						$(".cancleMaterialInModal").modal('show');
+						$(".transactionDetailModal").modal('hide');
+						console.log("취소+완료일 경우")
+						tdStatus= false;
+					}	
 				});
 		
 			if(tdStatus){
@@ -625,17 +630,6 @@
         }
         return obj
     }
-  	
-<!--    function transactionPrint(){-->
-<!--    	var initBody = document.body.innerHTML; //body영역 저장-->
-<!--    	window.onbeforeprint = function () { //프린터 출력 전 이벤트-->
-<!--    		document.body.innerHTML = document.getElementById('transactionPrint').innerHTML; //원하는 영역 지정 'transactionPrint'-->
-<!--    	}-->
-<!--    	window.onafterprint = function () { //프린터 출력 후 이벤트-->
-<!--    		document.body.innerHTML = initBody;-->
-<!--    	}-->
-<!--    	window.print();-->
-<!--    }-->
 </script>	
 		
 	</th:block>

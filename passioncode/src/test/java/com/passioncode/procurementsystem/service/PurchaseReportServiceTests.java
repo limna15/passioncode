@@ -136,15 +136,17 @@ public class PurchaseReportServiceTests {
 		
 		//ex> 특정 날짜에 해당하는 발주 예정 개수
 		for(int i=0; i<ppList.size(); i++) {
+			for(int j=0; j<dateList.size(); j++) {
+
 			//compareTo: 비교하는 날짜가 이전이면 -1, 동일하면 0, 이후이면 1 반환
-			registerDateCompare= java.sql.Date.valueOf(ppList.get(i).getRegisterDate().toLocalDate()).compareTo(dateList.get(1));
+			registerDateCompare= java.sql.Date.valueOf(ppList.get(i).getRegisterDate().toLocalDate()).compareTo(dateList.get(j));
 			log.info("등록일 비교 찍기 >>> " + i + "번째 " + registerDateCompare);
 			if(ppList.get(i).getCompletionDate() != null) {
-				completionDateCompare= java.sql.Date.valueOf(ppList.get(i).getCompletionDate().toLocalDate()).compareTo(dateList.get(1));			
+				completionDateCompare= java.sql.Date.valueOf(ppList.get(i).getCompletionDate().toLocalDate()).compareTo(dateList.get(j));			
 				log.info("완료일 비교 찍기 >>> " + i + "번째 " + completionDateCompare);
 			}
 			if(ppList.get(i).getDetailPurchaseOrder() != null) {
-				purchaseDateCompare= java.sql.Date.valueOf(ppList.get(i).getDetailPurchaseOrder().getDate().toLocalDate()).compareTo(dateList.get(1));	
+				purchaseDateCompare= java.sql.Date.valueOf(ppList.get(i).getDetailPurchaseOrder().getDate().toLocalDate()).compareTo(dateList.get(j));	
 				log.info("발주일 비교 찍기 >>> " + i + "번째 " + purchaseDateCompare);
 			}
 		
@@ -181,9 +183,11 @@ public class PurchaseReportServiceTests {
 					doneCount++;
 				}
 			}
-		}
-		//log.info("dateList 날짜 어떻게 나오지 >>> " + dateList.get(11));
-		log.info("dateList 날짜 어떻게 나오지 >>> " + ppList.get(1));
+			}
+		}//for문(ppList.size()) 끝
+		
+		log.info("dateList 날짜 어떻게 나오지 >>> " + dateList.get(11));
+		//log.info("dateList 날짜 어떻게 나오지 >>> " + ppList.get(1));
 		log.info("카운트 세기 >>> " + beforeCount +", "+ ingCount + ", " + doneCount);	
 	}
 }
