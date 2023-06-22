@@ -36,12 +36,12 @@ import net.coobird.thumbnailator.Thumbnailator;
 public class PS1UploadRestController {
 
 	@Value("${com.passioncode.procurementsystem.drawingFile.upload.path}")    //리소스의 설정 파일 내용(값)가져와서 셋팅
-    //application.properties 에서 com.passioncode.procurementsystem.drawingFile.upload.path = /PassionCode/upload/drawing 값을 읽어오는 방법
+    //application.properties 에서 com.passioncode.procurementsystem.drawingFile.upload.path = /PassionCode/upload/drawing/ 값을 읽어오는 방법
     //이렇게 설정을해야 경로가 바꼈을때 리소스에서 가서 고쳐주기만 하면 됨
     private String drawingUploadPath;
 	
 	@Value("${com.passioncode.procurementsystem.contract.upload.path}")    //리소스의 설정 파일 내용(값)가져와서 셋팅
-	//application.properties 에서 com.passioncode.procurementsystem.contract.upload.path = /PassionCode/upload/contract 값을 읽어오는 방법
+	//application.properties 에서 com.passioncode.procurementsystem.contract.upload.path = /PassionCode/upload/contract/ 값을 읽어오는 방법
 	//이렇게 설정을해야 경로가 바꼈을때 리소스에서 가서 고쳐주기만 하면 됨
 	private String contractUploadPath;
 		
@@ -59,7 +59,8 @@ public class PS1UploadRestController {
     	//근데 여기서는 필요 없음
         //요즘엔 자동으로 구분해줘서 위에처럼 안해줘도 됨!
     	
-        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd/"));
+        log.info("폴더 만드는 함수 안에서 folderPath 값 세팅좀 보자!"+folderPath);
 
         // make folder --------
         File uploadPathFolder = new File(drawingUploadPath, folderPath);
@@ -75,8 +76,7 @@ public class PS1UploadRestController {
      * @return 만든폴더이름 리턴(ex>2023/04/05)
      */
     private String makeContractFolder() {
-        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-
+        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd/"));
         // make folder --------
         File uploadPathFolder = new File(contractUploadPath, folderPath);
 
@@ -129,11 +129,15 @@ public class PS1UploadRestController {
         log.info("fileName: " + fileName);
         //날짜 폴더 생성
         String folderPath = makeDrawingFolder();
+        log.info("현재 메인 페스 drawingUploadPath 이거 봐보자 : "+drawingUploadPath);
+        log.info("어떻게 folderPath 세팅되나 보자!!!! : "+folderPath);
+        
         //UUID
         String uuid = UUID.randomUUID().toString();
 
         //저장할 파일 이름 중간에 "_"를 이용해서 구분
-        String saveName = drawingUploadPath + File.separator + folderPath + File.separator + uuid +"_" + fileName;
+//        String saveName = drawingUploadPath + File.separator + folderPath + File.separator + uuid +"_" + fileName;
+        String saveName = drawingUploadPath + folderPath + uuid +"_" + fileName;
         log.info("saveName 이름좀 봐보자 : "+saveName);
         Path savePath = Paths.get(saveName);
         log.info("savePath 이거 페스이름 봐보자 : "+savePath);
@@ -156,8 +160,8 @@ public class PS1UploadRestController {
             //올린 파일이 이미지 파일이 있는지 검사 -> 이미지 파일 일때만 썸네일 파일 만들자
             if(isImage) {
             	//섬네일 생성
-            	String thumbnailSaveName = drawingUploadPath + File.separator + folderPath + File.separator
-            			+"thumb_" + uuid +"_" + fileName;
+//            	String thumbnailSaveName = drawingUploadPath + File.separator + folderPath + File.separator +"thumb_" + uuid +"_" + fileName;
+            	String thumbnailSaveName = drawingUploadPath + folderPath +"thumb_" + uuid +"_" + fileName;
             	//섬네일 파일 이름은 중간에 thumb_로 시작하도록
             	File thumbnailFile = new File(thumbnailSaveName);
             	//섬네일 생성
@@ -165,7 +169,7 @@ public class PS1UploadRestController {
             	
             }
             	
-            drawingFileDTO = DrawingFileDTO.builder().fileName(fileName).uuid(uuid).folderPath(folderPath).image(isImage).build();
+            drawingFileDTO = DrawingFileDTO.builder().fileName(fileName).uuid(uuid).folderPath(folderPath).image(isImage).uuidAndFileName(uuid+fileName).build();
             log.info("업로드 DTO 에 넣은거 보자 : "+drawingFileDTO);
             log.info("어디 DTO의 파일 이름 읽어보자 : ", drawingFileDTO.getDrawingFile());
             
@@ -203,7 +207,8 @@ public class PS1UploadRestController {
             String srcFileName =  fileName;
             log.info("fileName: " + srcFileName);
 
-            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+//            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+            File file = new File(drawingUploadPath + srcFileName);
             log.info("file.getParent() 읽어보자 : "+file.getParent());
             
             //thumbnailURL & size=1 -> 원본 파일
@@ -241,7 +246,8 @@ public class PS1UploadRestController {
         String srcFileName = null;
         try {
             srcFileName = URLDecoder.decode(fileName,"UTF-8");
-            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+//            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+            File file = new File(drawingUploadPath + srcFileName);
             log.info("파일 봐보자... : "+file);
             boolean result = file.delete();
 
