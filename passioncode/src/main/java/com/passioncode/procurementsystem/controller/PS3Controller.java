@@ -1,6 +1,7 @@
 package com.passioncode.procurementsystem.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -48,7 +49,7 @@ public class PS3Controller {
 	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
 		List<MaterialInDTO> materialInDTOList = materialInService.getMaterialInDTOLsit();
 
-		log.info("materialInDTOlist............." + materialInDTOList);
+		log.info("materialInDTOlist.............");
 
 		model.addAttribute("DTOList", materialInDTOList);
 	}
@@ -147,8 +148,10 @@ public class PS3Controller {
 	}
 	
 	@GetMapping("/purchaseReport")
-	public void purchaseReport(Model model, PurchaseReportDTO purchaseReportDTO) {
-		log.info("발주진행 현황관리");		
+	public void purchaseReport(Date[] dates, Model model, PurchaseReportDTO purchaseReportDTO) {
+		//log.info("발주진행 현황관리");		
+		log.info("날짜 배열 읽어오기 >>> " + dates);		
+		
 		model.addAttribute("list", purchaseReportService.getCountPurchaseReportDTO());
 	}
 }

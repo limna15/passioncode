@@ -271,7 +271,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 			finalDTOList.add(dto);
 		}	
 		
-		log.info("만들어진 정렬된 ProcurementPlanDTO 리스트 보기 : "+finalDTOList);
+		//log.info("만들어진 정렬된 ProcurementPlanDTO 리스트 보기 : "+finalDTOList);
 		
 		return finalDTOList;
 	}

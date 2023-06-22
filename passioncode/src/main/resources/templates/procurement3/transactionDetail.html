@@ -1,3 +1,7 @@
+<html>
+<head>
+<title>거래명세서</title>
+</head>
 <style>
 html,body {
 	margin:5px;
@@ -46,7 +50,9 @@ th, td {
 	display:none;
 	}
 }	
-</style>						<!-- margin으로 테이블이 화면 가운데에 오게 설정-->
+</style>			
+<body>
+				<!-- margin으로 테이블이 화면 가운데에 오게 설정-->
 <div class="card-body" style="width: 210mm; height:297mm; margin : auto;">
 																			<!-- 취소버튼 누르면 뒤로가기 + 새로고침이 됨 -->
 	<button type="submit" class="btn"  id="noprint" style="float: right;" onclick="location.href = document.referrer;">취소</button>
@@ -129,7 +135,7 @@ th, td {
 
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
-	
+			
 	var tdList= [[${tdList}]];
 	console.log("tdDTO 읽어오나? ", tdList);
 	
@@ -177,5 +183,8 @@ th, td {
 	document.querySelector("#CEO").innerHTML = tdList[0].ceo; //협력회사 ceo
 	document.querySelector("#companyAddress").innerHTML = tdList[0].companyAddress; //협력회사 주소
 	document.querySelector("#manager").innerHTML = tdList[0].manager; //담당자
-	document.querySelector("#managerTel").innerHTML = tdList[0].managerTel; //담당자 번호			
+	document.querySelector("#managerTel").innerHTML = tdList[0].managerTel; //담당자 번호
 </script>
+
+	</body>
+</html>

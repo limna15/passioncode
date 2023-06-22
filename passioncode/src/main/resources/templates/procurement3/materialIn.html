@@ -154,8 +154,8 @@
 							<tbody>
 								<tr th:each="list: ${DTOList}" id="trList">
 									<td><input type="checkbox" id="checkBox" name="checkBox" th:value="${list.no}"></td>
-									<td><input type="hidden" name="no" th:value="${list.no}">[[${list.no}]]</td>
-									<td><input type="hidden" name="code" th:value="${list.code}">[[${list.code}]]</td>
+									<td><input type="hidden" name="no" th:value="${list.no}">[[${list.noStr}]]</td>
+									<td><input type="hidden" name="code" th:value="${list.code}">[[${list.codeStr}]]</td>
 									<td><input type="hidden" name="date" th:value="${list.dueDate}">[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
 									<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
 									<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>

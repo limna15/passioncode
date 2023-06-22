@@ -26,9 +26,19 @@ public class MaterialInDTO {
 	private Integer no;
 	
 	/**
+	 * 발주서 번호(문자ver.)
+	 */
+	private String noStr;
+	
+	/**
 	 * 발주코드
 	 */
 	private Integer code;
+	
+	/**
+	 * 발주코드(문자ver.)
+	 */
+	private String codeStr;
 	
 	/**
 	 * 조달납기예정일

@@ -15,7 +15,6 @@ import com.passioncode.procurementsystem.repository.MaterialInRepository;
 import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
 import com.passioncode.procurementsystem.repository.TransactionDetailRepository;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -28,12 +27,21 @@ public class MaterialInServiceImpl implements MateriallInService {
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	private final ProcurementPlanRepository procurementPlanRepository;
 	private final TransactionDetailRepository transactionDetailRepository;
-	private final EntityManager entityManager;
 	
-	
-	public Integer boolInInt(Boolean status) {
+	//발주코드에 문자를 넣어서 보내기
+	public String codeStr(Integer num1) {
+		String pNum = String.format("%05d", num1);
+		pNum = "DPO"+pNum;
 		
-		return status ? 1 : 0;
+		return pNum;
+	}
+	
+	//발주서번호에 문자를 넣어서 보내기
+	public String noStr(Integer num1) {
+		String pNum = String.format("%08d", num1);
+		pNum = "PO"+pNum;
+		
+		return pNum;
 	}
 	
 	@Override
@@ -83,7 +91,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 		
 		for(int i=0; i<ppList.size(); i++) {
 			if(!materialInRepository.existsById(i+1)) { //materialIn에 존재 X 때 설정
-				materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+				materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
 						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 						.status(null).transactionStatus(null).inDate(null).build();
@@ -92,7 +100,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 				}else { //materialIn에 존재할 때 설정
 					if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태가 null이 아닐 때
 						if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //입고상태 완료 + 발행상태 완료
-							materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+							materialInDTO= MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
 									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 									.status(miList.get(i).getStatus()).transactionStatus("발행 완료")
@@ -101,7 +109,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 							//log.info(i + "번 입고상태+발행상태 완료 miDTO 보기 >>> " + materialInDTO);
 						}else { //발행상태 미완료
 							if(miList.get(i).getStatus()) { //입고상태 완료 + 발행상태 미완료
-								materialInDTO= MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+								materialInDTO= MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
 										.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 										.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 										.status(miList.get(i).getStatus()).transactionStatus("발행 예정")
@@ -110,7 +118,7 @@ public class MaterialInServiceImpl implements MateriallInService {
 								//log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
 							
 							}else { //입고상태 취소 + 발행상태 "발행 불가"
-								materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
+								materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
 										.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 										.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 										.status(miList.get(i).getStatus()).transactionStatus("발행 불가").inDate(null).build();
