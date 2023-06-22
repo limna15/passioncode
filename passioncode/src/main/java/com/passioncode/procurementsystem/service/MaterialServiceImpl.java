@@ -63,14 +63,27 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public MaterialDTO entityToDTO(Material material) {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부
-		MaterialDTO materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
-														.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
-														.drawingFileDTO(new DrawingFileDTO(material.getDrawingFile()))
-														.shareStatus(shareStatusChangeToString(material.getShareStatus()))
-														.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
-														.middleCategoryName(material.getMiddleCategory().getCategory())
-														.largeCategoryCode(material.getMiddleCategory().getLargeCategory().getCode())
-														.middleCategoryCode(material.getMiddleCategory().getCode()).build();						
+		//도면파일 업로드가 되어있는것, 안되어있는것 나누어서 DTO 변환 해주자!!
+		MaterialDTO materialDTO = new MaterialDTO();
+		if(material.getDrawingFile() !=null) {	//도면파일이 존재 O -> drawingFileDTO 값을 세팅해주기
+			materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
+												.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
+												.drawingFileDTO(new DrawingFileDTO(material.getDrawingFile()))
+												.shareStatus(shareStatusChangeToString(material.getShareStatus()))
+												.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
+												.middleCategoryName(material.getMiddleCategory().getCategory())
+												.largeCategoryCode(material.getMiddleCategory().getLargeCategory().getCode())
+												.middleCategoryCode(material.getMiddleCategory().getCode()).build();
+		}else {									//도면파일이 존재 X -> drawingFileDTO null로 세팅해주기
+			materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
+												.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
+												.drawingFileDTO(null)
+												.shareStatus(shareStatusChangeToString(material.getShareStatus()))
+												.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
+												.middleCategoryName(material.getMiddleCategory().getCategory())
+												.largeCategoryCode(material.getMiddleCategory().getLargeCategory().getCode())
+												.middleCategoryCode(material.getMiddleCategory().getCode()).build();
+		}
 		return materialDTO;
 	}
 	

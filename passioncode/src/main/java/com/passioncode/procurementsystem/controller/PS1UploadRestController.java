@@ -9,13 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.passioncode.procurementsystem.dto.DrawingFileDTO;
-import com.passioncode.procurementsystem.dto.UploadResultDTO;
-
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 
@@ -146,12 +143,12 @@ public class PS1UploadRestController {
 //        log.info("savePath.getParent() 이거 한번 봐보자 : "+savePath.getParent());
 //        log.info("savePath.getRoot() 이거 한번 봐보자 : "+savePath.getRoot());
         
-        DrawingFileDTO drawingFileDTO = new DrawingFileDTO();
         
         File originFile = new File(saveName);
         log.info("만들어진 File을 봐보자 : "+originFile);
         log.info("이미지 파일 체크 여부 한번 보자 : "+checkImageType(originFile));
         boolean isImage = checkImageType(originFile);
+        DrawingFileDTO drawingFileDTO = new DrawingFileDTO();
         
         try {
             //원본 파일 저장
@@ -169,7 +166,7 @@ public class PS1UploadRestController {
             	
             }
             	
-            drawingFileDTO = DrawingFileDTO.builder().fileName(fileName).uuid(uuid).folderPath(folderPath).image(isImage).uuidAndFileName(uuid+fileName).build();
+            drawingFileDTO = new DrawingFileDTO(saveName);
             log.info("업로드 DTO 에 넣은거 보자 : "+drawingFileDTO);
             log.info("어디 DTO의 파일 이름 읽어보자 : ", drawingFileDTO.getDrawingFile());
             
@@ -238,11 +235,20 @@ public class PS1UploadRestController {
         return result;
     }
     
-    
+    /**
+     * 업로드파일 삭제하기
+     * @param fileName
+     * @return
+     */
     @PostMapping("/drawing/removeFile")
     public ResponseEntity<Boolean> removeFile(String fileName){
     	log.info("삭제할때 건내주는 파일이름 좀 보자 : "+fileName);
-
+    	//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
+		//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\ upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
+		//ajax 삭제할대 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
+		// \PassionCode\ upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
+		//ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
+    	
         String srcFileName = null;
         try {
             srcFileName = URLDecoder.decode(fileName,"UTF-8");
@@ -261,7 +267,182 @@ public class PS1UploadRestController {
             e.printStackTrace();
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+    
+    @GetMapping(value="/drawing/download",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE) //application/octet-stream 타입의 설정
+	//여기서 application/octet-stream 타입으로 설정을 해주면 브라우저에서 다운로드 하라고 기능이 되어있음!! 
+	//그래서 이거때문에 다운로드가 되는것임!!
+	//produces="application/octet-stream"  이것과 같은것임!!
+    public ResponseEntity<byte[]> download(String fileName){
+    	log.info("받아온 파일이름 봐보자! : "+fileName);
+    	String decodeFileName = null;
+    	try {
+			decodeFileName = URLDecoder.decode(fileName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	log.info("디코딩된 파일 이름 보자 : "+decodeFileName);
+    	
+    	File file = new File(drawingUploadPath+decodeFileName);  
+		HttpHeaders header = new HttpHeaders();
+		String downloadFileName=decodeFileName.substring(48);
+		System.out.println("잘 글자 가져오나아아?? : "+downloadFileName);
+//		System.out.println("몇글자니??"+"2023/03/10/9d162ca3-128e-4812-bd8f-eba090964c06_".length());  //48글자
+//		File file = new File("c:/upload/"+downloadFileName);  
+		//한글파일 문제 해결
+		String reDownloadFileName;
+		try {
+			reDownloadFileName = new String(downloadFileName.getBytes("UTF-8"),"ISO-8859-1");
+			log.info("reDownloadFileName 한글 인코딩한거 다시 봐보자 : "+reDownloadFileName);
+			//downloadFileName.getBytes("UTF-8") ->downloadFileName의 바이트를 가져오는데 utf-8로 인코딩해서 가져오라는 뜻
+			//new String(바이트의배열, 인코딩형식) ->바이트배열을 해당인코딩형식으로 만들어준다! 의미
+			//ISO-8859-1 이건 영어인데
+			//한글로 인코딩할걸, 다시 영어로 인코딩해서 보내면, 브라우저에서 알아서 내부적으로 한글임을 눈치채고 한글로 보여줌!
+			
+//			header.add("content-Disposition","attachment;filename="+reDownloadFileName);
+			header.add("content-Disposition","attachment;filename="+downloadFileName);
+			
+//			return FileCopyUtils.copyToByteArray(file);
+			return new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file),header,HttpStatus.OK );
+//			return new ResponseEntity<byte[]>(header,HttpStatus.OK );
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//produces=MediaType.APPLICATION_OCTET_STREAM_VALUE) //application/octet-stream 타입의 설정
+		//현재 이렇게 설정한값이 모든 파일들을 application/octet-stream 이렇게 타입을 설정해줌
+		//그래서 이미지든 모든 싹다 저렇게 타입을 바꿔주니까 모든지 다운로드가 가능한거다!!
+		//보낼 파일을 byte[]로 보낸다.
+		//파일을 byte[]배열로 변경하기 위해서는 FileCopyUtils.copyToByteArray(file)을 이용!
+		//보내기 위해서는 FileCopyUtils.copyToByteArray(file) 이 파일을 byte[] 배열로 바꿔주는 메소드// return 타입 만들어주는거
+    }
+    
+    
+    @GetMapping(value="/drawing/downloadTest2",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+    public ResponseEntity<Resource> downloadTest2(String fileName){
+    	log.info("받아온 파일이름 봐보자! : "+fileName);
+    	// 고양이.jpg
+    	// 2023/06/21/3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf
+    	
+    	String decodeFileName = null;
+    	try {
+			decodeFileName = URLDecoder.decode(fileName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	log.info("디코딩된 파일 이름 보자 : "+decodeFileName);
+    	
+    	String downloadFileName=decodeFileName.substring(48);
+    	log.info("잘 글자 가져오나아아?? : "+downloadFileName);
+    	    	
+    	FileSystemResource resource = new FileSystemResource(drawingUploadPath+decodeFileName);
+    	log.info("리소스 정보 보자 : "+resource);
+    	// file [c:\ upload\고양이.jpg]
+    	// file [C:\PassionCode\ upload\drawing\2023\06\21\3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf]
+    	
+    	String resourceName = resource.getFilename();
+    	log.info("resourceName 보자 : "+resourceName);
+    	// 고양이.jpg
+    	// 3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf
+    	
+    	HttpHeaders header = new HttpHeaders();
+    	String test;
+    	try {
+//    		test = new String(resourceName.getBytes("UTF-8"),"ISO-8859-1");
+    		test = new String(downloadFileName.getBytes("UTF-8"),"ISO-8859-1");
+    		log.info("인코딩 시킨 test 파일 보자 : "+test);
+    		// ê³ ìì´.jpg
+    		// 3ec525fe-fd55-484e-a6b4-3f061a73fb79_ë¬¼íëª©ë¡ì ë³´ë±ë¡ë°©ë².pdf
+    		header.add("content-Disposition","attachment;filename="+test);
+    	} catch (UnsupportedEncodingException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    	
+    	return new ResponseEntity<Resource>(resource,header,HttpStatus.OK );
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+//    @GetMapping(value="/drawing/downloadTest",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+//    public ResponseEntity<Resource> downloadTest(String fileName){
+//    	log.info("받아온 파일이름 봐보자! : "+fileName);
+//    	// 고양이.jpg
+//    	// 2023/06/21/3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf
+//    	
+////    	String decodeFileName = null;
+////    	try {
+////			decodeFileName = URLDecoder.decode(fileName,"UTF-8");
+////		} catch (UnsupportedEncodingException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+////    	log.info("디코딩된 파일 이름 보자 : "+decodeFileName);
+//    	
+//    	String downloadFileName=fileName.substring(48);
+//		System.out.println("잘 글자 가져오나아아?? : "+downloadFileName);
+//    	
+//    	FileSystemResource resource = new FileSystemResource(drawingUploadPath+fileName);
+//    	log.info("리소스 정보 보자 : "+resource);
+//    	// file [c:\ upload\고양이.jpg]
+//    	// file [C:\PassionCode\ upload\drawing\2023\06\21\3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf]
+//    	
+//    	String resourceName = resource.getFilename();
+//    	log.info("resourceName 보자 : "+resourceName);
+//    	// 고양이.jpg
+//    	// 3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf
+//    	
+//    	HttpHeaders header = new HttpHeaders();
+//    	String test;
+//    	try {
+////    		test = new String(resourceName.getBytes("UTF-8"),"ISO-8859-1");
+//    		test = new String(downloadFileName.getBytes("UTF-8"),"ISO-8859-1");
+//    		log.info("인코딩 시킨 test 파일 보자 : "+test);
+//    		// ê³ ìì´.jpg
+//    		// 3ec525fe-fd55-484e-a6b4-3f061a73fb79_ë¬¼íëª©ë¡ì ë³´ë±ë¡ë°©ë².pdf
+//    		header.add("content-Disposition","attachment;filename="+test);
+//    	} catch (UnsupportedEncodingException e) {
+//    		// TODO Auto-generated catch block
+//    		e.printStackTrace();
+//    	}
+//    	
+//    	return new ResponseEntity<Resource>(resource,header,HttpStatus.OK );
+//    }
+    
+//   @GetMapping(value="/drawing/downloadTest",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+//   public ResponseEntity<Resource> downloadTest(String fileName){
+//	   	log.info("받아온 파일이름 봐보자! : "+fileName);
+//	   	// 고양이.jpg
+//	   	
+//	   	FileSystemResource resource = new FileSystemResource("c:/upload/"+fileName);
+//	   	log.info("리소스 정보 보자 : "+resource);
+//	   	// file [c:\ upload\고양이.jpg]
+//	   	
+//	   	String resourceName = resource.getFilename();
+//	   	log.info("resourceName 보자 : "+resourceName);
+//	   	// 고양이.jpg
+//	   	
+//	   	HttpHeaders header = new HttpHeaders();
+//	   	String test;
+//	   	try {
+//	   		test = new String(resourceName.getBytes("UTF-8"),"ISO-8859-1");
+//	   		log.info("인코딩 시킨 test 파일 보자 : "+test);
+//	   		// ê³ ìì´.jpg
+//			header.add("content-Disposition","attachment;filename="+test);
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	   	
+//	   	return new ResponseEntity<Resource>(resource,header,HttpStatus.OK );
+//   }
+    
     
 }

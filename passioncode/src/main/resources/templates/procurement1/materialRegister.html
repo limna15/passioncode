@@ -21,7 +21,7 @@
 											<th width="">재질</th>
 											<th width="">제작 사양</th>
 											<th width="8%">도면 번호</th>
-											<th width="9%">도면<br>image</th>
+											<th width="9%">도면<br>Image</th>
 											<th width="8%">공용여부</th>
 											<th width="8%">대</th>
 											<th width="8%">중</th>
@@ -680,7 +680,7 @@
  	                data: formData,
  	                type: 'POST',
  	                dataType:'json',
- 	                success: function(result,textStatus, request){
+ 	                success: function(result){
  						//console.log("인풋 체인지 함수의 Ajax 결과 : ",result);
  	                    if(result.image){	//image 일때 아닐때, 
  	                    	showResultByImage(result);

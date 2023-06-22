@@ -63,15 +63,11 @@ public class PS1Controller {
 		log.info("어디 그 이미지 dto 읽어보자 getFileName() : "+DTOList.get(0).getDrawingFileDTO().getFileName() );
 		log.info("어디 그 이미지 dto 읽어보자 getUuid() : "+DTOList.get(0).getDrawingFileDTO().getUuid() );
 		log.info("어디 그 이미지 dto 읽어보자 getFolderPath() : "+DTOList.get(0).getDrawingFileDTO().getFolderPath() );
-		log.info("어디 그 이미지 dto 읽어보자 isImage() : "+DTOList.get(0).getDrawingFileDTO().isImage() );
-		log.info("어디 그 이미지 dto 읽어보자 getUuidAndFileName() : "+DTOList.get(0).getDrawingFileDTO().getUuidAndFileName() );
+		log.info("어디 그 이미지 dto 읽어보자 isImage() : "+DTOList.get(0).getDrawingFileDTO().isImage() );   
 		log.info("여기 까지 필드선언 기본값~~~~~~~~~~~~~~~~");
 		log.info("어디 그 이미지 dto 읽어보자 getDrawingFile() : "+DTOList.get(0).getDrawingFileDTO().getDrawingFile() );;
-		log.info("어디 그 이미지 dto 읽어보자 getDrawingFileByUuidAndFileName() : "+DTOList.get(0).getDrawingFileDTO().getDrawingFileByUuidAndFileName() );
 		log.info("어디 그 이미지 dto 읽어보자 getImageURL() : "+DTOList.get(0).getDrawingFileDTO().getImageURL() );
-		log.info("어디 그 이미지 dto 읽어보자 getImageURLByUuidAndFileName() : "+DTOList.get(0).getDrawingFileDTO().getImageURLByUuidAndFileName() );
 		log.info("어디 그 이미지 dto 읽어보자 getThumbnailURL() : "+DTOList.get(0).getDrawingFileDTO().getThumbnailURL() );
-		log.info("어디 그 이미지 dto 읽어보자 getThumbnailURLByUuidAndFileName() : "+DTOList.get(0).getDrawingFileDTO().getThumbnailURLByUuidAndFileName() );
 		
 	}
 	
