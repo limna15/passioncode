@@ -123,7 +123,7 @@
 					<!-- bar chart 넣을 자리-->
 		            <div class="card">
 		            	<div class="card-body">
-		                	<h4 class="card-title">발주진행 현황 그래프</h4>
+		                	<h4 class="card-title">발주진행 현황 그래프 (<span id="date"></span>)</h4>
 		                	<canvas id="barChart" style="height:30vh; width:70vw"></canvas>
 		            	</div>
 		        	</div>		
@@ -218,6 +218,15 @@
 			}
 		});//ajax 끝
     });
+    
+    var getToday= document.getElementById("date");
+    let today = new Date();   
+
+	let year = today.getFullYear(); // 년도
+	let month = today.getMonth() + 1;  // 월
+	let date = today.getDate();  // 날짜
+	
+	getToday.innerText= '오늘 날짜 기준 : ' + year + '년 ' + month + '월 ' + date + '일';
 </script>
 	</th:block>
 </th:block>
