@@ -102,7 +102,7 @@ public class PurchaseReportServiceTests {
 		log.info("purchaseReportDTO 한번 봅시다 >>> " + purchaseReportDTO);
 	}
 	
-	//기간별로 개수 가져오기 ~ing
+	//기간별로 개수 가져오기
 	@Transactional
 	@Test
 	public void getCount() throws ParseException {
@@ -117,6 +117,9 @@ public class PurchaseReportServiceTests {
 		Boolean ing= null;
 		Boolean done= null;
 		  
+		List<PurchaseReportDTO> prDTOList= new ArrayList<>();
+		PurchaseReportDTO prDTO= null;
+		
 		int beforeCount= 0;
 		int ingCount= 0;
 		int doneCount= 0;
@@ -130,57 +133,67 @@ public class PurchaseReportServiceTests {
 		
 		//ex> 특정 날짜에 해당하는 발주 예정 개수
 		for(int j=0; j<dateList.size();j++) {
-		for(int i=0; i<ppList.size(); i++) {
-			//compareTo
-			//Date타입일 경우: 비교하는 날짜가 이전이면 -1, 동일하면 0, 이후이면 1 반환
-			//String타입일 경우: 날짜 사이값을 반환
-			registerDateCompare= ppList.get(i).getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));
-			log.info("등록일 비교 찍기 >>> " + i + "번째 " + registerDateCompare);
-			if(ppList.get(i).getCompletionDate() != null) {
-				completionDateCompare= ppList.get(i).getCompletionDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));			
-				log.info("완료일 비교 찍기 >>> " + i + "번째 " + completionDateCompare);
-			}
-			if(ppList.get(i).getDetailPurchaseOrder() != null) {
-				purchaseDateCompare= ppList.get(i).getDetailPurchaseOrder().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));	
-				log.info("발주일 비교 찍기 >>> " + i + "번째 " + purchaseDateCompare);
-			}
-		
-			if(procurementPlanRepository.existsById(i+1)) {
-				//발주 예정 -> 완료일(입고일)X + 구매발주서(발주일) X + 등록일 O
-				if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() == null  && registerDateCompare <= 0) {
-					log.info("발주예정 >>> " + ppList.get(i));
-					before= true;
-					ing= false;
-					done= false;
-				//조달 진행 중 -> 완료일(입고일)X + 구매발주서(발주일) O + 등록일 O
-				}else if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() != null && (registerDateCompare == -1 || registerDateCompare == 0)){
-					log.info("조달 진행 중 >>> " + ppList.get(i));
-					before= false;
-					ing= true;
-					done= false;
-				//조달 완료 -> 완료일(입고일)O + 구매발주서(발주일) O + 등록일 O
-				}else if(ppList.get(i).getCompletionDate() != null && completionDateCompare == 0){
-					log.info("조달 완료 >>> " + ppList.get(i));
-					before= false;
-					ing= false;
-					done= true;
-				}else {
-					before= null;
-					ing= null;
-					done= null;
+			for(int i=0; i<ppList.size(); i++) {
+				//compareTo
+				//Date타입일 경우: 비교하는 날짜가 이전이면 -1, 동일하면 0, 이후이면 1 반환
+				//String타입일 경우: 날짜 사이값을 반환
+				registerDateCompare= ppList.get(i).getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));
+				//log.info("등록일 비교 찍기 >>> " + i + "번째 " + registerDateCompare);
+				if(ppList.get(i).getCompletionDate() != null) {
+					completionDateCompare= ppList.get(i).getCompletionDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));			
+					//log.info("완료일 비교 찍기 >>> " + i + "번째 " + completionDateCompare);
 				}
-				
-				if(before != null && before == true) {
-					beforeCount++;
-				}else if(ing != null && ing == true) {
-					ingCount++;
-				}else if(done != null && done == true) {
-					doneCount++;
+				if(ppList.get(i).getDetailPurchaseOrder() != null) {
+					purchaseDateCompare= ppList.get(i).getDetailPurchaseOrder().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));	
+					//log.info("발주일 비교 찍기 >>> " + i + "번째 " + purchaseDateCompare);
 				}
-			}//if문(existsBy) 끝
-		}//for문(ppList.size()) 끝
+			
+				if(procurementPlanRepository.existsById(i+1)) {
+					//발주 예정 -> 완료일(입고일)X + 구매발주서(발주일) X + 등록일 O
+					if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() == null  && registerDateCompare <= 0) {
+						//log.info("발주예정 >>> " + ppList.get(i));
+						before= true;
+						ing= false;
+						done= false;
+					//조달 진행 중 -> 완료일(입고일)X + 구매발주서(발주일) O + 등록일 O
+					}else if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() != null && (registerDateCompare == -1 || registerDateCompare == 0)){
+						//log.info("조달 진행 중 >>> " + ppList.get(i));
+						before= false;
+						ing= true;
+						done= false;
+					//조달 완료 -> 완료일(입고일)O + 구매발주서(발주일) O + 등록일 O
+					}else if(ppList.get(i).getCompletionDate() != null && completionDateCompare == 0){
+						//log.info("조달 완료 >>> " + ppList.get(i));
+						before= false;
+						ing= false;
+						done= true;
+					}else {
+						before= null;
+						ing= null;
+						done= null;
+					}
+					
+					if(before != null && before == true) {
+						beforeCount++;
+					}else if(ing != null && ing == true) {
+						ingCount++;
+					}else if(done != null && done == true) {
+						doneCount++;
+					}
+					
+				}//if문(existsBy) 끝
+			}//for문(ppList.size()) 끝
+			prDTO= PurchaseReportDTO.builder().date(dateList.get(j)).beforePurchase(beforeCount).ingProcurement(ingCount)
+					.doneProcurement(doneCount).build();
+			prDTOList.add(prDTO);
+			
+			beforeCount=0;
+			ingCount=0;
+			doneCount=0;
 		}//for문(dateList.size()) 끝
-		log.info("카운트 세기 >>> " + beforeCount +", "+ ingCount + ", " + doneCount);	
+		
+		//log.info("카운트 세기 >>> " + beforeCount +", "+ ingCount + ", " + doneCount);	
+		log.info("prDTOList >>> " + prDTOList);	
 		//log.info("dateList.get(0) 어떻게 나오지 >>> " + dateList.get(0));
 		//log.info("dateList 날짜 어떻게 나오지 >>> " + ppList.get(1));
 	}

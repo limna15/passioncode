@@ -202,10 +202,10 @@
 				//설정한 기간 테이블마다 행으로 세팅
 		        for(var i= 0; i<data.length; i++) {
 		            var tableTd = '<tr>';
-		            tableTd += '<td>' + data[i] + '</td>';
-		            tableTd += '<td>' + 2 + '</td>';
-		            tableTd += '<td>' + 3 + '</td>';
-		            tableTd += '<td>' + 4 +'</td>';
+		            tableTd += '<td>' + data[i].date + '</td>';
+		            tableTd += '<td>' + data[i].beforePurchase + '</td>';
+		            tableTd += '<td>' + data[i].ingProcurement + '</td>';
+		            tableTd += '<td>' + data[i].doneProcurement +'</td>';
 		            tableTd += '</tr>';
 
 		            $('#count').append(tableTd);

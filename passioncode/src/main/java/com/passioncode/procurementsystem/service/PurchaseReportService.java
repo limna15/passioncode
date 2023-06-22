@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.service;
 
+import java.util.List;
+
 import com.passioncode.procurementsystem.dto.PurchaseReportDTO;
 
 public interface PurchaseReportService {
@@ -10,4 +12,10 @@ public interface PurchaseReportService {
 	 * @return
 	 */
 	PurchaseReportDTO getCountPurchaseReportDTO();
+	
+	/**
+	 * PurchaseReportDTO 리스트 가져오기
+	 * @return
+	 */
+	List<PurchaseReportDTO> getPurchaseReportDTOList(String[] date);
 }

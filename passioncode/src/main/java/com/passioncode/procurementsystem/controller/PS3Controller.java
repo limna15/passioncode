@@ -148,9 +148,9 @@ public class PS3Controller {
 	}
 	
 	@GetMapping("/purchaseReport")
-	public void purchaseReport(Date[] dates, Model model, PurchaseReportDTO purchaseReportDTO) {
+	public void purchaseReport(String[] dates, Model model, PurchaseReportDTO purchaseReportDTO) {
 		//log.info("발주진행 현황관리");		
-		log.info("날짜 배열 읽어오기 >>> " + dates);		
+		log.info("날짜 배열 읽어오기 >>> " + dates);
 		
 		model.addAttribute("list", purchaseReportService.getCountPurchaseReportDTO());
 	}

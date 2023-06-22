@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 public class PurchaseReportDTO {
 	
 	/**
-	 * 조달계획개수
+	 * 날짜(선택한 기간 넣어주기 위한 변수)
 	 */
-	private Integer procurementPlanCount;
+	private String date;
 	
 	/**
 	 * 발주예정
@@ -38,7 +38,7 @@ public class PurchaseReportDTO {
 	private Integer doneProcurement;
 	
 	/**
-	 * 날짜(선택한 기간 넣어주기 위한 변수)
+	 * 조달계획개수
 	 */
-	private String date;
+	private Integer procurementPlanCount;
 }
