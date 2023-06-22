@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 /**
  * 자재출고 화면을 위한 자재출고DTO 클래스  <br>
  * 발주코드, 소요일, 품목코드, 품목명, 소요공정, 소요량, 출고상태  <br>
- * 출고코드, 자재소요계획코드, 출고일?, 기존재고수량???
+ * 출고코드, 자재소요계획코드, 출고일
  * @author KSH
  * 
  */ 
@@ -52,7 +52,7 @@ public class MaterialOutDTO {
 	
 	/**
 	 * 출고상태 (자재출고) <br>
-	 * null: 완료/취소 버튼, 0: 미완료, 1: 완료
+	 * 완료 버튼만 존재, 0: 버튼, 1: 완료
 	 */
 	private String outStatus;
 	
@@ -69,13 +69,5 @@ public class MaterialOutDTO {
 	/**
 	 * 출고일 (자재출고)
 	 */
-	private LocalDateTime outDate;
-	
-	/**
-	 * 기존재고수량 (품목)
-	 */
-	private Integer stockAmount;
-	
-	
-	
+	private LocalDateTime outDate;	
 }

@@ -26,11 +26,6 @@ public class PurchaseReportDTO {
 	 * 발주예정
 	 */
 	private Integer beforePurchase;
-	
-	/**
-	 * 발주서발행 (조달 진행 중이랑 어떻게 구분할 것인지 정하기 or 삭제)
-	 */
-	//private Integer donePurchase;
 
 	/**
 	 * 조달 진행 중
@@ -41,4 +36,9 @@ public class PurchaseReportDTO {
 	 * 조달완료
 	 */
 	private Integer doneProcurement;
+	
+	/**
+	 * 날짜(선택한 기간 넣어주기 위한 변수)
+	 */
+	private String date;
 }

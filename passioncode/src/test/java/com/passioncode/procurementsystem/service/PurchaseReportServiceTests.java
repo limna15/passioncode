@@ -129,18 +129,19 @@ public class PurchaseReportServiceTests {
 		int purchaseDateCompare= 0;
 		
 		//ex> 특정 날짜에 해당하는 발주 예정 개수
+		for(int j=0; j<dateList.size();j++) {
 		for(int i=0; i<ppList.size(); i++) {
 			//compareTo
 			//Date타입일 경우: 비교하는 날짜가 이전이면 -1, 동일하면 0, 이후이면 1 반환
 			//String타입일 경우: 날짜 사이값을 반환
-			registerDateCompare= ppList.get(i).getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(1));
+			registerDateCompare= ppList.get(i).getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));
 			log.info("등록일 비교 찍기 >>> " + i + "번째 " + registerDateCompare);
 			if(ppList.get(i).getCompletionDate() != null) {
-				completionDateCompare= ppList.get(i).getCompletionDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(1));			
+				completionDateCompare= ppList.get(i).getCompletionDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));			
 				log.info("완료일 비교 찍기 >>> " + i + "번째 " + completionDateCompare);
 			}
 			if(ppList.get(i).getDetailPurchaseOrder() != null) {
-				purchaseDateCompare= ppList.get(i).getDetailPurchaseOrder().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(1));	
+				purchaseDateCompare= ppList.get(i).getDetailPurchaseOrder().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(j));	
 				log.info("발주일 비교 찍기 >>> " + i + "번째 " + purchaseDateCompare);
 			}
 		
@@ -178,7 +179,7 @@ public class PurchaseReportServiceTests {
 				}
 			}//if문(existsBy) 끝
 		}//for문(ppList.size()) 끝
-		
+		}//for문(dateList.size()) 끝
 		log.info("카운트 세기 >>> " + beforeCount +", "+ ingCount + ", " + doneCount);	
 		//log.info("dateList.get(0) 어떻게 나오지 >>> " + dateList.get(0));
 		//log.info("dateList 날짜 어떻게 나오지 >>> " + ppList.get(1));

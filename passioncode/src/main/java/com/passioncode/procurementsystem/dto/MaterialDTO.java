@@ -1,13 +1,11 @@
 package com.passioncode.procurementsystem.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 /**
  * 품목정보등록 화면을 위한 품목DTO 클래스 (11개+2개) <br>
  * 품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
