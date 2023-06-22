@@ -57,7 +57,17 @@ public class PS1Controller {
 	public void MaterialList(Model model) {
 		log.info("품목정보 목록 화면 보기.....");
 		
-		model.addAttribute("DTOList",materialService.getDTOList());		
+		model.addAttribute("DTOList",materialService.getDTOList());	
+		List<MaterialDTO> DTOList = materialService.getDTOList();
+		log.info("어디 그 이미지 dto 읽어보자 getDrawingUploadPath() : "+DTOList.get(0).getDrawingFileDTO().getDrawingUploadPath() );
+		log.info("어디 그 이미지 dto 읽어보자 getFileName() : "+DTOList.get(0).getDrawingFileDTO().getFileName() );
+		log.info("어디 그 이미지 dto 읽어보자 getUuid() : "+DTOList.get(0).getDrawingFileDTO().getUuid() );
+		log.info("어디 그 이미지 dto 읽어보자 getFolderPath() : "+DTOList.get(0).getDrawingFileDTO().getFolderPath() );
+		log.info("어디 그 이미지 dto 읽어보자 isImage() : "+DTOList.get(0).getDrawingFileDTO().isImage() );   
+		log.info("여기 까지 필드선언 기본값~~~~~~~~~~~~~~~~");
+		log.info("어디 그 이미지 dto 읽어보자 getDrawingFile() : "+DTOList.get(0).getDrawingFileDTO().getDrawingFile() );;
+		log.info("어디 그 이미지 dto 읽어보자 getImageURL() : "+DTOList.get(0).getDrawingFileDTO().getImageURL() );
+		log.info("어디 그 이미지 dto 읽어보자 getThumbnailURL() : "+DTOList.get(0).getDrawingFileDTO().getThumbnailURL() );
 		
 	}
 	

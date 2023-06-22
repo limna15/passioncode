@@ -9,13 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.passioncode.procurementsystem.dto.DrawingFileDTO;
-import com.passioncode.procurementsystem.dto.UploadResultDTO;
-
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 
@@ -36,12 +33,12 @@ import net.coobird.thumbnailator.Thumbnailator;
 public class PS1UploadRestController {
 
 	@Value("${com.passioncode.procurementsystem.drawingFile.upload.path}")    //리소스의 설정 파일 내용(값)가져와서 셋팅
-    //application.properties 에서 com.passioncode.procurementsystem.drawingFile.upload.path = /PassionCode/upload/drawing 값을 읽어오는 방법
+    //application.properties 에서 com.passioncode.procurementsystem.drawingFile.upload.path = /PassionCode/upload/drawing/ 값을 읽어오는 방법
     //이렇게 설정을해야 경로가 바꼈을때 리소스에서 가서 고쳐주기만 하면 됨
     private String drawingUploadPath;
 	
 	@Value("${com.passioncode.procurementsystem.contract.upload.path}")    //리소스의 설정 파일 내용(값)가져와서 셋팅
-	//application.properties 에서 com.passioncode.procurementsystem.contract.upload.path = /PassionCode/upload/contract 값을 읽어오는 방법
+	//application.properties 에서 com.passioncode.procurementsystem.contract.upload.path = /PassionCode/upload/contract/ 값을 읽어오는 방법
 	//이렇게 설정을해야 경로가 바꼈을때 리소스에서 가서 고쳐주기만 하면 됨
 	private String contractUploadPath;
 		
@@ -59,7 +56,8 @@ public class PS1UploadRestController {
     	//근데 여기서는 필요 없음
         //요즘엔 자동으로 구분해줘서 위에처럼 안해줘도 됨!
     	
-        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd/"));
+        log.info("폴더 만드는 함수 안에서 folderPath 값 세팅좀 보자!"+folderPath);
 
         // make folder --------
         File uploadPathFolder = new File(drawingUploadPath, folderPath);
@@ -75,8 +73,7 @@ public class PS1UploadRestController {
      * @return 만든폴더이름 리턴(ex>2023/04/05)
      */
     private String makeContractFolder() {
-        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-
+        String folderPath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd/"));
         // make folder --------
         File uploadPathFolder = new File(contractUploadPath, folderPath);
 
@@ -129,11 +126,15 @@ public class PS1UploadRestController {
         log.info("fileName: " + fileName);
         //날짜 폴더 생성
         String folderPath = makeDrawingFolder();
+        log.info("현재 메인 페스 drawingUploadPath 이거 봐보자 : "+drawingUploadPath);
+        log.info("어떻게 folderPath 세팅되나 보자!!!! : "+folderPath);
+        
         //UUID
         String uuid = UUID.randomUUID().toString();
 
         //저장할 파일 이름 중간에 "_"를 이용해서 구분
-        String saveName = drawingUploadPath + File.separator + folderPath + File.separator + uuid +"_" + fileName;
+//        String saveName = drawingUploadPath + File.separator + folderPath + File.separator + uuid +"_" + fileName;
+        String saveName = drawingUploadPath + folderPath + uuid +"_" + fileName;
         log.info("saveName 이름좀 봐보자 : "+saveName);
         Path savePath = Paths.get(saveName);
         log.info("savePath 이거 페스이름 봐보자 : "+savePath);
@@ -142,12 +143,12 @@ public class PS1UploadRestController {
 //        log.info("savePath.getParent() 이거 한번 봐보자 : "+savePath.getParent());
 //        log.info("savePath.getRoot() 이거 한번 봐보자 : "+savePath.getRoot());
         
-        DrawingFileDTO drawingFileDTO = new DrawingFileDTO();
         
         File originFile = new File(saveName);
         log.info("만들어진 File을 봐보자 : "+originFile);
         log.info("이미지 파일 체크 여부 한번 보자 : "+checkImageType(originFile));
         boolean isImage = checkImageType(originFile);
+        DrawingFileDTO drawingFileDTO = new DrawingFileDTO();
         
         try {
             //원본 파일 저장
@@ -156,8 +157,8 @@ public class PS1UploadRestController {
             //올린 파일이 이미지 파일이 있는지 검사 -> 이미지 파일 일때만 썸네일 파일 만들자
             if(isImage) {
             	//섬네일 생성
-            	String thumbnailSaveName = drawingUploadPath + File.separator + folderPath + File.separator
-            			+"thumb_" + uuid +"_" + fileName;
+//            	String thumbnailSaveName = drawingUploadPath + File.separator + folderPath + File.separator +"thumb_" + uuid +"_" + fileName;
+            	String thumbnailSaveName = drawingUploadPath + folderPath +"thumb_" + uuid +"_" + fileName;
             	//섬네일 파일 이름은 중간에 thumb_로 시작하도록
             	File thumbnailFile = new File(thumbnailSaveName);
             	//섬네일 생성
@@ -165,7 +166,7 @@ public class PS1UploadRestController {
             	
             }
             	
-            drawingFileDTO = DrawingFileDTO.builder().fileName(fileName).uuid(uuid).folderPath(folderPath).image(isImage).build();
+            drawingFileDTO = new DrawingFileDTO(saveName);
             log.info("업로드 DTO 에 넣은거 보자 : "+drawingFileDTO);
             log.info("어디 DTO의 파일 이름 읽어보자 : ", drawingFileDTO.getDrawingFile());
             
@@ -203,7 +204,8 @@ public class PS1UploadRestController {
             String srcFileName =  fileName;
             log.info("fileName: " + srcFileName);
 
-            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+//            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+            File file = new File(drawingUploadPath + srcFileName);
             log.info("file.getParent() 읽어보자 : "+file.getParent());
             
             //thumbnailURL & size=1 -> 원본 파일
@@ -233,15 +235,25 @@ public class PS1UploadRestController {
         return result;
     }
     
-    
+    /**
+     * 업로드파일 삭제하기
+     * @param fileName
+     * @return
+     */
     @PostMapping("/drawing/removeFile")
     public ResponseEntity<Boolean> removeFile(String fileName){
     	log.info("삭제할때 건내주는 파일이름 좀 보자 : "+fileName);
-
+    	//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
+		//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\ upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
+		//ajax 삭제할대 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
+		// \PassionCode\ upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
+		//ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
+    	
         String srcFileName = null;
         try {
             srcFileName = URLDecoder.decode(fileName,"UTF-8");
-            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+//            File file = new File(drawingUploadPath +File.separator+ srcFileName);
+            File file = new File(drawingUploadPath + srcFileName);
             log.info("파일 봐보자... : "+file);
             boolean result = file.delete();
 
@@ -255,7 +267,55 @@ public class PS1UploadRestController {
             e.printStackTrace();
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+    
+        
+    @GetMapping(value="/drawing/download",produces=MediaType.APPLICATION_OCTET_STREAM_VALUE) 
+    public ResponseEntity<Resource> downloadTest2(String fileName){
+    	log.info("받아온 파일이름 봐보자! : "+fileName);
+    	// 고양이.jpg
+    	// 2023/06/21/3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf
+    	
+    	String decodeFileName = null;
+    	try {
+			decodeFileName = URLDecoder.decode(fileName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+    	log.info("디코딩된 파일 이름 보자 : "+decodeFileName);
+    	
+    	String downloadFileName=decodeFileName.substring(48);
+    	log.info("다운로드할 파일이름 : "+downloadFileName);
+    	// 물품목록정보등록방법.pdf
+    	    	
+    	FileSystemResource resource = new FileSystemResource(drawingUploadPath+decodeFileName);
+    	log.info("리소스 정보 보자 : "+resource);
+    	// file [c:\ upload\고양이.jpg]
+    	// file [C:\PassionCode\ upload\drawing\2023\06\21\3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf]
+    	
+    	String resourceName = resource.getFilename();
+    	log.info("resourceName 보자 : "+resourceName);
+    	// 고양이.jpg
+    	// 3ec525fe-fd55-484e-a6b4-3f061a73fb79_물품목록정보등록방법.pdf
+    	
+    	HttpHeaders header = new HttpHeaders();
+    	String headerInDownloadFileName;
+    	try {
+//    		headerInDownloadFileName = new String(resourceName.getBytes("UTF-8"),"ISO-8859-1");
+    		headerInDownloadFileName = new String(downloadFileName.getBytes("UTF-8"),"ISO-8859-1");
+    		log.info("인코딩 시킨 test 파일 보자 : "+headerInDownloadFileName);
+    		// ê³ ìì´.jpg
+    		// 3ec525fe-fd55-484e-a6b4-3f061a73fb79_ë¬¼íëª©ë¡ì ë³´ë±ë¡ë°©ë².pdf
+    		// ë¬¼íëª©ë¡ì ë³´ë±ë¡ë°©ë².pdf
+    		header.add("content-Disposition","attachment;filename="+headerInDownloadFileName);
+    	} catch (UnsupportedEncodingException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return new ResponseEntity<Resource>(resource,header,HttpStatus.OK );
+    }
+    
+    
+    
     
 }

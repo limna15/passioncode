@@ -21,7 +21,7 @@
 											<th width="">재질</th>
 											<th width="">제작 사양</th>
 											<th width="8%">도면 번호</th>
-											<th width="9%">도면<br>image</th>
+											<th width="9%">도면<br>Image</th>
 											<th width="8%">공용여부</th>
 											<th width="8%">대</th>
 											<th width="8%">중</th>
@@ -680,7 +680,7 @@
  	                data: formData,
  	                type: 'POST',
  	                dataType:'json',
- 	                success: function(result,textStatus, request){
+ 	                success: function(result){
  						//console.log("인풋 체인지 함수의 Ajax 결과 : ",result);
  	                    if(result.image){	//image 일때 아닐때, 
  	                    	showResultByImage(result);
@@ -753,7 +753,7 @@
                 str + " <div>";
                 str += "<button type='button' data-file=\'" + uploadResult.imageURL + "\' ";
                 str += "class='btn-warning btn-sm'>X</button><br>";
-                str += "<img class='attachDrawingFileThumbImg' src='/procurement1/drawing/display?fileName=thumb_document.jpg'>";
+                str += "<img class='attachDrawingFileThumbImg' src='/picture/thumb_document.jpg'>";
                 str += "</div>";
                 str + "</li>";
 	            uploadUL.append(str);
@@ -763,7 +763,7 @@
 	        $(".uploadResult ").on("click", "li button", function(e){
 	            console.log("li의 X삭제 버튼 누름");
 	            var targetFile = $(this).data("file");
-				//console.log("li 버튼 누를때 targetFile : ",targetFile);
+				console.log("li 버튼 누를때 targetFile : ",targetFile);
 	            var targetLi = $(this).closest("li");
 				//console.log("li 버튼 누를때 targetLi : ",targetLi);
 				//console.log("테이블의 input값 초기화 하기 전 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);

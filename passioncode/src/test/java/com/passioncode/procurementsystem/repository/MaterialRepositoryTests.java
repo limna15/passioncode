@@ -228,8 +228,14 @@ public class MaterialRepositoryTests {
 		String folderPath = drawingFile.substring(28,39);
 		log.info("어디어디 보자2~~~~~~~ : "+folderPath);
 		// 2023\06\21\
-		String uuidAndFileName = drawingFile.substring(39);
-		log.info("어디어디 보자3~~~~~~~ : "+uuidAndFileName);
+		String uuid = drawingFile.substring(39, 75);
+		log.info("uuid 보자!! : "+ uuid);
+		// 65334b3a-f3c2-4d06-92b4-7850e2ede958
+		// 언더바 _ 제외하고 fileName 보자!!
+		String fileName = drawingFile.substring(76);
+		log.info("어디 이제 오리지날 파일이름 보자!!! : "+fileName);
+//		String uuidAndFileName = drawingFile.substring(39);
+//		log.info("어디어디 보자3~~~~~~~ : "+uuidAndFileName);
 		// 97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
 		// thumb_97743ec3-da5b-44a3-9e79-c98e4faf90b3_HappyDay!!!!.jpg
 	}
@@ -239,5 +245,7 @@ public class MaterialRepositoryTests {
 		String test = URLDecoder.decode("2023%2F06%2F21%2F132d1fea-7240-4cf5-89c0-cffc758f00d4_a+a.jpg","UTF-8");
 		log.info("test 결과 : "+test);
 	}
+	
+	
 
 }

@@ -33,7 +33,7 @@ public class UploadResultDTO {
      * 파일경로
      */
     private String folderPath;
- 
+
     public String getImageURL(){
         try {
             return URLEncoder.encode(folderPath+"/"+uuid+"_"+fileName,"UTF-8");
@@ -52,6 +52,7 @@ public class UploadResultDTO {
         return "";
     }
 
+	   
     
     
 

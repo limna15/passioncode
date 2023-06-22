@@ -1,17 +1,12 @@
 package com.passioncode.procurementsystem.service;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.entity.Material;
-import com.passioncode.procurementsystem.repository.ContractRepository;
-import com.passioncode.procurementsystem.repository.MaterialRepository;
-
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -93,5 +88,13 @@ public class MaterialSeviceTests {
 		
 	}
 	
+	@Transactional
+	@Test
+	public void drawingFileExistTest() {
+		Material material = materialService.getMaterial("PC0002");
+		log.info("도면 없는 품목 자체를 읽어보자 : "+material);
+		MaterialDTO materialDTO = materialService.entityToDTO(material);
+		log.info("어디 도면 없는 dto 찍어보자 : "+materialDTO);
+	}
 
 }
