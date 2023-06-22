@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,19 +106,12 @@ public class PurchaseReportServiceTests {
 	@Transactional
 	@Test
 	public void getCount() throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		List<Date> dateList= new ArrayList<>();
-		  dateList.add(sdf.parse("2023-06-09")); dateList.add(sdf.parse("2023-06-10")); dateList.add(sdf.parse("2023-06-11"));
-		  dateList.add(sdf.parse("2023-06-12")); dateList.add(sdf.parse("2023-06-13")); dateList.add(sdf.parse("2023-06-14"));
-		  dateList.add(sdf.parse("2023-06-15")); dateList.add(sdf.parse("2023-06-16")); dateList.add(sdf.parse("2023-06-17"));
-		  dateList.add(sdf.parse("2023-06-18")); dateList.add(sdf.parse("2023-06-19")); dateList.add(sdf.parse("2023-06-20"));
+		List<String> dateList= new ArrayList<>();
+		  dateList.add("2023-06-09"); dateList.add("2023-06-10"); dateList.add("2023-06-11");
 		  
 		//log.info("날짜가 찍히나 >>> " + dateList);
 		//log.info("날짜 첫번째 값 >>> " + dateList.get(0));
-		
-//		Date testDate= sdf.parse("2023-06-14");
-//		log.info("주어진 날짜가 테스트 날짜보다 과거인가? >>> " + dateList.get(0).before(testDate));
-		  
+
 		//각각의 조달 코드마다 진행 상태를 체크해주기 위한 boolean값
 		Boolean before= null;
 		Boolean ing= null;
@@ -136,23 +130,23 @@ public class PurchaseReportServiceTests {
 		
 		//ex> 특정 날짜에 해당하는 발주 예정 개수
 		for(int i=0; i<ppList.size(); i++) {
-			for(int j=0; j<dateList.size(); j++) {
-
-			//compareTo: 비교하는 날짜가 이전이면 -1, 동일하면 0, 이후이면 1 반환
-			registerDateCompare= java.sql.Date.valueOf(ppList.get(i).getRegisterDate().toLocalDate()).compareTo(dateList.get(j));
+			//compareTo
+			//Date타입일 경우: 비교하는 날짜가 이전이면 -1, 동일하면 0, 이후이면 1 반환
+			//String타입일 경우: 날짜 사이값을 반환
+			registerDateCompare= ppList.get(i).getRegisterDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(1));
 			log.info("등록일 비교 찍기 >>> " + i + "번째 " + registerDateCompare);
 			if(ppList.get(i).getCompletionDate() != null) {
-				completionDateCompare= java.sql.Date.valueOf(ppList.get(i).getCompletionDate().toLocalDate()).compareTo(dateList.get(j));			
+				completionDateCompare= ppList.get(i).getCompletionDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(1));			
 				log.info("완료일 비교 찍기 >>> " + i + "번째 " + completionDateCompare);
 			}
 			if(ppList.get(i).getDetailPurchaseOrder() != null) {
-				purchaseDateCompare= java.sql.Date.valueOf(ppList.get(i).getDetailPurchaseOrder().getDate().toLocalDate()).compareTo(dateList.get(j));	
+				purchaseDateCompare= ppList.get(i).getDetailPurchaseOrder().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).compareTo(dateList.get(1));	
 				log.info("발주일 비교 찍기 >>> " + i + "번째 " + purchaseDateCompare);
 			}
 		
 			if(procurementPlanRepository.existsById(i+1)) {
 				//발주 예정 -> 완료일(입고일)X + 구매발주서(발주일) X + 등록일 O
-				if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() == null  && (registerDateCompare == -1 || registerDateCompare == 0)) {
+				if(ppList.get(i).getCompletionDate() == null && ppList.get(i).getDetailPurchaseOrder() == null  && registerDateCompare <= 0) {
 					log.info("발주예정 >>> " + ppList.get(i));
 					before= true;
 					ing= false;
@@ -182,12 +176,11 @@ public class PurchaseReportServiceTests {
 				}else if(done != null && done == true) {
 					doneCount++;
 				}
-			}
-			}
+			}//if문(existsBy) 끝
 		}//for문(ppList.size()) 끝
 		
-		log.info("dateList 날짜 어떻게 나오지 >>> " + dateList.get(11));
-		//log.info("dateList 날짜 어떻게 나오지 >>> " + ppList.get(1));
 		log.info("카운트 세기 >>> " + beforeCount +", "+ ingCount + ", " + doneCount);	
+		//log.info("dateList.get(0) 어떻게 나오지 >>> " + dateList.get(0));
+		//log.info("dateList 날짜 어떻게 나오지 >>> " + ppList.get(1));
 	}
 }
