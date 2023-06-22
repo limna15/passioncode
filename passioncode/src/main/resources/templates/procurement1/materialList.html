@@ -153,7 +153,8 @@
 										</button>
 									</td>
 									<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image!=true}">
-										<button th:data-file="${dto.drawingFileDTO.getImageURL()}" class="NoImgClick" type="button" style="border:none; background-color:transparent;">
+										<button th:data-file="${dto.drawingFileDTO.getImageURL()}" th:data-name="${dto.drawingFileDTO.fileName}"
+												class="NoImgClick" type="button" style="border:none; background-color:transparent;">
 											<img th:src="|/picture/thumb_document.jpg|" > 
 										</button>
 									</td>
@@ -224,12 +225,40 @@
             </div>
         </div>	
         <!-- 이미지 보여주는 모달창 끝 -->
+        
+        <!-- 첨부파일 다운로드 여부 묻는 모달창 시작-->
+		<div class="attachFileDownloadModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">첨부 파일 다운로드</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="attachFileDownloadCheckModal">
+                    	<!-- 첨부파일 이름 확인할 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary attachFileDownloadConfirmBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 첨부파일 다운로드 여부 묻는 모달창 끝 -->
 		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
 		
 		$(document).ready(function(e) {
-		
+			
+			//도면파일 -> 이미지로 된것 클릭 했을때, -> 원본파일 모달창으로 보여주기
 			$(".ImgClick").click(function() {
 				var file = $(this).data('file');
 				//console.log(file);
@@ -237,14 +266,53 @@
 				$(".imageModal").modal("show");
 			});
 			
+			//이미지 아닌 문서그림 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachDrawingFileTR = new Object();
+			
+			//도면파일 -> 이미지로 된거 아닌거! 클릭 했을때, -> 파일 다운로드 여부 묻는 모달창 보여주기
 			$(".NoImgClick").click(function() {
 				console.log("이미지 아닌거 선택함");
-				var encodeFile = $(this).data('file');
-				console.log("어디 해당 파일의 data-file 잘 읽나 보자 : ",encodeFile);
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachDrawingFileTR = getObjTR();
 				
-				window.location.href = "/procurement1/drawing/download?fileName="+encodeFile;
-						
+				//해당 버튼의 가지고 있는 파일이름 읽기
+				var fileName = $(this).data('name');
+				//console.log("어디 해당 파일의 data-fileName 잘 읽나 보자 : ",fileName);
+				
+				sentence = `<span><b>파일명</b> : `+fileName+`<br><br>
+							해당 파일을 다운로드 하시겠습니까?</span>`;
+				//console.log("만든 문장 봐보자 : ",sentence);
+       			document.querySelector("#attachFileDownloadCheckModal").innerHTML = sentence;					
+				$(".attachFileDownloadModal").modal('show');
 			});
+			
+			//첨부파일 다운로드 모달창의 확인 버튼 누를때
+			$(document).on("click",".attachFileDownloadConfirmBtn",function(e){
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachDrawingFileTR.querySelector(".NoImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("NoImgClick 버튼 눌렀을때의 파일의 data-file 잘 읽나 보자 : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".attachFileDownloadModal").modal('hide');
+				window.location.href = "/procurement1/drawing/download?fileName="+encodeFile;
+			});	
+			
+			//이벤트 발생한 요소의 상위의 TR 객체 찾기
+	        function getObjTR(){
+	            var obj = event.srcElement
+	            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+	                obj = obj.parentElement
+	            }
+	            return obj
+	        }
 			
 		
 		});
