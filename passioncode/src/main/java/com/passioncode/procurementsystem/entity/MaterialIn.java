@@ -2,6 +2,7 @@ package com.passioncode.procurementsystem.entity;
 
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,7 +30,7 @@ import lombok.ToString;
  */
 @EntityListeners(value= {AuditingEntityListener.class})
 @Entity
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

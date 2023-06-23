@@ -75,16 +75,25 @@ public class TransactionDetailRepositoryTests {
 	public void InsertByDTOTest() {
 		Company ourCompany= companyRepository.findById("777-77-77777").get();
 		
-		TransactionDetailDTO transactionDetailDTO= TransactionDetailDTO.builder().no(2).company(ourCompany.getName()).purchaseOrderNo(2).date(LocalDateTime.now())
-				.companyNo("403-81-80895").companyName("(유)길승산업").CEO("김태리").companyAddress("서울시 동작구").manager("박서준").managerTel("010-1111-1111")
-				.materialCode("CGa0001").materialName("Gear1").amount(150).unitPrice(500).build();
+		TransactionDetailDTO transactionDetailDTO= TransactionDetailDTO.builder().company(ourCompany.getName()).purchaseOrderNo(5).date(LocalDateTime.now())
+				.companyNo("312-81-40374").companyName("(주)경도전자").CEO("이민정").companyAddress("경상북도 포항시").manager("박보검").managerTel("010-4444-4444")
+				.materialCode("CN0001").materialName("Bolt1").amount(800).unitPrice(200).build();
 
 		log.info("transactionDetailDTO 어떻게 가지고 오는지 보자>>> " + transactionDetailDTO);
 	
-		TransactionDetail transactionDetail= TransactionDetail.builder().no(transactionDetailDTO.getNo())
+		TransactionDetail transactionDetail= TransactionDetail.builder()
 											.purchaseOrder(purchaseOrderRepository.findById(transactionDetailDTO.getPurchaseOrderNo()).get()).build();
 		log.info("transactionDetail 어떻게 가지고 오는지 보자>>> " + transactionDetail);
-	
+		transactionDetailRepository.save(transactionDetail);
+		
+		//거래명세서가 DB에 등록되면 자재입고 엔티티의 발행상태가 완료가 되어야함
+		List<DetailPurchaseOrder> detailPurchaseOrderList= detailPurchaseOrderRepository.findByPurchaseOrder(transactionDetail.getPurchaseOrder());
+		
+		for(int i=0; i<detailPurchaseOrderList.size(); i++) {
+			MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrderList.get(i));
+			materialIn= materialIn.toBuilder().transactionStatus("발행 완료").build();
+			materialInRepository.save(materialIn);
+		}
 	}
 	
 	public String makeNoStr(Integer no) {

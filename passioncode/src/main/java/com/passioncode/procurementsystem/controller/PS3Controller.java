@@ -56,7 +56,7 @@ public class PS3Controller {
 	
 	@PostMapping(value="materialInRegister")
 	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-		log.info("잘 보내지나 >>> "+ materialInDTO);
+		//log.info("잘 보내지나 >>> "+ materialInDTO);
 		
 		String purchaseOrderNoStr= request.getParameter("no");
 		String detailPurchaseOrderCodeStr= request.getParameter("code");
@@ -65,12 +65,12 @@ public class PS3Controller {
 		Integer amount= Integer.parseInt(request.getParameter("amount"));
 		String status= request.getParameter("status");
 		
-		log.info("js로 만들어 보낸 form 데이터 purchaseOrderNo 잘 받아오나 >>> " + purchaseOrderNoStr);
-		log.info("js로 만들어 보낸 form 데이터 detailPurchaseOrderCode잘 받아오나 >>> " + detailPurchaseOrderCodeStr);
-		log.info("js로 만들어 보낸 form 데이터 materialCode 잘 받아오나 >>> " + materialCode);
-		log.info("js로 만들어 보낸 form 데이터 materialName 잘 받아오나 >>> " + materialName);
-		log.info("js로 만들어 보낸 form 데이터 amount 잘 받아오나 >>> " + amount);
-		log.info("js로 만들어 보낸 form 데이터 status 잘 받아오나 >>> " + status);
+//		log.info("js로 만들어 보낸 form 데이터 purchaseOrderNo 잘 받아오나 >>> " + purchaseOrderNoStr);
+//		log.info("js로 만들어 보낸 form 데이터 detailPurchaseOrderCode잘 받아오나 >>> " + detailPurchaseOrderCodeStr);
+//		log.info("js로 만들어 보낸 form 데이터 materialCode 잘 받아오나 >>> " + materialCode);
+//		log.info("js로 만들어 보낸 form 데이터 materialName 잘 받아오나 >>> " + materialName);
+//		log.info("js로 만들어 보낸 form 데이터 amount 잘 받아오나 >>> " + amount);
+//		log.info("js로 만들어 보낸 form 데이터 status 잘 받아오나 >>> " + status);
 		
 		if(status.equals("1")) { //입고 상태가 완료일 때
 			materialInDTO.setNoStr("PO"+purchaseOrderNoStr);
@@ -80,7 +80,7 @@ public class PS3Controller {
 			materialInDTO.setAmount(amount);
 			materialInDTO.setStatus(true);
 			materialInDTO.setTransactionStatus("발행 예정");
-			log.info("입고 상태가 완료일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
+			//log.info("입고 상태가 완료일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
 			materialInService.register(materialInDTO);
 		}else { //입고 상태가 취소일 때
 			materialInDTO.setNoStr("PO"+purchaseOrderNoStr);
@@ -90,7 +90,7 @@ public class PS3Controller {
 			materialInDTO.setAmount(amount);
 			materialInDTO.setStatus(false);
 			materialInDTO.setTransactionStatus("발행 불가");
-			log.info("입고 상태가 취소일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
+			//log.info("입고 상태가 취소일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
 			materialInService.register(materialInDTO);
 		}
 		
@@ -106,7 +106,7 @@ public class PS3Controller {
 		model.addAttribute("list", transactionDetailService.getTdDTOList());
 	}
 	
-	//거래명세서 번호를 눌렀을 때 해당 거래명세서의 내용 보여주는 화면
+	//거래명세서 발행버튼 or 거래명세서 리스트에서 번호를 눌렀을 때 해당 거래명세서의 내용 보여주는 화면
 	@GetMapping("/transactionDetail")
 	public void transactionDetail(@Param(value= "purchaseNo") String purchaseNo, Model model) {
 		//log.info("파라미터로 보낸값 읽어지나 >>> " + purchaseNo);

@@ -79,6 +79,15 @@ public class TransactionDetailServiceImpl implements TransactionDetailService {
 	public Integer register(TransactionDetailDTO transactionDetailDTO) {
 		TransactionDetail transactionDetail=DTOToEntity(transactionDetailDTO);
 		transactionDetailRepository.save(transactionDetail);
+
+		//거래명세서가 DB에 등록되면 자재입고 엔티티의 발행상태가 완료가 되어야함
+		List<DetailPurchaseOrder> detailPurchaseOrderList= detailPurchaseOrderRepository.findByPurchaseOrder(transactionDetail.getPurchaseOrder());
+		
+		for(int i=0; i<detailPurchaseOrderList.size(); i++) {
+			MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrderList.get(i));
+			materialIn= materialIn.toBuilder().transactionStatus("발행 완료").build();
+			materialInRepository.save(materialIn);
+		}
 		
 		return transactionDetail.getNo();
 	}
