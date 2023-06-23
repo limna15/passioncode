@@ -556,6 +556,7 @@
 				var str = `<h3 id="h3Text">파일을 업로드 해주세요.</h3>`;
 				document.querySelector(".uploadResult ul").innerHTML = str;
 				$(".custom-file-label").html("계약서 첨부하기");
+				$(".custom-file-input").val("");
 				$(".contractUploadModal").modal('show');					
 			});
 			
@@ -762,6 +763,7 @@
 	 			if(isExist.length==0){
 	 				$("#h3Text").text("파일을 업로드 해주세요.");
 	 				$(".custom-file-label").html("계약서 첨부하기");
+	 				$(".custom-file-input").val("");
 	 			}
 	    	} //checkLi 함수 끝
 	        
@@ -913,7 +915,7 @@
 	      	
 	      	
 			
-		});		
+		});	//$(document).ready(function() 끝	
 		
 		
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

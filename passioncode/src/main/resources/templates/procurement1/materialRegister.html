@@ -608,6 +608,7 @@
 				var str = `<h3 id="h3Text">파일을 업로드 해주세요.</h3>`;
 				document.querySelector(".uploadResult ul").innerHTML = str;
 				$(".custom-file-label").html("도면 Image 첨부하기");
+				$(".custom-file-input").val("");
 				$(".drawingUploadModal").modal('show');					
 			});
 			
@@ -642,6 +643,8 @@
 	        //input file이 변할때, 파일확장 체크해서 업로드 하기
 	        $(".custom-file-input").on("change", function(e) {
 	        	console.log("인풋 체인지 함수 시작");
+	        	console.log("이 인풋의 값을 봐보자!! : ", $(".custom-file-input").val());
+	        	console.log("이 인풋 밑에 라벨의 값도 봐보자!! : ", $(".custom-file-label").val());
 	        	console.log("e.target.files 보자 : ",e.target.files);
  				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);		//이건 값을 못읽어 에러 뜸
 	        	
@@ -804,6 +807,7 @@
 	        
 	        //업로드할 파일을 다 지우면(liUpload 클래스가 하나도 없으면), 
 	        //파일을 업로드 해주세요. 글귀 넣기 + 도면 Image 첨부하기 글귀 넣기
+	        //그 해당 인풋의 값도 초기화 시켜주기!
 	    	function checkLi() {
 	    		var isExist = document.getElementsByClassName('liUpload');
 	 	        //console.log("모라고 찍힐까????",isExist);
@@ -811,6 +815,7 @@
 	 			if(isExist.length==0){
 	 				$("#h3Text").text("파일을 업로드 해주세요.");
 	 				$(".custom-file-label").html("도면 Image 첨부하기");
+	 				$(".custom-file-input").val("");
 	 			}
 	    	} //checkLi 함수 끝
 	        
@@ -963,7 +968,7 @@
 			
 			
 		
-		});
+		}); //$(document).ready(function() 함수 끝
 		
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -1134,7 +1139,7 @@
 	    	
 	    });
 	    
-	  //삭제 - 버튼 누를때, 행 삭제 + 그 해당 행의 테이블에 추가했던 업로드했던 이미지파일 삭제하기
+	  	//삭제 - 버튼 누를때, 행 삭제 + 그 해당 행의 테이블에 추가했던 업로드했던 이미지파일 삭제하기
 	    const tr_delete_event = (btn) => {
 	    	//해당 행의 이미지태그 읽어오자!	    	
 	    	var target = getObjTR().querySelector("img");
