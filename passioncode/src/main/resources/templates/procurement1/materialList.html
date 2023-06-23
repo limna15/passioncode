@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic::setContent(~{::content})}">
-
 	<th:block th:fragment="content">
-
 
 <style>
 .search-box {
@@ -77,7 +75,6 @@
 }
 </style>
 
-
 		<div class="col-md-12 stretch-card">
 			<!-- 수정 부분 시작 -->
 			<div class="card">
@@ -91,9 +88,10 @@
 								<div style="display:inline-block;">
 									<select class="custom-select mr-sm-2"  style="display:inline-block;">
 										<option selected>검색 조건 선택</option>
-										<option value="1">협력 회사</option>
-										<option value="2">품목 코드</option>
-										<option value="3">품목명</option>
+										<option value="1">대분류</option>
+										<option value="2">중분류</option>
+										<option value="3">품목코드</option>
+										<option value="4">품목명</option>
 									</select>
 								</div> 
 								&nbsp;	

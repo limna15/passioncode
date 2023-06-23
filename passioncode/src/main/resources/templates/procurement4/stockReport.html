@@ -92,21 +92,20 @@
 			<!-- 수정 부분 시작 -->
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title" style="font-size:23px;">자재 출고</p> 
+					<p class="card-title" style="font-size:23px;">재고금액 현황관리</p> 
 					<br>
-					<div class="row" style="margin-bottom: 5px;">
-						<!-- 목록 내려보기 시작 -->
-						<div class="col-md"> 
+					<form>
+						<div class="row" style="margin-bottom: 5px;">
+							<!-- 기간 검색 시작 -->
 							<div>
 								<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
-								<input type="date" id="startDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;~&nbsp;&nbsp;
-								<input type="date" id="endDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;
+								<input type="date" id="startDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;~&nbsp;&nbsp;
+								<input type="date" id="endDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;
 		                    </div>
-						</div> 
-						<!-- 목록 내려보기 끝 -->	
-						<div class="col-md-6"> 
+							<!-- 기간 검색 끝 -->
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<!-- 대분류 중분류 검색 시작 -->	
 							<div>
-								<form>
 								<div style="display:inline-block;">
 									<select class="custom-select mr-sm-2"  style="display:inline-block;">
 										<option selected>대분류</option>
@@ -128,10 +127,10 @@
 								<div style="display:inline-block;"> 
 									<button type="submit" class="btn btn-primary" style="display:inline-block;">검색</button>
 								</div>
-							</form>
 		                    </div>
-						</div> 					
-					</div>	
+							<!-- 대분류 중분류 검색 끝 -->				
+						</div>	
+					</form>
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
 						<br>
