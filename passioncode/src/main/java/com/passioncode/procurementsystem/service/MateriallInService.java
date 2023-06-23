@@ -64,10 +64,6 @@ public interface MateriallInService {
 	 */
 	MaterialIn getMeterialInByDetailPurchaseOrder(Integer code);
 	
-	/**
-	 * 코드번호(detailPurchaseOrder)를 이용해 거래명세서 테이블이 생길때 발행상태 업데이트하기
-	 * @param code
-	 */
-	@Transactional
-	void updateTransactionStatus(Integer code);
+	List<Object[]> getOrderByList();
+	
 }

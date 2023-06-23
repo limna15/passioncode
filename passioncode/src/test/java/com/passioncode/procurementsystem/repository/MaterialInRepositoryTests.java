@@ -1,7 +1,10 @@
 package com.passioncode.procurementsystem.repository;
 
+import static org.assertj.core.api.Assertions.assertThatObject;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -247,19 +250,14 @@ public class MaterialInRepositoryTests {
 		log.info("세부구매발주서 내용 가져와보자 >>> " + detailPurchaseOrderRepository.findByPurchaseOrder(po));
 	}
 	
-	//거래명세서가 존재 = 발행 완료 -> 입고테이블의 거래명세서 상태 업데이트 시켜야함
 	@Transactional
-	@Commit
 	@Test
-	public void updateTransactionStatus() {
-		DetailPurchaseOrder detailPurchaseOrder= detailPurchaseOrderRepository.findById(4).get();
-		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
+	public void getOrderByDTOListTest() {
+		List<Object[]> materialInList= materialInRepository.getOrderByList();
 		
-		materialIn= MaterialIn.builder().code(materialIn.getCode()).date(materialIn.getDate())					.status(materialIn.getStatus()).transactionStatus("발행 완료").detailPurchaseOrder(detailPurchaseOrder).build();
-		
-		materialInRepository.save(materialIn);
-		
-		log.info("materialIn 어떻게 읽히죠 >>> " + materialIn);
-	}
+		for(Object[] aa: materialInList) {
+			log.info("list 한번 보자 >>> " + Arrays.toString(aa));
 
+		}
+	}
 }
