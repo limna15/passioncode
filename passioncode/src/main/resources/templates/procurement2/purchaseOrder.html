@@ -276,56 +276,45 @@
                     <div class="modal-header">
                     <h5 class="modal-title">한개 이상의 발주서 발행</h5>
                     </div>
+                    
                     <div class="modal-body" >
-                    <span id="cName2">(회사이름)</span><br>
-                    <span id="dDate2">(회사이름)</span><br>
-                    <span id="mCode2">(회사이름)</span><br>
-                    <span id="mName2">(회사이름)</span><br>
-                    <span id="oAmount2">(회사이름)</span><br>
-                    <span id="uPrice2">(회사이름)</span><br>
-                    <span id="pPrice">(회사이름)</span><br>
+                    협력 회사: <span id="cName2">(회사이름)</span><br><!--회사이름은 다른 곳에 찍기 -->
+						<!-- 발주코드, 품목코드, 품목, 발주수량, 단가, 공급가격 총 6개 -->
+					발주일자: <br>
+                    조달납기 예정일: <span id="dDate2">조달납기 예정일</span><br>
+                    품목 코드: <span id="mCode2">품목코드</span><br>
+                    품목명: <span id="mName2">품목명</span><br>
+                    주문수량 <span id="oAmount2">주문수량</span><br>
+                    단가: <span id="uPrice2">단가</span><br>
+                    공급가격: <span id="pPrice2">공급가격</span><br>
+					<br>
+						<table id="poInfo" border="1">
+							<thead>
+								<tr>
+									<th>발주코드</th>
+									<th>품목코드</th>
+									<th>품목</th>
+									<th>발주수량</th>
+									<th>단가</th>
+									<th>공급가격</th>
+								</tr>
+							</thead>
+							<tbody id="detail">
+								<!-- 동적 테이블 부분-->
+								
+							</tbody>
+						</table>
+								
+							
                     
                <!-- 
                 총 7개 cName2, dDate2,mCode2, mName2,oAmount2, uPrice2,pPrice2
                 -->
-                    
-                    <div class="table-responsive" th:each="dto: ${myPublishDTO}">
-						<h4> 발주서 번호: [[${dto.showPono}]]</h4>
-						<h4> 협력 회사 : </h4>
-						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
-						<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
-						
-						<br>
-                    <table id="transactionDetail" border="1">
-								<thead>
-									<tr>
-										<th>발주코드</th>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>발주 수량</th>
-										<th>단가</th>
-										<th>공급<br>가격</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="dto: ${myPublishDTO}">
-									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
-										<td>[[${dto.showPocode}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.ppamount}]]</td>
-										<td>[[${dto.unit_price}]]</td>
-										<td>[[${dto.supply_price}]]</td>
-									</tr>
-								</tbody>
-							</table>
-							<br>
-                    </div>
                     <div class="modal-footer">
                        <button id="publishBtn22" href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
                        </button>
                       <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-                        	닫기
+                        	취소
                        </button>
                        </div>
                     </div>
@@ -338,6 +327,7 @@
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 //////
+var clNo=''; //cList의 값 갖고 보낼 부분
 $(".showInfo").click(function(){
 	console.log("내가 원하는 정보를 담고있는 체크박스를 누름");
 	//여기서 리스트에 담아서 길이만큼 반복해서 열어주기
@@ -366,23 +356,50 @@ $(".showInfo").click(function(){
 	//가져올 수 있는 것 총 7개 : 1. 협력회사, 2.품목명 3. 납기 예정일 4. 품목코드 5. 발주수량 6. 단가 7. 공급가격
 	//추가로 필요한 정보 : 발행할 발주서의 갯수
 	console.log("companyName: ", cName);
-	console.log("dueDate: ", dDate);
-	console.log("materialCode: ", mCode);
-	console.log("materialName: ", mName);
-	console.log("orderAmount: ", oAmount);
-	console.log("unitPrice: ", uPrice);
-	console.log("payPrice: ", pPrice);
+	//console.log("dueDate: ", dDate);
+	//console.log("materialCode: ", mCode);
+	//console.log("materialName: ", mName);
+	//console.log("orderAmount: ", oAmount);
+	//console.log("unitPrice: ", uPrice);
+	//console.log("payPrice: ", pPrice);
 	document.querySelector("#cName2").innerHTML = cName;
 	document.querySelector("#dDate2").innerHTML = dDate;
 	document.querySelector("#mCode2").innerHTML = mCode;
 	document.querySelector("#mName2").innerHTML = mName;
 	document.querySelector("#oAmount2").innerHTML = oAmount;
 	document.querySelector("#uPrice2").innerHTML = uPrice;
-	//document.querySelector("#pPrice2").innerHTML = pPrice;//이건 못 찍어내나?
-
-	$(".mypublish").click(function(){//발행 버튼 누름
+	document.querySelector("#pPrice2").innerHTML = pPrice;//잘 나옴
+	//테이블 만들어서 보여주기
+	let tList =new Array();
+	tList = [[${purchaseOrderList}]];
+	console.log("tList>> 발주서 발행화면 시작");
+	console.log("tList 리스트 ~~~~", tList);
+	tList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>>~~~  "+ i));//여기 오브젝트로 나옴	
+	console.log("길이가 찍히는 값, 총 개수: " + tList.length)
+	
+	
+	//여기에서 발주코드를 걸러서 보여줘야함
+	//const bb = purchaseOrderList;
+	//var needNum2=1;//여기에 원하는 자리수 숫자의 날짜 담기
+	//	for(let num6 = 0;num6<bb.length; num6++){
+	//		var check = bb[num6];
+	//		var ppNo = check.procurementPlan;
+	//		if(ppNo==num1){//내가 원하는 조달번호
+	//			if(check.purchaseOrderDate==null){
+	//				console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check.procurementPlan);
+	//				$(".myPublish").modal("show");
+	//			}else{
+	//				console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
+	//				$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
+	//			}
+	//		
+	
+	
+	
+	$(".mypublish").click(function(){
+		//발행 버튼 누름
+		
 		console.log("밖에 있는 발행버튼 누름");
-		console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
 		
 		
 		$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
@@ -402,11 +419,39 @@ $(".showInfo").click(function(){
 		
 		cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));	
 		console.log("길이가 찍히는 값>>> " + cList.length)
-		console.log("번호 리스트 >>> ", cList);
+		console.log("번호 리스트 >>> ", cList);	//잘 나옴
+		
+		//동적인 테이블 시작
+		//두개 선택하면 값이 누적되어 나옴
+		for(var i =0; i<tList.length; i++){//총 길이만큼 반복 모두 가지고 있는 것: tList
+			var mycheck = tList[i];
+			var ppNo = mycheck.procurementPlan;//발주서 번호를 출력하는 것
+			//console.log("ppNo: ", ppNo); tList의 모든 조달번호
+			for(var j =0; j<tList.length; j++){//cList를 비교해서 같은 것을 가져오기
+				var checkC = cList[j];
+				if(checkC == ppNo){ //조달번호와 cList의 갑이 같은 것 출력
+					clNo = checkC;
+					console.log("내가 선택한 발주서 번호: ", clNo);//선택한 것 잘 나옴
+					
+				//같은 것 번호 자리의 것을 가져와야함 
+				var tableTd01 = '<tr>';
+					tableTd01 += '<td>' + "발주코드" +'</td>';
+					tableTd01 += '<td>' + tList[i].materialCode +'</td>';
+					tableTd01 += '<td>' + tList[i].materialName +'</td>';
+					tableTd01 += '<td>' + tList[i].orderAmount +'</td>';
+					tableTd01 += '<td>' + tList[i].unitPrice +'</td>';
+					tableTd01 += '<td>' + tList[i].supplyPrice +'</td>';
+					tableTd01 += '</tr>';
+				
+				
+						$('#detail').append(tableTd01);//여기서 축척됨
+					}
+				}
+			}
 		
 		
 		
-	});
+		});
 	
 			
 	
@@ -414,7 +459,7 @@ $(".showInfo").click(function(){
 
 //if(window.location.search!=''){//테이터가 있을 경우에만
 	var mych=window.location.search;
-	console.log(" 값>>>>>>>>>>>>>>> " + mych);
+	//console.log(" 값>>>>>>>>>>>>>>> " + mych);
 	console.log("길이 보여줘 제발", mych.length);
 	const last2 = mych.substring(10);//0부터 
 	console.log("길이??????????~~~@", last2);
@@ -422,8 +467,8 @@ $(".showInfo").click(function(){
 	$(document).ready(function(){
 		//데이터가 있을때만뜨게 해라
 		console.log("여기에서 이미 발주된 거라고 검사하는 구간");
-		//여기에서 담아야 한는 구나
-		let cList99 =new Array();
+		//여기에서 담아야함
+		
 		$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
 			const chkChecked45 = 'input[name="checkBox"]:checked';
 			const selectedEls = document.querySelectorAll(chkChecked45);
@@ -434,7 +479,7 @@ $(".showInfo").click(function(){
 		$("input[name=checkBox]:checked").each(function(){
 			let no= $(this).val();
 			cList.push(no);	//리스트에 담는다	
-			console.log("cList>>>>> ", cList);
+			console.log("cList>>>>> 333", cList);
 		})
 		
 		//$("input[name=checkBox]:checked").each(function(){
@@ -458,9 +503,10 @@ $(".showInfo").click(function(){
 		
 		
 		var mych=window.location.search;
+		//이거 이제 못 쓸 예정
 		const last2 = mych.substring(10);//조달계획 번호
 		console.log("조달계획번호 나와라: ", last2);
-		console.log("안에 있는 purchaseOrderList 입니다===>>",purchaseOrderList);
+		//console.log("안에 있는 purchaseOrderList 입니다===>>",purchaseOrderList);
 		//var num1 = Number(last2);
 		var num1 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
 		var num4 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
@@ -472,8 +518,7 @@ $(".showInfo").click(function(){
 			dtoOrderDate= item.purchaseOrderDate;
 			orderDateList.push(dtoOrderDate);
 		});
-		console.log("orderDateList가 제대로 오나 >>> ", orderDateList)//현재 길이 16
-		//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])//1번 조달계획은 null 그래서 null나옴
+		//console.log("orderDateList가 제대로 오나 >>> ", orderDateList)//현재 길이 16, 배열 0부터 시작
 		
 		console.log("for문 밖에있는 숫자 num1의 값: ",num1);//이 숫자랑 비교해야 한다. 
 		var needNum=1;//여기에 원하는 자리수 숫자의 날짜 담기
@@ -485,9 +530,6 @@ $(".showInfo").click(function(){
 			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
 			
 		}
-		const purchaseOrderList2 = [[${purchaseOrderList}]];
-		//console.log("두 번째 purchaseOrderList2 입니다===>>",purchaseOrderList2);
-		
 		
 		function findppPlan(element){
 			if(element.procurementPlan = num4){//배열이라 다른 값 가져온다. 
@@ -496,11 +538,6 @@ $(".showInfo").click(function(){
 			}
 		}
 		
-		//다른 방법
-		//function makeMyppList(){
-		//	let newArr2 = [];
-		//	for
-		//}
 		const bb = purchaseOrderList;
 		//console.log("00000000purchaseOrderList2 입니다===>>",bb);
 		//변수명 너무 기니까 bb로 쓰기 
@@ -548,12 +585,10 @@ $("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을
 	
 });
 
-var poDate2 ='';
-//poDate2= getObjTR().querySelector("input[name=poDate]").value;//이거 쓰면 발행안됨
-//console.log("발주일: ",poDate2);
-$(".mypublish").click(function(){	
+$(".mypublish").click(function(){
 	//발주서 발행 버튼을 누르면, 클래스로 가져와야 tr, td정보 불러오기 가능
-	console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
+	let cList =new Array();//체크한 번호를 담을 리스트
+	//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
 	
 	
 	$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
@@ -561,7 +596,6 @@ $(".mypublish").click(function(){
 		const selectedEls = document.querySelectorAll(chkChecked);
 		
 	})
-	let cList =new Array();//체크한 번호를 담을 리스트
 	
 	$("input[name=checkBox]:checked").each(function(){
 		let no= $(this).val();
@@ -570,10 +604,6 @@ $(".mypublish").click(function(){
 		
 	})
 	
-	
-	cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));	
-	console.log("길이가 찍히는 값>>> " + cList.length)
-	console.log("번호 리스트 >>> ", cList);
 	
 	////////여기 시작 실험
 	$(".multiplePublish").modal("show");
@@ -640,7 +670,7 @@ $(".mypublish").click(function(){
 	});
 	
 var purchaseOrderList = [[${purchaseOrderList}]];
-console.log("purchaseOrderList 입니다===>>",purchaseOrderList);//이거 잘 나옴
+//console.log("purchaseOrderList 입니다===>>",purchaseOrderList);//이거 잘 나옴
 
 var codeList9= new Array();
 var orderDateList= new Array();
@@ -658,8 +688,6 @@ purchaseOrderList.forEach(function(item){
 //});
 
 console.log("codeList가 제대로 오나 >>> ", codeList9);//발주 번호만 나옴
-//poDate2= getObjTR().querySelector("input[name=poDate]").value;//이게 날짜 tr갖고오는 부분
-//console.log("발주일: ",poDate2);
 
 var purchaseNo = '';
 function myCheckBox(){
