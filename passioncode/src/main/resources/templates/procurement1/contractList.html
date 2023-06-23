@@ -161,6 +161,9 @@
 											<img th:src="|/picture/thumb_document.jpg|" > 
 										</button>
 									</td>
+									<td th:if="${dto.contractFileDTO == null}">
+									
+									</td>
 									<td>[[${dto.contractStatus}]]</td>
 								</tr>
 							</tbody>
