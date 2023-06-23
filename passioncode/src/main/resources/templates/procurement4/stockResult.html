@@ -114,72 +114,46 @@
 								</div>
 							</form>
 						</div> 
-						<!-- 목록 내려보기 끝 -->						
-					</div>	
+						<!-- 목록 내려보기 끝 -->	
+						<!-- 기간 검색 -->	
+						<div class="col-md-6">
+							<div style="float: right;">
+								<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
+								<input type="date" id="startDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;~&nbsp;&nbsp;
+								<input type="date" id="endDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;
+								<input type="submit" id="dateSearch" value="검색" class="btn btn-primary">
+							</div>
+						</div>
+						<!-- 기간 검색 끝-->				
+					</div>
+					<br>
+					<br>
 					<div class="table-responsive">
 						<!-- 테이블 시작 -->
 						<form action="/procurement3/materialInRegister" method="post" id="inForm">
 							<table id="recent-purchases-listing" class="listTable" style="text-align: center;">
 								<thead>
 									<tr>
-										<th></th>
-										<th>발주 코드</th>
-										<th>소요일</th>
+										<th>대</th>
+										<th>중</th>
 										<th>품목코드</th>
 										<th>품목명</th>
-										<th width="12%">소요공정</th>
-										<th>소요량</th>
-										<th>출고 상태</th>
+										<th>입고 수량</th>
+										<th>출고 수량</th>
+										<th>재고 수량</th>
+										<th>재고 단가</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr>
-										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-										<td><input type="hidden" name="code" >00003</td>
-										<td><input type="hidden" name="date" >2023/06/30</td>
-										<td><input type="hidden" name="materialCode" >BSa0001</td>
-										<td><input type="hidden" name="materialName" >Gear1</td>
-										<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-										<td><input type="hidden" name="amount" >200</td>
-										<td id= "status">
-											<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-										</td>
-									</tr>
-									<tr>
-										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-										<td><input type="hidden" name="code" >00004</td>
-										<td><input type="hidden" name="date" >2023/06/29</td>
-										<td><input type="hidden" name="materialCode" >BSa0001</td>
-										<td><input type="hidden" name="materialName" >Gear1</td>
-										<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-										<td><input type="hidden" name="amount" >200</td>
-										<td id= "status">
-											<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-										</td>
-									</tr>
-									<tr>
-										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-										<td><input type="hidden" name="code" >00001</td>
-										<td><input type="hidden" name="date" >2023/06/18</td>
-										<td><input type="hidden" name="materialCode" >BSa0001</td>
-										<td><input type="hidden" name="materialName" >Gear1</td>
-										<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-										<td><input type="hidden" name="amount" >200</td>
-										<td id= "status">
-											완료
-										</td>
-									</tr>
-									<tr>
-										<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-										<td><input type="hidden" name="code" >00002</td>
-										<td><input type="hidden" name="date" >2023/06/18</td>
-										<td><input type="hidden" name="materialCode" >BPa0001</td>
-										<td><input type="hidden" name="materialName" >Gear1</td>
-										<td><input type="hidden" name="amount" >1각형 E/L FILLING #1</td>
-										<td><input type="hidden" name="amount" >70</td>
-										<td id= "status">
-											완료
-										</td>
+										<td><input type="hidden" name="largeCategoryName" ></td>
+										<td><input type="hidden" name="middleCategoryName" ></td>
+										<td><input type="hidden" name="materialCode" ></td>
+										<td><input type="hidden" name="materialName" ></td>
+										<td><input type="hidden" name="inAmount" ></td>
+										<td><input type="hidden" name="outAmount" ></td>
+										<td><input type="hidden" name="stockAmount" ></td>
+										<td><input type="hidden" name="stockPrice" ></td>
 									</tr>
 								</tbody>
 							</table>
@@ -227,7 +201,6 @@
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 
-	
 </script>	
 		
 	</th:block>

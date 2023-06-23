@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+
+	<th:block th:fragment="content">
+
+
+<style>
+  table {
+    width: 100%;
+    border: 1px solid #444444;
+    font-size: 13px;
+
+  }
+  th, td {
+    border: 1px solid #444444;
+    padding: 10px;
+    text-align: center;
+  }
+.search-box {
+	position: relative;
+	float: right;
+}
+
+.search-box input {
+	height: 34px;
+	border-radius: 20px;
+	padding-left: 35px;
+	border-color: #ddd;
+	box-shadow: none;
+}
+
+.search-box input:focus {
+	border-color: #3FBAE4;
+}
+
+.search-box i {
+	color: #a0a5b1;
+	position: absolute;
+	font-size: 19px;
+	top: 8px;
+	left: 10px;
+}
+
+.pagination {
+	float: right;
+	margin: 0 0 5px;
+}
+
+.pagination li a {
+	border: none;
+	font-size: 95%;
+	width: 30px;
+	height: 30px;
+	color: #999;
+	margin: 0 2px;
+	line-height: 30px;
+	border-radius: 30px !important;
+	text-align: center;
+	padding: 0;
+}
+
+.pagination li a:hover {
+	color: #666;
+}
+
+.pagination li.active a {
+	background: #03A9F4;
+}
+
+.pagination li.active a:hover {
+	background: #0397d6;
+}
+
+.pagination li.disabled i {
+	color: #ccc;
+}
+
+.pagination li i {
+	font-size: 16px;
+	padding-top: 6pxrow
+}
+
+.hint-text {
+	float: left;
+	margin-top: 6px;
+	font-size: 95%;
+}
+
+</style>
+		<div class="col-md-12 stretch-card" >
+			<!-- 수정 부분 시작 -->
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title" style="font-size:23px;">자재 출고</p> 
+					<br>
+					<div class="row" style="margin-bottom: 5px;">
+						<!-- 목록 내려보기 시작 -->
+						<div class="col-md"> 
+							<div>
+								<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
+								<input type="date" id="startDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;~&nbsp;&nbsp;
+								<input type="date" id="endDate" style="width: 150px; height: 40px;">&nbsp;&nbsp;
+		                    </div>
+						</div> 
+						<!-- 목록 내려보기 끝 -->	
+						<div class="col-md-6"> 
+							<div>
+								<form>
+								<div style="display:inline-block;">
+									<select class="custom-select mr-sm-2"  style="display:inline-block;">
+										<option selected>대분류</option>
+				                        <option value="1">철</option>
+				                        <option value="2">보드</option>
+				                        <option value="3">플라스틱</option>
+									</select>
+								</div> 
+								&nbsp;	
+								<div style="display:inline-block;">
+									<select class="custom-select mr-sm-2"  style="display:inline-block;">
+										<option selected>중분류</option>
+				                        <option value="1">-</option>
+				                        <option value="2">-</option>
+				                        <option value="3">-</option>
+									</select>
+								</div> 
+								&nbsp;
+								<div style="display:inline-block;"> 
+									<button type="submit" class="btn btn-primary" style="display:inline-block;">검색</button>
+								</div>
+							</form>
+		                    </div>
+						</div> 					
+					</div>	
+					<div class="table-responsive">
+						<!-- 테이블 시작 -->
+						<br>
+						<canvas id="cash-deposits-chart"></canvas>
+						<br>
+						<!-- 테이블 끝 -->
+					</div>					
+				</div>
+			</div>
+		</div>
+		
+<script src="../../vendors/base/vendor.bundle.base.js"></script>
+<script src="../../vendors/chart.js/Chart.min.js"></script>
+<script src="../../js/off-canvas.js"></script>
+<script src="../../js/hoverable-collapse.js"></script>
+<script src="../../js/template.js"></script>
+<script src="../../js/chart.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script th:inline="javascript" type="text/javascript">
+
+	
+</script>	
+		
+	</th:block>
+</th:block>
+</html>

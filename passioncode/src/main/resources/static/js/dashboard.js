@@ -5,33 +5,13 @@
     if ($('#cash-deposits-chart').length) {
       var cashDepositsCanvas = $("#cash-deposits-chart").get(0).getContext("2d");
       var data = {
-        labels: ["0", "1", "2", "3", "4", "5", "6", "7", "8"],
+        labels: ["2023-06-09", "2023-06-10", "2023-06-11", "2023-06-12", "2023-06-13", "2023-06-14"],
         datasets: [
-          {
-            label: 'Returns',
-            data: [27, 35, 30, 40, 52, 48, 54, 46, 70],
-            borderColor: [
-              '#ff4747'
-            ],
-            borderWidth: 2,
-            fill: false,
-            pointBackgroundColor: "#fff"
-          },
           {
             label: 'Sales',
             data: [29, 40, 37, 48, 64, 58, 70, 57, 80],
             borderColor: [
               '#4d83ff'
-            ],
-            borderWidth: 2,
-            fill: false,
-            pointBackgroundColor: "#fff"
-          },
-          {
-            label: 'Loss',
-            data: [90, 62, 80, 63, 72, 62, 40, 50, 38],
-            borderColor: [
-              '#ffc100'
             ],
             borderWidth: 2,
             fill: false,

@@ -23,5 +23,15 @@ public class PS4Controller {
 	public void materialOut() {
 		
 	}
+	
+	@GetMapping("stockResult")
+	public void stockResult() {
+		
+	}
+	
+	@GetMapping("stockReport")
+	public void stockReport() {
+		
+	}
 
 }
