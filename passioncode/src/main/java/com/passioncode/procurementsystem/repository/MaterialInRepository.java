@@ -1,6 +1,9 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
@@ -21,4 +24,14 @@ public interface MaterialInRepository extends JpaRepository<MaterialIn, Integer>
 	 * @return
 	 */
 	public MaterialIn findByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
+	
+	@Query(value= "SELECT po.no, dpo.code, pp.dueDate, m.code, m.name, dpo.amount, mi.status, mi.transactionStatus "
+			+ "FROM MaterialIn mi "
+			+ "right outer JOIN DetailPurchaseOrder dpo ON dpo =mi.detailPurchaseOrder "
+			+ "JOIN PurchaseOrder po ON po=dpo.purchaseOrder "
+			+ "JOIN ProcurementPlan pp ON pp.detailPurchaseOrder=dpo "
+			+ "JOIN Contract c ON c=pp.contract "
+			+ "JOIN material m ON m =c.material "
+			+ "ORDER BY COALESCE(mi.status, 2) desc, binary(mi.transactionStatus)")
+	public List<Object[]> getOrderByList();
 }
