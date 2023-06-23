@@ -469,12 +469,4 @@ public class ProcurementPlanRepositoryTests {
 		procurementPlan = procurementPlan.toBuilder().completionDate(localDateTime).build();
 		log.info("나중 값 보자 : "+procurementPlan);
 	}
-	
-	
-	
-	
-	
-	
-	
-
 }
