@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class StockPriceDTO {
+public class StockReportDTO {
 	/**
 	 * 대분류 종류 (대분류)
 	 */
