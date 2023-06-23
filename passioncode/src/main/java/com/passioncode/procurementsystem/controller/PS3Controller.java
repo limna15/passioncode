@@ -47,7 +47,11 @@ public class PS3Controller {
 	
 	@GetMapping("/materialIn")
 	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
-		List<MaterialInDTO> materialInDTOList = materialInService.getMaterialInDTOLsit();
+		//정렬 안된 DTOList
+		//List<MaterialInDTO> materialInDTOList2 = materialInService.getMaterialInDTOLsit();
+		
+		//정렬한 List
+		List<MaterialInDTO> materialInDTOList = materialInService.getSortDTOLsit();
 
 		log.info("materialInDTOlist.............");
 

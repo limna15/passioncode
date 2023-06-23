@@ -64,6 +64,9 @@ public interface MateriallInService {
 	 */
 	MaterialIn getMeterialInByDetailPurchaseOrder(Integer code);
 	
-	List<Object[]> getOrderByList();
-	
+	/**
+	 * MaterialInDTO 리스트 가져오기(정렬)
+	 * @return
+	 */
+	List<MaterialInDTO> getSortDTOLsit();
 }
