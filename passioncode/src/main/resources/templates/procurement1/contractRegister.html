@@ -51,6 +51,7 @@
 											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice" class="unitPrice"></td>
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition" class="dealCondition"></td>
 											<td>
+												<input type="hidden" name="contractFile" class="contractFile">
 												<div class="attachContractFile">
 								            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
 														첨부
@@ -71,7 +72,7 @@
 						</div>
 						<div class="col-md-12">						
 							<!-- 등록확인, 등록취소 버튼 시작 -->						
-							<button class="btn btn-primary" style="margin-right: 130px; float: right;" onclick="location.href='/procurement1/contractList'" type="button">
+							<button class="btn btn-primary" style="margin-right: 130px; float: right;" type="button" id="contractRegisterCancelBtn">
 								등록취소
 							</button>
 							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="contractRegisterBtn">
@@ -127,30 +128,6 @@
         </div>
 		<!-- 협력회사 찾기 모달창 끝 -->
 		
-		<!-- 협력회사 찾았는데, 없을시와 오류시 보여줄 모달창 시작 -->
-		<div class="companySearchErrorModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">협력회사 찾기</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="searchCompanyListErrorModal">
-                    	<!-- 협력회사 찾은 후에, 회사가 없을 시와 오류시 보여줄 내용 -->    
-                    	
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary AllResetSetting" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
-                        	확인
-                       	</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-		<!-- 협력회사 찾았는데, 없을시와 오류시 보여줄 모달창 끝 -->
-				
 		<!-- 등록확인 모달창 시작-->
 		<div class="contractRegisterConfirmModal modal" tabindex="-2" role="dialog">
             <div class="modal-dialog" role="document">
@@ -178,19 +155,97 @@
         </div>
 		<!-- 등록확인 모달창 끝 -->
 		
-		<!-- 등록확인 모달창의 오류시 보여줄 모달창 시작 -->
-		<div class="contractRegisterConfirmErrorModal modal" tabindex="-1" role="dialog">
+		<!-- 첨부파일 모달창 시작-->
+		<div class="contractUploadModal modal" tabindex="-2" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">계약 등록 확인</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <h5 class="modal-title">계약서 첨부하기</h5>
+                        <button type="button" class="close contractUploadCancelBtn" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">   
-                    	<span>등록해야할 값들이 누락되어있습니다.</span><br>
-                    	<span>다시 작성해주시길 바랍니다.</span>
+                    <div class="modal-body" >
+               			<div class="custom-file">
+		                    <input type="file" class="custom-file-input" id="customFile">
+		                    <label class="custom-file-label" for="customFile">계약서 첨부하기</label>
+		                </div> 
+		                <style>
+							.uploadResult {
+								width: 100%;
+								background-color: gray;
+								margin-top: 10px;                    
+							}
+							
+							.uploadResult ul {
+								display: flex;
+								flex-flow: row;
+								justify-content: center;
+								align-items: center;
+								vertical-align: top;
+								overflow: auto;                           
+								height: 220px;             
+							}
+							
+							.uploadResult ul li {
+								list-style: none;
+								padding: 10px;
+								margin-left: 2em;
+							}
+							
+							.uploadResult ul li img {
+								width: 100px;
+							}
+						</style>
+                    	<div class="uploadResult" id="holder">
+			                <ul id="boxing">
+								<h3 id="h3Text">파일을 업로드 해주세요.</h3>
+			                </ul>
+			            </div>                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary contractUploadConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary contractUploadCancelBtn" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 첨부파일 모달창 끝 -->
+		
+		<!-- 
+			오류시 보여줄 모달창 시작
+			1. 협력회사 찾기 오류시
+				- 제목 : 협력회사 찾기
+				- 내용 : 1. <span>거래 가능한 협력회사를 찾을 수 없습니다.</span><br>
+							<span>다시 검색해 주시기바랍니다.</span>
+						 2. <span>검색한 내용이 없습니다.</span><br>
+							<span>다시 검색해 주시기바랍니다.</span>
+			2. 등록확인 모달창 오류시
+				- 제목 : 계약 등록 확인
+				- 내용 : <span>등록해야할 값들이 누락되어있습니다.</span><br>
+		               	 <span>다시 작성해주시길 바랍니다.</span>
+		    3. 파일업로드 오류시
+		       - 제목 : 계약서 첨부 확인
+		       - 내용 : 1. <span>파일 사이즈가 초과되었습니다.</span>
+						2. <span>해당 종류의 파일은 업로드할 수 없습니다.</span>
+						3. <span>파일 1개만 첨부할 수 있습니다.</span>
+		-->
+		<div class="contractInfoAndErrorModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="contractInfoAndErrorModalTitle"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="contractInfoAndErrorModalContent">   
+						<!-- 오류시 보여줄 모달창 내용 -->
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
@@ -200,7 +255,7 @@
                 </div>
             </div>
         </div>
-		<!-- 등록확인 모달창의 오류시 보여줄 모달창 끝 -->
+		<!-- 오류시 보여줄 모달창 끝 -->
 		
 		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -251,32 +306,34 @@
 							$(".companySearchModal").modal('show');	
 							
 						}else{					//받아온 데이터가 존재 X, 즉 검색되서 찾은 협력회사가 X
+							//오류 모달창 보여주기
+		    				//1. 제목 -> 협력회사 찾기 확인 넣어주고
+		    				//2. 내용 -> <span>거래 가능한 협력회사를 찾을 수 없습니다.</span><br>
+							//			 <span>다시 검색해 주시기바랍니다.</span>
+		    				document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `협력회사 찾기`;
 							completeHtml = `<span>거래 가능한 협력회사를 찾을 수 없습니다.</span><br>
 											<span>다시 검색해 주시기바랍니다.</span>`;
-											
-							//시작 태그 바로 뒤에, 협력회사 오류 모달창 -> 본문 html 넣기
-							//innerHTML -> 내용 덮어씌우기
-	   						//insertAdjacentHTML -> 내용 추가해서 넣기
-							//document.querySelector("#searchCompanyListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
-							document.querySelector("#searchCompanyListErrorModal").innerHTML = completeHtml;
 							
-							//협력회사 오류 모달창 보여주기
-							$(".companySearchErrorModal").modal('show');
+		           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = completeHtml;					
+							
+							$(".contractInfoAndErrorModal").modal('show'); 
 						}
 					},
 					error : function(jqXHR,textStatus,errorThrown){    //검색어 입력 안했을 시!
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
-						//console.log(errorThrown);						
+						//console.log(errorThrown);	
+						//오류 모달창 보여주기
+	    				//1. 제목 -> 협력회사 찾기 확인 넣어주고
+	    				//2. 내용 -> <span>검색한 내용이 없습니다.</span><br>
+						//			 <span>다시 검색해 주시기바랍니다.</span>
+	    				document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `협력회사 찾기`;
 						completeHtml = `<span>검색한 내용이 없습니다.</span><br>
 										<span>다시 검색해 주시기바랍니다.</span>`;
-						
-						//시작 태그 바로 뒤에, 협력회사 오류 모달창 -> 본문 html 넣기
-						//document.querySelector("#searchCompanyListErrorModal").insertAdjacentHTML('afterbegin', completeHtml);	
-						document.querySelector("#searchCompanyListErrorModal").innerHTML = completeHtml;	
-						
-						//협력회사 오류 모달창 보여주기
-						$(".companySearchErrorModal").modal('show');
+							
+	           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = completeHtml;					
+							
+						$(".contractInfoAndErrorModal").modal('show'); 
 					}
 				});					
 			});	
@@ -355,7 +412,7 @@
     			//console.log("제대로 넣어 졌는지 보자",codenameList[0]);
     			//console.log("제대로 넣어 졌는지 보자",codenameList[1]);
     			
-    			//2-2. 등록할 값들이 제대로 들어갔는지 체크해주기 위한 값 받기(사업자등록번호, 품목공급LT, 단가, 계약서(추후에 다시 받기))
+    			//2-2. 등록할 값들이 제대로 들어갔는지 체크해주기 위한 값 받기(사업자등록번호, 품목공급LT, 단가, 계약서)
     			console.log("등록체크 전역변수 확인하기(체크하기 전) : ",contractRegisterValueCheck);
     			
     			//사업자등록번호 값 체크해주기 
@@ -364,7 +421,7 @@
     			//사업자등록번호에 값이 셋팅되어 있으면, 값을 입력한것!  아니면 안한것!
     			$('.companyNo').each(function(){
     				let companyNo = $(this).val();
-    				console.log("들어간건가 보자 : ",companyNo);
+    				console.log("사업자등록번호 들어간건가 보자 : ",companyNo);
     				if(companyNo==""){		//빈값일때, false로 바꿔주기
     					contractRegisterValueCheck = false;
     				}
@@ -374,7 +431,7 @@
     			//품목공급LT 값 들어갔는지 체크해주기 
     			$('.supplyLt').each(function(){
     				let supplyLt = $(this).val();
-    				console.log("들어간건가 보자 : ",supplyLt);
+    				console.log("품목공급LT 들어간건가 보자 : ",supplyLt);
     				if(supplyLt==""){		//빈값일때, false로 바꿔주기
     					contractRegisterValueCheck = false;
     				}
@@ -384,7 +441,7 @@
     			//단가 값 들어갔는지 체크해주기 
     			$('.unitPrice').each(function(){
     				let unitPrice = $(this).val();
-    				console.log("들어간건가 보자 : ",unitPrice);
+    				console.log("단가 들어간건가 보자 : ",unitPrice);
     				if(unitPrice==""){		//빈값일때, false로 바꿔주기
     					contractRegisterValueCheck = false;
     				}
@@ -392,7 +449,15 @@
 				console.log("등록체크 전역변수 확인하기(단가 체크 후) : ",contractRegisterValueCheck);
     			
     			//dealCondition 거래조건은 null 허용 체크 안해줘도 됨
-    			//contractFile 계약서 도 추후에 테스트 해주기!
+    			//계약서 값 들어갔는지 체크해주기
+    			$('.contractFile').each(function(){
+    				let contractFile = $(this).val();
+    				console.log("계약서 들어간건지 보자 : ",contractFile);
+    				if(contractFile==""){		//빈값일때, false로 바꿔주기
+    					contractRegisterValueCheck = false;
+    				}
+    			});
+				console.log("등록체크 전역변수 확인하기(계약서 체크 후) : ",contractRegisterValueCheck);
     			
     			//3. 입력받은 리스트를 이용해서, 모달창에 보여줄 한문장으로 만들기
     			let sentence = ``;
@@ -418,8 +483,17 @@
 	   				//등록확인 모달창 보여주기
 					$(".contractRegisterConfirmModal").modal('show');	   				
     			}else{								//등록체크 값이=>false 일때, 등록하려는 값들 중 하나라도 빠진 상태 ->오류 모달창 보여주기
-					//오류 모달창 보여주기
-					$(".contractRegisterConfirmErrorModal").modal('show');    					
+    				//오류 모달창 보여주기
+					//1. 제목 -> 계약 등록 확인 넣어주고
+					//2. 내용 -><span>등록해야할 값들이 누락되어있습니다.</span><br>
+		            //		 	<span>다시 작성해주시길 바랍니다.</span>
+					document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `계약 등록 확인`;
+					sentence = `<span>등록해야할 값들이 누락되어있습니다.</span><br>
+		               			<span>다시 작성해주시길 바랍니다.</span>`;
+					
+           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = sentence;					
+					
+					$(".contractInfoAndErrorModal").modal('show'); 					
 					//그리고 다시 등록체크 값 true로 다시 세팅해주기
 					contractRegisterValueCheck = true;
     			}
@@ -437,16 +511,409 @@
 				$(".contractRegisterConfirmModal").modal('hide');				
 			});	
 			
-		
+			//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 모든 파일 삭제 시키기
+			$(document).on("click","#contractRegisterCancelBtn",function(e){
+				console.log("등록취소 버튼 누름");
+				e.preventDefault();
+				//var contractFile = attachContractFileTR.querySelector("input[name=contractFile]").value;
+				//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
+				//ajax 삭제할대 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
+				// \PassionCode\upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
+				// ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
+				
+				//테이블의 태그에 넣은 타겟파일 이름을 통해서 ajax 처리하기 //ecah 함수니까! 모든 업로드한 파일 삭제 시키기
+				$(".attachContractFileImgTag").each(function(i,obj){
+		                var target = $(obj);
+		                var targetFile = target.data("file");
+		                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
+		                
+		                $.ajax({
+			                url: '/procurement1/contract/removeFile',
+			                data: {fileName: targetFile},
+			                dataType:'text',
+			                type: 'POST',
+			                success: function(result){
+			                	//console.log("성공한거지? ",result);
+			                }
+			            }); //$.ajax
+				});
+	           
+				window.location.href = '/procurement1/contractList';
+			});	
+			
+			
+			//-------------------------------------- 파일업로드 부분 --------------------------------------------------------------//
+			
+			//첨부 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(첨부한 도면이미지를 원래 테이블에 넣어주기위해)
+			var attachContractFileTR = new Object();
+			
+			//계약서 첨부버튼 클릭할때 -> 계약서 첨부 모달창 보여주기
+			$(document).on("click",".attachBtn",function(e){
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachContractFileTR = getObjTR();
+				//모달창 열기전에, 기존에 넣어진 값들 초기화 세팅해주기(input file값,li 값)
+				var str = `<h3 id="h3Text">파일을 업로드 해주세요.</h3>`;
+				document.querySelector(".uploadResult ul").innerHTML = str;
+				$(".custom-file-label").html("계약서 첨부하기");
+				$(".contractUploadModal").modal('show');					
+			});
+			
+			var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$");
+	        var maxSize = 10485760; //10MB
+			
+	        //파일의 확장여부 체크하는 함수(파일종류,크기)
+	        function checkExtension(fileName, fileSize){
+	            if(fileSize >= maxSize){
+	                //alert("파일 사이즈 초과");
+	                document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `계약서 첨부 확인`;
+					sentence = `<span>파일 사이즈가 초과되었습니다.</span>`;
+           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".contractInfoAndErrorModal").modal('show');   
+					
+					$(".custom-file-label").html("계약서 첨부하기");
+	                return false;
+	            }
+	            if(regex.test(fileName)){
+	                //alert("해당 종류의 파일은 업로드할 수 없습니다.");
+	                document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `계약서 첨부 확인`;
+					sentence = `<span>해당 종류의 파일은 업로드할 수 없습니다.</span>`;
+           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".contractInfoAndErrorModal").modal('show');   
+					
+					$(".custom-file-label").html("계약서 첨부하기");
+	                return false;
+	            }
+	            return true;
+	        }
+	        
+	      	//input file이 변할때, 파일확장 체크해서 업로드 하기
+	        $(".custom-file-input").on("change", function(e) {
+	        	console.log("인풋 체인지 함수 시작");
+	        	console.log("e.target.files 보자 : ",e.target.files);
+ 				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);		//이건 값을 못읽어 에러 뜸
+	        	
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	        	if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
+	 				console.log("인풋 체인지 함수에서!! li 길이가 0개~~~~~~~~~");
+	        		//console.log("$(this).val() 이게 도대체 모야? 체인지 함수 클릭할때 값 읽어보자 : ",$(this).val()); 	// C:\fakepath\테이블정의서ver4.xlsx
+	        		//console.log("그리고 인풋 체인지 함수에서 그자체 읽어보자 $(this) : ",$(this));
+	        		
+	 				var fileName = $(this).val().split("\\").pop();
+					//console.log("인풋 체인지 함수의 fileName : ",fileName);
+		            //$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		            $(this).siblings(".custom-file-label").html(fileName);
+		 				
+	 				var formData = new FormData();
+	 	            var inputFile = $(this);
+	 	            //console.log("인풋 체인지 함수에서!! inputFile : ",inputFile);
+					var files = inputFile[0].files;
+	 				//console.log("인풋 체인지 함수에서!! files : ",files);
+	 				
+	 				/*
+					var files = e.target.files;
+	 				//console.log("인풋 체인지 함수에서!! files : ",files);
+	 				if(files===e.target.files){
+	 					console.log("이거 값 같은지 보자! 이러면 완전 같은거야~~")
+	 				}
+	 				*/
+	 	            var appended = false;
+
+	 	            for (var i = 0; i < files.length; i++) {
+	 	                if(!checkExtension(files[i].name, files[i].size) ){
+	 	                    return false;
+	 	                }
+	 					//console.log("인풋 체인지 함수의 files[i] : ",files[i]);
+	 	                formData.append("uploadFile", files[i]);
+	 	                appended = true;
+	 	            }
+
+	 	            //upload를 하지 않는다.
+	 	            if (!appended) {return;}
+
+	 	            for (var value of formData.values()) {
+	 	                //console.log("인풋 체인지 함수의 value of formData.values() value값 : ",value);
+	 	            }
+
+	 	            //실제 업로드 부분
+	 	            //upload ajax
+	 	            $.ajax({
+	 	                url: '/procurement1/contract/uploadAjax',
+	 	                processData: false,
+	 	                contentType: false,
+	 	                data: formData,
+	 	                type: 'POST',
+	 	                dataType:'json',
+	 	                success: function(result){
+	 						console.log("인풋 체인지 함수의 Ajax 결과 : ",result);
+	 	                    if(result.image){	//image 일때 아닐때, 
+	 	                    	showResultByImage(result);
+	 	                    }else{
+	 	                    	showResultByNoImage(result);
+	 	                    }
+	 	                    //원래 테이블의 파일이름에 만든 파일이름 넣어주기
+	 	                    var contractFile = result.contractFile;
+	 	                    console.log("파일이름 잘 읽어오나 보자 : ",contractFile);
+	 	                    console.log("테이블의 input값 제대로 넣기 전 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
+							attachContractFileTR.querySelector("input[name=contractFile]").value = contractFile;
+							console.log("테이블의 input값 제대로 넣고 난 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
+	 	                },
+	 	                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("인풋 체인지 함수의 Ajax 에러",textStatus);
+	 	                }
+	 	            }); //$.ajax
+	 			}else{													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
+	 				console.log("현재 인풋 체인지 함수에서 li 길이가 1개 이상!!~~~~~~~~~");
+	 				e.preventDefault();
+	 				document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `계약서 첨부 확인`;
+					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
+           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".contractInfoAndErrorModal").modal('show');   
+	 			}
+	        }); //$(".custom-file-input") change 끝
+	        
+	      	//input file이 클릭할때!!! 1개만 파일 업로드 할수 있게 막기!
+	        $(".custom-file-input").on("click", function(e) {
+	        	console.log("인풋 클릭 함수 시작");
+	     		//썸네일 넣은 li의 개수를 이용하여, 1개만 파일 업로드 하게 만들기
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	        	if(isExist.length>0){													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
+	 				console.log("현재 인풋 클릭 함수에서 li 길이가 1개 이상!!~~~~~~~~~");
+	 				e.preventDefault();
+	 				document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `계약서 첨부 확인`;
+					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
+           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".contractInfoAndErrorModal").modal('show');   
+	 			}
+	        }); //$(".custom-file-input") click 끝
+	        
+	     	 //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
+	        function showResultByImage(uploadResult){
+	            var uploadUL = $(".uploadResult ul");
+	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.contractFile);
+	            
+	           //파일을 업로드 해주세요. 글귀 지우기 
+	           $("#h3Text").text("");
+	           //ul에 넣을 li 만들기
+				var str ="";
+				str += "<li class='liUpload' data-name='" + uploadResult.fileName + "' data-path='"+uploadResult.folderPath+"' data-uuid='"+uploadResult.uuid+"' data-file=\'" + uploadResult.imageURL + "\' >";
+				str + " <div>";
+				str += "<button type='button' data-file=\'" + uploadResult.imageURL + "\' ";
+				str += "class='btn-warning btn-sm'>X</button><br>";
+				str += "<img class='attachContractFileThumbImg' src='/procurement1/contract/display?fileName=" + uploadResult.thumbnailURL + "'>";
+				str += "</div>";
+				str + "</li>";
+				uploadUL.append(str);
+                //var strTest = `<span> 입력 테스트중이야~ </span>`;
+	            //document.querySelector(".uploadResult ul").innerHTML = str;
+	        } //showResultByImage(uploadResult) 함수 끝
+	        
+	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
+	        function showResultByNoImage(uploadResult){
+	            var uploadUL = $(".uploadResult ul");
+	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.contractFile);
+	            
+	           //파일을 업로드 해주세요. 글귀 지우기 
+	           $("#h3Text").text("");
+	           //ul에 넣을 li 만들기
+	            var str ="";
+                str += "<li class='liUpload' data-file=\'" + uploadResult.imageURL + "\' >";
+                str + " <div>";
+                str += "<button type='button' data-file=\'" + uploadResult.imageURL + "\' ";
+                str += "class='btn-warning btn-sm'>X</button><br>";
+                str += "<img class='attachContractFileThumbImg' src='/picture/thumb_document.jpg'>";
+                str += "</div>";
+                str + "</li>";
+	            uploadUL.append(str);
+	        } //showResultByNoImage(uploadResult) 함수 끝
+	        
+	     	//썸네일 보여준 div에서, X버튼 클릭하면, 업로드된 파일 삭제하고, 원래대로 보여주기
+	        $(".uploadResult ").on("click", "li button", function(e){
+	            console.log("li의 X삭제 버튼 누름");
+	            var targetFile = $(this).data("file");
+				console.log("li 버튼 누를때 targetFile : ",targetFile);
+	            var targetLi = $(this).closest("li");
+				//console.log("li 버튼 누를때 targetLi : ",targetLi);
+				//console.log("테이블의 input값 초기화 하기 전 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
+	            $.ajax({
+	                url: '/procurement1/contract/removeFile',
+	                data: {fileName: targetFile},
+	                dataType:'text',
+	                type: 'POST',
+	                success: function(result){
+	                    targetLi.remove();
+	                    checkLi();
+	                    
+	                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
+	                    attachContractFileTR.querySelector("input[name=contractFile]").value = "";
+	                    //console.log("테이블의 input값 초기화 한 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
+	                }
+	            }); //$.ajax  
+	        });
+	        
+	      	//업로드할 파일을 다 지우면(liUpload 클래스가 하나도 없으면), 
+	        //파일을 업로드 해주세요. 글귀 넣기 + 도면 Image 첨부하기 글귀 넣기
+	    	function checkLi() {
+	    		var isExist = document.getElementsByClassName('liUpload');
+	 	        //console.log("모라고 찍힐까????",isExist);
+	 	        //console.log("그럼 길이를 찍어보자!!!",isExist.length); 	        
+	 			if(isExist.length==0){
+	 				$("#h3Text").text("파일을 업로드 해주세요.");
+	 				$(".custom-file-label").html("계약서 첨부하기");
+	 			}
+	    	} //checkLi 함수 끝
+	        
+	    	//-----------------------드래그 앤 드랍 시작!! --------------------------------//
+	        var holder = document.getElementById("holder");
+	        var boxing = document.getElementById("boxing");
+
+	        //파일을 마우스로 드래그over, 드래그leave 할때, 보여주는 박스의 스타일설정하는 함수
+	        function fileDragDrop(event){        	
+	        	event.stopPropagation();
+	        	event.preventDefault();
+	        	if (event.type == "dragover"){ // Drag Over        		
+	        		//event.target.style.border = '5px dashed #c00';
+	        		//holder.style.border = '5px dashed #c00';
+	        		boxing.style.border = '5px dashed #c00';
+	        	}else{  // File Drop        		
+	        		//event.target.style.border = '';
+	        		//holder.style.border = '';
+	        		boxing.style.border = '';
+	        	}
+	        } //fileDragDrop 함수 끝
+	    	
+	     	//파일을 드랍했을때, Ajax 처리 되면서 업로드하게 하는 함수
+	        function fileUpload(e){        	
+	        	e.stopPropagation();
+	        	e.preventDefault();
+	        	fileDragDrop(e); // (e.type != "dragover") 캔슬을위해 [여기서 별도로 작업해줘도 상관없음]
+	        	
+	        	//썸네일 넣은 li의 개수를 이용하여, 1개만 파일 업로드 하게 만들기
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
+	 				console.log("드래그엔 드롭에서!! li 길이가 0개~~~~~~~~~");
+	 				var files = e.target.files || e.dataTransfer.files; 
+	 				console.log("e.target.files 보자 : ",e.target.files);
+	 				console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);
+		        	var formData = new FormData();
+		            var appended = false;
+		            
+		            for (var i = 0; i < files.length; i++) {
+		                if(!checkExtension(files[i].name, files[i].size) ){
+		                    return false;
+		                }
+		                //console.log(files[i]);
+		                formData.append("uploadFile", files[i]);
+		                appended = true;
+		            }
+
+		            //upload를 하지 않는다.
+		            if (!appended) {return;}
+
+		            for (var value of formData.values()) {
+		                //console.log("value of formData.values() 이거야 어디 보자",value);
+		            }
+
+		            //실제 업로드 부분
+		            //upload ajax
+		            $.ajax({
+		                url: '/procurement1/contract/uploadAjax',
+		                processData: false,
+		                contentType: false,
+		                data: formData,
+		                type: 'POST',
+		                dataType:'json',
+		                success: function(result){
+		                    //console.log(result);
+		                    if(result.image){
+		                    	showResultByImage(result);
+		                    }else{
+		                    	showResultByNoImage(result);
+		                    }
+		                    //input의 html에 파일이름 넣어주기(+ 클래스에 selected 추가??)
+		                    //document.querySelector(".custom-file-label").classList.add("selected");
+		                    $(".custom-file-label").html(result.fileName);
+		                    
+		                    //원래 테이블의 파일이름에 만든 파일이름 넣어주기
+		                    var contractFile = result.contractFile;
+		                    //console.log("파일이름 잘 읽어오나 보자 : ",contractFile);
+		                    //console.log("테이블의 input값 제대로 넣기 전 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
+							attachContractFileTR.querySelector("input[name=contractFile]").value = contractFile;
+							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+		                    console.log(textStatus);
+		                }
+		            }); //$.ajax 
+	 			}else{																	//현재 개수 1개 이상으로, 이미 업로드한게 있음!
+	 				console.log("드래그엔 드롭에서!! li 길이가 1개 이상!!~~~~~~~~~");
+	 				e.preventDefault();
+	 				document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `계약서 첨부 확인`;
+					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
+           			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".contractInfoAndErrorModal").modal('show');   
+	 			}
+	        } //fileUpload 함수 끝
+	        
+	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
+	        holder.addEventListener("dragleave", fileDragDrop);
+	        holder.addEventListener("drop", fileUpload);  
+	      	//-----------------------드래그 앤 드랍 끝!! --------------------------------//
+	    	
+	      	//계약서 첨부 모달창의 확인버튼 누를때 -> 첨부버튼을 지우고, 썸네일 보여주기
+	        $(".contractUploadConfirmBtn").on("click", function(e) {
+	        	console.log("계약서 첨부 모달창의 확인버튼 누름");
+				e.preventDefault();
+				var attachContractFileThumbImg = $(".attachContractFileThumbImg").attr("src");
+				//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachContractFileThumbImg);
+				var targetFile = $(".uploadResult li").data("file");
+				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
+				var str = `<img src='`+attachContractFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachContractFileImgTag'>`;
+				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachContractFileTR);
+				attachContractFileTR.querySelector(".attachContractFile").innerHTML = str;
+				
+				$(".contractUploadModal").modal('hide');
+	        });
+	        
+			//계약서 첨부 모달창의 취소버튼 + 모달창 x 누를때 -> 업로드한 파일 지워주기
+	        $(".contractUploadCancelBtn").on("click", function(e) {
+	        	console.log("계약서 첨부 모달창의 취소버튼 or 상단의 X 버튼 누름");
+				e.preventDefault();
+				//var contractFile = attachContractFileTR.querySelector("input[name=contractFile]").value;
+				//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
+				//ajax 삭제할대 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
+				// \PassionCode\upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
+				// ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
+				var targetFile = $(".uploadResult li").data("file");
+				//console.log("모야모야 제대로 읽어오는거니? ",targetFile);
+				
+				//값이 만들어 진게 있을때에만 Ajax처리 가능하게 하자! 
+				var lengthCheck = $(".uploadResult li").length;
+				if(lengthCheck>0){
+					console.log("현재 길이 1개 이상이야 만든거 있어~ 갯수는 : ",lengthCheck);
+					$.ajax({
+		                url: '/procurement1/contract/removeFile',
+		                data: {fileName: targetFile},
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	//console.log("성공한거지? ",result);
+		                	$(".uploadResult li").remove();
+		                    checkLi();
+		                    
+		                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
+		                    attachContractFileTR.querySelector("input[name=contractFile]").value = "";
+		                    //console.log("테이블의 input값 초기화 한 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
+		                }
+		            }); //$.ajax 
+				}
+	        }); //contractUploadCancelBtn 도면 모달창 취소 버튼 끝
+	      	
+	      	
 			
 		});		
-		
-		/*
-			23.06.14.수 오후3시 현재상태
-			-> 협력회사 찾는건 ajax처리로 받아온 데이터 함수처리로 모달창 다보여주고, 그리고 난 후 초기화 시키기때문에, 데이터 초기화가 되는상태
-			-> 등록확인 버튼은 ajax처리가 아니라 내가 만들어준거라서, 모달창을 보여주고 난후 초기화 처리시, 값이 등록이 안되서, 모달창 보여주고 난후, 그 모달창의 버튼 누를때 초기화로 만든 상태
-			-> 그래서 현재, 등록확인 모달창을 보여주고 모달창의 버튼 말고 다른걸 눌러서 끌경우 초기화가 안되어 있음!
-		*/
 		
 		
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -566,6 +1033,7 @@
 	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition" class="dealCondition"></td>`;
 	            }else if(i === 8){
 	            	temp_html = `<td>
+	            					<input type="hidden" name="contractFile" class="contractFile">
 									<div class="attachContractFile">
 					            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
 											첨부
@@ -585,8 +1053,28 @@
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     		    	    
-	    //삭제 - 버튼 누를때, 행 삭제
+	    //삭제 - 버튼 누를때, 행 삭제 + 그 해당 행의 테이블에 추가했던 업로드했던 이미지파일 삭제하기
 	    const tr_delete_event = (btn) => {
+			//해당 행의 이미지태그 읽어오자!	    	
+	    	var target = getObjTR().querySelector("img");
+	    	//console.log("img 태그 읽어오나 보자 : ",target);
+	    	
+	    	//이미지 태그가 존재할때만, Ajax 처리로 이미지 첨부파일 지워주자
+	    	if(target != null){
+	    		var targetFile = $(target).data("file");
+	    		console.log("이미지 태그 존재하고 targetFile 읽자 : ",targetFile);
+	    		
+	    		$.ajax({
+	                url: '/procurement1/contract/removeFile',
+	                data: {fileName: targetFile},
+	                dataType:'text',
+	                type: 'POST',
+	                success: function(result){
+	                	//console.log("성공한거지? ",result);
+	                }
+	           }); //$.ajax
+	    	}
+	    	
 			const table = document.getElementById('contractRegisterTable');
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);

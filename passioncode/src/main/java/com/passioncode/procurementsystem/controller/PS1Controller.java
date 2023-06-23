@@ -310,8 +310,8 @@ public class PS1Controller {
 			contractDTO2.setSupplyLt(Integer.parseInt(supplyLt[i]));
 			contractDTO2.setUnitPrice(Integer.parseInt(unitPrice[i]));
 			//계약서 업로드 null 허용이 아니라서, 일단은 "화면DB테스트 문구"라고 보내자
-//			contractDTO2.setContractFile(contractFile[i]);
-			contractDTO2.setContractFile("화면DB 테스트중");
+			contractDTO2.setContractFile(contractFile[i]);
+//			contractDTO2.setContractFile("화면DB 테스트중");
 			contractDTO2.setCompanyNo(companyNo[i]);
 			
 			if(dealCondition != null) {									//받아온 dealCondition가 존재 O

@@ -8,9 +8,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
+import com.passioncode.procurementsystem.dto.ContractFileDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.Material;
@@ -221,7 +223,48 @@ public class ContractRepositoryTests {
 		// 거래계약서 샘플6.doc
 	}
 	
+	public ContractDTO contractEntityToDTO(Contract contract) {
+		ContractDTO contractDTO = ContractDTO.builder().contractNo(contract.getNo()).materialCode(contract.getMaterial().getCode()).materialName(contract.getMaterial().getName())
+														.contractNoStr(makeContractNoStr(contract.getNo()))
+														.contractFileDTO(new ContractFileDTO(contract.getContractFile()))
+														.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
+														.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
+														.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus("완료").build();
+		return contractDTO;
+	}
 	
+	@Transactional
+	@Test
+	public void getDTOListTest() {
+		List<ContractDTO> contractDTOList = new ArrayList<>();
+		
+		//계약이 미완료 인것만! 품목 가져오기 -> 계약 미완료인 상태
+		List<Material> materialList = materialRepository.getListNoContract();
+		
+		//계약 미완료인것 먼저 DTO리스트에 넣기 -> contractFileDTO 은 Builder.Default 로 만들어주기때문에, 지금은 없기 때문에 null로 셋팅해서 넣어주기
+		for(int i=0;i<materialList.size();i++) {
+			ContractDTO contractDTO = ContractDTO.builder().materialCode(materialList.get(i).getCode()).materialName(materialList.get(i).getName())
+															.contractStatus("미완료").contractFileDTO(null).build();
+			contractDTOList.add(contractDTO);			
+		}
+		log.info("만든 중간 dto 리스트 보자 : "+contractDTOList);
+		
+		//계약서에서 계약서번호 오름차순으로 계약서 전부 가져오기 -> 계약상태 완료인 상태
+		List<Contract> contractList = contractRepository.findAll(Sort.by(Sort.Direction.ASC, "no"));
+		log.info("정렬해서가져온 contract 리스트 보자 : "+contractList);
+		
+//		ContractDTO contractDTO2 = contractEntityToDTO(contractList.get(0));
+		
+		//계약 완료인것 DTO리스트에 넣기
+		for(int i=0;i<contractList.size();i++) {
+			contractDTOList.add(contractEntityToDTO(contractList.get(i)));
+		}
+		
+		log.info("만든 최종 dto 리스트 보자 : "+contractDTOList);
+		
+		
+		
+	}
 	
 	
 	

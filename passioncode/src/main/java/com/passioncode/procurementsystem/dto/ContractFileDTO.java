@@ -65,7 +65,7 @@ public class ContractFileDTO {
         return "";
     }
     
-    public String getDrawingFile() {    	
+    public String getContractFile() {    	
         return contractUploadPath+folderPath+uuid+"_"+fileName;
     }
     
