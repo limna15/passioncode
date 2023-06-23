@@ -423,31 +423,41 @@ $(".showInfo").click(function(){
 		
 		//동적인 테이블 시작
 		//두개 선택하면 값이 누적되어 나옴
-		for(var i =0; i<tList.length; i++){//총 길이만큼 반복 모두 가지고 있는 것: tList
+		let mylength = new Array();
+		for(var i =0; i<tList.length; i++){//총 **길이** 만큼 반복 모두 가지고 있는 것: tList
 			var mycheck = tList[i];
 			var ppNo = mycheck.procurementPlan;//발주서 번호를 출력하는 것
 			//console.log("ppNo: ", ppNo); tList의 모든 조달번호
+			
 			for(var j =0; j<tList.length; j++){//cList를 비교해서 같은 것을 가져오기
 				var checkC = cList[j];
 				if(checkC == ppNo){ //조달번호와 cList의 갑이 같은 것 출력
 					clNo = checkC;
-					console.log("내가 선택한 발주서 번호: ", clNo);//선택한 것 잘 나옴
+					//mylength.push(clNo);//나온 발주 번호를 리스트에 저장
+					//console.log("리스트에 담은 내 조달번호 ",mylength);
+					//이 아래걸 한번 만 실행하는 것 부터 해보기
+					console.log("내가 선택한 계획서 번호: ", clNo);//선택한 것 잘 나옴
 					
-				//같은 것 번호 자리의 것을 가져와야함 
-				var tableTd01 = '<tr>';
-					tableTd01 += '<td>' + "발주코드" +'</td>';
-					tableTd01 += '<td>' + tList[i].materialCode +'</td>';
-					tableTd01 += '<td>' + tList[i].materialName +'</td>';
-					tableTd01 += '<td>' + tList[i].orderAmount +'</td>';
-					tableTd01 += '<td>' + tList[i].unitPrice +'</td>';
-					tableTd01 += '<td>' + tList[i].supplyPrice +'</td>';
-					tableTd01 += '</tr>';
-				
-				
-						$('#detail').append(tableTd01);//여기서 축척됨
+					
+					
+					//두개 선택하면 4줄 나오는데 어떻게 한 줄만 보여주지>>,,
+					//2개를 선택하면 2*2 모든 값의 제곱이 된다. 
+					var tableTd01 = '<tr>';
+						tableTd01 += '<td>' + "발주코드" +'</td>';
+						tableTd01 += '<td>' + tList[i].materialCode +'</td>';
+						tableTd01 += '<td>' + tList[i].materialName +'</td>';
+						tableTd01 += '<td>' + tList[i].orderAmount +'</td>';
+						tableTd01 += '<td>' + tList[i].unitPrice +'</td>';
+						tableTd01 += '<td>' + tList[i].supplyPrice +'</td>';
+						tableTd01 += '</tr>';
+						
+					//$('#detail').append(tableTd01);//여기서 축척됨
+					
 					}
 				}
 			}
+			//이 밖에 있으면 마지막 값만 선택한 갯수만큼 나옴
+			$('#detail').append(tableTd01);//여기서 축척됨
 		
 		
 		
@@ -489,18 +499,7 @@ $(".showInfo").click(function(){
 		
 //			cList.push(no);	//리스트에 담는다				
 	//	})
-		
-		
-		//이 아래에 발주일 갖고오기
-		var codeList88= new Array();
-		var dtoCode88= new Object();
 
-		purchaseOrderList.forEach(function(item){
-		dtoCode88= item.code;
-		codeList88.push(dtoCode88);
-		});
-
-		
 		
 		var mych=window.location.search;
 		//이거 이제 못 쓸 예정
