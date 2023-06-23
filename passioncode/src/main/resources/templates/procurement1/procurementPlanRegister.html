@@ -16,16 +16,15 @@
 								<table class="table table-bordered" id="ppRegisterTable" style="text-align: center;">
 									<thead>
 										<tr>
-											<th>품목코드</th>
-											<th>품목명</th>
-											<th width="10%">소요공정</th>
-											<th width="6%">소요일</th>
-											<th width="7%">소요량</th>
+											<th width="11%">품목코드</th>
+											<th width="11%">품목명</th>
+											<th width="12%">소요공정</th>
+											<th width="10%">소요일</th>
+											<th width="9%">소요량</th>
 											<th>협력회사</th>
-											<th width="">품목 공급 L/T</th>
 											<th>조달납기<br>예정일</th>
 											<th>최소<br>발주일</th>
-											<th>필요수량</th>
+											<th width="9%">필요수량</th>
 											<!-- 계약상태 / 조달계획 등록상태 / 조달계획 진행사항 -->
 											<!-- 조달계획코드, 자재소요계획코드, 사업자등록번호, 계약서번호 // 기본 여유기간 -->
 										</tr>
@@ -55,8 +54,10 @@
 													<input type="text" style="float:left; width:65%; border: 0; text-align: center;" name=companyName class="companyName" readonly>
 												</div>
 											</td>
-											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt" readonly></td>
-											<td><input type="date" style="width:100%; border: 0; text-align: center;" name="dueDate" class="dueDate" readonly></td>
+											<td>
+												<input type="hidden" name="supplyLt" class="supplyLt">
+												<input type="date" style="width:100%; border: 0; text-align: center;" name="dueDate" class="dueDate" readonly>
+											</td>
 											<td><input type="date" style="width:100%; border: 0; text-align: center;" name="minimumOrderDate" class="minimumOrderDate" readonly></td>
 											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="ppAmount" class="ppAmount" readonly></td>											
 										</tr>

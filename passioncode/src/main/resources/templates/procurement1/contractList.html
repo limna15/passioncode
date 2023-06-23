@@ -150,7 +150,17 @@
 									<td>[[${dto.supplyLt}]]</td>
 									<td>[[${dto.unitPrice}]]</td>
 									<td>[[${dto.dealCondition}]]</td>
-									<td th:value='${dto.contractFile}'><button type="submit" class="btn btn-primary" style="height:25px;">보기</button></td>
+									<td th:if="${dto.contractFileDTO != null && dto.contractFileDTO.image==true}">
+										<button th:data-file="${dto.contractFileDTO.getImageURL()}" class="ImgClick" type="button" style="border:none; background-color:transparent;">
+											<img th:src="|/procurement1/contract/display?fileName=${dto.contractFileDTO.getThumbnailURL()}|" > 
+										</button>
+									</td>
+									<td th:if="${dto.contractFileDTO != null && dto.contractFileDTO.image!=true}">
+										<button th:data-file="${dto.contractFileDTO.getImageURL()}" th:data-name="${dto.contractFileDTO.fileName}"
+												class="NoImgClick" type="button" style="border:none; background-color:transparent;">
+											<img th:src="|/picture/thumb_document.jpg|" > 
+										</button>
+									</td>
 									<td>[[${dto.contractStatus}]]</td>
 								</tr>
 							</tbody>
@@ -195,7 +205,15 @@
 			</div>
 		</div>
 		
-		<!-- 등록버튼 누를때, 미완료 건만 안눌렀을때 뜨는 모달창 시작 -->
+		<!-- 
+			등록버튼 누를때, 오류시 보여줄 모달창 시작
+			(상황1. 계약상태 미완료인 것만 눌렀을때)
+			(상황2. 체크한게 아무것도 없을때)
+			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'미완료'</span>인 것만 계약등록이 가능합니다.</span><br>
+                    	<span>다시 선택해주시길 바랍니다.</span>
+					 2. <span>체크한 항목이 없습니다.</span><br>
+						<span>다시 선택해주시길 바랍니다.</span>
+		-->
 		<div class="contractRegisterErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -205,9 +223,9 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">   
-                    	<span>계약상태가 <span style='color:red;'>'미완료'</span>인 것만 계약등록이 가능합니다.</span><br>
-                    	<span>다시 선택해주시길 바랍니다.</span>
+                    <div class="modal-body" id="contractRegisterErrorModalContent">   
+						<!-- 오류시 보여줄 내용 -->	
+							
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
@@ -217,7 +235,60 @@
                 </div>
             </div>
         </div>
-		<!-- 등록버튼 누를때, 미완료 건만 안눌렀을때 뜨는 모달창 끝 -->
+		<!-- 등록버튼 누를때, 오류시 보여줄 모달창 끝 -->
+		
+		<!-- 이미지 보여주는 모달창 시작 -->
+		<div class="imageModal modal " tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">계약서</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary imageDownloadBtn" style="padding-top:10px; padding-left:15px; padding-right:15px; width:88px; height:33px;">
+                        	다운로드
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>	
+        <!-- 이미지 보여주는 모달창 끝 -->
+        
+        <!-- 첨부파일 다운로드 여부 묻는 모달창 시작-->
+		<div class="attachFileDownloadModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">첨부 파일 다운로드</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="attachFileDownloadCheckModal">
+                    	<!-- 첨부파일 이름 확인할 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary attachFileDownloadConfirmBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 첨부파일 다운로드 여부 묻는 모달창 끝 -->
 		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
@@ -264,12 +335,27 @@
 			var contractStatusValueCheck = true;		//-> 하나라도 완료 일 경우에 false로 바꿔주기 
 			console.log("계약상태 전역변수 확인하기1 : ",contractStatusValueCheck);
 			
-			//등록버튼 눌렀을때, 계약상태 미완료인것만! 등록가능하게!
+			//체크박스를 체크를 했는지 안했는지 체크하기 위한, 전역변수 체크값 선언해주기
+			var checkBoxValueCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
+			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
+			
+			//등록버튼 눌렀을때, 계약상태 미완료인것만! 등록가능하게! + 아무것도 체크 하지 않으면 다시 체크하게!
     		$("#registerBtn").on("click",function(e){
     			//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
     			
-    			//2. 계약상태 값 리스트 가져와서, 하나라도 완료일경우 false로 바꿔주기
+    			//2. 체크박스가 체크 된게 있는지 체크하기, 하나라도 미체크시 checkBoxValueCheck false로 바꿔주기
+    			const chkChecked = 'input[name="checkBox"]:checked';
+    			const selectedEls = document.querySelectorAll(chkChecked);
+    			//console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+    			//console.log("길이로 체크하면 되겠지? : ",selectedEls.length);
+    			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
+    				checkBoxValueCheck = false;
+    			}
+    			console.log("계약상태 전역변수 확인하기(체크 전) : ",contractStatusValueCheck);
+    			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
+    			
+    			//3. 계약상태 값 리스트 가져와서, 하나라도 완료일경우 contractStatusValueCheck false로 바꿔주기
     			let contractStatusList = new Array();
     			contractStatusList = getContractStatus();
     			contractStatusList.forEach(function(item){
@@ -279,9 +365,11 @@
    				});
     			console.log("계약상태 전역변수 확인하기(체크한 후) : ",contractStatusValueCheck);
     			
+    			//오류 모달창의 contractRegisterErrorModalContent 에 넣을 내용
+    			let sentence = ``;
     			
-    			//3. 계약상태 전역변수가 true 일때만, 등록가능~
-    			if(contractStatusValueCheck){			//현재 계약상태 미완료인것만! ->등록가능하게
+    			//4. 계약상태 전역변수가 true + 체크박스 체크전역변수가 true 일때만, 등록가능~
+    			if(contractStatusValueCheck && checkBoxValueCheck){			// 현재 계약상태 미완료인것 + 체크박스 체크된게 있을 시! ->등록가능하게
 	    			//만든 품목코드 리스트를 input 히든에 담기
 	    			let materialCodeList = new Array();
 	    			materialCodeList = $('input[name=materialCodeList]').attr('value',chkClicked());
@@ -293,16 +381,122 @@
 	    			
 	   				//담은거 submit으로 보내자
 	    			$("#registerForm").submit();
-    			}else{								//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
+    			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 등록오류 모달창 보여주기				
     				//오류 모달창 보여주기
+    				sentence = `<span>체크한 항목이 없습니다.</span><br>
+								<span>다시 선택해주시길 바랍니다.</span>`;
+           			document.querySelector("#contractRegisterErrorModalContent").innerHTML = sentence;
+    				
 					$(".contractRegisterErrorModal").modal('show');    					
 					//그리고 다시 등록체크 값 true로 다시 세팅해주기
+					checkBoxValueCheck = true;   
+    			}else if(!contractStatusValueCheck){						//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
+    				//오류 모달창 보여주기
+    				sentence = `<span>계약상태가 <span style='color:red;'>'미완료'</span>인 것만 계약등록이 가능합니다.</span><br>
+                    			<span>다시 선택해주시길 바랍니다.</span>`;
+           			document.querySelector("#contractRegisterErrorModalContent").innerHTML = sentence;
+    				
+					$(".contractRegisterErrorModal").modal('show'); 
+    				
+    				//그리고 다시 등록체크 값 true로 다시 세팅해주기
 					contractStatusValueCheck = true;   
 					//그리고 체크된 값들 전부 체크 해제 해주기
 					$("input:checkbox").prop("checked", false);
     			}
-    			
-   			});
+   			}); //registerBtn 등록 버튼 누를때, 끝
+   			
+   			//--------------------------------- 계약서 첨부파일 관련 --------------------------------------------------------------//
+   			
+    		//이미지인 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachImageDrawingFileTR = new Object();
+			
+			//계약서파일 -> 이미지로 된것 클릭 했을때, -> 원본파일 모달창으로 보여주기
+			$(".ImgClick").click(function() {
+				console.log("도면이미지인거 선택함");
+				var file = $(this).data('file');
+				//console.log("file 보자! : ",file);
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachImageDrawingFileTR = getObjTR();
+				
+				//console.log(file);
+				//만약 위에서 보내는 data를 dto.contractFileDTO.getThumbnailURL() 썸네일URL로 한다면 사이즈를 1 추가 셋팅 해줘야 원본파일을 불러옴
+				//$('.imageModal .modal-body').html("<img style='width:100%' src='/procurement1/contract/display?fileName="+file+"&size=1' >");
+				$('.imageModal .modal-body').html("<img style='width:100%' src='/procurement1/contract/display?fileName="+file+" ' >");
+				$(".imageModal").modal("show");
+			});
+			
+			//이미지 아닌 문서그림 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachNoImageDrawingFileTR = new Object();
+			
+			//계약서파일 -> 이미지로 된거 아닌거! 클릭 했을때, -> 파일 다운로드 여부 묻는 모달창 보여주기
+			$(".NoImgClick").click(function() {
+				console.log("이미지 아닌거 선택함");
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachNoImageDrawingFileTR = getObjTR();
+				
+				//해당 버튼의 가지고 있는 파일이름 읽기
+				var fileName = $(this).data('name');
+				//console.log("어디 해당 파일의 data-fileName 잘 읽나 보자 : ",fileName);
+				
+				sentence = `<span><b>파일명</b> : `+fileName+`<br><br>
+							해당 파일을 다운로드 하시겠습니까?</span>`;
+				//console.log("만든 문장 봐보자 : ",sentence);
+       			document.querySelector("#attachFileDownloadCheckModal").innerHTML = sentence;					
+				$(".attachFileDownloadModal").modal('show');
+			});
+			
+			//첨부파일 다운로드 모달창의 확인 버튼 누를때
+			$(document).on("click",".attachFileDownloadConfirmBtn",function(e){
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachNoImageDrawingFileTR.querySelector(".NoImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("NoImgClick 버튼 눌렀을때의 파일의 data-file 잘 읽나 보자 : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".attachFileDownloadModal").modal('hide');
+				window.location.href = "/procurement1/contract/download?fileName="+encodeFile;
+			});	
+			
+			//도면파일 -> 이미지로 된것 클릭 했을때,
+			//원본 이미지 모달창에서 -> 다운로드 버튼 클릭시 -> 원본 파일 다운로드 하기
+			$(document).on("click",".imageDownloadBtn",function(e){
+				console.log("이미지 모달창의 다운로드 버튼 누름");
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachImageDrawingFileTR.querySelector(".ImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("다운로드 버튼 눌렀을때의 파일의 data-file : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".imageModal").modal('hide');
+				window.location.href = "/procurement1/contract/download?fileName="+encodeFile;
+			});	
+			
+			
+			//이벤트 발생한 요소의 상위의 TR 객체 찾기
+	        function getObjTR(){
+	            var obj = event.srcElement
+	            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+	                obj = obj.parentElement
+	            }
+	            return obj
+	        }
+   			
+   			
+   			
    		});	
 		
 		
