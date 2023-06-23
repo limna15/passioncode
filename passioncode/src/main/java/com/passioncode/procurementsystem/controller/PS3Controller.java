@@ -58,23 +58,23 @@ public class PS3Controller {
 	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 		log.info("잘 보내지나 >>> "+ materialInDTO);
 		
-		Integer purchaseOrderNo= Integer.parseInt(request.getParameter("no"));
-		Integer detailPurchaseOrderCode= Integer.parseInt(request.getParameter("code"));
+		String purchaseOrderNoStr= request.getParameter("no");
+		String detailPurchaseOrderCodeStr= request.getParameter("code");
 		String materialCode= request.getParameter("materialCode");
 		String materialName= request.getParameter("materialName");
 		Integer amount= Integer.parseInt(request.getParameter("amount"));
 		String status= request.getParameter("status");
 		
-//		log.info("js로 만들어 보낸 form 데이터 purchaseOrderNo 잘 받아오나 >>> " + purchaseOrderNo);
-//		log.info("js로 만들어 보낸 form 데이터 detailPurchaseOrderCode잘 받아오나 >>> " + detailPurchaseOrderCode);
-//		log.info("js로 만들어 보낸 form 데이터 materialCode 잘 받아오나 >>> " + materialCode);
-//		log.info("js로 만들어 보낸 form 데이터 materialName 잘 받아오나 >>> " + materialName);
-//		log.info("js로 만들어 보낸 form 데이터 amount 잘 받아오나 >>> " + amount);
-//		log.info("js로 만들어 보낸 form 데이터 status 잘 받아오나 >>> " + status);
+		log.info("js로 만들어 보낸 form 데이터 purchaseOrderNo 잘 받아오나 >>> " + purchaseOrderNoStr);
+		log.info("js로 만들어 보낸 form 데이터 detailPurchaseOrderCode잘 받아오나 >>> " + detailPurchaseOrderCodeStr);
+		log.info("js로 만들어 보낸 form 데이터 materialCode 잘 받아오나 >>> " + materialCode);
+		log.info("js로 만들어 보낸 form 데이터 materialName 잘 받아오나 >>> " + materialName);
+		log.info("js로 만들어 보낸 form 데이터 amount 잘 받아오나 >>> " + amount);
+		log.info("js로 만들어 보낸 form 데이터 status 잘 받아오나 >>> " + status);
 		
 		if(status.equals("1")) { //입고 상태가 완료일 때
-			materialInDTO.setCode(purchaseOrderNo);
-			materialInDTO.setCode(detailPurchaseOrderCode);
+			materialInDTO.setNoStr("PO"+purchaseOrderNoStr);
+			materialInDTO.setCodeStr("DPO"+detailPurchaseOrderCodeStr);
 			materialInDTO.setMaterialCode(materialCode);
 			materialInDTO.setMaterialName(materialName);
 			materialInDTO.setAmount(amount);
@@ -83,8 +83,8 @@ public class PS3Controller {
 			log.info("입고 상태가 완료일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
 			materialInService.register(materialInDTO);
 		}else { //입고 상태가 취소일 때
-			materialInDTO.setCode(purchaseOrderNo);
-			materialInDTO.setCode(detailPurchaseOrderCode);
+			materialInDTO.setNoStr("PO"+purchaseOrderNoStr);
+			materialInDTO.setCodeStr("DPO"+detailPurchaseOrderCodeStr);
 			materialInDTO.setMaterialCode(materialCode);
 			materialInDTO.setMaterialName(materialName);
 			materialInDTO.setAmount(amount);

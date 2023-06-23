@@ -153,9 +153,9 @@
 							</thead>
 							<tbody>
 								<tr th:each="list: ${DTOList}" id="trList">
-									<td><input type="checkbox" id="checkBox" name="checkBox" th:value="${list.no}"></td>
-									<td><input type="hidden" name="no" th:value="${list.no}">[[${list.noStr}]]</td>
-									<td><input type="hidden" name="code" th:value="${list.code}">[[${list.codeStr}]]</td>
+									<td><input type="checkbox" id="checkBox" name="checkBox" th:value="${list.noStr}"></td>
+									<td><input type="hidden" name="no" th:value="${list.noStr}">[[${list.noStr}]]</td>
+									<td><input type="hidden" name="code" th:value="${list.codeStr}">[[${list.codeStr}]]</td>
 									<td><input type="hidden" name="date" th:value="${list.dueDate}">[[${#dates.format(list.dueDate, 'yyyy/MM/dd')}]]</td>
 									<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
 									<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>
@@ -315,123 +315,123 @@
         </div>
 		<!-- 발주서 번호가 다를 때 뜨는 모달창 끝 -->
 	
-		<!-- 거래명세서 세부 내용 모달창 시작 -->
-		<div>
-			<div class="transactionDetailModal modal">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content">
-						<div class="modal-header">
-			            <!-- header title -->
-							<h4 class="modal-title">거래명세서 발행</h4>
-			             <!-- 닫기(x) 버튼 -->
-							<button type="button" class="close" data-dismiss="modal">×</button>
-						</div>
+<!-- 		<!-- 거래명세서 세부 내용 모달창 시작 --> -->
+<!-- 		<div> -->
+<!-- 			<div class="transactionDetailModal modal"> -->
+<!-- 				<div class="modal-dialog modal-lg"> -->
+<!-- 					<div class="modal-content"> -->
+<!-- 						<div class="modal-header"> -->
+<!-- 			            header title -->
+<!-- 							<h4 class="modal-title">거래명세서 발행</h4> -->
+<!-- 			             닫기(x) 버튼 -->
+<!-- 							<button type="button" class="close" data-dismiss="modal">×</button> -->
+<!-- 						</div> -->
 									
-						<!-- body -->
-						<!-- style="width:210mm; height: 297mm;" A4용지 사이즈 -->
-						<div class="modal-body">
-						    <div class="publish"  id="transactionPrint">
-								<div class="card-body">
-									<button type="submit" class="btn btn-primary" onclick="transactionPrint();"  style="float: right; margin: 0 5px;" id="none">인쇄</button>
-									<br>
-									<p class="card-title"><b>거래명세서</b></p>
+<!-- 						body -->
+<!-- 						style="width:210mm; height: 297mm;" A4용지 사이즈 -->
+<!-- 						<div class="modal-body"> -->
+<!-- 						    <div class="publish"  id="transactionPrint"> -->
+<!-- 								<div class="card-body"> -->
+<!-- 									<button type="submit" class="btn btn-primary" onclick="transactionPrint();"  style="float: right; margin: 0 5px;" id="none">인쇄</button> -->
+<!-- 									<br> -->
+<!-- 									<p class="card-title"><b>거래명세서</b></p> -->
 									
-									<!--거래명세서 회사 정보-->
-									<div>
-										<table id="transactionInfo">
-												<tr>
-													<th>발주 회사</th>
-													<td id="company"></td>
-													<th rowspan="4">공<br><br>급<br><br>자</th>
-													<th>사업자 등록번호</th>
-													<td colspan="3" id="companyNo"></td>
-												</tr>
-												<tr>
-													<th>발주서 번호</th>
-													<td id="purchaseOrderNo"></td>
-													<th>상호(법인명)</th>
-													<td id="companyName"></td>
-													<th>성명(대표자)</th>
-													<td id="CEO"></td>
-												</tr>
-												<tr>
-													<th>납기일자</th>
-													<td id="date"></td>
-													<th>주소</th>
-													<td colspan="3" id="companyAddress"></td>
-												</tr>
-												<tr>
-													<th>총 가격</th>
-													<td id="totalPrice"></td>
-													<th>담당자</th>
-													<td id="manager"></td>
-													<th>연락처</th>
-													<td id="managerTel"></td>
-												</tr>
-										</table>
-									</div>
-									<br>
-									
-									<!--거래명세서 품목 정보-->
-									<div class="table-responsive">
-										<table id="transactionDetail">
-											<thead>
-												<tr>
-													<th>품목코드</th>
-													<th>품목명</th>
-													<th>수량</th>
-													<th>단가</th>
-													<th>공급가격</th>
-													<th>부가세</th>
-												</tr>
-											</thead>
-											<tbody id="detail">
+<!-- 									거래명세서 회사 정보 -->
+<!-- 									<div> -->
+<!-- 										<table id="transactionInfo"> -->
 <!-- 												<tr> -->
-<!-- 													<td id="materialCode"></td> -->
-<!-- 													<td id="materialName"></td> -->
-<!-- 													<td id="amount"></td> -->
-<!-- 													<td id="unitPrice"></td> -->
-<!-- 													<td id="price"></td> -->
-<!-- 													<td id="vat"></td> -->
+<!-- 													<th>발주 회사</th> -->
+<!-- 													<td id="company"></td> -->
+<!-- 													<th rowspan="4">공<br><br>급<br><br>자</th> -->
+<!-- 													<th>사업자 등록번호</th> -->
+<!-- 													<td colspan="3" id="companyNo"></td> -->
 <!-- 												</tr> -->
-											<!-- ajax로 동적 테이블 생성해서 들어가는 위치-->
+<!-- 												<tr> -->
+<!-- 													<th>발주서 번호</th> -->
+<!-- 													<td id="purchaseOrderNo"></td> -->
+<!-- 													<th>상호(법인명)</th> -->
+<!-- 													<td id="companyName"></td> -->
+<!-- 													<th>성명(대표자)</th> -->
+<!-- 													<td id="CEO"></td> -->
+<!-- 												</tr> -->
+<!-- 												<tr> -->
+<!-- 													<th>납기일자</th> -->
+<!-- 													<td id="date"></td> -->
+<!-- 													<th>주소</th> -->
+<!-- 													<td colspan="3" id="companyAddress"></td> -->
+<!-- 												</tr> -->
+<!-- 												<tr> -->
+<!-- 													<th>총 가격</th> -->
+<!-- 													<td id="totalPrice"></td> -->
+<!-- 													<th>담당자</th> -->
+<!-- 													<td id="manager"></td> -->
+<!-- 													<th>연락처</th> -->
+<!-- 													<td id="managerTel"></td> -->
+<!-- 												</tr> -->
+<!-- 										</table> -->
+<!-- 									</div> -->
+<!-- 									<br> -->
+									
+<!-- 									거래명세서 품목 정보 -->
+<!-- 									<div class="table-responsive"> -->
+<!-- 										<table id="transactionDetail"> -->
+<!-- 											<thead> -->
+<!-- 												<tr> -->
+<!-- 													<th>품목코드</th> -->
+<!-- 													<th>품목명</th> -->
+<!-- 													<th>수량</th> -->
+<!-- 													<th>단가</th> -->
+<!-- 													<th>공급가격</th> -->
+<!-- 													<th>부가세</th> -->
+<!-- 												</tr> -->
+<!-- 											</thead> -->
+<!-- 											<tbody id="detail"> -->
+<!-- <!-- 												<tr> --> -->
+<!-- <!-- 													<td id="materialCode"></td> --> -->
+<!-- <!-- 													<td id="materialName"></td> --> -->
+<!-- <!-- 													<td id="amount"></td> --> -->
+<!-- <!-- 													<td id="unitPrice"></td> --> -->
+<!-- <!-- 													<td id="price"></td> --> -->
+<!-- <!-- 													<td id="vat"></td> --> -->
+<!-- <!-- 												</tr> --> -->
+<!-- 											ajax로 동적 테이블 생성해서 들어가는 위치 -->
 												
-											</tbody>
-										</table>
-									</div>
-									<br>
+<!-- 											</tbody> -->
+<!-- 										</table> -->
+<!-- 									</div> -->
+<!-- 									<br> -->
 									
-									<!--거래명세서 결론-->
-									<div class="table-responsive">
-										<table id="transactionResult" style="border: 1px solid ; font-size: 13px;">
-												<tr>
-													<th>수량</th>
-													<td id="amountResult"></td>
-													<th>공급가격</th>
-													<td id="priceResult"></td>
-													<th>VAT</th>
-													<td id="vatResult"></td>
-													<th>합계</th>
-													<td id="totalPriceResult"></td>
-												</tr>
-										</table>
-									</div>					
-									<br>
-								</div>
-							</div>
-							<!-- <th:block th:replace="~{/procurement3/transactionDetail :: materialIn(~{this::publish} )}"></th:block> -->
-							<!--여기에 외부에서 작성한 테이블 들어옴-->
-						</div>
+<!-- 									거래명세서 결론 -->
+<!-- 									<div class="table-responsive"> -->
+<!-- 										<table id="transactionResult" style="border: 1px solid ; font-size: 13px;"> -->
+<!-- 												<tr> -->
+<!-- 													<th>수량</th> -->
+<!-- 													<td id="amountResult"></td> -->
+<!-- 													<th>공급가격</th> -->
+<!-- 													<td id="priceResult"></td> -->
+<!-- 													<th>VAT</th> -->
+<!-- 													<td id="vatResult"></td> -->
+<!-- 													<th>합계</th> -->
+<!-- 													<td id="totalPriceResult"></td> -->
+<!-- 												</tr> -->
+<!-- 										</table> -->
+<!-- 									</div>					 -->
+<!-- 									<br> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 							<th:block th:replace="~{/procurement3/transactionDetail :: materialIn(~{this::publish} )}"></th:block> -->
+<!-- 							여기에 외부에서 작성한 테이블 들어옴 -->
+<!-- 						</div> -->
 									
-						<!-- Footer -->
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 거래명세서 세부 내용 모달창 끝 -->
+<!-- 						Footer -->
+<!-- 						<div class="modal-footer"> -->
+<!-- 							<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<!-- 거래명세서 세부 내용 모달창 끝 --> -->
 
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
@@ -496,18 +496,19 @@
 						$(".transactionDetailModal").modal('hide');
 						console.log("취소+불가일 경우")
 						tdStatus= false;
+					//모달창: 발행상태가 이미 완료된 경우
 					}else if((tdArr[1].includes('완료')) && (tdArr[0].includes('완료'))){
-						//모달창: 발행상태가 이미 완료된 경우
 						$(".doneTransactionModal").modal('show');
 						$(".transactionDetailModal").modal('hide');
 						console.log("완료+완료일 경우")
 						tdStatus= false;
+					//모달창: 입고가 되지 않은 경우
 					}else if(tdArr[0].includes('완료') && tdArr[0].includes('취소')){
-						//모달창: 입고가 되지 않은 경우
 						$(".noMaterialInModal").modal('show');
 						$(".transactionDetailModal").modal('hide');
 						console.log("아직 입고가 되지 않아 상태가 완료, 취소 버튼일 경우")
 						tdStatus= false;
+					//모달창: 발행상태가 완료이지만 입고상태가 취소된 경우(하나의 발주서 안에 여러개의 코드가 있을 경우 생김)
 					}else if(tdArr[1].includes('완료') && tdArr[0].includes('취소')){
 						$(".cancleMaterialInModal").modal('show');
 						$(".transactionDetailModal").modal('hide');
@@ -520,6 +521,8 @@
 				//같은 발주서 번호를 눌렀는데 발주 코드가 여러개인 경우: 중복값을 제거하고 발주서 번호를 하나로 만듬	
 				var setNoList= new Set(noList);
 				var purchaseNo= [...setNoList];
+				
+				purchaseNo[0]= purchaseNo[0].substring(2);
 				console.log("purchaseNo는 어떻게 찍히는 거지 >>> ", purchaseNo, ", 타입은 ", typeof(purchaseNo))
 				
 				if(purchaseNo.length != 1){
@@ -548,14 +551,17 @@
 		var materialName= getObjTR().querySelector("input[name=materialName]").value;
 		var amount= getObjTR().querySelector("input[name=amount]").value;
 		
-// 		console.log("no 읽기 >>> ", no)
-//		console.log("code 읽기 >>> ", code)
-//		console.log("materialCode 읽기 >>> ", materialCode)
-//		console.log("materialName 읽기 >>> ", materialName)
-//		console.log("amount 읽기 >>> ", amount)
+ 		no= no.substring(2);
+ 		code= code.substring(3);
+		console.log("no 읽기 >>> ", no)
+		console.log("code 읽기 >>> ", code)
+		console.log("materialCode 읽기 >>> ", materialCode)
+		console.log("materialName 읽기 >>> ", materialName)
+		console.log("amount 읽기 >>> ", amount)
 
 		//create element (form)
 		var inForm = $('<form></form>');
+		
 		//set attribute (form) 
 		inForm.attr("name","inForm");
 		inForm.attr("method","post");
@@ -588,6 +594,8 @@
 		let materialName= getObjTR().querySelector("input[name=materialName]").value;
 		let amount= getObjTR().querySelector("input[name=amount]").value;
 
+ 		no= no.substring(2);
+ 		code= code.substring(3);
 		//create element (form)
 		let inForm = $('<form></form>');
 		//set attribute (form) 
