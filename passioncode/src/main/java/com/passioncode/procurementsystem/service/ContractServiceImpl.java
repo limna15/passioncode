@@ -16,6 +16,7 @@ import com.passioncode.procurementsystem.repository.CompanyRepository;
 import com.passioncode.procurementsystem.repository.ContractRepository;
 import com.passioncode.procurementsystem.repository.MaterialRepository;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -138,9 +139,10 @@ public class ContractServiceImpl implements ContractService {
 		//계약이 미완료 인것만! 품목 가져오기 -> 계약 미완료인 상태
 		List<Material> materialList = materialRepository.getListNoContract();
 		
-		//계약 미완료인것 먼저 DTO리스트에 넣기
+		//계약 미완료인것 먼저 DTO리스트에 넣기 -> contractFileDTO 은 Builder.Default 로 만들어주기때문에, 지금은 없기 때문에 null로 셋팅해서 넣어주기
 		for(int i=0;i<materialList.size();i++) {
-			ContractDTO contractDTO = ContractDTO.builder().materialCode(materialList.get(i).getCode()).materialName(materialList.get(i).getName()).contractStatus("미완료").build();
+			ContractDTO contractDTO = ContractDTO.builder().materialCode(materialList.get(i).getCode()).materialName(materialList.get(i).getName())
+															.contractStatus("미완료").contractFileDTO(null).build();
 			contractDTOList.add(contractDTO);			
 		}
 		

@@ -81,10 +81,10 @@
 						</div>
 						<div class="col-md-12">						
 							<!-- 등록확인, 등록취소 버튼 시작 -->						
-							<button class="btn btn-primary" style="margin-right: 130px; float: right;" type="button" id="materialregisterCancelBtn">
+							<button class="btn btn-primary" style="margin-right: 130px; float: right;" type="button" id="materialRegisterCancelBtn">
 								등록취소
 							</button>
-							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="materialregisterBtn">
+							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="materialRegisterBtn">
 								등록확인
 							</button>										
 							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="button" id="materialcodeGenerateBtn">
@@ -243,7 +243,7 @@
 			console.log("등록체크 전역변수 품목명 확인하기1 : ",materialNameRegisterValueCheck);
 			
 			//등록확인 버튼 누를때 -> 등록확인 모달창 보여주기
-			$(document).on("click","#materialregisterBtn",function(e){
+			$(document).on("click","#materialRegisterBtn",function(e){
 				console.log("등록확인 버튼 누름");
 				//1. 버튼 이벤트(submit)금지
     			e.preventDefault();				
@@ -374,7 +374,7 @@
 			});	
 			
 			//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기
-			$(document).on("click","#materialregisterCancelBtn",function(e){
+			$(document).on("click","#materialRegisterCancelBtn",function(e){
 				console.log("등록취소 버튼 누름");
 				e.preventDefault();
 				//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
@@ -739,8 +739,8 @@
 	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
 	        function showResultByImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
-	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.fileName);
-	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
+	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
 	            
 	           //파일을 업로드 해주세요. 글귀 지우기 
 	           $("#h3Text").text("");
@@ -761,8 +761,8 @@
 	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
 	        function showResultByNoImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
-	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.fileName);
-	            //console.log("showResult 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
+	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
 	            
 	           //파일을 업로드 해주세요. 글귀 지우기 
 	           $("#h3Text").text("");
@@ -814,7 +814,7 @@
 	 			}
 	    	} //checkLi 함수 끝
 	        
-	    	//드래그 앤 드랍 시작!! 
+	    	//-----------------------드래그 앤 드랍 시작!! --------------------------------//
 	        var holder = document.getElementById("holder");
 	        var boxing = document.getElementById("boxing");
 
@@ -909,7 +909,7 @@
 	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
 	        holder.addEventListener("dragleave", fileDragDrop);
 	        holder.addEventListener("drop", fileUpload);  
-	    	//드래그 앤 드랍 끝!! 
+	      //-----------------------드래그 앤 드랍 끝!! --------------------------------//
 
 	        //도면 첨부 모달창의 확인버튼 누를때 -> 첨부버튼을 지우고, 썸네일 보여주기
 	        $(".drawingUploadConfirmBtn").on("click", function(e) {
@@ -958,9 +958,7 @@
 		                }
 		            }); //$.ajax 
 				}
-				
-				
-	        });
+	        }); //drawingUploadCancelBtn 도면 모달창 취소 버튼 끝
 			
 			
 			
@@ -1136,36 +1134,32 @@
 	    	
 	    });
 	    
-	    //삭제 - 버튼 누를때, 행 삭제 + 테이블에 추가했던 업로드했던 이미지파일 삭제하기
+	  //삭제 - 버튼 누를때, 행 삭제 + 그 해당 행의 테이블에 추가했던 업로드했던 이미지파일 삭제하기
 	    const tr_delete_event = (btn) => {
-	    	//console.log("이렇게도 값을 읽나??",$(".attachDrawingFileImgTag"));
-	    	//console.log("이렇게도 값을 읽나?? 그럼 길이는??",$(".attachDrawingFileImgTag").length);
+	    	//해당 행의 이미지태그 읽어오자!	    	
+	    	var target = getObjTR().querySelector("img");
+	    	//console.log("img 태그 읽어오나 보자 : ",target);
 	    	
-	    	//위에서보면(길이로 체크할때) 애초에 첨부파일에 넣은게 없으면 $(".attachDrawingFileImgTag")가 만들어지지 않아서(길이가 0),
-	    	//별도로 ajax에 없는값 보내는게 신경쓸 필요가 없음!, 없으면 애초에 밑에꺼가 실행이 안됨!
-			//테이블의 태그에 넣은 타겟파일 이름을 통해서 ajax 처리하기
-			$(".attachDrawingFileImgTag").each(function(i,obj){
-	                var target = $(obj);
-	                //console.log("target 읽어보자! : ",target);
-	                var targetFile = target.data("file");
-	                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
-	                
-	                $.ajax({
-		                url: '/procurement1/drawing/removeFile',
-		                data: {fileName: targetFile},
-		                dataType:'text',
-		                type: 'POST',
-		                success: function(result){
-		                	//console.log("성공한거지? ",result);
-		                }
-		           }); //$.ajax
-			});
+	    	//이미지 태그가 존재할때만, Ajax 처리로 이미지 첨부파일 지워주자
+	    	if(target != null){
+	    		var targetFile = $(target).data("file");
+	    		console.log("이미지 태그 존재하고 targetFile 읽자 : ",targetFile);
+	    		
+	    		$.ajax({
+	                url: '/procurement1/drawing/removeFile',
+	                data: {fileName: targetFile},
+	                dataType:'text',
+	                type: 'POST',
+	                success: function(result){
+	                	//console.log("성공한거지? ",result);
+	                }
+	           }); //$.ajax
+	    	}
 			
 			const table = document.getElementById('registerTable');
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);
 			console.log("테이블의 행 추가한거 삭제 버튼 누름");
-			
     	};	    
     	
     	
