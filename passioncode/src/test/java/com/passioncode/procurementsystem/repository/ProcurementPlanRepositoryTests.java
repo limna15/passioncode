@@ -460,6 +460,19 @@ public class ProcurementPlanRepositoryTests {
 //		log.info("조달계획 리스트 보자 : "+procurementPlanRepository.getPPJoinMRPWithOrder());
 	}
 	
+	@Test
+	public void  tobuilderTest() {
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();
+		log.info("현재 값 보자 : "+procurementPlan);
+		LocalDateTime localDateTime = LocalDateTime.now();
+		log.info("시간 보자 : "+localDateTime);
+		procurementPlan = procurementPlan.toBuilder().completionDate(localDateTime).build();
+		log.info("나중 값 보자 : "+procurementPlan);
+	}
+	
+	
+	
+	
 	
 	
 	

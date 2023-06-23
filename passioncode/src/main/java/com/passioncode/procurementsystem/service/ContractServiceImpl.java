@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.dto.ContractDTO;
+import com.passioncode.procurementsystem.dto.ContractFileDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.Material;
@@ -91,6 +92,7 @@ public class ContractServiceImpl implements ContractService {
 			for(int i=0;i<contractList.size();i++) {
 				contractDTO = ContractDTO.builder().contractNo(contractList.get(i).getNo()).materialCode(contractList.get(i).getMaterial().getCode())
 													.contractNoStr(makeContractNoStr(contractList.get(i).getNo()))
+													.contractFileDTO(new ContractFileDTO(contractList.get(i).getContractFile()))
 													.materialName(contractList.get(i).getMaterial().getName()).companyNo(contractList.get(i).getCompany().getNo())
 													.companyName(contractList.get(i).getCompany().getName()).manager(contractList.get(i).getCompany().getManager())
 													.managerTel(contractList.get(i).getCompany().getManagerTel()).supplyLt(contractList.get(i).getSupplyLt())
@@ -111,6 +113,7 @@ public class ContractServiceImpl implements ContractService {
 	public ContractDTO contractEntityToDTO(Contract contract) {
 		ContractDTO contractDTO = ContractDTO.builder().contractNo(contract.getNo()).materialCode(contract.getMaterial().getCode()).materialName(contract.getMaterial().getName())
 														.contractNoStr(makeContractNoStr(contract.getNo()))
+														.contractFileDTO(new ContractFileDTO(contract.getContractFile()))
 														.companyNo(contract.getCompany().getNo()).companyName(contract.getCompany().getName()).manager(contract.getCompany().getManager())
 														.managerTel(contract.getCompany().getManagerTel()).supplyLt(contract.getSupplyLt()).unitPrice(contract.getUnitPrice())
 														.dealCondition(contract.getDealCondition()).contractFile(contract.getContractFile()).contractStatus("완료").build();

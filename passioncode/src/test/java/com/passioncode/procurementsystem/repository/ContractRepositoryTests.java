@@ -203,4 +203,26 @@ public class ContractRepositoryTests {
 	}
 	
 	
+	@Test
+	public void fileTest() {
+		String contractFile = "/PassionCode/upload/contract/2023/06/20/1a2c5f54-51be-4b09-a656-01577901388f_거래계약서 샘플6.doc";
+		String uploadPath = contractFile.substring(0,29);
+		log.info("어디어디 보자~~~~~~~ : "+uploadPath);
+		// /PassionCode/upload/contract/
+		String folderPath = contractFile.substring(29,40);
+		log.info("어디어디 보자2~~~~~~~ : "+folderPath);
+		// 2023/06/20/
+		String uuid = contractFile.substring(40, 76);
+		log.info("uuid 보자!! : "+ uuid);
+		// 1a2c5f54-51be-4b09-a656-01577901388f
+		// 언더바 _ 제외하고 fileName 보자!!
+		String fileName = contractFile.substring(77);
+		log.info("어디 이제 오리지날 파일이름 보자!!! : "+fileName);
+		// 거래계약서 샘플6.doc
+	}
+	
+	
+	
+	
+	
 }

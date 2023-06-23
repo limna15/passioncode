@@ -28,8 +28,8 @@ public class ContractServiceTests {
 	public void materialEntityToDTOTest() {
 		//CGa0002 계약 미완료 품목
 		//CGa0001 계약 완료 품목
-		log.info("품목엔티티 이용해서 contractDTO 가져오나 보자(리스트) :"+contractService.materialEntityToDTO(materialService.getMaterial("CGa0002")));
-		log.info("품목엔티티 이용해서 contractDTO 가져오나 보자(리스트) :"+contractService.materialEntityToDTO(materialService.getMaterial("CGa0001")));		
+		log.info("품목엔티티 이용해서 contractDTO 가져오나 보자(리스트) :"+contractService.materialEntityToDTO(materialService.getMaterial("CG0002")));
+		log.info("품목엔티티 이용해서 contractDTO 가져오나 보자(리스트) :"+contractService.materialEntityToDTO(materialService.getMaterial("CG0001")));		
 	}
 	
 	@Transactional

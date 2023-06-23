@@ -124,10 +124,10 @@
 							<thead>
 								<tr>
 									<th></th>
-									<th width="10%">품목코드</th>
-									<th width="10%">품목명</th>
 									<th width="9%">대</th>
 									<th width="8%">중</th>
+									<th width="10%">품목코드</th>
+									<th width="10%">품목명</th>
 									<th width="8%">규격</th>
 									<th width="9%">재질</th>
 									<th width="13%">제작 사양</th>
@@ -139,16 +139,16 @@
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
 									<td><input type="checkbox"></td>
-									<td>[[${dto.code}]]</td>
-									<td>[[${dto.name}]]</td>
 									<td>[[${dto.largeCategoryName}]]</td>
 									<td>[[${dto.middleCategoryName}]]</td>
+									<td>[[${dto.code}]]</td>
+									<td>[[${dto.name}]]</td>
 									<td>[[${dto.size}]]</td>
 									<td>[[${dto.quality}]]</td>
 									<td>[[${dto.spec}]]</td>
 									<td>[[${dto.drawingNo}]]</td>
 									<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image==true}">
-										<button th:data-file="${dto.drawingFileDTO.getThumbnailURL()}" class="ImgClick" type="button" style="border:none; background-color:transparent;">
+										<button th:data-file="${dto.drawingFileDTO.getImageURL()}" class="ImgClick" type="button" style="border:none; background-color:transparent;">
 											<img th:src="|/procurement1/drawing/display?fileName=${dto.drawingFileDTO.getThumbnailURL()}|" > 
 										</button>
 									</td>
@@ -219,7 +219,12 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary imageDownloadBtn" style="padding-top:10px; padding-left:15px; padding-right:15px; width:88px; height:33px;">
+                        	다운로드
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
                     </div>
                 </div>
             </div>
@@ -258,23 +263,32 @@
 		
 		$(document).ready(function(e) {
 			
+			//이미지인 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachImageDrawingFileTR = new Object();
+			
 			//도면파일 -> 이미지로 된것 클릭 했을때, -> 원본파일 모달창으로 보여주기
 			$(".ImgClick").click(function() {
+				console.log("도면이미지인거 선택함");
 				var file = $(this).data('file');
+				//console.log("file 보자! : ",file);
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachImageDrawingFileTR = getObjTR();
+				
 				//console.log(file);
-				$('.imageModal .modal-body').html("<img style='width:100%' src='/procurement1/drawing/display?fileName="+file+"&size=1' >");
+				$('.imageModal .modal-body').html("<img style='width:100%' src='/procurement1/drawing/display?fileName="+file+" ' >");
 				$(".imageModal").modal("show");
 			});
 			
 			//이미지 아닌 문서그림 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
 			//(그 해당 행의 버튼 정보를 가져오기 위해)
-			var attachDrawingFileTR = new Object();
+			var attachNoImageDrawingFileTR = new Object();
 			
 			//도면파일 -> 이미지로 된거 아닌거! 클릭 했을때, -> 파일 다운로드 여부 묻는 모달창 보여주기
 			$(".NoImgClick").click(function() {
 				console.log("이미지 아닌거 선택함");
 				//클릭한 행의 정보 전역변수에 세팅해주기
-				attachDrawingFileTR = getObjTR();
+				attachNoImageDrawingFileTR = getObjTR();
 				
 				//해당 버튼의 가지고 있는 파일이름 읽기
 				var fileName = $(this).data('name');
@@ -293,7 +307,7 @@
 				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
 				//일단 해당 NoImgClick 버튼 먼저 읽고
 				var target = new Object();
-				target = attachDrawingFileTR.querySelector(".NoImgClick");
+				target = attachNoImageDrawingFileTR.querySelector(".NoImgClick");
 				//console.log("일단 타겟부터 읽어보자 : ",target);
 				
 				//그 버튼의 가지고 있던 file 정보 읽기
@@ -304,6 +318,27 @@
 				$(".attachFileDownloadModal").modal('hide');
 				window.location.href = "/procurement1/drawing/download?fileName="+encodeFile;
 			});	
+			
+			//도면파일 -> 이미지로 된것 클릭 했을때,
+			//원본 이미지 모달창에서 -> 다운로드 버튼 클릭시 -> 원본 파일 다운로드 하기
+			$(document).on("click",".imageDownloadBtn",function(e){
+				console.log("이미지 모달창의 다운로드 버튼 누름");
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachImageDrawingFileTR.querySelector(".ImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("다운로드 버튼 눌렀을때의 파일의 data-file : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".imageModal").modal('hide');
+				window.location.href = "/procurement1/drawing/download?fileName="+encodeFile;
+			});	
+			
 			
 			//이벤트 발생한 요소의 상위의 TR 객체 찾기
 	        function getObjTR(){

@@ -79,6 +79,12 @@ public class ContractDTO {
 	private String contractFile;	
 	
 	/**
+	 * 계약서 업로드
+	 */
+	@Builder.Default
+	private ContractFileDTO contractFileDTO = new ContractFileDTO();
+	
+	/**
 	 * 계약상태 (추가된 변수) <br>
 	 * 완료 : 계약상태 O, 미완료 : 계약상태 X 
 	 */
