@@ -523,23 +523,25 @@
 				
 				//테이블의 태그에 넣은 타겟파일 이름을 통해서 ajax 처리하기 //ecah 함수니까! 모든 업로드한 파일 삭제 시키기
 				$(".attachContractFileImgTag").each(function(i,obj){
-		                var target = $(obj);
-		                var targetFile = target.data("file");
-		                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
-		                
-		                $.ajax({
-			                url: '/procurement1/contract/removeFile',
-			                data: {fileName: targetFile},
-			                dataType:'text',
-			                type: 'POST',
-			                success: function(result){
-			                	//console.log("성공한거지? ",result);
-			                }
-			            }); //$.ajax
+	                var target = $(obj);
+	                var targetFile = target.data("file");
+	                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
+	                
+	                $.ajax({
+		                url: '/procurement1/contract/removeFile',
+		                data: {fileName: targetFile},
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	//console.log("성공한거지? ",result);
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+	 	                }
+		            }); //$.ajax
 				});
-	           
 				window.location.href = '/procurement1/contractList';
-			});	
+			});	//등록취소 버튼 누를때 끝
 			
 			
 			//-------------------------------------- 파일업로드 부분 --------------------------------------------------------------//
@@ -750,7 +752,10 @@
 	                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
 	                    attachContractFileTR.querySelector("input[name=contractFile]").value = "";
 	                    //console.log("테이블의 input값 초기화 한 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
-	                }
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+ 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+ 	                }
 	            }); //$.ajax  
 	        });
 	        
@@ -767,7 +772,7 @@
 	 			}
 	    	} //checkLi 함수 끝
 	        
-	    	//-----------------------드래그 앤 드랍 시작!! --------------------------------//
+	    	//-------------------------------------------드래그 앤 드랍 시작!! --------------------------------------------------//
 	        var holder = document.getElementById("holder");
 	        var boxing = document.getElementById("boxing");
 
@@ -846,7 +851,7 @@
 							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-		                    console.log(textStatus);
+		                    console.log("드래그 앤 드롭에서 파일업로드 ajax 에러 발생",textStatus);
 		                }
 		            }); //$.ajax 
 	 			}else{																	//현재 개수 1개 이상으로, 이미 업로드한게 있음!
@@ -862,22 +867,34 @@
 	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
 	        holder.addEventListener("dragleave", fileDragDrop);
 	        holder.addEventListener("drop", fileUpload);  
-	      	//-----------------------드래그 앤 드랍 끝!! --------------------------------//
+	    	//-------------------------------------------드래그 앤 드랍 끝!! --------------------------------------------------//
 	    	
 	      	//계약서 첨부 모달창의 확인버튼 누를때 -> 첨부버튼을 지우고, 썸네일 보여주기
 	        $(".contractUploadConfirmBtn").on("click", function(e) {
 	        	console.log("계약서 첨부 모달창의 확인버튼 누름");
 				e.preventDefault();
-				var attachContractFileThumbImg = $(".attachContractFileThumbImg").attr("src");
-				//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachContractFileThumbImg);
-				var targetFile = $(".uploadResult li").data("file");
-				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
-				var str = `<img src='`+attachContractFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachContractFileImgTag'>`;
-				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachContractFileTR);
-				attachContractFileTR.querySelector(".attachContractFile").innerHTML = str;
 				
-				$(".contractUploadModal").modal('hide');
-	        });
+				//썸네일 넣은 li의 개수를 이용하여, 업로드한게 없을때 첨부된게 없습니다. 안내창 띄어주기
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 해줘요~ 안내창 띄우기
+					document.querySelector("#contractInfoAndErrorModalTitle").innerHTML = `계약서 첨부 확인`;
+					sentence = `<span>첨부된 파일이 없습니다.</span><br>
+						   		<span>다시 작성해주시길 바랍니다.</span>`;
+	       			document.querySelector("#contractInfoAndErrorModalContent").innerHTML = sentence;					
+					
+					$(".contractInfoAndErrorModal").modal('show');
+	 			}else{																	//첨부된 파일이 존재하니 원래대로 진행
+	 				var attachContractFileThumbImg = $(".attachContractFileThumbImg").attr("src");
+					//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachContractFileThumbImg);
+					var targetFile = $(".uploadResult li").data("file");
+					//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
+					var str = `<img src='`+attachContractFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachContractFileImgTag'>`;
+					//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachContractFileTR);
+					attachContractFileTR.querySelector(".attachContractFile").innerHTML = str;
+					
+					$(".contractUploadModal").modal('hide');
+	 			} //if
+	        });	//계약서 첨부 모달창의 확인버튼 누를때 -> 첨부버튼을 지우고, 썸네일 보여주기 끝
 	        
 			//계약서 첨부 모달창의 취소버튼 + 모달창 x 누를때 -> 업로드한 파일 지워주기
 	        $(".contractUploadCancelBtn").on("click", function(e) {
@@ -908,9 +925,12 @@
 		                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
 		                    attachContractFileTR.querySelector("input[name=contractFile]").value = "";
 		                    //console.log("테이블의 input값 초기화 한 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
-		                }
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+	 	                }
 		            }); //$.ajax 
-				}
+				} //if
 	        }); //contractUploadCancelBtn 도면 모달창 취소 버튼 끝
 	      	
 	      	
@@ -1050,8 +1070,8 @@
 					    		</td> `;
 	            }
 	            new_cell.insertAdjacentHTML('beforeend', temp_html);
-    		}
-    	}   	    	
+    		} //for
+    	} //등록추가+ 버튼 누를때 끝  	    	
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     		    	    
@@ -1073,14 +1093,17 @@
 	                type: 'POST',
 	                success: function(result){
 	                	//console.log("성공한거지? ",result);
-	                }
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+ 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+ 	                }
 	           }); //$.ajax
-	    	}
+	    	} //if
 	    	
 			const table = document.getElementById('contractRegisterTable');
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);
-    	};	       	
+    	}; //삭제- 버튼 누를때 끝
     	
 		
 		</script>

@@ -209,6 +209,8 @@ public class PS1Controller {
 	
 	/**
 	 * 품목 수정 화면 보기
+	 * @param materialCodeList
+	 * @param model
 	 */
 	@GetMapping("materialModify")
 	public void materialModify(String[] materialCodeList, Model model) {
@@ -232,8 +234,126 @@ public class PS1Controller {
 		
 		//중분류 셀렉트 정보는 읽어온 품목코드리스트에서 품목을 찾고, 그 품목의 중분류 코드를 이용해서,
 		//그 중분류의 해당 대분류에서 모든 중분류들! 리스트로 만들어서 materialDTO에 다 보내짐
-		
 	}
+	
+	
+	/**
+	 * 품목정보 수정 처리 
+	 * @param materialDTO
+	 * @param redirectAttributes
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("materialModify")
+	public void materialModify2(MaterialDTO materialDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
+		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
+		//대분류코드, 중분류코드
+		
+		log.info("품목정보 수정 처리.....");
+		
+		log.info("화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
+		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
+		
+//		List<MaterialDTO> materialDTOList = new ArrayList<>();
+//				
+//		//품목코드 배열
+//		String[] code = request.getParameterValues("code");	
+//		//품목명 배열
+//		String[] name = request.getParameterValues("name");
+//		//대분류코드 배열
+//		String[] largeCategoryCode = request.getParameterValues("largeCategoryCode");
+//		//중분류코드 배열
+//		String[] middleCategoryCode = request.getParameterValues("middleCategoryCode");
+//		//규격 배열
+//		String[] size = request.getParameterValues("size");
+//		//재질 배열
+//		String[] quality = request.getParameterValues("quality");
+//		//제작사양 배열
+//		String[] spec = request.getParameterValues("spec");
+//		//도면번호 배열
+//		String[] drawingNo = request.getParameterValues("drawingNo");
+//		//도면 배열
+//		String[] drawingFile = request.getParameterValues("drawingFile");
+//		//공용여부 배열
+//		String[] shareStatus =  request.getParameterValues("shareStatus");
+//		
+//		//품목코드는 null일수 없으니까, 품목코드 배열 기준으로, 각각의 DTO에 넣어주고, 그값 DTO리스트에 넣기
+//		for(int i=0; i<code.length; i++) {
+//			MaterialDTO materialDTO2 = new MaterialDTO();
+//			materialDTO2.setCode(code[i]);
+//			materialDTO2.setName(name[i]);
+//			materialDTO2.setLargeCategoryCode(largeCategoryCode[i]);
+//			materialDTO2.setLargeCategoryName(middleCategoryService.getLargeCategory(largeCategoryCode[i]).getCategory());
+//			materialDTO2.setMiddleCategoryCode(middleCategoryCode[i]);
+//			materialDTO2.setMiddleCategoryName(middleCategoryService.getMiddleCategory(middleCategoryCode[i]).getCategory());
+//			materialDTO2.setShareStatus(shareStatus[i]);
+//			if(size != null) {										//받아온 size가 존재 O
+//				if(!size[i].equals("")) {							//빈값이 아닐때
+//					materialDTO2.setSize(size[i]);					
+//				}else {												//"" 빈값으로 받아올때
+//					materialDTO2.setSize(null);
+//				}
+//			}else {													//받아온 size가 존재 X
+//				materialDTO2.setSize(null);	
+//			}
+//			
+//			if(quality != null) {									//받아온 quality가 존재 O
+//				if(!quality[i].equals("")) {						//빈값이 아닐때
+//					materialDTO2.setQuality(quality[i]);			
+//				}else {												//"" 빈값으로 받아올때
+//					materialDTO2.setQuality(null);					
+//				}
+//			}else {													//받아온 quality가 존재 X
+//				materialDTO2.setQuality(null);				
+//			}
+//			
+//			if(spec != null) {										//받아온 spec가 존재 O
+//				if(!spec[i].equals("")) {							//빈값이 아닐때
+//					materialDTO2.setSpec(spec[i]);								
+//				}else {												//"" 빈값으로 받아올때
+//					materialDTO2.setSpec(null);
+//				}
+//			}else {													//받아온 spec가 존재 X
+//				materialDTO2.setSpec(null);
+//			}
+//			
+//			if(drawingNo != null) {									//받아온 drawingNo가 존재 O
+//				if(!drawingNo[i].equals("")) {						//빈값이 아닐때
+//					materialDTO2.setDrawingNo(drawingNo[i]);		
+//				}else {												//"" 빈값으로 받아올때
+//					materialDTO2.setDrawingNo(null);
+//				}				
+//			}else {													//받아온 drawingNo가 존재 X
+//				materialDTO2.setDrawingNo(null);
+//			}
+//			
+//			if(drawingFile != null) {								//받아온 drawingFile가 존재 O
+//				if(!drawingFile[i].equals("")) {					//빈값이 아닐때
+//					materialDTO2.setDrawingFile(drawingFile[i]);	
+//				}else {												//"" 빈값으로 받아올때
+//					materialDTO2.setDrawingFile(null);
+//				}				
+//			}else {													//받아온 drawingFile가 존재 X
+//				materialDTO2.setDrawingFile(null);
+//			}			
+//			materialDTOList.add(materialDTO2);
+//		}
+//		
+//		log.info("만든 materialDTOList 보자 : "+materialDTOList);
+//		
+//		//등록된 품목코드 리스트
+//		List<String> registerList = new ArrayList<>();
+//		//받아온 DTO리스트 각각 DB에 저장하기
+//		for(MaterialDTO dto : materialDTOList) {
+//			registerList.add(materialService.register(dto));
+//		}
+//		
+//		redirectAttributes.addFlashAttribute("registerList",registerList);
+		
+//		return "redirect:/procurement1/materialList";
+	}
+	
+	
 	
 	/**
 	 * 계약 목록 화면 보기

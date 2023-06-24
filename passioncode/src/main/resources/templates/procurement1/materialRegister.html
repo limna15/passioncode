@@ -13,7 +13,7 @@
 					<form th:action = "@{/procurement1/materialRegister}" th:method="post" id="materialregisterForm">
 						<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
-								<table class="table table-bordered" id="registerTable" style="text-align: center;">
+								<table class="table table-bordered" id="materialRegisterTable" style="text-align: center;">
 									<thead>
 										<tr>
 											<th width="11%">품목명</th>
@@ -107,7 +107,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="materialRegisterCheckModal">
+                    <div class="modal-body" id="materialRegisterConfirmModalContent">
                     	<!-- 품목정보 등록 확인할 내용 -->    
                     	
                     </div>
@@ -205,6 +205,8 @@
 		       - 내용 : 1. <span>파일 사이즈가 초과되었습니다.</span>
 						2. <span>해당 종류의 파일은 업로드할 수 없습니다.</span>
 						3. <span>파일 1개만 첨부할 수 있습니다.</span>
+						4. <span>첨부된 파일이 없습니다.</span><br>
+						   <span>다시 작성해주시길 바랍니다.</span>
 		-->
 		<div class="materialInfoAndErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -320,7 +322,7 @@
 	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
 	   				//innerHTML -> 내용 덮어씌우기
 	   				//insertAdjacentHTML -> 내용 추가해서 넣기
-	   				document.querySelector("#materialRegisterCheckModal").innerHTML = sentence;
+	   				document.querySelector("#materialRegisterConfirmModalContent").innerHTML = sentence;
 	   				   				
 	   				//등록확인 모달창 보여주기
 					$(".materialRegisterConfirmModal").modal('show');	
@@ -396,7 +398,10 @@
 		                type: 'POST',
 		                success: function(result){
 		                	//console.log("성공한거지? ",result);
-		                }
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+	 	                }
 		            }); //$.ajax
 				});
 				window.location.href = '/procurement1/materialList';
@@ -795,7 +800,10 @@
 	                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
 	                    attachDrawingFileTR.querySelector("input[name=drawingFile]").value = "";
 	                    //console.log("테이블의 input값 초기화 한 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
-	                }
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+ 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+ 	                }
 	            }); //$.ajax  
 	        });
 	        
@@ -813,7 +821,7 @@
 	 			}
 	    	} //checkLi 함수 끝
 	        
-	    	//-----------------------드래그 앤 드랍 시작!! --------------------------------//
+	    	//-------------------------------------------드래그 앤 드랍 시작!! --------------------------------------------------//
 	        var holder = document.getElementById("holder");
 	        var boxing = document.getElementById("boxing");
 
@@ -892,7 +900,7 @@
 							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-		                    console.log(textStatus);
+		                    console.log("드래그 앤 드롭에서 파일 업로드 ajax 에러발생",textStatus);
 		                }
 		            }); //$.ajax 
 	 			}else{																	//현재 개수 1개 이상으로, 이미 업로드한게 있음!
@@ -908,22 +916,34 @@
 	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
 	        holder.addEventListener("dragleave", fileDragDrop);
 	        holder.addEventListener("drop", fileUpload);  
-	      //-----------------------드래그 앤 드랍 끝!! --------------------------------//
+	    	//-------------------------------------------드래그 앤 드랍 끝!! --------------------------------------------------//
 
 	        //도면 첨부 모달창의 확인버튼 누를때 -> 첨부버튼을 지우고, 썸네일 보여주기
 	        $(".drawingUploadConfirmBtn").on("click", function(e) {
 	        	console.log("도면 첨부 모달창의 확인버튼 누름");
 				e.preventDefault();
-				var attachDrawingFileThumbImg = $(".attachDrawingFileThumbImg").attr("src");
-				//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachDrawingFileThumbImg);
-				var targetFile = $(".uploadResult li").data("file");
-				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
-				var str = `<img src='`+attachDrawingFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachDrawingFileImgTag'>`;
-				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachDrawingFileTR);
-				attachDrawingFileTR.querySelector(".attachDrawingFile").innerHTML = str;
-				
-				$(".drawingUploadModal").modal('hide');
-	        });
+								
+				//썸네일 넣은 li의 개수를 이용하여, 업로드한게 없을때 첨부된게 없습니다. 안내창 띄어주기
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 해줘요~ 안내창 띄우기
+					document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
+					sentence = `<span>첨부된 파일이 없습니다.</span><br>
+						   		<span>다시 작성해주시길 바랍니다.</span>`;
+	       			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					
+					$(".materialInfoAndErrorModal").modal('show');
+	 			}else{																	//첨부된 파일이 존재하니 원래대로 진행
+					var attachDrawingFileThumbImg = $(".attachDrawingFileThumbImg").attr("src");
+					//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachDrawingFileThumbImg);
+					var targetFile = $(".uploadResult li").data("file");
+					//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
+					var str = `<img src='`+attachDrawingFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachDrawingFileImgTag'>`;
+					//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachDrawingFileTR);
+					attachDrawingFileTR.querySelector(".attachDrawingFile").innerHTML = str;
+					
+					$(".drawingUploadModal").modal('hide');
+	 			} //if
+	        }); //도면 첨부 모달창의 확인버튼 누를때 -> 첨부버튼을 지우고, 썸네일 보여주기 끝
 	        
 			//도면 첨부 모달창의 취소버튼 + 모달창 x 누를때 -> 업로드한 파일 지워주기
 	        $(".drawingUploadCancelBtn").on("click", function(e) {
@@ -954,7 +974,10 @@
 		                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
 		                    attachDrawingFileTR.querySelector("input[name=drawingFile]").value = "";
 		                    //console.log("테이블의 input값 초기화 한 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
-		                }
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+	 	                }
 		            }); //$.ajax 
 				}
 	        }); //drawingUploadCancelBtn 도면 모달창 취소 버튼 끝
@@ -1061,7 +1084,7 @@
 		    console.log("등록 추가 버튼 누름")
 		    	
 	    	// table element 찾기
-	    	const table = document.getElementById('registerTable');
+	    	const table = document.getElementById('materialRegisterTable');
 	    	console.log("가져온 table 정보",table)
 	    	
 	    	// 새 행(Row) 추가
@@ -1146,11 +1169,14 @@
 	                type: 'POST',
 	                success: function(result){
 	                	//console.log("성공한거지? ",result);
-	                }
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+ 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+ 	                }
 	           }); //$.ajax
 	    	}
 			
-			const table = document.getElementById('registerTable');
+			const table = document.getElementById('materialRegisterTable');
 			const row_index = btn.closest('tr').rowIndex;
 			table.deleteRow(row_index);
 			console.log("테이블의 행 추가한거 삭제 버튼 누름");
