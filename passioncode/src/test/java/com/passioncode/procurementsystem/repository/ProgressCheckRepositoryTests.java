@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,6 +46,75 @@ public class ProgressCheckRepositoryTests {
 
 	@Autowired
 	MRPRepository mrpRepository;
+	
+	//납기 진도율
+	//오늘과 가까운 과거기록 가져오기
+	@Transactional
+	@Test
+	public void checkPercentTest() {//없으면 미등록, 날짜 중 가까운 과거의 데이터 가져오기
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		
+		//오늘과 가까운 과거 날짜 가져오기
+		Date date1=null;
+		Date date2=null;
+		Date today = new Date();//오늘 날짜 보는 방법
+		Integer rate =null;
+				
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setPcrate((Integer) arr[3]);//저장할 납기 진도율
+			//int comparison = date1.compareTo(today);// 날짜 비교, 미래 비교는 마지막에 하기
+			//1. 오늘보다 과거, 2. 가장 최근 과거
+			if(date1!=null) {//비교하기 위한 값이 있다면
+				date2 = ((Date) arr[1]);//다음에 들어온 날을 넣어준다.
+				log.info("두 번째 수"+date2);
+				int comparison2 = date1.compareTo(date2);// 날짜 비교
+					
+				//(미래)오늘 뒤에 있는 날만 보여주기
+				//date1이 date2보다 오늘과 가까운 미래이면 date1에 저장하기
+				//다음 진척검수일이 과거인 것은 다른 곳에서 비교해서 없음 표시하기
+				
+				if (comparison2 > 0) {//이게 더 빠른 날짜
+					date1 = date2;//date2에 있음으로 date1으로 바꿔주기, 그래야 계속 비교가능
+					rate += rate;//자기 자신 더해주기
+					System.out.println("date1이 date2보다 뒤에 있습니다."+rate+"%"+date1);
+					//여기에 있는게 원하는 rate
+				} else if (comparison2 < 0) {//이 경우가 가까운 날의 진척 검수
+					rate = ((Integer) arr[3]);
+					System.out.println("date1이 date2보다 앞에 있습니다."+rate+"%"+date1);
+					//System.out.println("다음 진척 검수일정"+date1);
+				} else {//이런 경우는 처음부터 없도록 하기
+					System.out.println("두 날짜는 같습니다.");
+				}
+				//오늘이랑 먼저 비교하고
+			}else {//처음에 date1이 null인 경우(처음 비교하는 경우, 한개의 일정)
+				date1 = ((Date) arr[1]);	//무조건 담는다
+				//rate = ((Integer) arr[3]);	//처음 진도율 담기
+				log.info("처음에만 있는 수"+date1);
+				int comparison = date1.compareTo(today);// 날짜 비교
+				if (comparison > 0) {//이게 더 빠른 날짜
+					//미래의 것은 필요 없음
+					date1 = null;
+					System.out.println("date1이 today보다 뒤에 있습니다."+rate+"%");
+				} else if (comparison < 0) {
+					rate = ((Integer) arr[3]);//과거의 평가가 존재함으로 저장
+					date1 = null;
+					System.out.println("date1이 today보다 앞에 있습니다."+rate+"%");
+				}
+			}
+			
+			list.add(pdDTO);
+		}
+		String lastRate;
+		lastRate = rate+"";
+		log.info("납기 진도율: "+lastRate);//마지막 한개만 나옴
+				
+				
+	}
 	
 	//검수완료
 	//조건: 검수 일정이 존재하고, 검수 일정 개수와 납기 진도율의 개수도 같을 때
@@ -145,12 +215,6 @@ public class ProgressCheckRepositoryTests {
 	@Transactional
 	@Test
 	public void getDTOList() {
-		// List<DetailPurchaseOrder> optionalDpo=
-		// detailPurchaseOrderRepository.findAll();
-		// ProcurementPlan pp=
-		// procurementPlanRepository.findByDetailPurchaseOrder(optionalDpo.get());
-		// log.info("세부구매발주서로 procurementPlan 찾기! " + pp.getDueDate());
-
 		List<DetailPurchaseOrder> detailList = detailPurchaseOrderRepository.findAll();
 		List<ProgressCheckDTO> progressCheckDTOList = new ArrayList<>();
 
