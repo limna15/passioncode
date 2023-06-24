@@ -1,5 +1,9 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.util.List;
+
+import com.passioncode.procurementsystem.entity.MiddleCategory;
+
 import lombok.AllArgsConstructor;
 
 import lombok.Builder;
@@ -13,7 +17,7 @@ import lombok.NoArgsConstructor;
  * @author KSH
  * 
  */ 
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -86,6 +90,11 @@ public class MaterialDTO {
 	 */
 	private String middleCategoryCode;
 	
+	/**
+	 * 중분류 리스트 <br>
+	 * 수정화면에서 뿌려줄, 해당 품목의 중분류에서, 그 해당 대분류에 해당하는 중분류들 만! 리스트로 만들기
+	 */
+	private List<MiddleCategoryDTO> middleCategoryDTOList;
 	
 
 }

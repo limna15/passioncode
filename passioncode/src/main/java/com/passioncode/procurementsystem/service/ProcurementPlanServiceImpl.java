@@ -48,6 +48,11 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		return contractRepository.findById(no).get();
 	}
 	
+	@Override
+	public List<ProcurementPlan> getPPJoinMRPByMaterialCode(String materialCode) {		
+		return procurementPlanRepository.getPPJoinMRPByMaterialCode(materialCode);
+	}	
+	
 	/**
 	 * 조달계획 진행사항 만들어주는 메소드 (조달계획을 이용해서) <br>
 	 * 등록 후 발주코드 존재X, 조달완료일 존재X : 발주 예정  <br>
@@ -409,5 +414,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	public ProcurementPlan getPpByDetailPurchaseOrder(Integer code) {
 		DetailPurchaseOrder dpo= detailPurchaseOrderRepository.findById(code).get();
 		return	procurementPlanRepository.findByDetailPurchaseOrder(dpo);
-	}	
+	}
+
+	
 }

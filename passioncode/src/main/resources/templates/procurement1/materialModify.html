@@ -8,7 +8,7 @@
 			<!-- 수정 부분 시작 -->
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title" style="font-size:23px;">품목 정보 등록</p> 
+					<p class="card-title" style="font-size:23px;">품목 정보 수정</p> 
 					<br>
 					<form th:action = "@{/procurement1/materialRegister}" th:method="post" id="materialregisterForm">
 						<div class="table-responsive" style="margin-bottom: 10px;">
@@ -17,77 +17,75 @@
 									<thead>
 										<tr>
 											<th width="11%">품목명</th>
-											<th width="">규격</th>
-											<th width="">재질</th>
+											<th width="10%">규격</th>
+											<th width="10%">재질</th>
 											<th width="">제작 사양</th>
-											<th width="8%">도면 번호</th>
+											<th width="10%">도면 번호</th>
 											<th width="9%">도면<br>Image</th>
-											<th width="8%">공용여부</th>
-											<th width="8%">대</th>
-											<th width="8%">중</th>
-											<th width="10%">품목코드</th>
-											<th></th> 
+											<th width="9%">공용여부</th>
+											<th width="9%">대</th>
+											<th width="9%">중</th>
+											<th width="11%">품목코드</th>
 										</tr>
 									</thead>
 									<tbody>	
-										<tr>									
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>
+										<tr th:each="dto : ${materialDTOList}" >									
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName" th:value="${dto.name}" ></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size" th:value="${dto.size}" ></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality" th:value="${dto.quality}" ></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec" th:value="${dto.spec}" ></td>
 											<td>
-												<input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo">
-												<input type="hidden" name="drawingFile">
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo" th:value="${dto.drawingNo}" >
+												<input type="hidden" name="drawingFile" th:value="${dto.drawingFile}" >
 											</td>
 											<td>
 												<div class="attachDrawingFile">
-								            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
-														첨부
+								            		<button type="button" class="btn btn-primary drawingModifyBtn" style=" padding-left: 10px;padding-right: 10px;">
+														수정
 													</button>
 												</div>
 											</td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
-													<option value='공용'>공용</option>
-													<option value='전용'>전용</option>
+												<select style="width:100%; border: 0; text-align: center;" name="shareStatus" >
+													<option value='공용' th:selected="${dto.shareStatus == '공용'}" >공용</option>
+													<option value='전용' th:selected="${dto.shareStatus == '전용'}" >전용</option>
 												</select>											
 											</td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" class="largeCategoryCode" name="largeCategoryCode" >
+												<select style="width:100%; border: 0; text-align: center;" class="largeCategoryCode" name="largeCategoryCode"  >
 													<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
-														<option th:value="${LCDTO.code}">[[${LCDTO.category}]]</option>
+														<option th:value="${LCDTO.code}" th:selected="${dto.largeCategoryCode==LCDTO.code}" >
+															[[${LCDTO.category}]]
+														</option>
 													</th:block>
 												</select>
 											</td>
 											<td>
 												<select style="width:100%; border: 0; text-align: center;" class="middleCategoryCode" name="middleCategoryCode" >
-													<th:block th:each="MCDTO : ${MiddleCategoryDTOList}">
-														<option th:value="${MCDTO.middleCode}">[[${MCDTO.middleCategory}]]</option>
+													<th:block th:each="MCDTO : ${dto.middleCategoryDTOList}">
+														<option th:value="${MCDTO.middleCode}" th:selected="${dto.middleCategoryCode==MCDTO.middleCode}" >
+															[[${MCDTO.middleCategory}]]
+														</option>
 													</th:block>
 												</select>									
 											</td>
 											<td>
-												<input type="text" style="width:100%; border: 0; text-align: center; " name="code" class="materialCode" readonly>
+												<input type="text" style="width:100%; border: 0; text-align: center; " name="code" class="materialCode"  th:value="${dto.code}"  readonly>
 											</td>
-											<td>
-												<button type="button" class="btn btn-primary" id="addRow" style="width:106px; height:40px; padding-left: 10px;padding-right: 10px;">
-													등록추가 &nbsp;&nbsp;+
-												</button>
-											</td> 
 										</tr>
 									</tbody>
 								</table>
 							<!-- 테이블 끝 -->
 						</div>
-						<div class="col-md-12">						
+						<div>						
 							<!-- 등록확인, 등록취소 버튼 시작 -->						
-							<button class="btn btn-primary" style="margin-right: 130px; float: right;" type="button" id="materialRegisterCancelBtn">
-								등록취소
+							<button class="btn btn-primary" style="float:right;" type="button" id="materialRegisterCancelBtn">
+								수정취소
 							</button>
-							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="materialRegisterBtn">
-								등록확인
-							</button>										
-							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="button" id="materialcodeGenerateBtn">
+							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="submit" id="materialRegisterBtn">
+								수정확인
+							</button>	
+							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="button" id="materialcodeGenerateBtn">
 								코드생성
 							</button>										
 							<!-- 등록확인, 등록취소 버튼 끝 -->
@@ -398,10 +396,9 @@
 			                	//console.log("성공한거지? ",result);
 			                }
 			            }); //$.ajax
-				});
-	           
+				}); //$(".attachDrawingFileImgTag") 끝
 				window.location.href = '/procurement1/materialList';
-			});	
+			});	//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기 끝
 			
 			//-------------------------------------- 코드생성 부분 --------------------------------------------------------------//
 			
@@ -532,9 +529,8 @@
 						//console.log(errorThrown);					
 						console.log("품목코드 생성 Ajax 에러발생~~!!!!!");						
 					}
-				});					
-				
-			});	
+				});	//$.ajax				
+			});	//코드생성 버튼 누를때, -> 코드생성 안내 모달창 보여주기 끝
 			
 			//대분류코드 변경될때마다 처리되는 함수
 			//대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수
@@ -590,8 +586,13 @@
 						//console.log(errorThrown);	
 						console.log("대분류코드를 이용해서 중분류리스트 가져오는데 Ajax 오류 발생!!!!!!");
 					}
-				});	
-			});
+				});	//$.ajax
+			}); //대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수 끝
+			
+			//code와 category 값을 넣어서 option 만들기
+	    	function makeOption(code,category){
+	    		return `<option value=${code}>${category}</option>`;
+	    	};    
 			
 			//-------------------------------------- 파일업로드 부분 --------------------------------------------------------------//
 			
@@ -970,81 +971,7 @@
 		
 		}); //$(document).ready(function() 함수 끝
 		
-    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		//대분류 리스트 타임리프 포문으로 안되서! 변수로 바꿔주기
-		let LargeCategoryDTOList = [[${LargeCategoryDTOList}]];    	
-    	let LCDTOList = new Array();
     	
-    	LargeCategoryDTOList.forEach(function(item){
-    		let LCDTO = new Object();
-    		LCDTO.code = item.code;
-    		LCDTO.category = item.category;
-    		LCDTOList.push(LCDTO);
-    	});    	
-    	//console.log("대분류 전체 리스트 확인",LCDTOList);
-    	
-    	//code와 category 값을 넣어서 option 만들기
-    	function makeOption(code,category){
-    		return `<option value=${code}>${category}</option>`;
-    	};    
-    	
-    	//option 넣어서, 넣어야할 대분류 html 문장 만들기
-    	function makeLCHtml(option){
-    		let temp_html = `<td>
-					 			<select style="width:100%; border: 0; text-align: center;" class="largeCategoryCode" name="largeCategoryCode">
-									${option}
-								</select>
-							</td>`;
-			return temp_html;
-    	}
-		
-    	//넣어야할 option을 한 문장으로 만들기
-    	let LCoptionList = ``;
-    	
-    	LCDTOList.forEach(function(item){
-    		LCoptionList=LCoptionList+(makeOption(item.code,item.category));
-    	});    	    	
-    	//console.log("합친 대분류 option",LCoptionList);       		
-    	
-    	//최종적으로 만들어진 대분류 옵션 html 문장
-    	//console.log("최종 합친 대분류 옵션 전체 문장",makeLCHtml(LCoptionList));
-    	
-    
-    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    	
-    	//중분류 리스트 타임리프 포문으로 안되서! 변수로 바꿔주기
-		let MiddleCategoryDTOList = [[${MiddleCategoryDTOList}]];        	
-    	let MCDTOList = new Array();
-    	
-    	MiddleCategoryDTOList.forEach(function(item){
-    		let MCDTO = new Object();
-    		MCDTO.middleCode = item.middleCode;
-    		MCDTO.middleCategory = item.middleCategory;
-    		MCDTOList.push(MCDTO);
-    	});    	
-    	//console.log("중분류 전체 리스트 확인",MCDTOList);
-    			
-    	//넣어야할 option을 한 문장으로 만들기
-    	let MCoptionList = ``;
-    	
-    	MCDTOList.forEach(function(item){
-    		MCoptionList=MCoptionList+(makeOption(item.middleCode,item.middleCategory));
-    	});    	    	
-    	//console.log("합친 중분류 option",MCoptionList);       		
-    	
-    	//option 넣어서, 넣어야할 대분류 html 문장 만들기
-    	function makeMCHtml(option){
-    		let temp_html = `<td>
-					 			<select style="width:100%; border: 0; text-align: center;" class="middleCategoryCode" name="middleCategoryCode">
-									${option}
-								</select>
-							</td>`;
-			return temp_html;
-    	}
-    	
-    	//최종적으로 만들어진 중분류 옵션 html 문장
-    	//console.log("최종 합친 중분류 옵션 전체 문장",makeMCHtml(MCoptionList));
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     	
@@ -1066,110 +993,6 @@
             return obj
         }
 	    
-	    //등록추가 + 버튼 누를때, 행 추가
-	    document.getElementById('addRow').addEventListener('click', () => {
-		    console.log("등록 추가 버튼 누름")
-		    	
-	    	// table element 찾기
-	    	const table = document.getElementById('registerTable');
-	    	console.log("가져온 table 정보",table)
-	    	
-	    	// 새 행(Row) 추가
-	    	const new_row = table.insertRow();
-	    	
-	    	// Cell의 길이
-	    	const cell_length = table.rows[1].cells.length;
-	    	console.log("Cell의 길이",cell_length)    	
-	    	
-	    	//각 Cell html 작성 및, 행에 추가
-	    	for(let i = 0; i < cell_length; i++) {
-	            const new_cell = new_row.insertCell(i);
-	            let temp_html = ``;
-	            if(i === 0) {
-					temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName"></td>`;
-	            }else if(i === 1) {
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size"></td>`;
-	            }else if(i === 2) {
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>`;
-	            }else if(i === 3){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>`;
-	            }else if(i === 4){
-	            	temp_html = `<td>
-									<input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo">
-									<input type="hidden" name="drawingFile">
-								</td>`;
-	            }else if(i === 5){
-	            	temp_html = `<td> 
-		            				<div class="attachDrawingFile">
-					            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
-											첨부
-										</button>
-									</div>
-	            				</td>`;
-	            }else if(i === 6){
-	            	temp_html = `<td>
-				        			<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
-					    				<option value='공용'>공용</option>
-					    				<option value='전용'>전용</option>
-					    			</select>											
-					    		</td>`;
-	            }else if(i === 7){
-	            	temp_html = makeLCHtml(LCoptionList);
-	            }else if(i === 8){
-	            	temp_html = makeMCHtml(MCoptionList);
-	            }else if(i === 9){
-                   temp_html = `<td>
-			                	    <input type="text" style="width:100%; border: 0; text-align: center;" name="code" class="materialCode" readonly>
-								</td>`;
-	            }else{
-	            	temp_html = `<td>
-				    				<button type="button" class="btn btn-primary tr_delete" style="width:106px; height:40px;" onclick="tr_delete_event(this)">
-				    					삭제 &nbsp;&nbsp;-
-			    					</button>
-					    		</td> `;
-	            }
-	            new_cell.insertAdjacentHTML('beforeend', temp_html);
-	        }
-	    	
-	    	const tdBtn = document.getElementsByClassName('tr_delete');
-			//console.log("td버튼 클래스 잘 읽어오나",tdBtn);
-			
-			const tdtest = $(tdBtn).parent('td');
-			//console.log("어디보자,,td읽어오나,,,,",tdtest);
-	    	
-	    });
-	    
-	  	//삭제 - 버튼 누를때, 행 삭제 + 그 해당 행의 테이블에 추가했던 업로드했던 이미지파일 삭제하기
-	    const tr_delete_event = (btn) => {
-	    	//해당 행의 이미지태그 읽어오자!	    	
-	    	var target = getObjTR().querySelector("img");
-	    	//console.log("img 태그 읽어오나 보자 : ",target);
-	    	
-	    	//이미지 태그가 존재할때만, Ajax 처리로 이미지 첨부파일 지워주자
-	    	if(target != null){
-	    		var targetFile = $(target).data("file");
-	    		console.log("이미지 태그 존재하고 targetFile 읽자 : ",targetFile);
-	    		
-	    		$.ajax({
-	                url: '/procurement1/drawing/removeFile',
-	                data: {fileName: targetFile},
-	                dataType:'text',
-	                type: 'POST',
-	                success: function(result){
-	                	//console.log("성공한거지? ",result);
-	                }
-	           }); //$.ajax
-	    	}
-			
-			const table = document.getElementById('registerTable');
-			const row_index = btn.closest('tr').rowIndex;
-			table.deleteRow(row_index);
-			console.log("테이블의 행 추가한거 삭제 버튼 누름");
-    	};	    
-    	
-    	
-    	
-    	
     	
 		
 		</script>

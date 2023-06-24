@@ -70,7 +70,7 @@
 							<button class="btn btn-primary" style="float: right;" onclick="location.href='/procurement1/procurementPlanList'" type="button">
 								등록취소
 							</button>
-							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="ppRegisterBtn">
+							<button class="btn btn-primary" style="margin-right: 10px; float: right;" type="submit" id="ppRegisterBtn">
 								등록확인
 							</button>										
 							<!-- 등록확인, 등록취소 버튼 끝 -->
@@ -211,7 +211,7 @@
 				//품목코드 로 계약서 찾는 Ajax처리
 				$.ajax({
 					type : "post" ,
-					url : "/procurement1/contractSearch2" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					url : "/procurement1/contractSearch" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
 					data : materialCode ,                				//보내는 데이터!(요청 데이터)
 					contentType :"text/plain; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
 					dataType : "json" ,							 		//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
@@ -242,7 +242,7 @@
 						//console.log(errorThrown);	
 						console.log("계약서 찾기 Ajax 오류 발생~!!!");
 					}
-				});					
+				});	//$.ajax				
 			});	
 			
 			console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchContractTR);
@@ -297,11 +297,11 @@
 				//소요일, 기본여유기간, 품목공급LT 를 주고 조달납기예정일, 최소발주일 계산된 값을 받아오는 Ajax처리
 				$.ajax({
 					type : "post" ,
-					url : "/procurement1/procurementPlanCalculate" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
-					data : changeJsonData ,                					//보내는 데이터!(요청 데이터)
-					contentType :"application/json; charset=UTF-8" ,  	//보내는 데이터 형식 (전송 데이터,요청데이터)
-					dataType : "json" ,							 		//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
-					success : function(data){        					//가져오는 데이터! (응답데이터)
+					url : "/procurement1/procurementPlanCalculate" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : changeJsonData ,                						//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  			//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "json" ,							 				//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        							//가져오는 데이터! (응답데이터)
 					//console.log("받아온 데이터 : ",data);
 					
 					//계산해서 받아온, 조달납기예정일,최소발주일 -> 원래 조달계획 테이블에 넣어주기
@@ -320,7 +320,7 @@
 						//console.log(errorThrown);					
 						console.log("조달납기예정일, 최소발주일 계산 Ajax 에러발생~~!!!!!");						
 					}
-				});	
+				});	//$.ajax
 				//console.log("값이 제대로 바뀌었나? : ",searchContractTR.querySelector("input[name=companyNo]").value);
 				
 				//그리고 자동으로 모달창 닫아주기

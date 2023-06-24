@@ -111,11 +111,11 @@
 								<button class="btn btn-primary" type="submit">삭제</button>
 							</form>
 							<form style="float: right;">
-								&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >수정</button>&nbsp;&nbsp;
+								<button type="submit" class="btn btn-primary" style="margin-right:10px">수정</button>
 							</form>
-							<form style="float: right;" th:action = "@{/procurement1/contractRegister}" th:method="get" id="registerForm">
+							<form style="float: right;" th:action = "@{/procurement1/contractRegister}" th:method="get" id="contractRegisterForm">
 								<input type="hidden" name="materialCodeList" id="materialCodeList">
-								<button class="btn btn-primary" id="registerBtn" type="submit">등록</button>
+								<button class="btn btn-primary" id="contractRegisterBtn" type="submit" style="margin-right:10px">등록</button>
 							</form>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->
@@ -332,8 +332,18 @@
 			//console.log("어디 만들어진 계약상태 리스트 봐보자 : ",contractStatusList);		
 			return contractStatusList;
 		}
+		
+		//이벤트 발생한 요소의 상위의 TR 객체 찾기
+        function getObjTR(){
+            var obj = event.srcElement
+            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+                obj = obj.parentElement
+            }
+            return obj
+        }
 				
 		$(document).ready(function(){
+			//-------------------------------------------- 등록 버튼 관련 -----------------------------------------------------------//
 			
 			//계약상태 값에 완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			var contractStatusValueCheck = true;		//-> 하나라도 완료 일 경우에 false로 바꿔주기 
@@ -344,7 +354,7 @@
 			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
 			
 			//등록버튼 눌렀을때, 계약상태 미완료인것만! 등록가능하게! + 아무것도 체크 하지 않으면 다시 체크하게!
-    		$("#registerBtn").on("click",function(e){
+    		$("#contractRegisterBtn").on("click",function(e){
     			//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
     			
@@ -375,16 +385,17 @@
     			//4. 계약상태 전역변수가 true + 체크박스 체크전역변수가 true 일때만, 등록가능~
     			if(contractStatusValueCheck && checkBoxValueCheck){			// 현재 계약상태 미완료인것 + 체크박스 체크된게 있을 시! ->등록가능하게
 	    			//만든 품목코드 리스트를 input 히든에 담기
-	    			let materialCodeList = new Array();
-	    			materialCodeList = $('input[name=materialCodeList]').attr('value',chkClicked());
-	    			//console.log("이렇게 만든 리스트 되는건가?",materialCodeList);
+	    			$('input[name=materialCodeList]').attr('value',chkClicked());
+	    			//console.log("input hidden에 잘 담겼나 보자 : ",$('input[name=materialCodeList]').attr('value'));
 	    			
 	    			//var test = $('input[name=materialCodeList]').attr('value');
 	    			//console.log("값을 봐보자.. 흠",test);
 	    			//alert(test);
 	    			
 	   				//담은거 submit으로 보내자
-	    			$("#registerForm").submit();
+	    			$("#contractRegisterForm").submit();
+	    			//그리고 체크된 값들 전부 체크 해제 해주기
+					$("input:checkbox").prop("checked", false);
     			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 등록오류 모달창 보여주기				
     				//오류 모달창 보여주기
     				sentence = `<span>체크한 항목이 없습니다.</span><br>
@@ -407,9 +418,9 @@
 					//그리고 체크된 값들 전부 체크 해제 해주기
 					$("input:checkbox").prop("checked", false);
     			}
-   			}); //registerBtn 등록 버튼 누를때, 끝
+   			}); //contractRegisterBtn 등록 버튼 누를때, 끝
    			
-   			//--------------------------------- 계약서 첨부파일 관련 --------------------------------------------------------------//
+   			//-------------------------------------------- 계약서 첨부파일 관련 -----------------------------------------------------------//
    			
     		//이미지인 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
 			//(그 해당 행의 버튼 정보를 가져오기 위해)
@@ -490,18 +501,10 @@
 			});	
 			
 			
-			//이벤트 발생한 요소의 상위의 TR 객체 찾기
-	        function getObjTR(){
-	            var obj = event.srcElement
-	            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
-	                obj = obj.parentElement
-	            }
-	            return obj
-	        }
+			
    			
    			
-   			
-   		});	
+   		});	//$(document).ready(function() 끝
 		
 		
 		

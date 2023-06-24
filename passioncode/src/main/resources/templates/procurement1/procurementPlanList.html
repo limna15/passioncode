@@ -113,11 +113,11 @@
 								<button class="btn btn-primary" type="submit">삭제</button>
 							</form>
 							<form style="float: right;">
-								&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >수정</button>&nbsp;&nbsp;
+								<button type="submit" class="btn btn-primary" style="margin-right:10px">수정</button>
 							</form>
-							<form style="float: right;" th:action = "@{/procurement1/procurementPlanRegister}" th:method="get" id="registerForm">
+							<form style="float: right;" th:action = "@{/procurement1/procurementPlanRegister}" th:method="get" id="ppRegisterForm">
 								<input type="hidden" name="mrpCodeList" id="mrpCodeList">
-								<button class="btn btn-primary" id="registerBtn" type="submit">등록</button>
+								<button class="btn btn-primary" id="ppRegisterBtn" type="submit" style="margin-right:10px">등록</button>
 							</form>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->
@@ -288,7 +288,7 @@
 			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
 			
 			//등록버튼 눌렀을때, 계약상태 완료 + 조달계획 등록상태 미완료 -> 등록가능하게!
-    		$("#registerBtn").on("click",function(e){
+    		$("#ppRegisterBtn").on("click",function(e){
     			//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
     			
@@ -323,13 +323,14 @@
     			
     			//4. 계약상태 + 조달계획 등록상태 전역변수가 true + 체크박스 체크전역변수가 true 일때만, 등록가능~
     			if(contractStatusValueCheck && ppStatusValueCheck && checkBoxValueCheck){		//현재 계약상태 완료+조달계획 등록상태 미완료 인것만! ->등록가능하게
-    				//만든 품목코드 리스트를 input 히든에 담기
-        			let mrpCodeList = new Array();
-        			mrpCodeList = $('input[name=mrpCodeList]').attr('value',chkClicked());
-        			//console.log("이렇게 만든 리스트 되는건가?",mrpCodeList);
+    				//만든 mrp코드 리스트를 input 히든에 담기
+        			$('input[name=mrpCodeList]').attr('value',chkClicked());
+        			//console.log("input hidden mrpCodeList에 잘 담겼는지 보자 : ",$('input[name=mrpCodeList]').attr('value'));
         			
        				//담은거 submit으로 보내자
-        			$("#registerForm").submit();
+        			$("#ppRegisterForm").submit();
+        			//그리고 체크된 값들 전부 체크 해제 해주기
+					$("input:checkbox").prop("checked", false);
     			}else if(!checkBoxValueCheck){													//체크박스 선택된게 X -> 등록오류 모달창 보여주기		
     				//오류 모달창 보여주기
     				sentence = `<span>체크한 항목이 없습니다.</span><br>

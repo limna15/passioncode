@@ -19,6 +19,7 @@ import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.ContractService;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialService;
@@ -45,7 +46,7 @@ public class PS1RestController {
 	 * @param companyName
 	 * @return
 	 */
-	@PostMapping(value="companySearch")
+	@PostMapping(value="companySearch",produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<ContractDTO> searchCompany(@RequestBody String companyName){	//post메핑이라서 파라미터로 못 읽기 때문에, @RequestBody 바디에 실어서 보내기
 		log.info("값은 가져오나 보자 : "+companyName);
 		
@@ -58,51 +59,10 @@ public class PS1RestController {
 															.manager(company.getManager()).managerTel(company.getManagerTel()).build();
 			searchContractDTOs.add(contractDTO);
 		}
-		
 		log.info("만들어진 회사리스트 보자 : "+searchContractDTOs);
 		
 		return searchContractDTOs;
 	}
-	
-	/**
-	 * 조달계획 등록 화면에서, 회사이름을 통해 계약서 찾기 <br>
-	 * 이때, 해당 품목코드를 읽어와서, 그 해당되는 계약서롤 찾기
-	 * @param companyName
-	 * @return
-	 */
-	@PostMapping(value="contractSearch",produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<ContractDTO> contractSearch(@RequestBody ContractDTO contractDTO){
-		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
-		//사업자등록번호
-		
-		//contractDTO로 받아도 보낸 변수는 companyName, materialCode 2개!
-		log.info("화면에서 보낸 회사이름,품목코드 json데이터 값 보자 : "+contractDTO); 
-				
-		List<ContractDTO> searchContractDTOs = new ArrayList<>();
-		
-		//화면에서 이미 품목코드 값이 셋팅되서 넘어오는데, 회사이름을 입력안할시엔 null이 아닌 빈값으로 받아오기때문에, 자꾸 값이 넘어간다!
-		//따라서 받은 회사이름이 빈값이 아닐때만 값을 리스트에 담아서 보내주자!
-		if(contractDTO.getCompanyName()==null || contractDTO.getCompanyName().equals("")) {
-			searchContractDTOs=null;
-		}else {
-			List<Contract> contractList = contractService.searchContractByCompanyNameAndMaterialCode(contractDTO.getCompanyName(), contractDTO.getMaterialCode());
-			log.info("잘 검색해서 왔나 계약서 보자 : "+contractList);
-			
-			//거래조건은 null일경우 null 이라고 화면에 그대로 찍히기 때문에, 거래조건이 null일때 "" 빈값으로 셋팅 바꿔주자
-			for(Contract contract:contractList) {
-				ContractDTO contractDTO2 = contractService.contractEntityToDTO(contract);
-				if(contractDTO2.getDealCondition()==null) {
-					contractDTO2.setDealCondition("");
-				}
-				searchContractDTOs.add(contractDTO2);
-			}				
-		}		
-		
-		log.info("만들어진 계약서 리스트 보자 : "+searchContractDTOs);
-		
-		return searchContractDTOs;		
-	}
-	
 	
 	/**
 	 * 조달계획 등록 화면에서, 품목코드를 통해 계약서 찾기 <br>
@@ -110,8 +70,8 @@ public class PS1RestController {
 	 * @param companyName
 	 * @return
 	 */
-	@PostMapping(value="contractSearch2",produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<ContractDTO> contractSearch2(@RequestBody String materialCode){
+	@PostMapping(value="contractSearch",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<ContractDTO> contractSearch(@RequestBody String materialCode){
 		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
 		//사업자등록번호
 		
@@ -131,7 +91,6 @@ public class PS1RestController {
 			}
 			searchContractDTOs.add(contractDTO);
 		}		
-		
 		log.info("만들어진 계약서 리스트 보자 : "+searchContractDTOs);
 		
 		return searchContractDTOs;		
@@ -153,7 +112,6 @@ public class PS1RestController {
 		log.info("소요일, 기본여유기간, 품목공급LT 객체로 보낸 json 타입 보자 : "+procurementPlanDTO); 		
 		
 		ProcurementPlanDTO result = procurementPlanService.getProcurementPlanCalculate(procurementPlanDTO);
-		
 		log.info("계산된 값 확인해 보자 : "+result);
 		
 		return result;
@@ -173,7 +131,6 @@ public class PS1RestController {
 		for(MiddleCategory middleCategory:middleCategoryList) {
 			middleCategoryDTOList.add(middleCategoryService.entityToDTO(middleCategory));
 		}
-		
 		log.info("만들어진 중분류 DTO리스트 보자 : "+middleCategoryDTOList);
 		
 		return	middleCategoryDTOList;
@@ -236,8 +193,54 @@ public class PS1RestController {
 		log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
 		
 		return finalGenerateMaterialCodeList;		
-		
 	}
+	
+	
+	@PostMapping(value="expectedPurchaseOrderCheck", produces=MediaType.TEXT_PLAIN_VALUE)
+	public String expectedPurchaseOrderCheck(@RequestBody List<String> materialCodeList) {
+		//주의사항!! 반환타입은 boolean이 안된다! 그래서 String 문자열로 반환해주기!
+		//화면에서 받아온 품목코드 리스트로 조회하기!!
+		//품목코드로 조달계획 조회하는데 
+		// 1. 조회가 안된다 => mrp조차 등록안되서, 혹은 조달계획조차 등록이 안된거니까, 등록한지 얼마 안된 품목! 수정 가능!
+		// 2. 조회가 되는데, 리스트에서 조달완료일,세부구매발주서 둘다 전부 null => 한번도 발주한적이 없는거니까, 얼마안된 등록이라 수정 가능!!
+		
+		log.info("받아온 품목코드 리스트 봐보자 : "+materialCodeList);
+		
+		boolean expectedPurchaseOrderCheck = false;
+		
+		for(String materialCode : materialCodeList) {
+			List<ProcurementPlan> ppList = procurementPlanService.getPPJoinMRPByMaterialCode(materialCode);
+			
+			if(ppList.size()==0) {
+				expectedPurchaseOrderCheck = true;
+			}else {
+				for(int i=0; i<ppList.size(); i++) {
+					if(ppList.get(i).getCompletionDate()!=null) {
+						expectedPurchaseOrderCheck = false;
+						break;
+					}else {
+						if(ppList.get(i).getDetailPurchaseOrder()!=null) {
+							expectedPurchaseOrderCheck = false;
+							break;
+						}else {
+							expectedPurchaseOrderCheck = true;
+						}
+					}
+				}
+			}
+			
+			if(!expectedPurchaseOrderCheck) {
+				break;
+			}
+		}
+		log.info("그래서 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
+		
+		return expectedPurchaseOrderCheck+"";
+	}
+	
+	
+	
+	
 	
 	
 

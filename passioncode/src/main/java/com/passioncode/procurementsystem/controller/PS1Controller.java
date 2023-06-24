@@ -5,14 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.LargeCategoryDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
@@ -26,7 +24,6 @@ import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialService;
 import com.passioncode.procurementsystem.service.MiddleCategoryService;
 import com.passioncode.procurementsystem.service.ProcurementPlanService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -47,7 +44,6 @@ public class PS1Controller {
 	public void test() {
 		
 	}
-	
 	
 	/**
 	 * 품목정보 목록 화면 보기 <br>	  
@@ -212,6 +208,34 @@ public class PS1Controller {
 	}
 	
 	/**
+	 * 품목 수정 화면 보기
+	 */
+	@GetMapping("materialModify")
+	public void materialModify(String[] materialCodeList, Model model) {
+		log.info("품목 수정 화면 보기.....");
+		log.info("받아온 품목코드 리스트 보자 : "+materialCodeList);
+		
+		//클릭한 품목코드 리스트를 통해서, 수정화면에 보낼, MaterialDTO 리스트 만들기		
+		List<MaterialDTO> materialDTOList = new ArrayList<>();
+		//품목코드,품목명 넣어서 셋팅해주기 -> 계약상태는 아직 계약 등록할지 모르니까 null 넣어서 보내주자
+		for(int i=0;i<materialCodeList.length;i++) {
+			MaterialDTO materialDTO = materialService.entityToDTO(materialService.getMaterial(materialCodeList[i]));
+			materialDTOList.add(materialDTO);
+		}
+		log.info("수정화면에 보내는 materialDTOList 봐보자 : "+materialDTOList);
+		
+		model.addAttribute("materialDTOList", materialDTOList);
+		
+		//대분류 셀렉트 정보는 모든 정보 다 보내주기
+		List<LargeCategoryDTO> LargeCategoryDTOList = largeCategoryService.getDTOList();
+		model.addAttribute("LargeCategoryDTOList", LargeCategoryDTOList );
+		
+		//중분류 셀렉트 정보는 읽어온 품목코드리스트에서 품목을 찾고, 그 품목의 중분류 코드를 이용해서,
+		//그 중분류의 해당 대분류에서 모든 중분류들! 리스트로 만들어서 materialDTO에 다 보내짐
+		
+	}
+	
+	/**
 	 * 계약 목록 화면 보기
 	 * @param model
 	 */
@@ -340,6 +364,14 @@ public class PS1Controller {
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
 		return "redirect:/procurement1/contractList";
+	}
+	
+	/**
+	 * 계약 수정 화면 보기
+	 */
+	@GetMapping("contractModify")
+	public void contractModify() {
+		
 	}
 	
 	/**
@@ -536,5 +568,12 @@ public class PS1Controller {
 		return "redirect:/procurement1/procurementPlanList";
 	}
 	
+	/**
+	 * 계약 수정 화면 보기
+	 */
+	@GetMapping("procurementPlanModify")
+	public void procurementPlanModify() {
+		
+	}
 
 }
