@@ -6,19 +6,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
-import com.passioncode.procurementsystem.dto.MaterialInDTO;
-import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.dto.ProgressCheckDTO;
-import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
+import com.passioncode.procurementsystem.dto.DetailProgressCheckListDTO;
+import com.passioncode.procurementsystem.dto.DetailPublishDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
-import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.ProgressCheck;
@@ -50,23 +45,101 @@ public class ProgressCheckRepositoryTests {
 
 	@Autowired
 	MRPRepository mrpRepository;
-
+	
+	//검수완료
+	//조건: 검수 일정이 존재하고, 검수 일정 개수와 납기 진도율의 개수도 같을 때
 	@Transactional
 	@Test
-	public void detailPurchaseOrderDTOTest() {
-		// 발주서 목록 화면
-		// DTO로 갖고와서 뿌리기
-
-		// 발주서 목록은 다 뿌려야 한다
-		List<DetailPurchaseOrder> detailList = detailPurchaseOrderRepository.findAll();
-
-		List<MaterialInDTO> materialInDTOList = new ArrayList<>();
-		MaterialInDTO materialInDTO = null;
-		List<ProcurementPlan> ppList = new ArrayList<>();
-		List<MaterialIn> miList = new ArrayList<>();
-
-		DetailPurchaseOrder detailPurchaseOrder = detailPurchaseOrderRepository.findById(1).get();
-
+	public void checkDone() {//여러개 가져오기 가능
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setPcectc((String) arr[2]);
+			pdDTO.setPcrate((Integer) arr[3]);
+			pdDTO.setPcdetail((Integer) arr[4]);
+			pdDTO.setTodaydate(LocalDateTime.now());//나중에 오늘날짜만 검수할 수 있도록 넣어두기
+			pdDTO.setCountno(1);			//목록에서 열 번호를 위해
+			//log.info("Date today: ", today);;
+			log.info("dListDTO.setPccode: "+((Integer) arr[0]));
+			list.add(pdDTO);
+		}
+		
+		log.info("쿼리 발주번호를 통한 진척검수: "+list);
+		//return pc;
+		
+	}
+	
+	@Transactional
+	@Test
+	public void compareDateTest() {//리턴 스트링으로 하기?(date1이 null이라면 미래가 없는 것) 고민중, 검수일정 없음을 위해
+		//날짜 비교하기
+		//오늘과 가까운 미래 날짜 가져오기
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		//Date futureDate=null;//더 미래인 날을 여기에 저장하기
+		Date date1=null;
+		Date date2=null;
+		Date today = new Date();//오늘 날짜 보는 방법
+		
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setTodaydate(LocalDateTime.now());
+			//int comparison = date1.compareTo(today);// 날짜 비교, 미래 비교는 마지막에 하기
+			//1. 오늘보다 미래에 있기, 2. 미래에서 가장 가까운 날짜
+			
+			if(date1!=null) {//비교하기 위한 값이 있다면
+				date2 = ((Date) arr[1]);//다음에 들어온 날을 넣어준다.
+				log.info("두 번째 수"+date2);
+				int comparison2 = date1.compareTo(date2);// 날짜 비교
+				//오늘이랑 먼저 비교하고
+				//(미래)오늘 뒤에 있는 날만 보여주기
+				//date1이 date2보다 오늘과 가까운 미래이면 date1에 저장하기
+				//다음 진척검수일이 과거인 것은 다른 곳에서 비교해서 없음 표시하기
+				
+				if (comparison2 > 0) {//이게 더 빠른 날짜
+					date1 = date2;//date2에 있음으로 date1으로 바꿔주기, 그래야 계속 비교가능
+		            System.out.println("date1이 date2보다 뒤에 있습니다.");
+		        } else if (comparison2 < 0) {//이 경우가 가까운 날의 진척 검수
+		            System.out.println("date1이 date2보다 앞에 있습니다.");
+		            System.out.println("다음 진척 검수일정"+date1);
+		        } else {//이런 경우는 처음부터 없도록 하기
+		            System.out.println("두 날짜는 같습니다.");
+		        }
+			}else {//처음에 date1이 null인 경우
+				date1 = ((Date) arr[1]);//무조건 담는다
+				log.info("처음에만 있는 수"+date1);
+				int comparison = date1.compareTo(today);// 날짜 비교
+				if (comparison > 0) {//이게 더 빠른 날짜
+		            System.out.println("date1이 today보다 뒤에 있습니다.");
+		        } else if (comparison < 0) {//오늘보다 앞에 있으면 null로 보내기
+		        	date1 = null;
+		            System.out.println("date1이 today보다 앞에 있습니다.");
+		        }
+			}
+			
+			list.add(pdDTO);
+		
+		//log.info("쿼리 발주번호를 통한 진척검수: "+list);
+		
+//	     for (DetailProgressCheckListDTO item : list) {
+//	         int pccode = item.getPccode();
+//	         Date pcdate = item.getPcdate();
+//	         
+//	         System.out.println("pccode: " + pccode);
+//	         System.out.println("pcdate: " + pcdate);
+//	     }
+		}
+		log.info("날짜: "+date1);//마지막 한개만 나옴
+		
 	}
 
 	@Transactional
@@ -113,7 +186,6 @@ public class ProgressCheckRepositoryTests {
 		// 세부구매발주서 -> 조달계획 -> ..
 		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
 		ProcurementPlan procurementPlan = procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
-		MaterialIn maIn = materialInRepository.findByDetailPurchaseOrder(detailPO);
 
 		ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
 				.companyName(procurementPlan.getContract().getCompany().getName())
@@ -137,23 +209,6 @@ public class ProgressCheckRepositoryTests {
 		
 		return pNum;
 		
-	}
-
-	@Transactional
-	@Test
-	public void DTOTest() {// 자재 입고 화면 가져온 것
-		DetailPurchaseOrder detailPurchaseOrder2 = detailPurchaseOrderRepository.findById(1).get();
-		ProcurementPlan pp = procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder2);
-		MaterialIn mi = materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder2);
-		log.info("pp는 어케 찍히나 " + pp);
-
-		MaterialInDTO materialInDTO = MaterialInDTO.builder().no(detailPurchaseOrder2.getPurchaseOrder().getNo())
-				.code(detailPurchaseOrder2.getCode()).dueDate(pp.getDueDate())
-				.materialCode(pp.getMrp().getMaterial().getCode()).materialName(pp.getMrp().getMaterial().getName())
-				.amount(pp.getDetailPurchaseOrder().getAmount()).status(true).transactionStatus("발행 예정")
-				.inDate(mi.getDate()).build();
-
-		log.info("DTO 하나는 어케 가져오는거죠 " + materialInDTO);
 	}
 
 	public LocalDateTime extistPurchaseOrderDate(ProcurementPlan procurementPlan) {// 조달 계획을 가져와야 하기 때문에 리턴이 필요하다.
