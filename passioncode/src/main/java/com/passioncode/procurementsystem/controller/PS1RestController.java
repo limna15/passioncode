@@ -202,58 +202,77 @@ public class PS1RestController {
 	 * @return
 	 */
 	@PostMapping(value="modifyMaterialCode",produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<MaterialDTO> modifyMaterialCode(@RequestBody List<MiddleCategoryDTO> middleCategoryDTOList, @RequestBody List<String> materialCodeList  ){
+	public List<MaterialDTO> modifyMaterialCode(@RequestBody List<MiddleCategoryDTO> middleCategoryDTOList){
 		//화면에서 대분류코드, 중분류코드를 받아서, 품목코드를 만들어서 보내주기
+		//그리고 기존의 품목코드를 받아서 그 품목코드 삭제를 시키고, 품목코드 생성하기! 그래야 중복이나 바뀔시 생기는 문제를 없앨수 있음!
+		// 하지만 이때 @RequestBody List<MiddleCategoryDTO> middleCategoryDTOList, @RequestBody List<String> materialCodeList  이렇게 
+		// @RequestBody 2개 안돼!! 그러니까 품목코드를 MiddleCategoryDTO의 middleCategory 속성에 넣어서 하나로 리스트 만들어서 보내주자!
+		//같은 String이니까! 담아서 보낼 수 있을 듯! 하지만 middleCategory -> materialCode 가 되는거니까 헷갈릴테니 주의하자!
+		
 		//코드생성 버튼 누를때마다, 모든 대분류코드, 중분류코드 받아서, 각각 품목코드 만들어주기
 		log.info("일단 제대로 받아오나 함 보자 middleCategoryDTOList : "+middleCategoryDTOList);
-		log.info("일단 제대로 받아오나 함 보자 materialCodeList : "+materialCodeList);
 		
-//		//받은 대분류코드, 중분류코드 문자만 추출해서 만들고, 만든거 리스트에 넣어주기 
-//		// -> 생성된 품목코드의 문자부분의 리스트
-//		List<String> getLCWithMCList = new ArrayList<>();
-//		for(MiddleCategoryDTO middleCategoryDTO:middleCategoryDTOList) {
-//			String getLC = middleCategoryDTO.getLargeCode().substring(0,1);
-//			String getMC = middleCategoryDTO.getMiddleCode().substring(0,1);
-//			getLCWithMCList.add(getLC + getMC);
-//		}
-//		log.info("대분류,중분류 코드 문자부분만 합쳐서 만든 문자 코드 리스트 보자 : ",getLCWithMCList);
-//		
-//		//생성된 품목코드의 숫자부분 리스트로 만들기
-//		List<String> maxOnlyNumByStringList = new ArrayList<>();
-//		
-//		//생성된 품목코드의 문자부분 리스트를 통해서, 모든 품목 찾아와서, 숫자부분만 추출후 최대값 가져오고, 최대값 +1 문자로 만들어서 리스트로 만들기
-//		for(String getLCWithMC:getLCWithMCList) {			
-//			//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
-//			List<Material> materialList=materialService.getMaterialListByCodeContaining(getLCWithMC);
-//			
-//			//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
-//			List<Integer> onlyNumList = new ArrayList<>();
-//			for(Material m:materialList) {
-//				onlyNumList.add(Integer.parseInt(m.getCode().substring(2)));
-//			}
-//			
-//			//뽑아낸 숫자 리스트 중에서 최고값 (ex> 2)
-//			Integer maxOnlyNumByInt = Collections.max(onlyNumList);
-//			
-//			//최고 숫자에 +1 하고, 4자릿수로 맞춰서 문자로 만들기 (ex> 2+1 =3 -> 0003)
-//	        String maxOnlyNumByString = String.format("%04d",maxOnlyNumByInt+1);
-//			
-//			//만든 숫자리스트 -> 위에서 선언한, 생성된 품목코드의 숫자부분 리스트에 넣기
-//	        maxOnlyNumByStringList.add(maxOnlyNumByString);			
-//		}
-//		log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
-//		
-//		List<MaterialDTO> finalGenerateMaterialCodeList = new ArrayList<>();
-//		
-//		for(int i=0;i<getLCWithMCList.size();i++) {
-//			MaterialDTO materialDTO = new MaterialDTO();
-//			materialDTO.setCode(getLCWithMCList.get(i)+maxOnlyNumByStringList.get(i));
-//			finalGenerateMaterialCodeList.add(materialDTO);
-//		}
-//		log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
-//		
-//		return finalGenerateMaterialCodeList;		
-		return null;
+		//middleCategory에 받은 품목코드 materialDTO에 담기!
+		List<MaterialDTO> materialDTOList = new ArrayList<>();
+		
+		for(MiddleCategoryDTO middleCategoryDTO:middleCategoryDTOList ) {
+			MaterialDTO materialDTO = MaterialDTO.builder().code(middleCategoryDTO.getMiddleCategory()).build();
+			materialDTOList.add(materialDTO);			
+		}
+		log.info("MaterialDTO 리스트로 품목코드 옮긴거 보자! : "+materialDTOList);
+		
+		//받아온 품목코드들은 변경되야하는 기존의 품목코드니까 삭제를 시키기
+		for(MaterialDTO materialDTO : materialDTOList) {
+			materialService.delete(materialDTO);
+		}
+		
+		//이제 중복되거나 할일 없으니까, 받아온 대분류, 중분류 를 통해 품목코드 만들기
+		//받은 대분류코드, 중분류코드 문자만 추출해서 만들고, 만든거 리스트에 넣어주기 
+		// -> 생성된 품목코드의 문자부분의 리스트
+		List<String> getLCWithMCList = new ArrayList<>();
+		for(MiddleCategoryDTO middleCategoryDTO:middleCategoryDTOList) {
+			String getLC = middleCategoryDTO.getLargeCode().substring(0,1);
+			String getMC = middleCategoryDTO.getMiddleCode().substring(0,1);
+			getLCWithMCList.add(getLC + getMC);
+		}
+		log.info("대분류,중분류 코드 문자부분만 합쳐서 만든 문자 코드 리스트 보자 : ",getLCWithMCList);
+		
+		//생성된 품목코드의 숫자부분 리스트로 만들기
+		List<String> maxOnlyNumByStringList = new ArrayList<>();
+		
+		//생성된 품목코드의 문자부분 리스트를 통해서, 모든 품목 찾아와서, 숫자부분만 추출후 최대값 가져오고, 최대값 +1 문자로 만들어서 리스트로 만들기
+		for(String getLCWithMC:getLCWithMCList) {			
+			//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
+			List<Material> materialList=materialService.getMaterialListByCodeContaining(getLCWithMC);
+			
+			//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
+			List<Integer> onlyNumList = new ArrayList<>();
+			for(Material m:materialList) {
+				onlyNumList.add(Integer.parseInt(m.getCode().substring(2)));
+			}
+			
+			//뽑아낸 숫자 리스트 중에서 최고값 (ex> 2)
+			Integer maxOnlyNumByInt = Collections.max(onlyNumList);
+			
+			//최고 숫자에 +1 하고, 4자릿수로 맞춰서 문자로 만들기 (ex> 2+1 =3 -> 0003)
+	        String maxOnlyNumByString = String.format("%04d",maxOnlyNumByInt+1);
+			
+			//만든 숫자리스트 -> 위에서 선언한, 생성된 품목코드의 숫자부분 리스트에 넣기
+	        maxOnlyNumByStringList.add(maxOnlyNumByString);			
+		}
+		log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
+		
+		List<MaterialDTO> finalGenerateMaterialCodeList = new ArrayList<>();
+		
+		for(int i=0;i<getLCWithMCList.size();i++) {
+			MaterialDTO materialDTO = new MaterialDTO();
+			materialDTO.setCode(getLCWithMCList.get(i)+maxOnlyNumByStringList.get(i));
+			finalGenerateMaterialCodeList.add(materialDTO);
+		}
+		log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
+		
+		return finalGenerateMaterialCodeList;		
+//		return null;
 	}
 	
 	

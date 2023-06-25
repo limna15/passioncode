@@ -175,7 +175,7 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	@Override
 	public void delete(MaterialDTO materialDTO) {
-		log.info("삭제된 품목(material)정보 : "+dtoToEntity(materialDTO));
+		//log.info("삭제된 품목(material)정보 : "+dtoToEntity(materialDTO));
 		materialRepository.deleteById(materialDTO.getCode());		
 	}
 

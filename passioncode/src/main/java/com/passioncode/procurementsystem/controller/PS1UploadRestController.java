@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -276,32 +278,36 @@ public class PS1UploadRestController {
     
     /**
      * 업로드파일 삭제하기2 <br>
-     * 품목 DB에 있는 drawingFile 그대로 받았을때 삭제 처리하기
+     * 품목 DB에 있는 drawingFile 그대로 받았을때 삭제 처리하기 <br>
+     * 이때 drawingFile 리스트로 받아와서 전부 삭제처리 해주기
      * @param fileName
      * @return
      */
     @PostMapping("/drawing/removeFile2")
-    public ResponseEntity<Boolean> drawingRemoveFile2(String drawingFile){
+    public ResponseEntity<Boolean> drawingRemoveFile2(@RequestBody List<String> drawingFileList){
     	//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
 		//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\ upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
 		//ajax 삭제할대 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
 		// \PassionCode\ upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
 		//ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
-    	log.info("제대로 DB에 저장된 파일이름 그대로 읽어오나 보자 : "+drawingFile);
+    	//log.info("제대로 DB에 저장된 파일이름 그대로 읽어오나 보자 : "+drawingFile);
+		log.info("제대로 DB에 저장된 파일이름 리스트 담아서 오나 보자 : "+drawingFileList);
     	// 파일명 그대로 받은거에서 절대경로 /PassionCode/ upload/drawing/ 이거 drawingUploadPath 빼주자 
     	
-    	 File file = new File(drawingFile);
-         log.info("파일 봐보자... : "+file);
-         boolean result = file.delete();
-         log.info("원본 삭제 결과 : "+result);
-
-         File thumbnail = new File(file.getParent(), "thumb_" + file.getName());
-         log.info("썸네일 봐보자... : "+thumbnail);
-         result = thumbnail.delete();
-         log.info("썸네일 삭제 결과 : "+result);
-         
-         return new ResponseEntity<>(result, HttpStatus.OK);
-    	
+		boolean result = false;
+		for(String drawingFile: drawingFileList) {
+			File file = new File(drawingFile);
+			log.info("파일 봐보자... : "+file);
+			result = file.delete();
+			log.info("원본 삭제 결과 : "+result);
+			
+			File thumbnail = new File(file.getParent(), "thumb_" + file.getName());
+			log.info("썸네일 봐보자... : "+thumbnail);
+			result = thumbnail.delete();
+			log.info("썸네일 삭제 결과 : "+result);
+		}
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
     

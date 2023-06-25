@@ -20,11 +20,10 @@
 											<th width="">규격</th>
 											<th width="">재질</th>
 											<th width="">제작 사양</th>
-											<th width="8%">도면 번호</th>
 											<th width="9%">도면<br>Image</th>
-											<th width="8%">공용여부</th>
-											<th width="8%">대</th>
-											<th width="8%">중</th>
+											<th width="9%">공용여부</th>
+											<th width="9%">대</th>
+											<th width="9%">중</th>
 											<th width="10%">품목코드</th>
 											<th></th> 
 										</tr>
@@ -34,10 +33,10 @@
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName"></td>
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size"></td>
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>
 											<td>
-												<input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo">
-												<input type="hidden" name="drawingFile">
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="spec">
+												<input type="hidden" name="drawingNo" >
+												<input type="hidden" name="drawingFile" class="drawingFile">
 											</td>
 											<td>
 												<div class="attachDrawingFile">
@@ -366,14 +365,34 @@
 			console.log("등록체크 전역변수 품목코드 확인하기(중간에 확인) : ",materialCodeRegisterValueCheck);
 			console.log("등록체크 전역변수 품목명 확인하기(중간에 확인) : ",materialNameRegisterValueCheck);
 						
-			//등록확인 모달창의 확인 버튼 누를때
+			//등록확인 모달창의 확인 버튼 누를때 --> 실제로 DB에 등록 되는 부분
 			$(document).on("click",".materialRegisterConfirmBtn",function(e){
-				e.preventDefault();					
+				e.preventDefault();	
+				//도면파일 인풋에 값이 실려서! 존재한다면, 도면번호에 품목코드+D01을 넣어주자!
+				//모든 도면파일의 인풋값 리스트로 만들기
+				let drawingFileList = new Array();
+				$('.drawingFile').each(function(){
+    				let drawingFile = $(this).val();
+    				//console.log("이거 잘 drawingFile 읽어온건가!!",drawingFile);
+    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+   					drawingFileList.push(drawingFile);
+    			}); 
+	        	console.log("만든 drawingFileList 보자! : ",drawingFileList);
+
+	        	//도면파일이 존재하게 된다면, 도면번호의 품목코드+D01 넣어주기
+				drawingFileList.forEach(function(item, i){
+					if(item != ""){
+						var materialCode = document.querySelector(`#materialRegisterTable tr:nth-child(${i+1}) input[name=code]`).value;
+						console.log("어디 품목코드 읽히나 보자 : ",materialCode);
+						document.querySelector(`#materialRegisterTable tr:nth-child(${i+1}) input[name=drawingNo]`).value = materialCode+"D01";
+					}
+				});
+				
 				//폼태그에 실어서 등록하기
 				$("#materialregisterForm").submit();
 				//그리고 자동으로 모달창 닫아주기
 				$(".materialRegisterConfirmModal").modal('hide');				
-			});	
+			});	////등록확인 모달창의 확인 버튼 누를때 끝
 			
 			//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기
 			$(document).on("click","#materialRegisterCancelBtn",function(e){
@@ -1105,13 +1124,12 @@
 	            }else if(i === 2) {
 	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality"></td>`;
 	            }else if(i === 3){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="spec"></td>`;
-	            }else if(i === 4){
 	            	temp_html = `<td>
-									<input type="text" style="width:100%; border: 0; text-align: center;" name="drawingNo">
+									<input type="text" style="width:100%; border: 0; text-align: center;" name="spec">
+									<input type="hidden" name="drawingNo">
 									<input type="hidden" name="drawingFile">
 								</td>`;
-	            }else if(i === 5){
+	            }else if(i === 4){
 	            	temp_html = `<td> 
 		            				<div class="attachDrawingFile">
 					            		<button type="button" class="btn btn-primary drawingAttachBtn" style=" padding-left: 10px;padding-right: 10px;">
@@ -1119,18 +1137,18 @@
 										</button>
 									</div>
 	            				</td>`;
-	            }else if(i === 6){
+	            }else if(i === 5){
 	            	temp_html = `<td>
 				        			<select style="width:100%; border: 0; text-align: center;" name="shareStatus">
 					    				<option value='공용'>공용</option>
 					    				<option value='전용'>전용</option>
 					    			</select>											
 					    		</td>`;
-	            }else if(i === 7){
+	            }else if(i === 6){
 	            	temp_html = makeLCHtml(LCoptionList);
-	            }else if(i === 8){
+	            }else if(i === 7){
 	            	temp_html = makeMCHtml(MCoptionList);
-	            }else if(i === 9){
+	            }else if(i === 8){
                    temp_html = `<td>
 			                	    <input type="text" style="width:100%; border: 0; text-align: center;" name="code" class="materialCode" readonly>
 								</td>`;

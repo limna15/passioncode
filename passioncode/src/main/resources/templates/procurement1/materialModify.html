@@ -29,14 +29,20 @@
 									</thead>
 									<tbody>	
 										<tr th:each="dto : ${materialDTOList}" >									
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName" th:value="${dto.name}" ></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="size" th:value="${dto.size}" ></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="quality" th:value="${dto.quality}" ></td>
 											<td>
-												<input type="text" style="width:100%; border: 0; text-align: center;" name="spec" th:value="${dto.spec}" >
-												<input type="hidden" name="drawingNo" th:value="${dto.drawingNo}"  >
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName" th:value="${dto.name}" >
+											</td>
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="size" class="size" th:value="${dto.size}" >
+											</td>
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="quality" class="quality" th:value="${dto.quality}" >
+											</td>
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="spec" class="spec" th:value="${dto.spec}" >
+												<input type="hidden" name="drawingNo" class="drawingNo" th:value="${dto.drawingNo}"  >
 												<input type="hidden" class="originalDrawingFile"  th:value="${dto.drawingFile}" >
-												<input type="hidden" name="drawingFile"  >
+												<input type="hidden" name="drawingFile" class="drawingFile" th:value="${dto.drawingFile}" >
 											</td>
 											<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image==true}">
 												<div class="modifyDrawingFile">
@@ -67,7 +73,7 @@
 												</div>											
 											</td>
 											<td>
-												<select style="width:100%; border: 0; text-align: center;" name="shareStatus" >
+												<select style="width:100%; border: 0; text-align: center;" name="shareStatus" class="shareStatus">
 													<option value='공용' th:selected="${dto.shareStatus == '공용'}" >공용</option>
 													<option value='전용' th:selected="${dto.shareStatus == '전용'}" >전용</option>
 												</select>											
@@ -100,14 +106,11 @@
 						</div>
 						<div>						
 							<!-- 등록확인, 등록취소 버튼 시작 -->						
-							<button class="btn btn-primary" style="float:right;" type="button" id="materialRegisterCancelBtn">
+							<button class="btn btn-primary" style="float:right;" type="button" id="materialModifyCancelBtn">
 								수정취소
 							</button>
 							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="submit" id="materialModifyBtn">
 								수정확인
-							</button>	
-							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="button" id="materialcodeGenerateBtn">
-								코드생성
 							</button>										
 							<!-- 등록확인, 등록취소 버튼 끝 -->
 						</div>	
@@ -264,15 +267,11 @@
 		       - 내용 : 1. <span>파일 사이즈가 초과되었습니다.</span>
 						2. <span>해당 종류의 파일은 업로드할 수 없습니다.</span>
 						3. <span>파일 1개만 첨부할 수 있습니다.</span>
- 			2. 코드생성 안내
- 				- 제목 : 품목코드 생성 안내
- 				- 내용 : <span>품목코드 : BN0002 </span><br>
- 						 <span>품목코드 : PB0004 </span><br>
- 						 <span>위와 같이 품목코드가 생성되었습니다.</span>      
-			3. 코드생성 안내 오류시
-				- 제목 : 품목코드 생성 안내
-				- 내용 : <span>등록해야할 값들이 누락되어있습니다.</span><br>
-		               	 <span>다시 작성해주시길 바랍니다.</span> 
+		    2. 수정확인 버튼 누를때 오류시
+		       - 제목 : 품목 정보 수정 확인
+		       - 내용 : 1. <span>변경된 사항이 없습니다.</span><br>
+						   <span>다시 작성해주시길 바랍니다.</span>
+				
 		-->
 		<div class="materialInfoAndErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -750,38 +749,26 @@
 					
 					$(".materialInfoAndErrorModal").modal('show');
 	 			}else{																	//첨부된 파일이 존재하니 원래대로 진행
-	 				//기존의 도면파일이 존재한다면 경고창 보여주고 아닐시에는 업로드 하기!
-	 				//원래 그 해당 테이블에서 기존의 도면파일 값 읽기
-	 				var originalDrawingFile = attachDrawingFileTR.querySelector(".originalDrawingFile").value
-	 				console.log("어디 테이블에서 기존 도면파일 값 읽어오나 보자 : ",originalDrawingFile);
-	 				// 도면 파일이 없으면 null이 아니라 "" 빈값인 상태!
-	 				if(originalDrawingFile==""){
-	 					var attachDrawingFileThumbImg = $(".attachDrawingFileThumbImg").attr("src");
-	    				//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachDrawingFileThumbImg);
-	    				var targetFile = $(".uploadResult li").data("file");
-	    				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
-	    				var str = `<img src='`+attachDrawingFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachDrawingFileImgTag'>`;
-	    				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachDrawingFileTR);
-	    				//console.log("넣을 내용 잘 셋팅 되었나 보자 : ",str);
-	    				attachDrawingFileTR.querySelector(".modifyDrawingFile").innerHTML = str;
-	    				
-	    				$(".drawingUploadModal").modal('hide');
-	 				}else{
-		 				document.querySelector("#materialInfoAndErrorModalTitle2").innerHTML = `도면 Image 첨부 확인`;
-						sentence = `<span>기존의 도면파일은 삭제됩니다.</span><br>
-			       			  		<span>현재 도면파일로 수정하시겠습니까?</span>`;
-		       			document.querySelector("#materialInfoAndErrorModalContent2").innerHTML = sentence;					
-						$(".materialInfoAndErrorModal2").modal('show');
-	 				} //if
+ 					var attachDrawingFileThumbImg = $(".attachDrawingFileThumbImg").attr("src");
+    				//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachDrawingFileThumbImg);
+    				var targetFile = $(".uploadResult li").data("file");
+    				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
+    				var str = `<img src='`+attachDrawingFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachDrawingFileImgTag'>`;
+    				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachDrawingFileTR);
+    				//console.log("넣을 내용 잘 셋팅 되었나 보자 : ",str);
+    				attachDrawingFileTR.querySelector(".modifyDrawingFile").innerHTML = str;
+    				
+    				$(".drawingUploadModal").modal('hide');
 	 			} //if
 	        });	//도면 첨부 모달창의 확인버튼 누를때 끝
 	        
+	        /*
 	        //수정 진짜로 할거니? 모달창의 확인 버튼 누를때, 기존의 업로드된 파일 삭제 + 업로드 진행 (경고모달창, 첨무보달창 2개다 지우기) 
 	        $(".materialInfoAndErrorModal2ConfirmBtn").on("click", function(e) {
 	        	var originalDrawingFile = $(".originalDrawingFile").val();
-	        	console.log("이거 지금 이미지url 잘 읽은거 겠지? : ",originalDrawingFile);
+	        	console.log("이미지url 못읽어서 drawingFile 이름으로!! : ",originalDrawingFile);
 	        	
-	        	//기존의 업로드된 파일 삭제하는 ajax
+	        	//기존의 업로드된 파일 삭제하는 ajax(imgurl말고! drawingFile을 바로 이용해서 하는 삭제)
 	        	$.ajax({
 	                url: '/procurement1/drawing/removeFile2',
 	                data: {drawingFile: originalDrawingFile},
@@ -807,6 +794,7 @@
  	                }
 	            }); //$.ajax 
 	        });	//수정 진짜로 할거니? 모달창의 확인 버튼 끝
+	        */
 	        
 			//도면 첨부 모달창의 취소버튼 + 모달창 x 누를때 -> 업로드한 파일 지워주기
 	        $(".drawingUploadCancelBtn").on("click", function(e) {
@@ -848,46 +836,181 @@
 			//-------------------------------------- 수정확인, 수정취소 버튼 부분 --------------------------------------------------------------//
 			
 			//수정확인 버튼 누를때 -> 수정확인 모달창 보여주기
+			//변경된 사항이 없을때!!! -> 변경된 내용이 없습니다. 다시 작성해주시길 바랍니다 모달창 보여주기
 			$(document).on("click","#materialModifyBtn",function(e){
 				console.log("수정확인 버튼 누름");
 				//1. 버튼 이벤트(submit)금지
     			e.preventDefault();				
 				
-				//2. 수정확인 모달창에 띄울 값 받기(품목명)
-				//입력받은 품목명 -> 품목명 리스트에 담기
-    			let nameList = new Array();
-    			$('.materialName').each(function(){
-    				let name = $(this).val();
-    				//console.log("이거 잘 code 읽어온건가!!",name);
-    				if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
-    					nameList.push(name);
-    				}   	
-    			});  
+				//2. 원래의 품목 속성값들(품목명, 규격, 재질, 제작사양, 도면파일, 공용여부, 대분류코드, 중분류코드) -> 리스트로 만들기
+				// vs 입력받은 품목 속성값들(품목명, 규격, 재질, 제작사양, 도면파일, 공용여부, 대분류코드, 중분류코드) -> 리스트로 만들기
+				// 두개를 비교하여, 변경된 값이 하나도 없으면!! 수정된 내용이 없다는 안내 모달창 보여주기
+				// 번거롭게 각각 리스트로 만들지 말고!1 materialDTO 객체로 만들어 담고, 이걸 리스트로 담아주자!
 				
-    			//3. 입력받은 리스트를 이용해서, 모달창에 보여줄 한문장으로 만들기
-    			function makeSentence(name){
-    				let sentence =`<span>품목명 : ${name}</span><br>`;
-    				return sentence;    				
-    			}
-    			
-    			let sentence = ``;
-    			nameList.forEach(function(item){
-   					sentence=sentence+makeSentence(item);
-   				});
-   				sentence=sentence+`<br><span>해당 품목을 수정 하시겠습니까?</span>`;   				
-   				//console.log("완성된 문장보자",sentence);
-   				
-   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
-   				document.querySelector("#materialModifyConfirmModalContent").innerHTML = sentence;
-   				//등록확인 모달창 보여주기
-				$(".materialModifyConfirmModal").modal('show');	
+				//원래의 품목 속성값들 리스트
+				//값은 잘읽어오는데, 만약에 없는 값들을 null로 받아오기때문에, 입력받아온 값들은 없으면 "" 빈값으로 읽기 때문에 비교가 두개가 당연히 다르다고 읽는다!
+				// 받아온 값들이 null 일 경우 "" 빈값으로 바꿔주자! (규격,재질,제작사양,도면파일)
+				let originalMaterialDTOList = [[${materialDTOList}]];
+				for(var i=0; i<originalMaterialDTOList.length; i++){
+					if(originalMaterialDTOList[i].size == null){
+						originalMaterialDTOList[i].size = "";
+					}
+					if(originalMaterialDTOList[i].quality == null){
+						originalMaterialDTOList[i].quality = "";
+					}
+					if(originalMaterialDTOList[i].spec == null){
+						originalMaterialDTOList[i].spec = "";
+					}
+					if(originalMaterialDTOList[i].drawingFile == null){
+						originalMaterialDTOList[i].drawingFile = "";
+					}
+				}
+				//console.log("원래의 originalMaterialDTOList 보자!!!!! : ",originalMaterialDTOList);
+				
+				//입력받은 수정된 품목 속성값들 리스트
+				let modifyMaterialDTOList = new Array();
+				for(var i=0; i<originalMaterialDTOList.length; i++){
+					let modifyMaterialDTO = new Object();
+					modifyMaterialDTO.name = document.querySelectorAll(".materialName")[i].value;
+					modifyMaterialDTO.size = document.querySelectorAll(".size")[i].value;
+					modifyMaterialDTO.quality = document.querySelectorAll(".quality")[i].value;
+					modifyMaterialDTO.spec = document.querySelectorAll(".spec")[i].value;
+					modifyMaterialDTO.drawingFile = document.querySelectorAll(".drawingFile")[i].value;
+					modifyMaterialDTO.shareStatus = document.querySelectorAll(".shareStatus")[i].value;
+					modifyMaterialDTO.largeCategoryCode = document.querySelectorAll(".largeCategoryCode")[i].value;
+					modifyMaterialDTO.middleCategoryCode = document.querySelectorAll(".middleCategoryCode")[i].value;
+					modifyMaterialDTOList.push(modifyMaterialDTO);
+				}
+				//console.log("입력받은 수정된 modifyMaterialDTOList 보자!!!!! : ",modifyMaterialDTOList);
+				
+				//값이 하나라도 변하지 않을때, 그 횟수를 더해주자!
+				//값이안변한 갯수 = originalMaterialDTOList.length  ==> 전부가 하나도 값이 안변한거야!! -> 하나도 변한값 없어~ 모달창 보여주기
+				var noChangeCount = 0;
+				
+				for(var i=0; i<originalMaterialDTOList.length; i++){
+					if(originalMaterialDTOList[i].name == modifyMaterialDTOList[i].name &&
+						originalMaterialDTOList[i].size == modifyMaterialDTOList[i].size &&
+						originalMaterialDTOList[i].quality == modifyMaterialDTOList[i].quality &&
+						originalMaterialDTOList[i].spec == modifyMaterialDTOList[i].spec &&
+						originalMaterialDTOList[i].drawingFile == modifyMaterialDTOList[i].drawingFile &&
+						originalMaterialDTOList[i].shareStatus == modifyMaterialDTOList[i].shareStatus &&
+						originalMaterialDTOList[i].largeCategoryCode == modifyMaterialDTOList[i].largeCategoryCode &&
+						originalMaterialDTOList[i].middleCategoryCode == modifyMaterialDTOList[i].middleCategoryCode ){
+						//console.log("지금 "+i+"번째 항목이 다 같은 경우야!!!!");
+						noChangeCount = noChangeCount +1; 
+					}
+				}
+				//console.log("최종적으로 값이 안변한 갯수 보자 : ", noChangeCount);
+				//console.log("전체 품목 속성리스트의 크기 : ",originalMaterialDTOList.length);
+				
+				if(noChangeCount == originalMaterialDTOList.length){	//값이 하나도 변한게 없어!!! -> 안내 모달창 보여주자!
+					/* 
+					수정확인 버튼 오류 모달창 보여주기
+						- 제목 : 품목 정보 수정 확인
+				       	- 내용 : 1. <span>변경된 사항이 없습니다.</span><br>
+								   	<span>다시 작성해주시길 바랍니다.</span>
+					*/
+					document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목 정보 수정 확인`;
+					sentence = `<span>변경된 사항이 없습니다.</span><br>
+						   		<span>다시 작성해주시길 바랍니다.</span>`;
+	       			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					
+					$(".materialInfoAndErrorModal").modal('show');
+				}else{													//변경된 것이 있으니까!!  -> 원래대로 수정확인 모달창 보여주기
+					//3. 입력받은 품목명리스트를 이용해서,수정확인 모달창에 보여줄 한문장으로 만들기
+					//입력받은 품목명 -> 품목명 리스트에 담기
+	    			let materialNameList = new Array();
+	    			$('.materialName').each(function(){
+	    				let name = $(this).val();
+	    				//console.log("이거 잘 code 읽어온건가!!",name);
+	    				if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
+	    					materialNameList.push(name);
+	    				}   	
+	    			});  
+					
+	    			function makeSentence(name){
+	    				let sentence =`<span>품목명 : ${name}</span><br>`;
+	    				return sentence;    				
+	    			}
+	    			
+	    			let sentence = ``;
+	    			materialNameList.forEach(function(item){
+	   					sentence=sentence+makeSentence(item);
+	   				});
+	   				sentence=sentence+`<br><span>해당 품목을 수정 하시겠습니까?</span>`;   				
+	   				//console.log("완성된 문장보자",sentence);
+	   				
+	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
+	   				document.querySelector("#materialModifyConfirmModalContent").innerHTML = sentence;
+	   				//수정확인 모달창 보여주기
+					$(".materialModifyConfirmModal").modal('show');	
+				} //if
 			});	//수정확인 버튼 누를때 끝
-			
 						
-			//수정확인 모달창의 확인 버튼 누를때
+			
+			//수정확인 모달창의 확인 버튼 누를때 -> 진짜!! 수정처리 되는 부분!
 			$(document).on("click",".materialModifyConfirmBtn",function(e){
+				console.log("수정확인 모달창의 확인 버튼 누름");
 				e.preventDefault();
 				
+				//0. 수정하는거니까! 기존의 도면파일 업로드된거 지워주자!! (올려진 업로드 파일이 있다면!)
+				// ---> 아니아니 기존도면을 수정안했으면, 유지 시켜줘야하고!, 수정이 되었다면 지워줘야한다!
+				//기존의 도면파일 이름 모두 가져와서 리스트로 만들자
+				let originalDrawingFileList = new Array();
+				$('.originalDrawingFile').each(function(){
+    				let originalDrawingFile = $(this).val();
+    				//console.log("이거 잘 originalDrawingFile 읽어온건가!!",originalDrawingFile);
+    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+   					originalDrawingFileList.push(originalDrawingFile);
+    			}); 
+	        	console.log("만든 originalDrawingFileList 보자! : ",originalDrawingFileList);
+	        	
+	        	//입력받은 도면파일 이름 모두 가져와서 리스트로 만들기
+	        	let modifyDrawingFileList = new Array();
+	        	$('.drawingFile').each(function(){
+    				let modifyDrawingFile = $(this).val();
+    				//console.log("이거 잘 originalDrawingFile 읽어온건가!!",originalDrawingFile);
+    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+   					modifyDrawingFileList.push(modifyDrawingFile);
+    			}); 
+	        	console.log("만든 modifyDrawingFileList 보자! : ",modifyDrawingFileList);
+	        	
+	        	//원래 도면파일과 입력받은 거 비교해서!, 달라진게 있다면, 그 해당 원래거를 리스트에 담아주자
+	        	//근데 이럴때, 원래꺼가 빈값이라면! 담지 말자!
+	        	let sendDrawingFileList = new Array();
+	        	
+	        	for(var i=0; i<originalDrawingFileList.length; i++){
+	        		if(originalDrawingFileList[i] != modifyDrawingFileList[i] ){
+	        			if(originalDrawingFileList[i] != ""){
+		        			sendDrawingFileList.push(originalDrawingFileList[i]);
+	        			}
+	        		}	        		
+	        	}
+	        	console.log("변경이 된! 보낼 원래 도면파일 리스트 만들어 진거 보자 : ",sendDrawingFileList);
+	        	
+	        	//그래서 보낼 도면파일 리스트의 값이 있을때만 ajax 보내서 삭제, 
+	        	if(sendDrawingFileList.length>0){
+		        	//Json 타입으로 변환시키기
+					var sendDrawingFileListToJsonData = JSON.stringify(sendDrawingFileList);	
+					//console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",sendDrawingFileListToJsonData);
+					
+		        	//기존의 업로드된 파일 삭제하는 ajax(imgurl말고! drawingFile을 바로 이용해서 하는 삭제)
+		        	$.ajax({
+		                url: '/procurement1/drawing/removeFile2',
+		                data: sendDrawingFileListToJsonData,
+		                contentType :"application/json; charset=UTF-8" ,
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	console.log("이거 현재 기존의 도면 삭제하는거야, 성공한거지!! 결과 값 보자 : ",result);
+		                	
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("업로드된 파일 삭제하는 Ajax 에러",textStatus);
+	 	                }
+		            }); //$.ajax 
+	        	} //if
+	            
 				//1. 기존 원래의 품목 정보인 대분류 코드, 중분류 코드 값들 -> MiddleCategoryDTO 리스트로  만들기 
     			//원본 대분류 코드, 중분류 코드 리스트 만들기
 				let materialDTOList = [[${materialDTOList}]];    	
@@ -899,7 +1022,7 @@
 					MCDTO.middleCode = item.middleCategoryCode;
 					MiddleCategoryDTOList.push(MCDTO);
 		    	});   
-    			console.log("원본 대분류 코드 + 중분류 코드 -> MiddleCategoryDTOList 리스트 : ", MiddleCategoryDTOList);
+    			//console.log("원본 대분류 코드 + 중분류 코드 -> MiddleCategoryDTOList 리스트 : ", MiddleCategoryDTOList);
     			
     			//2. 입력받은 수정본 대분류 코드, 중분류 코드 값들 -> MiddleCategoryDTO  리스트로 만들기
 				//대분류코드 값들 전부 읽어서 리스트에 담기
@@ -910,7 +1033,7 @@
 					//console.log("대분류코드 값들 보자",item.value);
 					allLCCodevalue.push(item.value);
 				});
-				console.log("일단 입력받은 대분류 리스트 보자 : ",allLCCodevalue);
+				//console.log("일단 입력받은 대분류 리스트 보자 : ",allLCCodevalue);
 				
 				//중분류코드 값들 전부 읽어서 리스트에 담기
 				var allMCCodeList = document.querySelectorAll(".middleCategoryCode");
@@ -920,7 +1043,7 @@
 					//console.log("대분류코드 값들 보자",item.value);
 					allMCCodevalue.push(item.value);
 				});
-				console.log("일단 입력받은 중분류 리스트 보자 : ",allMCCodevalue);
+				//console.log("일단 입력받은 중분류 리스트 보자 : ",allMCCodevalue);
 				
 				let ModifyMiddleCategoryDTOList = new Array();
 				
@@ -930,7 +1053,7 @@
 					MCDTO.middleCode = allMCCodevalue[i];
 					ModifyMiddleCategoryDTOList.push(MCDTO);
 				}
-				console.log("수정본본 대분류 코드 + 중분류 코드 -> ModifyMiddleCategoryDTOList 리스트 : ", ModifyMiddleCategoryDTOList);
+				//console.log("수정본본 대분류 코드 + 중분류 코드 -> ModifyMiddleCategoryDTOList 리스트 : ", ModifyMiddleCategoryDTOList);
 				
 				//3. 원본과 수정본을 비교하여, 값이 다른 대분류,중분류를 코드생성ajax로 보낼 MiddleCategoryList 로 만들기
 				//몇번째 행의 정보가 바뀐건지 알기 위해 번호리스트를 만들어서 바뀐 행의 번호 넣어주기 -> 바뀐 행번호 리스트 만들기
@@ -938,43 +1061,47 @@
 				let ModifyMaterialTRList = new Array();
 				
 				for(var i=0; i<ModifyMiddleCategoryDTOList.length; i++){
-					if(ModifyMiddleCategoryDTOList[i].largeCode != MiddleCategoryDTOList[i].largeCode || ModifyMiddleCategoryDTOList[i].middleCode != MiddleCategoryDTOList[i].middleCode){
+					if(ModifyMiddleCategoryDTOList[i].largeCode != MiddleCategoryDTOList[i].largeCode 
+							|| ModifyMiddleCategoryDTOList[i].middleCode != MiddleCategoryDTOList[i].middleCode){
 						let MCDTO = new Object();
 						MCDTO.largeCode = ModifyMiddleCategoryDTOList[i].largeCode;
 						MCDTO.middleCode = ModifyMiddleCategoryDTOList[i].middleCode;
+						MCDTO.middleCategory = "";
 						SendMiddleCategoryDTOList.push(MCDTO);
 						ModifyMaterialTRList.push(i+1);
 					}
 				}
-				console.log("보낼 SendMiddleCategoryDTOList 잘 만들어 졌나~~ : ",SendMiddleCategoryDTOList );
-				console.log("바뀐 행번호 리스트 ModifyMaterialTRList : ",ModifyMaterialTRList );
-				
-				//Json 타입으로 변환시키기
-				var changeJsonData = JSON.stringify(SendMiddleCategoryDTOList);	
-				console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",changeJsonData);
+				//console.log("보낼 SendMiddleCategoryDTOList 잘 만들어 졌나~~ : ",SendMiddleCategoryDTOList );
+				//console.log("바뀐 행번호 리스트 ModifyMaterialTRList : ",ModifyMaterialTRList );
 				
 				//4. 바뀐행의 원래의 품목코드 리스트 만들기
 				let materialCodeList = new Array();
 				ModifyMaterialTRList.forEach(function(item, i){
 					materialCodeList.push(document.querySelector(`#materialModifyTable tr:nth-child(${item}) input[name=code]`).value);
 				});
-				console.log("어디 원래의 품목코드리스트 봐보자 : ",materialCodeList);
+				//console.log("어디 원래의 품목코드리스트 봐보자 : ",materialCodeList);
+				
+				//5. 보낼 SendMiddleCategoryDTOList 에 품목코드를 middleCategory 속성에 담아서, 한방에 같이 보내기!
+				SendMiddleCategoryDTOList.forEach(function(item, i){
+					item.middleCategory = materialCodeList[i];
+				});
+				//console.log("보낼 SendMiddleCategoryDTOList 에 품목코드 잘 넣어진건가?? : ",SendMiddleCategoryDTOList );
 				
 				//Json 타입으로 변환시키기
-				var changeJsonData2 = JSON.stringify(materialCodeList);	
-				console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",changeJsonData2);
+				var SendMiddleCategoryDTOListToJsonData = JSON.stringify(SendMiddleCategoryDTOList);	
+				//console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",SendMiddleCategoryDTOListToJsonData);
 				
 				//대분류코드, 중분류코드를 보내서 품목코드를 생성해준 값을 받아오는 Ajax처리
 				//materialDTO리스트 형식으로 받아옴
 				$.ajax({
 					type : "post" ,
-					url : "/procurement1/modifyMaterialCode" ,     												//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
-					data : {middleCategoryDTOList : changeJsonData , materialCodeList : changeJsonData2},		//보내는 데이터!(요청 데이터)
-					contentType :"application/json; charset=UTF-8" ,  											//보내는 데이터 형식 (전송 데이터,요청데이터)
-					dataType : "json" ,							 												//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
-					success : function(data){        															//가져오는 데이터! (응답데이터)
-						console.log("받아온 데이터 : ",data);
-						/*
+					url : "/procurement1/modifyMaterialCode" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : SendMiddleCategoryDTOListToJsonData,				//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "json" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        						//가져오는 데이터! (응답데이터)
+						console.log("modifyMaterialCode ajax 받아온 데이터 : ",data);
+						
 						//1. 생성한 품목코드 -> 품목코드 리스트에 담기
 						let codeList = new Array();
 						
@@ -988,36 +1115,56 @@
 							document.querySelector(`#materialModifyTable tr:nth-child(${item}) input[name=code]`).value = data[i].code;
 							document.querySelector(`#materialModifyTable tr:nth-child(${item}) input[name=drawingNo]`).value = data[i].code+"D01";
 						});
-						*/
-						
-						
 
-					
-										
+						//없는 도면에서 추가로 수정해준 경우! 도면파일명은 첨부할때 세팅해주지만, 도면번호는 null로 셋팅된게 없게 된다!
+						//그러므로 지금 도면번호는 없는데 도면파일명이 세팅이 된 경우!, 품목코드를 읽어서 도면번호의 값을 세팅해주자!
+						//모든 도면번호 인풋값을 리스트로 만들기
+						let drawingNoList = new Array();
+						$('.drawingNo').each(function(){
+		    				let drawingNo = $(this).val();
+		    				//console.log("이거 잘 drawingNo 읽어온건가!!",drawingNo);
+		    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+		   					drawingNoList.push(drawingNo);
+		    			}); 
+			        	console.log("만든 drawingNoList 보자! : ",drawingNoList);
+						
+						//모든 도면파일의 인풋값 리스트로 만들기
+						let drawingFileList = new Array();
+						$('.drawingFile').each(function(){
+		    				let drawingFile = $(this).val();
+		    				//console.log("이거 잘 drawingFile 읽어온건가!!",drawingFile);
+		    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+		   					drawingFileList.push(drawingFile);
+		    			}); 
+			        	console.log("만든 drawingFileList 보자! : ",drawingFileList);
+						
+			        	//원래 도면번호 없는데, 도면파일 있는경우에, 도면번호 값 세팅해주기
+						drawingNoList.forEach(function(item, i){
+							if(item == "" && drawingFileList[i] != ""){
+								var materialCode = document.querySelector(`#materialModifyTable tr:nth-child(${i+1}) input[name=code]`).value;
+								console.log("어디 품목코드 읽히나 보자 : ",materialCode);
+								document.querySelector(`#materialModifyTable tr:nth-child(${i+1}) input[name=drawingNo]`).value = materialCode+"D01";
+							}
+						});
+						
+						// 폼태그에 실어서 등록하기
+						$("#materialModifyForm").submit();
+						//그리고 자동으로 모달창 닫아주기
+						$(".materialModifyConfirmModal").modal('hide');				
 					},
 					error : function(jqXHR,textStatus,errorThrown){    
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
 						//console.log(errorThrown);					
-						console.log("품목코드 생성 Ajax 에러발생~~!!!!!");						
+						console.log("품목코드 수정 Ajax 에러발생~~!!!!!");						
 					}
 				});	//$.ajax	
 				
-				
-				
-				
-				
-				
-				
-				//폼태그에 실어서 등록하기
-				//$("#materialModifyForm").submit();
-				//그리고 자동으로 모달창 닫아주기
-				//$(".materialModifyConfirmModal").modal('hide');				
-			});	
+			});	//수정확인 모달창의 확인 버튼 누를때 끝
 			
-			//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기
-			$(document).on("click","#materialRegisterCancelBtn",function(e){
-				console.log("등록취소 버튼 누름");
+			//수정취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기
+			$(document).on("click","#materialModifyCancelBtn",function(e){
+				console.log("수정취소 버튼 누름");
 				e.preventDefault();
 				//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
 				//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
@@ -1030,7 +1177,6 @@
 		                var target = $(obj);
 		                var targetFile = target.data("file");
 		                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
-		                
 		                $.ajax({
 			                url: '/procurement1/drawing/removeFile',
 			                data: {fileName: targetFile},
@@ -1047,137 +1193,7 @@
 				window.location.href = '/procurement1/materialList';
 			});	//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기 끝
 			
-			//-------------------------------------- 코드생성 부분 --------------------------------------------------------------//
-			
-			//코드생성 버튼 누를때, -> 코드생성 안내 모달창 보여주기
-			$(document).on("click","#materialcodeGenerateBtn",function(e){
-				console.log("코드생성 버튼 누름");
-				
-				//대분류코드 값들 전부 읽어서 리스트에 담기
-				var allLCCodeList = document.querySelectorAll(".largeCategoryCode");
-				let allLCCodevalue = new Array();
-				
-				allLCCodeList.forEach(function(item){
-					//console.log("대분류코드 값들 보자",item.value);
-					allLCCodevalue.push(item.value);
-				});
-				console.log("대분류코드 값들...",allLCCodevalue);
-				
-				//중분류코드 값들 전부 읽어서 리스트에 담기
-				var allMCCodeList = document.querySelectorAll(".middleCategoryCode");
-				let allMCCodevalue = new Array();
-				
-				allMCCodeList.forEach(function(item){
-					//console.log("대분류코드 값들 보자",item.value);
-					allMCCodevalue.push(item.value);
-				});
-				console.log("중분류코드 값들...",allMCCodevalue);
-				
-				//Ajax에 보내기 위한, 위에 코드들 List<MiddleCategoryDTO> 만들어서 담기
-				let middleCategoryDTOSendList = new Array();
-				
-				for(var i=0; i<allLCCodevalue.length;i++){
-					let MCDTO = new Object();
-					MCDTO.largeCode = allLCCodevalue[i];
-					MCDTO.middleCode = allMCCodevalue[i];
-					middleCategoryDTOSendList.push(MCDTO);
-				}
-				console.log("어디 보낼 MCDTO리스트 값 보자 : ",middleCategoryDTOSendList);
-				
-				//Json 타입으로 변환시키기
-				var changeJsonData = JSON.stringify(middleCategoryDTOSendList);	
-				console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",changeJsonData);
-				
-				
-				//대분류코드, 중분류코드를 보내서 품목코드를 생성해준 값을 받아오는 Ajax처리
-				//materialDTO리스트 형식으로 받아옴
-				$.ajax({
-					type : "post" ,
-					url : "/procurement1/generateMaterialCode" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
-					data : changeJsonData ,                					//보내는 데이터!(요청 데이터)
-					contentType :"application/json; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
-					dataType : "json" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
-					success : function(data){        						//가져오는 데이터! (응답데이터)
-					//console.log("받아온 데이터 : ",data);
-					
-					//1. 생성한 품목코드 -> 품목코드 리스트에 담기
-					let codeList = new Array();
-					
-					for(var i=0; i<data.length; i++){
-						codeList.push(data[i].code);
-					}
-					//console.log("코드리스트 안만들어지나?",codeList);
-				
-					
-					//2. 입력받은 품목명 -> 품목명 리스트에 담기
-					let nameList = new Array();
-					$('.materialName').each(function(){
-						let name = $(this).val();
-						//console.log("이거 잘 code 읽어온건가!!",name);
-						if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
-						nameList.push(name);
-						}   	
-					});
-					
-					//3. 각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
-	    			let codenameList = new Array();
-	    			
-	    			for(var i = 0; i<codeList.length; i++){
-	    				let codenameObj = new Object();
-	    				codenameObj.code = codeList[i];
-	    				codenameObj.name = nameList[i];
-	    				codenameList.push(codenameObj);
-	    			} 
-					
-					//html에 넣어줄 문장과,쉽게 넣어줄 함수 만들기
-					let sentence = ``;
-	    			
-					function makeSentence(code,name){
-						let sentence =`<span>품목명 : ${name},&nbsp;&nbsp; 품목코드 : ${code}</span><br>`;
-						return sentence;    				
-					}
-					
-					//품목명이 기입되어 있을때만! 품목코드 생성한것 넣어주기!
-					//품목명 리스트 길이가 0이면 -> 품목명 기입하고 와라! 창 띄어주기
-					if(nameList.length==0){
-						document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목코드 생성 안내`;
-						
-						sentence = `<span>품목명이 누락되어있습니다.</span><br>
-									<span>품목명과 그 외 항목들을 기입 후, 코드생성 버튼을 눌러주세요.</span>`;
-						
-						document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;	
-						$(".materialInfoAndErrorModal").modal('show'); 
-						
-					}else{	 //품목명 리스트 길이 1이상일때, 품목명 기입되어있을때, 품목코드 값 넣어주기
-						//품목코드 생성해서 받아온 품목코드 리스트를, 테이블의 품목코드 값에 넣어주기
-						var inputMaterialCodeList = document.querySelectorAll(".materialCode");
-											
-						for(var i=0; i<data.length; i++){
-							inputMaterialCodeList[i].value = data[i].code;
-						}
-						
-						codenameList.forEach(function(item){
-		   					sentence=sentence+makeSentence(item.code,item.name);
-		   				});
-		   				//console.log("현재까지 만들어진 문장보자",sentence);
-		   									
-						sentence=sentence+`<br><span>해당 품목의 품목코드가 위와 같이 생성되었습니다.</span>`;   				
-						//console.log("완성된 문장보자",sentence);
-						
-						document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목코드 생성 안내`;
-						document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;	
-						$(".materialInfoAndErrorModal").modal('show');
-					}
-										
-					},
-					error : function(jqXHR,textStatus,errorThrown){    
-						//console.log(jqXHR); 			//응답 메시지
-						//console.log(textStatus); 		//"error"로 고정인듯함
-						//console.log(errorThrown);					
-						console.log("품목코드 생성 Ajax 에러발생~~!!!!!");						
-					}
-				});	//$.ajax				
-			});	//코드생성 버튼 누를때, -> 코드생성 안내 모달창 보여주기 끝
+			//-------------------------------------- 대분류코드 변경할때마다 중분류 코드 변경하기 --------------------------------------------------------------//
 			
 			//대분류코드 변경될때마다 처리되는 함수
 			//대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수
@@ -1225,7 +1241,6 @@
 						$("#middleCategoryCode").append(completeHtml);		
 						*/
 						middleCategoryCodeOptions.innerHTML = completeHtml;
-						
 					},
 					error : function(jqXHR,textStatus,errorThrown){    
 						//console.log(jqXHR); 			//응답 메시지
