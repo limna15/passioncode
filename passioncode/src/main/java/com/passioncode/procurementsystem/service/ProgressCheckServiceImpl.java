@@ -32,6 +32,54 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 	private final ProgressCheckRepository progressCheckRepository;
 	private final MaterialInRepository materialInRepository;
 	
+	public List<DetailProgressCheckListDTO> getminiDTOList(Integer num1) {
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num1).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setPcectc((String) arr[2]);
+			pdDTO.setPcrate((Integer) arr[3]);
+			pdDTO.setPcdetail((Integer) arr[4]);
+			pdDTO.setTodaydate(LocalDateTime.now());// 나중에 오늘날짜만 검수할 수 있도록 넣어두기
+			pdDTO.setCountno(1); // 목록에서 열 번호를 위해
+			log.info("dListDTO.setPccode: " + ((Integer) arr[0]));
+			list.add(pdDTO);
+		}
+
+		log.info("쿼리 발주번호를 통한 진척검수: " + list);
+		
+		return list;
+		
+	}
+	
+	public String forEtc(Integer num1) {
+		String etc = null;// 여러개 가져오기 가능
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num1).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setPcectc((String) arr[2]);
+			pdDTO.setPcrate((Integer) arr[3]);
+			pdDTO.setPcdetail((Integer) arr[4]);
+			pdDTO.setTodaydate(LocalDateTime.now());// 나중에 오늘날짜만 검수할 수 있도록 넣어두기
+			pdDTO.setCountno(1); // 목록에서 열 번호를 위해
+			log.info("dListDTO.setPccode: " + ((Integer) arr[0]));
+			list.add(pdDTO);
+			etc = ((String) arr[2]);
+		}
+
+		return etc;
+
+	}
+	
 	@Override
 	public List<ProgressCheckDTO> getProgressCheckDTOList() {//발주서 목록 갖고오기
 		List<DetailPurchaseOrder> detilList = detailPurchaseOrderRepository.findAll();
@@ -49,7 +97,8 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		//DetailPurchaseOrder detailPurchaseOrder2= detailPurchaseOrderRepository.findById(1).get();
 		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		
-		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder()
+		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder().etc(forEtc(procurementPlan.getDetailPurchaseOrder().getCode()))
+				  .detailCode(procurementPlan.getDetailPurchaseOrder())
 		  .companyName(procurementPlan.getContract().getCompany().getName())
 		  .purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
 		  .orderAmount(procurementPlan.getDetailPurchaseOrder().getAmount())

@@ -1,6 +1,9 @@
 package com.passioncode.procurementsystem.dto;
 
 import java.util.Date;
+
+import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +30,17 @@ public class ProgressCheckDTO {
 	/**
 	 * 기타 사항
 	 */
-	//private String etc;
+	private String etc;
+	
+	/**
+	 * 발주코드, 임시 추가
+	 */
+	private DetailPurchaseOrder detailCode;
+	
+	/**
+	 * 발주서 번호, 임시 추가
+	 */
+	private DetailPurchaseOrder detailNo;
 	
 	/**
 	 * 보여지는 발주코드
