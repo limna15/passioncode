@@ -99,5 +99,15 @@ public interface ProcurementPlanService {
 	 * @return
 	 */
 	ProcurementPlan getPpByDetailPurchaseOrder(Integer code);
+	
+	/**
+	 * 계약서번호를 이용하여, 조달계획이 존재하는지 체크하기 <br>
+	 * 계약서 수정 화면 진입을 위한, contractInPPCheck <br>
+	 * 조달계획 존재 O -> 계약 수정 불가능 <br>
+	 * 조달계획 존재 X -> 계약 수정 가능
+	 * @param contractNo
+	 * @return
+	 */
+	Boolean ppExistsByContract(Integer contractNo);
 
 }

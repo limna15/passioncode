@@ -16,6 +16,7 @@ import com.passioncode.procurementsystem.dto.LargeCategoryDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
+import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
@@ -483,9 +484,27 @@ public class PS1Controller {
 	 * 계약 수정 화면 보기
 	 */
 	@GetMapping("contractModify")
-	public void contractModify() {
+	public void contractModify(String[] contractNoList,Model model) {
+		log.info("계약 수정 화면 보기.....");
+		log.info("계약 등록(목록) 화면에서 받아온 계약서번호 리스트 보자 : "+contractNoList);
+		
+		//받아온 계약서번호 리스트를 통해서, 수정화면에 보낼, ContractDTO 리스트 만들기
+		List<ContractDTO> contractDTOList = new ArrayList<>();
+		for(int i=0; i<contractNoList.length; i++) {
+			Contract contract = contractService.getContract(Integer.parseInt(contractNoList[i]));
+			ContractDTO contractDTO = contractService.contractEntityToDTO(contract);
+			contractDTOList.add(contractDTO);
+		}
+		log.info("계약 수정화면에 보내는 contractDTOList 봐보자 : "+contractDTOList);
+		
+		model.addAttribute("contractDTOList", contractDTOList);
 		
 	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * 조달계획 목록 화면보기

@@ -275,7 +275,12 @@ public class PS1RestController {
 //		return null;
 	}
 	
-	
+	/**
+	 * 품목 정보 수정화면 진입을 위한, 수정가능여부 체크해주기<br>
+	 * 품목코드 리스트를 이용해서, 수정이 가능한 품목코드 확인해주기
+	 * @param materialCodeList
+	 * @return
+	 */
 	@PostMapping(value="expectedPurchaseOrderCheck", produces=MediaType.TEXT_PLAIN_VALUE)
 	public String expectedPurchaseOrderCheck(@RequestBody List<String> materialCodeList) {
 		//주의사항!! 반환타입은 boolean이 안된다! 그래서 String 문자열로 반환해주기!
@@ -313,12 +318,44 @@ public class PS1RestController {
 				break;
 			}
 		}
-		log.info("그래서 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
+		log.info("그래서 expectedPurchaseOrderCheck 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
 		
 		return expectedPurchaseOrderCheck+"";
 	}
 	
 	
+	/**
+	 * 품목 정보 수정화면 진입을 위한, 수정가능여부 체크해주기<br>
+	 * 품목코드 리스트를 이용해서, 수정이 가능한 품목코드 확인해주기
+	 * @param contractNoList
+	 * @return
+	 */
+	@PostMapping(value="contractInPPCheck", produces=MediaType.TEXT_PLAIN_VALUE)
+	public String contractInPPCheck(@RequestBody List<String> contractNoList) {
+		//주의사항!! 반환타입은 boolean이 안된다! 그래서 String 문자열로 반환해주기!
+		//화면에서 받아온 계약서번호 리스트로 조회하기!!
+		//계약서번호로 조달계획 조회하는데
+		// 1. 조회가 안된다 => 아직 조달계획에 등록이 안된거라서, 계약서 수정 가능
+		// 2. 조회가 된다 => 조달계획에 등록이 된거라서, 계약서 수정 불가능
+		log.info("계약서 목록화면에서 받아온 계약서 리스트 봐보자 : "+contractNoList);
+		
+		boolean contractInPPCheck = false;
+		
+		for(String contractNo : contractNoList) {
+			//result ->  그 계약서가 조달계획에 있는지 여부! fasle -> 수정가능, true -> 수정 불가능!!
+			boolean result = procurementPlanService.ppExistsByContract(Integer.parseInt(contractNo));
+			if(result == true) {
+				contractInPPCheck = false;
+				break;
+			}else {
+				contractInPPCheck = true;
+			}
+		}
+		
+		log.info("그래서 contractInPPCheck 최종 참, 거짓 확인해 보자 : "+contractInPPCheck);
+		
+		return contractInPPCheck+"";
+	}
 	
 	
 	

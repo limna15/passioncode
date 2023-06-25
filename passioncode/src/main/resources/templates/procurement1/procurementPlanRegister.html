@@ -67,10 +67,10 @@
 						</div>
 						<div>						
 							<!-- 등록확인, 등록취소 버튼 시작 -->						
-							<button class="btn btn-primary" style="float: right;" onclick="location.href='/procurement1/procurementPlanList'" type="button">
+							<button class="btn btn-primary" style="float:right;" onclick="location.href='/procurement1/procurementPlanList'" type="button">
 								등록취소
 							</button>
-							<button class="btn btn-primary" style="margin-right: 10px; float: right;" type="submit" id="ppRegisterBtn">
+							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="submit" id="ppRegisterBtn">
 								등록확인
 							</button>										
 							<!-- 등록확인, 등록취소 버튼 끝 -->
@@ -86,7 +86,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">계약서 찾기</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -126,7 +126,7 @@
                     	   
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        <button type="button" class="btn btn-secondary " data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        	</button>
                     </div>
@@ -141,7 +141,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">조달 계획 등록 확인</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -168,7 +168,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">조달 계획 등록 확인</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -208,7 +208,7 @@
 				var materialCode = searchContractTR.querySelector("input[name=materialCode]").value;	
 				console.log("품목코드 : ",materialCode);
 				
-				//품목코드 로 계약서 찾는 Ajax처리
+				//품목코드 로 계약서 찾는 ajax처리
 				$.ajax({
 					type : "post" ,
 					url : "/procurement1/contractSearch" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
@@ -240,7 +240,7 @@
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
 						//console.log(errorThrown);	
-						console.log("계약서 찾기 Ajax 오류 발생~!!!");
+						console.log("계약서 찾기 ajax 오류 발생~!!!");
 					}
 				});	//$.ajax				
 			});	
@@ -294,7 +294,7 @@
 				var changeJsonData = JSON.stringify(procurementDTOObj);					//procurementDTOObj 자바스크립트 객체를 json포맷으로 변경
 				//console.log("변경된 제이슨 타입 데이터 보자 : "+changeJsonData);
 				
-				//소요일, 기본여유기간, 품목공급LT 를 주고 조달납기예정일, 최소발주일 계산된 값을 받아오는 Ajax처리
+				//소요일, 기본여유기간, 품목공급LT 를 주고 조달납기예정일, 최소발주일 계산된 값을 받아오는 ajax처리
 				$.ajax({
 					type : "post" ,
 					url : "/procurement1/procurementPlanCalculate" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
@@ -318,7 +318,7 @@
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
 						//console.log(errorThrown);					
-						console.log("조달납기예정일, 최소발주일 계산 Ajax 에러발생~~!!!!!");						
+						console.log("조달납기예정일, 최소발주일 계산 ajax 에러발생~~!!!!!");						
 					}
 				});	//$.ajax
 				//console.log("값이 제대로 바뀌었나? : ",searchContractTR.querySelector("input[name=companyNo]").value);

@@ -8,24 +8,23 @@
 			<!-- 수정 부분 시작 -->
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title" style="font-size:23px;">계약 등록</p> 
+					<p class="card-title" style="font-size:23px;">계약 수정</p> 
 					<br>
-					<form th:action = "@{/procurement1/contractRegister}" th:method="post" id="contractRegisterForm">
+					<form th:action = "@{/procurement1/contractModify}" th:method="post" id="contractModifyForm">
 						<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
-								<table class="table table-bordered" id="contractRegisterTable" style="text-align: center;">
+								<table class="table table-bordered" id="contractModifyTable" style="text-align: center;">
 									<thead>
 										<tr>
-											<th>품목코드</th>
-											<th>품목명</th>
-											<th>협력회사</th>
-											<th>담당자</th>
-											<th>담당자<br>연락처</th>
-											<th width="">품목 공급 L/T</th>
-											<th width="7%">단가</th>
-											<th>거래조건</th>
-											<th width="6%">계약서</th>
-											<th></th> 
+											<th width="10%">품목코드</th>
+											<th width="10%">품목명</th>
+											<th width="">협력회사</th>
+											<th width="9%">담당자</th>
+											<th width="10%">담당자<br>연락처</th>
+											<th width="10%">품목 공급 L/T</th>
+											<th width="8%">단가</th>
+											<th width="">거래조건</th>
+											<th width="10%">계약서</th>
 										</tr>
 									</thead>
 									<tbody>	
@@ -37,46 +36,57 @@
 											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="materialName" class="materialName" th:value="${dto.materialName}" readonly></td>
 											<td>
 												<div class="row" style="margin-left: 0px;" >
-													<input type="hidden" name="companyNo" class="companyNo">
-													<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name=companyName class="companyName">
+													<input type="hidden" name="companyNo" class="companyNo" th:value="${dto.companyNo}" >
+													<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name=companyName class="companyName" th:value="${dto.companyName}" >
 													&nbsp;&nbsp;
-													<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right" >
+													<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right; margin-left:10px;" >
 														<i class="mdi mdi-magnify"></i>
 													</button>
 												</div>
 											</td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" class="manager" ></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel" class="managerTel"></td>
-											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt"></td>
-											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice" class="unitPrice"></td>
-											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition" class="dealCondition"></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" class="manager" th:value="${dto.manager}" ></td>
+											<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel" class="managerTel" th:value="${dto.managerTel}" ></td>
+											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt" th:value="${dto.supplyLt}" ></td>
+											<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice" class="unitPrice" th:value="${dto.unitPrice}" ></td>
 											<td>
-												<input type="hidden" name="contractFile" class="contractFile">
-												<div class="attachContractFile">
-								            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
-														첨부
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition" class="dealCondition" th:value="${dto.dealCondition}" >
+												<input type="hidden" class="originalContractFile"  th:value="${dto.contractFile}" >
+												<input type="hidden" name="contractFile" class="contractFile" th:value="${dto.contractFile}" >
+											</td>
+											<td th:if="${dto.contractFileDTO.image==true}">
+												<div class="modifyContractFile">
+													<button th:data-file="${dto.contractFileDTO.getImageURL()}" class="ImgClick" 
+															type="button" style="border:none; background-color:transparent; margin-right:10px;">
+														<img th:src="|/procurement1/contract/display?fileName=${dto.contractFileDTO.getThumbnailURL()}|" > 
+													</button>
+								            		<button type="button" class="btn btn-primary contractModifyBtn" style="padding-left:10px; padding-right:10px;">
+														수정
 													</button>
 												</div>
 											</td>
-											<td>
-												<button type="button" class="btn btn-primary" style="width:106px; height:40px; padding-left: 10px; padding-right: 10px;" 
-														th:materialCode="${dto.materialCode}" th:materialName="${dto.materialName}"
-														th:onclick="registerAddBtn(this.getAttribute('materialCode'),this.getAttribute('materialName'))">
-													등록추가 &nbsp;&nbsp;+
-												</button>
-											</td> 
+											<td th:if="${dto.contractFileDTO.image!=true}">
+												<div class="modifyContractFile">
+													<button th:data-file="${dto.contractFileDTO.getImageURL()}" th:data-name="${dto.contractFileDTO.fileName}"
+															class="NoImgClick" type="button" style="border:none; background-color:transparent; margin-right:10px;">
+														<img th:src="|/picture/thumb_document.jpg|" > 
+													</button>
+								            		<button type="button" class="btn btn-primary contractModifyBtn" style="padding-left:10px; padding-right:10px;">
+														수정
+													</button>
+												</div>
+											</td>
 										</tr>
 									</tbody>
 								</table>
 							<!-- 테이블 끝 -->
 						</div>
-						<div class="col-md-12">						
+						<div>						
 							<!-- 등록확인, 등록취소 버튼 시작 -->						
-							<button class="btn btn-primary" style="margin-right: 130px; float: right;" type="button" id="contractRegisterCancelBtn">
-								등록취소
+							<button class="btn btn-primary" style="float:right;" type="button" id="contractModifyCancelBtn">
+								수정취소
 							</button>
-							<button class="btn btn-primary" style="margin-right: 8px; float: right;" type="submit" id="contractRegisterBtn">
-								등록확인
+							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="submit" id="contractModifyBtn">
+								수정확인
 							</button>										
 							<!-- 등록확인, 등록취소 버튼 끝 -->
 						</div>	
@@ -85,13 +95,66 @@
 			</div>
 		</div>
 		
+		<!-- 이미지 보여주는 모달창 시작 -->
+		<div class="imageModal modal " tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">계약서</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary imageDownloadBtn" style="padding-top:10px; padding-left:15px; padding-right:15px; width:88px; height:33px;">
+                        	다운로드
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>	
+        <!-- 이미지 보여주는 모달창 끝 -->
+        
+        <!-- 첨부파일 다운로드 여부 묻는 모달창 시작-->
+		<div class="attachFileDownloadModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">첨부 파일 다운로드</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="attachFileDownloadCheckModal">
+                    	<!-- 첨부파일 이름 확인할 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary attachFileDownloadConfirmBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 첨부파일 다운로드 여부 묻는 모달창 끝 -->
+		
 		<!-- 협력회사 찾기 모달창 시작 -->
 		<div class="companySearchModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">협력회사 찾기</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -119,7 +182,7 @@
                     	   
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        <button type="button" class="btn btn-secondary " data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        	</button>
                     </div>
@@ -128,22 +191,22 @@
         </div>
 		<!-- 협력회사 찾기 모달창 끝 -->
 		
-		<!-- 등록확인 모달창 시작-->
-		<div class="contractRegisterConfirmModal modal" tabindex="-2" role="dialog">
+		<!-- 수정확인 모달창 시작-->
+		<div class="contractModifyConfirmModal modal" tabindex="-2" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">계약 등록 확인</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <h5 class="modal-title">계약 수정 확인</h5>
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="contractRegisterCheckModal">
+                    <div class="modal-body" id="contractModifyConfirmModalContent">
                     	<!-- 계약 등록 확인할 내용 -->    
                     	
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary contractRegisterConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
+                        <button type="button" class="btn btn-primary contractModifyConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
                         	확인
                        	</button>
                         <button type="button" class="btn btn-secondary " data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
@@ -153,7 +216,7 @@
                 </div>
             </div>
         </div>
-		<!-- 등록확인 모달창 끝 -->
+		<!-- 수정확인 모달창 끝 -->
 		
 		<!-- 첨부파일 모달창 시작-->
 		<div class="contractUploadModal modal" tabindex="-2" role="dialog">
@@ -224,15 +287,15 @@
 							<span>다시 검색해 주시기바랍니다.</span>
 						 2. <span>검색한 내용이 없습니다.</span><br>
 							<span>다시 검색해 주시기바랍니다.</span>
-			2. 등록확인 모달창 오류시
-				- 제목 : 계약 등록 확인
-				- 내용 : <span>등록해야할 값들이 누락되어있습니다.</span><br>
-		               	 <span>다시 작성해주시길 바랍니다.</span>
-		    3. 파일업로드 오류시
+		    2. 파일업로드 오류시
 		       - 제목 : 계약서 첨부 확인
 		       - 내용 : 1. <span>파일 사이즈가 초과되었습니다.</span>
 						2. <span>해당 종류의 파일은 업로드할 수 없습니다.</span>
 						3. <span>파일 1개만 첨부할 수 있습니다.</span>
+			3. 수정확인 버튼 누를때 오류시
+		       - 제목 : 계약 수정 확인
+		       - 내용 : 1. <span>변경된 사항이 없습니다.</span><br>
+						   <span>다시 작성해주시길 바랍니다.</span>			
 		-->
 		<div class="contractInfoAndErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -263,6 +326,88 @@
 		
 		
 		$(document).ready(function(){
+			//-------------------------------------------- 계약서 첨부파일, 이미지 버튼 눌렀을때 보는 모달창 -----------------------------------------------------//
+   			
+    		//이미지인 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachImageDrawingFileTR = new Object();
+			
+			//계약서파일 -> 이미지로 된것 클릭 했을때, -> 원본파일 모달창으로 보여주기
+			$(".ImgClick").click(function() {
+				console.log("계약서 이미지인거 선택함");
+				var file = $(this).data('file');
+				//console.log("file 보자! : ",file);
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachImageDrawingFileTR = getObjTR();
+				
+				//console.log(file);
+				//만약 위에서 보내는 data를 dto.contractFileDTO.getThumbnailURL() 썸네일URL로 한다면 사이즈를 1 추가 셋팅 해줘야 원본파일을 불러옴
+				//$('.imageModal .modal-body').html("<img style='width:100%' src='/procurement1/contract/display?fileName="+file+"&size=1' >");
+				$('.imageModal .modal-body').html("<img style='width:100%' src='/procurement1/contract/display?fileName="+file+" ' >");
+				$(".imageModal").modal("show");
+			});
+			
+			//이미지 아닌 문서그림 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachNoImageDrawingFileTR = new Object();
+			
+			//계약서파일 -> 이미지로 된거 아닌거! 클릭 했을때, -> 파일 다운로드 여부 묻는 모달창 보여주기
+			$(".NoImgClick").click(function() {
+				console.log("이미지 아닌거 선택함");
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachNoImageDrawingFileTR = getObjTR();
+				
+				//해당 버튼의 가지고 있는 파일이름 읽기
+				var fileName = $(this).data('name');
+				//console.log("어디 해당 파일의 data-fileName 잘 읽나 보자 : ",fileName);
+				
+				sentence = `<span><b>파일명</b> : `+fileName+`<br><br>
+							해당 파일을 다운로드 하시겠습니까?</span>`;
+				//console.log("만든 문장 봐보자 : ",sentence);
+       			document.querySelector("#attachFileDownloadCheckModal").innerHTML = sentence;					
+				$(".attachFileDownloadModal").modal('show');
+			});
+			
+			//첨부파일 다운로드 모달창의 확인 버튼 누를때
+			$(document).on("click",".attachFileDownloadConfirmBtn",function(e){
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachNoImageDrawingFileTR.querySelector(".NoImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("NoImgClick 버튼 눌렀을때의 파일의 data-file 잘 읽나 보자 : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".attachFileDownloadModal").modal('hide');
+				window.location.href = "/procurement1/contract/download?fileName="+encodeFile;
+			});	
+			
+			//도면파일 -> 이미지로 된것 클릭 했을때,
+			//원본 이미지 모달창에서 -> 다운로드 버튼 클릭시 -> 원본 파일 다운로드 하기
+			$(document).on("click",".imageDownloadBtn",function(e){
+				console.log("이미지 모달창의 다운로드 버튼 누름");
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachImageDrawingFileTR.querySelector(".ImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("다운로드 버튼 눌렀을때의 파일의 data-file : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".imageModal").modal('hide');
+				window.location.href = "/procurement1/contract/download?fileName="+encodeFile;
+			});	
+			
+			//-------------------------------------- 협력회사 찾기 버튼 부분 --------------------------------------------------------------//
+			
 			//협력회사 찾으려고 검색한 tr을 넣어주기 위한 tr 전역변수 선언
 			var searchcompanyTR = new Object();
 			//console.log("tr 전역변수 만들고 난 값 : ",searchcompanyTR);			
@@ -278,7 +423,7 @@
 				var companyName = getObj().querySelector("input[type=text]").value;				
 				console.log("회사이름 : ",companyName);
 				
-				//협력회사 이름으로 (거래가능한)협력회사 찾는 Ajax처리
+				//협력회사 이름으로 (거래가능한)협력회사 찾는 ajax처리
 				$.ajax({
 					type : "post" ,
 					url : "/procurement1/companySearch" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
@@ -368,13 +513,15 @@
 				//그리고 자동으로 모달창 닫아주기
 				$(".companySearchModal").modal('hide');							
 			});		
+			
+			//-------------------------------------- 등록확인, 등록취소 버튼 부분 --------------------------------------------------------------//
 									
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			var contractRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
 			console.log("등록체크 전역변수 확인하기1 : ",contractRegisterValueCheck);
 			
 			//등록확인 버튼 누를때 -> 등록확인 모달창 보여주기
-			$(document).on("click","#contractRegisterBtn",function(e){
+			$(document).on("click","#contractModifyBtn",function(e){
 				console.log("등록확인 버튼 누름");
 				//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
@@ -477,11 +624,11 @@
 	   				//console.log("완성된 문장보자",sentence);
 	   				
 	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
-	   				//document.querySelector("#contractRegisterCheckModal").insertAdjacentHTML('afterbegin', sentence);
-					document.querySelector("#contractRegisterCheckModal").innerHTML = sentence;
+	   				//document.querySelector("#contractModifyConfirmModalContent").insertAdjacentHTML('afterbegin', sentence);
+					document.querySelector("#contractModifyConfirmModalContent").innerHTML = sentence;
 	   				   				
 	   				//등록확인 모달창 보여주기
-					$(".contractRegisterConfirmModal").modal('show');	   				
+					$(".contractModifyConfirmModal").modal('show');	   				
     			}else{								//등록체크 값이=>false 일때, 등록하려는 값들 중 하나라도 빠진 상태 ->오류 모달창 보여주기
     				//오류 모달창 보여주기
 					//1. 제목 -> 계약 등록 확인 넣어주고
@@ -503,16 +650,16 @@
 			console.log("등록체크 전역변수 확인하기(중간에 확인) : ",contractRegisterValueCheck);
 						
 			//등록확인 모달창의 확인 버튼 누를때
-			$(document).on("click",".contractRegisterConfirmBtn",function(e){
+			$(document).on("click",".contractModifyConfirmBtn",function(e){
 				e.preventDefault();				
 				//폼태그에 실어서 등록하기
-				$("#contractRegisterForm").submit();
+				$("#contractModifyForm").submit();
 				//그리고 자동으로 모달창 닫아주기
-				$(".contractRegisterConfirmModal").modal('hide');				
+				$(".contractModifyConfirmModal").modal('hide');				
 			});	
 			
 			//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 모든 파일 삭제 시키기
-			$(document).on("click","#contractRegisterCancelBtn",function(e){
+			$(document).on("click","#contractModifyCancelBtn",function(e){
 				console.log("등록취소 버튼 누름");
 				e.preventDefault();
 				//var contractFile = attachContractFileTR.querySelector("input[name=contractFile]").value;
@@ -534,13 +681,15 @@
 			                type: 'POST',
 			                success: function(result){
 			                	//console.log("성공한거지? ",result);
-			                }
+			                },
+			                error: function(jqXHR, textStatus, errorThrown){
+		 	                    console.log("등록취소 버튼 안의 업로드 파일 삭제 ajax 에러",textStatus);
+		 	                }
 			            }); //$.ajax
 				});
 	           
 				window.location.href = '/procurement1/contractList';
 			});	
-			
 			
 			//-------------------------------------- 파일업로드 부분 --------------------------------------------------------------//
 			
@@ -646,7 +795,7 @@
 	 	                type: 'POST',
 	 	                dataType:'json',
 	 	                success: function(result){
-	 						console.log("인풋 체인지 함수의 Ajax 결과 : ",result);
+	 						console.log("인풋 체인지 함수의 ajax 결과 : ",result);
 	 	                    if(result.image){	//image 일때 아닐때, 
 	 	                    	showResultByImage(result);
 	 	                    }else{
@@ -660,7 +809,7 @@
 							console.log("테이블의 input값 제대로 넣고 난 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
 	 	                },
 	 	                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("인풋 체인지 함수의 Ajax 에러",textStatus);
+	 	                    console.log("인풋 체인지 함수의 ajax 에러",textStatus);
 	 	                }
 	 	            }); //$.ajax
 	 			}else{													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
@@ -688,7 +837,7 @@
 	 			}
 	        }); //$(".custom-file-input") click 끝
 	        
-	     	 //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
+	     	 //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
 	        function showResultByImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
 	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
@@ -710,7 +859,7 @@
 	            //document.querySelector(".uploadResult ul").innerHTML = str;
 	        } //showResultByImage(uploadResult) 함수 끝
 	        
-	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
+	        //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
 	        function showResultByNoImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
 	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
@@ -767,7 +916,8 @@
 	 			}
 	    	} //checkLi 함수 끝
 	        
-	    	//-----------------------드래그 앤 드랍 시작!! --------------------------------//
+	    	//-------------------------------------------드래그 앤 드랍 시작!! --------------------------------------------------//
+	    	
 	        var holder = document.getElementById("holder");
 	        var boxing = document.getElementById("boxing");
 
@@ -786,7 +936,7 @@
 	        	}
 	        } //fileDragDrop 함수 끝
 	    	
-	     	//파일을 드랍했을때, Ajax 처리 되면서 업로드하게 하는 함수
+	     	//파일을 드랍했을때, ajax 처리 되면서 업로드하게 하는 함수
 	        function fileUpload(e){        	
 	        	e.stopPropagation();
 	        	e.preventDefault();
@@ -862,7 +1012,7 @@
 	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
 	        holder.addEventListener("dragleave", fileDragDrop);
 	        holder.addEventListener("drop", fileUpload);  
-	      	//-----------------------드래그 앤 드랍 끝!! --------------------------------//
+	     	//-------------------------------------------드래그 앤 드랍 끝!! --------------------------------------------------//
 	    	
 	      	//계약서 첨부 모달창의 확인버튼 누를때 -> 첨부버튼을 지우고, 썸네일 보여주기
 	        $(".contractUploadConfirmBtn").on("click", function(e) {
@@ -874,7 +1024,7 @@
 				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
 				var str = `<img src='`+attachContractFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachContractFileImgTag'>`;
 				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachContractFileTR);
-				attachContractFileTR.querySelector(".attachContractFile").innerHTML = str;
+				attachContractFileTR.querySelector(".modifyContractFile").innerHTML = str;
 				
 				$(".contractUploadModal").modal('hide');
 	        });
@@ -891,7 +1041,7 @@
 				var targetFile = $(".uploadResult li").data("file");
 				//console.log("모야모야 제대로 읽어오는거니? ",targetFile);
 				
-				//값이 만들어 진게 있을때에만 Ajax처리 가능하게 하자! 
+				//값이 만들어 진게 있을때에만 ajax처리 가능하게 하자! 
 				var lengthCheck = $(".uploadResult li").length;
 				if(lengthCheck>0){
 					console.log("현재 길이 1개 이상이야 만든거 있어~ 갯수는 : ",lengthCheck);
@@ -935,39 +1085,6 @@
 					</tr>`;
 		}
 		
-    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		//contractDTO 리스트 타임리프 포문으로 안되서! 변수로 바꿔주기
-		/*
-		let contractDTOList = [[${contractDTOList}]];    	
-    	let DTOList = new Array();
-    	
-    	contractDTOList.forEach(function(item){
-    		let DTO = new Object();
-    		DTO.materialCode = item.materialCode;
-    		DTO.materialName = item.materialName;
-    		DTOList.push(DTO);
-    	});
-    	//console.log("contractDTO 전체 리스트 확인",DTOList);
-    	*/
-    	
-    	//첫번째 넣을 품목코드td html 만들기 (materialCode 이용)
-    	function makeMaterialCode(materialCode){
-    		return `<td>
-			    		<input type="text" style="width:100%; border: 0; text-align: center;" name="materialCode" class="materialCode" value=${materialCode} readonly>
-			    		<input type="hidden" name="contractStatus" value="미완료">
-		    		</td>`;
-    	};        	
-    	
-    	//두번째 넣을 품목명td html 만들기 (materialName 이용)
-    	function makeMaterialName(materialName){
-    		return `<td>
-			    		<input type="text" style="width:100%; border: 0; text-align: center;" name="materialName" class="materialName" value=${materialName} readonly>
-		    		</td>`;
-    	};        	
-    	    	
-    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    	
     	//이벤트 발생한 요소의 상위의 TD 객체 찾기
         function getObj(){
             var obj = event.srcElement
@@ -985,102 +1102,6 @@
             }
             return obj
         }
-	    
-		//등록추가 버튼 누를때, 행 추가
-    	function registerAddBtn(materialCode,materialName){
-    		
-    		// table element 찾기
-	    	const table = document.getElementById('contractRegisterTable');
-	    	//console.log("가져온 table 정보",table)
-	    	
-	    	//클릭된 행의 인덱스            
-            var idx = getObj().parentElement.rowIndex;
-			//console.log("와 대박 이거 되는거 같아!!! 와!!",idx)          
-	    	
-	    	// 클릭한 행 +1 -> 밑에 새로 행 추가
-	    	const new_row = table.insertRow(idx+1);
-	    	
-	    	// Cell의 길이
-	    	const cell_length = table.rows[1].cells.length;
-	    	//console.log("Cell의 길이",cell_length)    	
-	    	
-	    	//각 Cell html 작성 및, 행에 추가
-	    	for(let i = 0; i < cell_length; i++) {
-	            const new_cell = new_row.insertCell(i);
-	            let temp_html = ``;
-	            if(i === 0) {
-	                temp_html = makeMaterialCode(materialCode);
-	            }else if(i === 1) {
-					temp_html = makeMaterialName(materialName);
-	            }else if(i === 2) {
-	            	temp_html = `<td>
-									<div class="row" style="margin-left: 0px;" >
-										<input type="hidden" name="companyNo" class="companyNo">
-										<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name="companyName" class="companyName">
-										&nbsp;&nbsp;
-										<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right">
-											<i class="mdi mdi-magnify"></i>
-										</button>
-									</div>
-								</td>`;
-	            }else if(i === 3){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="manager" class="manager"></td>`;
-	            }else if(i === 4){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="managerTel" class="managerTel"></td>`;
-	            }else if(i === 5){
-	            	temp_html = `<td><input type="number" style="width:100%; border: 0; text-align: center;" name="supplyLt" class="supplyLt"></td>`;
-	            }else if(i === 6){
-	            	temp_html = `<td><input type="number" style="width:100%; border: 0; text-align: center;" name="unitPrice" class="unitPrice"></td>`;
-	            }else if(i === 7){
-	            	temp_html = `<td><input type="text" style="width:100%; border: 0; text-align: center;" name="dealCondition" class="dealCondition"></td>`;
-	            }else if(i === 8){
-	            	temp_html = `<td>
-	            					<input type="hidden" name="contractFile" class="contractFile">
-									<div class="attachContractFile">
-					            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
-											첨부
-										</button>
-									</div>
-								</td>`;
-	            }else{
-	            	temp_html = `<td>
-				    				<button type="button" class="btn btn-primary tr_delete" style="width:106px; height:40px;" onclick="tr_delete_event(this)">
-				    					삭제 &nbsp;&nbsp;-
-			    					</button>
-					    		</td> `;
-	            }
-	            new_cell.insertAdjacentHTML('beforeend', temp_html);
-    		}
-    	}   	    	
-    	
-    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    		    	    
-	    //삭제 - 버튼 누를때, 행 삭제 + 그 해당 행의 테이블에 추가했던 업로드했던 이미지파일 삭제하기
-	    const tr_delete_event = (btn) => {
-			//해당 행의 이미지태그 읽어오자!	    	
-	    	var target = getObjTR().querySelector("img");
-	    	//console.log("img 태그 읽어오나 보자 : ",target);
-	    	
-	    	//이미지 태그가 존재할때만, Ajax 처리로 이미지 첨부파일 지워주자
-	    	if(target != null){
-	    		var targetFile = $(target).data("file");
-	    		console.log("이미지 태그 존재하고 targetFile 읽자 : ",targetFile);
-	    		
-	    		$.ajax({
-	                url: '/procurement1/contract/removeFile',
-	                data: {fileName: targetFile},
-	                dataType:'text',
-	                type: 'POST',
-	                success: function(result){
-	                	//console.log("성공한거지? ",result);
-	                }
-	           }); //$.ajax
-	    	}
-	    	
-			const table = document.getElementById('contractRegisterTable');
-			const row_index = btn.closest('tr').rowIndex;
-			table.deleteRow(row_index);
-    	};	       	
     	
 		
 		</script>
