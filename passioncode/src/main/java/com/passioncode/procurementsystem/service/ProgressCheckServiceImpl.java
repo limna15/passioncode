@@ -248,11 +248,10 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 				
 				if (comparison2 > 0) {//이게 더 빠른 날짜
 					date1 = date2;//date2에 있음으로 date1으로 바꿔주기, 그래야 계속 비교가능
-					rate += rate;//자기 자신 더해주기
+					rate = ((Integer) arr[3]);//자기 자신 더해주기//고치기
 					System.out.println("date1이 date2보다 뒤에 있습니다."+rate+"%"+date1);
 					//여기에 있는게 원하는 rate
 				} else if (comparison2 < 0) {//이 경우가 가까운 날의 진척 검수
-					rate = ((Integer) arr[3]);
 					System.out.println("date1이 date2보다 앞에 있습니다."+rate+"%"+date1);
 					//System.out.println("다음 진척 검수일정"+date1);
 				} else {//이런 경우는 처음부터 없도록 하기
@@ -269,7 +268,11 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 					date1 = null;
 					System.out.println("date1이 today보다 뒤에 있습니다."+rate+"%");
 				} else if (comparison < 0) {
-					rate = ((Integer) arr[3]);//과거의 평가가 존재함으로 저장
+					if(((Integer) arr[3]) == null) {
+						System.out.println(rate+"진척 검수가 기록되지 않은 경우 이전 데이터를 가져감");
+					}else {//값이 있는 경우만 최근 데이터 넣어줌
+						rate = ((Integer) arr[3]);//과거의 평가가 존재함으로 저장
+					}
 					date1 = null;
 					System.out.println("date1이 today보다 앞에 있습니다."+rate+"%");
 				}

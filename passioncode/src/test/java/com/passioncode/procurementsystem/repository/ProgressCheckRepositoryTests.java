@@ -47,11 +47,19 @@ public class ProgressCheckRepositoryTests {
 	@Autowired
 	MRPRepository mrpRepository;
 	
-	//납기 진도율
-	//오늘과 가까운 과거기록 가져오기
 	@Transactional
 	@Test
-	public void checkPercentTest() {//없으면 미등록, 날짜 중 가까운 과거의 데이터 가져오기
+	public void progressCheckDoneTest(){//검수 완료
+		//1. 검수일이 한개 이상
+		//2. 일정이 지남, 평가가 없더라도 검수는 완료된 것임
+		
+		
+	}
+	
+	
+	@Transactional
+	@Test
+	public void checkPercentTest() {	//납기 진도율, 오늘과 가까운 과거기록 가져오기
 		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
 		List<DetailProgressCheckListDTO> list = new ArrayList<>();
 		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
@@ -80,11 +88,10 @@ public class ProgressCheckRepositoryTests {
 				
 				if (comparison2 > 0) {//이게 더 빠른 날짜
 					date1 = date2;//date2에 있음으로 date1으로 바꿔주기, 그래야 계속 비교가능
-					rate += rate;//자기 자신 더해주기
+					rate = ((Integer) arr[3]);//값 더해주기						
 					System.out.println("date1이 date2보다 뒤에 있습니다."+rate+"%"+date1);
 					//여기에 있는게 원하는 rate
 				} else if (comparison2 < 0) {//이 경우가 가까운 날의 진척 검수
-					rate = ((Integer) arr[3]);
 					System.out.println("date1이 date2보다 앞에 있습니다."+rate+"%"+date1);
 					//System.out.println("다음 진척 검수일정"+date1);
 				} else {//이런 경우는 처음부터 없도록 하기
@@ -94,14 +101,18 @@ public class ProgressCheckRepositoryTests {
 			}else {//처음에 date1이 null인 경우(처음 비교하는 경우, 한개의 일정)
 				date1 = ((Date) arr[1]);	//무조건 담는다
 				//rate = ((Integer) arr[3]);	//처음 진도율 담기
-				log.info("처음에만 있는 수"+date1);
+				log.info("처음에만 있는 수"+date1+rate+"%");
 				int comparison = date1.compareTo(today);// 날짜 비교
 				if (comparison > 0) {//이게 더 빠른 날짜
 					//미래의 것은 필요 없음
 					date1 = null;
 					System.out.println("date1이 today보다 뒤에 있습니다."+rate+"%");
 				} else if (comparison < 0) {
-					rate = ((Integer) arr[3]);//과거의 평가가 존재함으로 저장
+					if(((Integer) arr[3]) == null) {
+						System.out.println(rate+"진척 검수가 기록되지 않은 경우 이전 데이터를 가져감");
+					}else {//값이 있는 경우만 최근 데이터 넣어줌
+						rate = ((Integer) arr[3]);//과거의 평가가 존재함으로 저장
+					}
 					date1 = null;
 					System.out.println("date1이 today보다 앞에 있습니다."+rate+"%");
 				}
