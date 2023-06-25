@@ -35,6 +35,33 @@ public class PurchaseOrderRepositoryTests {
 	@Autowired
 	ProgressCheckRepository progressCheckRepository;
 	
+	@Transactional
+	@Test
+	public void detailNo() {//발주서 번호 구하기
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(4).get();
+		//PurchaseOrderDTO purchaseOrderDTO = 
+		Integer mycode = 0;
+		if(procurementPlan.getDetailPurchaseOrder().getPurchaseOrder().getNo()==null) {
+			mycode = 0;//발주되지 않은 것
+		}else {
+			mycode = procurementPlan.getDetailPurchaseOrder().getPurchaseOrder().getNo();
+		}
+		log.info(mycode+"<<발주서 번호");
+	}
+	
+	@Test
+	public void detailCode() {//발주코드 구하기
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(4).get();
+		//PurchaseOrderDTO purchaseOrderDTO = 
+		Integer mycode = 0;
+		if(procurementPlan.getDetailPurchaseOrder()==null) {
+			mycode = 0;//발주되지 않은 것
+		}else {
+			mycode = procurementPlan.getDetailPurchaseOrder().getCode();
+		}
+		log.info(mycode+"<<코드번호");
+	}
+	
 	@Test
 	public void myRecord() {//지난 검수 기록 가져오기
 		Optional<PurchaseOrder> list = purchaseOrderRepository.findById(1);

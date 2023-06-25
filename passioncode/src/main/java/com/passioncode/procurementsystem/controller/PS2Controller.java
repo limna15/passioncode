@@ -72,6 +72,7 @@ public class PS2Controller {
 		log.info("progressCheck일정등록 위해>>==="+checkBox);
 		
 		model.addAttribute("pCheckList", progressCheckService.getProgressCheckDTOList());
+		//model.addAttribute("miniList", progressCheckService.getProgressCheckDTOList());
 		
 		
 		
