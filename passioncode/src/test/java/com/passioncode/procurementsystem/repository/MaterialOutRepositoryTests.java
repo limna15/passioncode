@@ -91,4 +91,58 @@ public class MaterialOutRepositoryTests {
 		log.info("moDTOList >>> " + moDTOList + ", 사이즈는 >>> " + moDTOList.size());	
 	}
 	
+	@Transactional
+	@Test
+	public void sortDTOListTest() {
+		List<MRP> mrpList= mrpRepository.findAll();
+		List<ProcurementPlan> ppList= new ArrayList<>();
+				
+		for(int i=0; i<mrpList.size(); i++) {
+			if(procurementPlanRepository.existsByMrp(mrpList.get(i))) {
+				ppList.add(procurementPlanRepository.findByMrp(mrpList.get(i)));				
+			}
+		}
+		
+		//log.info("ppList 한번 보자 >>> " + ppList + ", 사이즈는 >>> " + ppList.size());
+		
+		List<MaterialOutDTO> moDTOList= new ArrayList<>();
+		List<MaterialOutDTO> notNullMoDTOList= new ArrayList<>();
+		List<MaterialOutDTO> nullMoDTOList= new ArrayList<>();
+		MaterialOutDTO moDTO= null;
+		List<MaterialOut> moList= materialOutRepository.findAll();
+		log.info("moList 한번 보자 >>> " + moList + ", 사이즈는 >>> " + moList.size());
+		
+		for(int i=0; i<ppList.size(); i++) {
+		log.info("ppList 완료일 한번 보자 >>> " + ppList.get(i).getCompletionDate());
+			//세부구매발주서 등록 +  완료일(입고일) 등록 -> 출고 리스트(출고 상태 0(버튼))
+			if(ppList.get(i).getDetailPurchaseOrder() != null && ppList.get(i).getCompletionDate() != null) {
+				//출고 엔티티에 존재 O
+				if(materialOutRepository.existsByMrp(ppList.get(i).getMrp())){
+					moDTO= MaterialOutDTO.builder().dpoCode(ppList.get(i).getDetailPurchaseOrder().getCode())
+							.mrpDate(ppList.get(i).getMrp().getDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+							.materialName(ppList.get(i).getMrp().getMaterial().getName())
+							.process(ppList.get(i).getMrp().getProcess()).mrpAmount(ppList.get(i).getMrp().getAmount()).outStatus("1").build();			
+					notNullMoDTOList.add(moDTO);		
+				//출고 엔티티에 존재 X	
+				}else {
+					moDTO= MaterialOutDTO.builder().dpoCode(ppList.get(i).getDetailPurchaseOrder().getCode())
+							.mrpDate(ppList.get(i).getMrp().getDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+							.materialName(ppList.get(i).getMrp().getMaterial().getName())
+							.process(ppList.get(i).getMrp().getProcess()).mrpAmount(ppList.get(i).getMrp().getAmount()).outStatus("0").build();			
+					nullMoDTOList.add(moDTO);			
+				}
+				
+			}//if문 끝
+		}//for문 끝
+		
+		//엔티티에 존재 X(null) -> 존재 O(출고 완료된 상태) 순으로 넣기
+		for(MaterialOutDTO dto: nullMoDTOList) {
+			moDTOList.add(dto);
+		}
+		for(MaterialOutDTO dto: notNullMoDTOList) {
+			moDTOList.add(dto);
+		}
+		//log.info("moDTOList >>> " + moDTOList + ", 사이즈는 >>> " + moDTOList.size());	
+	}
+	
 }

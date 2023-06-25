@@ -42,13 +42,15 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 			}
 		}
 		
-		//log.info("ppList 한번 보자 >>> " + ppList + ", 사이즈는 >>> " + ppList.size());
-		
 		List<MaterialOutDTO> moDTOList= new ArrayList<>();
+		List<MaterialOutDTO> notNullMoDTOList= new ArrayList<>();
+		List<MaterialOutDTO> nullMoDTOList= new ArrayList<>();
 		MaterialOutDTO moDTO= null;
 		List<MaterialOut> moList= materialOutRepository.findAll();
+		//log.info("moList 한번 보자 >>> " + moList + ", 사이즈는 >>> " + moList.size());
 		
 		for(int i=0; i<ppList.size(); i++) {
+		//log.info("ppList 완료일 한번 보자 >>> " + ppList.get(i).getCompletionDate());
 			//세부구매발주서 등록 +  완료일(입고일) 등록 -> 출고 리스트(출고 상태 0(버튼))
 			if(ppList.get(i).getDetailPurchaseOrder() != null && ppList.get(i).getCompletionDate() != null) {
 				//출고 엔티티에 존재 O
@@ -57,17 +59,24 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 							.mrpDate(ppList.get(i).getMrp().getDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 							.materialName(ppList.get(i).getMrp().getMaterial().getName())
 							.process(ppList.get(i).getMrp().getProcess()).mrpAmount(ppList.get(i).getMrp().getAmount()).outStatus("1").build();			
-					moDTOList.add(moDTO);		
+					notNullMoDTOList.add(moDTO);		
 				//출고 엔티티에 존재 X	
 				}else {
 					moDTO= MaterialOutDTO.builder().dpoCodeStr(codeStr(ppList.get(i).getDetailPurchaseOrder().getCode()))
 							.mrpDate(ppList.get(i).getMrp().getDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 							.materialName(ppList.get(i).getMrp().getMaterial().getName())
 							.process(ppList.get(i).getMrp().getProcess()).mrpAmount(ppList.get(i).getMrp().getAmount()).outStatus("0").build();			
-					moDTOList.add(moDTO);			
+					nullMoDTOList.add(moDTO);			
 				}
-				
-			}
+			}//if문 끝
+		}//for문 끝
+		
+		//엔티티에 존재 X(null) -> 존재 O(출고 완료된 상태) 순으로 넣기
+		for(MaterialOutDTO dto: nullMoDTOList) {
+			moDTOList.add(dto);
+		}
+		for(MaterialOutDTO dto: notNullMoDTOList) {
+			moDTOList.add(dto);
 		}
 		return moDTOList;
 	}
