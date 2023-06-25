@@ -296,39 +296,6 @@
         </div>
 		<!-- 안내와 오류시 보여줄 모달창 끝 -->
 		
-		<!-- 
-			안내와 오류시 보여줄 모달창 시작 (확인, 취소 버튼 둘다 있는거)
-			1. 파일업로드 수정 오류시
-		       - 제목 : 도면 Image 첨부 확인
-		       - 내용 : 1. <span>기존의 도면파일은 삭제됩니다.</span><br>
-		       			   <span>현재 도면파일로 수정하시겠습니까?</span>
-		-->
-		<div class="materialInfoAndErrorModal2 modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="materialInfoAndErrorModalTitle2"></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="materialInfoAndErrorModalContent2">   
-						<!-- 안내와 오류시 보여줄 모달창 내용 -->
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary materialInfoAndErrorModal2ConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
-                        	확인
-                       	</button>
-                       	<button type="button" class="btn btn-secondary materialInfoAndErrorModal2CancelBtn" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
-                        	취소
-                       	</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-		<!-- 안내와 오류시 보여줄 모달창 끝 -->
-		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
 		
@@ -761,40 +728,6 @@
     				$(".drawingUploadModal").modal('hide');
 	 			} //if
 	        });	//도면 첨부 모달창의 확인버튼 누를때 끝
-	        
-	        /*
-	        //수정 진짜로 할거니? 모달창의 확인 버튼 누를때, 기존의 업로드된 파일 삭제 + 업로드 진행 (경고모달창, 첨무보달창 2개다 지우기) 
-	        $(".materialInfoAndErrorModal2ConfirmBtn").on("click", function(e) {
-	        	var originalDrawingFile = $(".originalDrawingFile").val();
-	        	console.log("이미지url 못읽어서 drawingFile 이름으로!! : ",originalDrawingFile);
-	        	
-	        	//기존의 업로드된 파일 삭제하는 ajax(imgurl말고! drawingFile을 바로 이용해서 하는 삭제)
-	        	$.ajax({
-	                url: '/procurement1/drawing/removeFile2',
-	                data: {drawingFile: originalDrawingFile},
-	                dataType:'text',
-	                type: 'POST',
-	                success: function(result){
-	                	console.log("이거 현재 기존의 도면 삭제하는거야, 성공한거지!! 결과 값 보자 : ",result);
-	                	
-	                	var attachDrawingFileThumbImg = $(".attachDrawingFileThumbImg").attr("src");
-	    				//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachDrawingFileThumbImg);
-	    				var targetFile = $(".uploadResult li").data("file");
-	    				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
-	    				var str = `<img src='`+attachDrawingFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachDrawingFileImgTag'>`;
-	    				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachDrawingFileTR);
-	    				//console.log("넣을 내용 잘 셋팅 되었나 보자 : ",str);
-	    				attachDrawingFileTR.querySelector(".modifyDrawingFile").innerHTML = str;
-	    				
-	    				$(".materialInfoAndErrorModal2").modal('hide');
-	    				$(".drawingUploadModal").modal('hide');
-	                },
-	                error: function(jqXHR, textStatus, errorThrown){
- 	                    console.log("업로드된 파일 삭제하는 Ajax 에러",textStatus);
- 	                }
-	            }); //$.ajax 
-	        });	//수정 진짜로 할거니? 모달창의 확인 버튼 끝
-	        */
 	        
 			//도면 첨부 모달창의 취소버튼 + 모달창 x 누를때 -> 업로드한 파일 지워주기
 	        $(".drawingUploadCancelBtn").on("click", function(e) {
