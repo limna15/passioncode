@@ -520,6 +520,38 @@ public class PS1UploadRestController {
     }
     
     /**
+     * 업로드파일 삭제하기2 <br>
+     * 계약서 DB에 있는 contractFile 그대로 받았을때 삭제 처리하기 <br>
+     * 이때 contractFile 리스트로 받아와서 전부 삭제처리 해주기
+     * @param fileName
+     * @return
+     */
+    @PostMapping("/contract/removeFile2")
+    public ResponseEntity<Boolean> contractRemoveFile2(@RequestBody List<String> contractFileList){
+    	//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
+		//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\ upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
+		//ajax 삭제할대 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
+		// \PassionCode\ upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
+		//ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
+		log.info("제대로 DB에 저장된 파일이름 리스트 담아서 오나 보자 : "+contractFileList);
+    	
+		boolean result = false;
+		for(String contractFile: contractFileList) {
+			File file = new File(contractFile);
+			log.info("파일 봐보자... : "+file);
+			result = file.delete();
+			log.info("원본 삭제 결과 : "+result);
+			
+			File thumbnail = new File(file.getParent(), "thumb_" + file.getName());
+			log.info("썸네일 봐보자... : "+thumbnail);
+			result = thumbnail.delete();
+			log.info("썸네일 삭제 결과 : "+result);
+		}
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    /**
      * 업로드파일 다운로드하기
      * @param fileName
      * @return

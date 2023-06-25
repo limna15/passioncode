@@ -72,7 +72,7 @@ public class ContractServiceImpl implements ContractService {
 	 */
 	public String makeContractNoStr(Integer contractNo) {
 		//계약서번호 1 -> C00001 로 바꿔주기
-		String contractNoStr = String.format("%05d",contractNo);
+		String contractNoStr = String.format("%08d",contractNo);
 		contractNoStr = "C" + contractNoStr;
 		log.info("바꾼 계약서 번호 좀 보자 : ",contractNoStr);
 		return contractNoStr;

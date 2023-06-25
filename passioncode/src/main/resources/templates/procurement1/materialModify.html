@@ -383,7 +383,7 @@
 			//-------------------------------------- 도면 이미지 수정 첨부 부분 --------------------------------------------------------------//
 			
 			//수정 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
-			//(첨부한 도면이미지를 원래 테이블에 넣어주기위해)
+			//(수정한 도면이미지를 원래 테이블에 넣어주기위해)
 			var attachDrawingFileTR = new Object();
 			
 			//도면이미지 수정버튼 클릭할때 -> 도면 첨부 모달창 보여주기
@@ -429,16 +429,16 @@
 	        //input file이 변할때, 파일확장 체크해서 업로드 하기
 	        $(".custom-file-input").on("change", function(e) {
 	        	console.log("인풋 체인지 함수 시작");
-	        	console.log("이 인풋의 값을 봐보자!! : ", $(".custom-file-input").val());
+	        	//console.log("이 인풋의 값을 봐보자!! : ", $(".custom-file-input").val());
 	        	//console.log("이 인풋 밑에 라벨의 값도 봐보자!! : ", $(".custom-file-label").val());
-	        	console.log("e.target.files 보자 : ",e.target.files);
+	        	//console.log("e.target.files 보자 : ",e.target.files);
  				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);		//이건 값을 못읽어 에러 뜸
 	        	
 	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
 	        	if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
 	 				console.log("인풋 체인지 함수에서!! li 길이가 0개~~~~~~~~~");
-	        		console.log("$(this).val() 이게 도대체 모야? 체인지 함수 클릭할때 값 읽어보자 : ",$(this).val()); 	// C:\fakepath\테이블정의서ver4.xlsx
-	        		console.log("그리고 인풋 체인지 함수에서 그자체 읽어보자 $(this) : ",$(this));
+	        		//console.log("$(this).val() 이게 도대체 모야? 체인지 함수 클릭할때 값 읽어보자 : ",$(this).val()); 	// C:\fakepath\테이블정의서ver4.xlsx
+	        		//console.log("그리고 인풋 체인지 함수에서 그자체 읽어보자 $(this) : ",$(this));
 	        		
 	 				var fileName = $(this).val().split("\\").pop();
 					//console.log("인풋 체인지 함수의 fileName : ",fileName);
@@ -471,7 +471,7 @@
 	 	            if (!appended) {return;}
 
 	 	            for (var value of formData.values()) {
-	 	                console.log("인풋 체인지 함수의 value of formData.values() : ",value);
+	 	                //console.log("인풋 체인지 함수의 value of formData.values() : ",value);
 	 	            }
 
 	 	            //실제 업로드 부분
@@ -484,7 +484,7 @@
 	 	                type: 'POST',
 	 	                dataType:'json',
 	 	                success: function(result){
-	 						console.log("인풋 체인지 함수의 ajax 결과 : ",result);
+	 						console.log("인풋 체인지 함수의 파일 업로드 ajax 결과 : ",result);
 	 	                    if(result.image){	//image 일때 아닐때, 
 	 	                    	showResultByImage(result);
 	 	                    }else{
@@ -498,7 +498,7 @@
 							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 	 	                },
 	 	                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("인풋 체인지 함수의 ajax 에러",textStatus);
+	 	                    console.log("인풋 체인지 함수의 파일업로드 ajax 에러",textStatus);
 	 	                }
 	 	            }); //$.ajax
 	 			}else{													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
@@ -584,7 +584,6 @@
 	                success: function(result){
 	                    targetLi.remove();
 	                    checkLi();
-	                    
 	                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
 	                    attachDrawingFileTR.querySelector("input[name=drawingFile]").value = "";
 	                    //console.log("테이블의 input값 초기화 한 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
@@ -636,8 +635,8 @@
 	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
 	 				console.log("드래그엔 드롭에서!! li 길이가 0개~~~~~~~~~");
 	 				var files = e.target.files || e.dataTransfer.files; 
-	 				console.log("e.target.files 보자 : ",e.target.files);
-	 				console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);
+	 				//console.log("e.target.files 보자 : ",e.target.files);
+	 				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);
 		        	var formData = new FormData();
 		            var appended = false;
 		            
@@ -685,7 +684,7 @@
 							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-		                    console.log(textStatus);
+		                    console.log("드래그앤 드롭에서 파일업로드 ajax 에러",textStatus);
 		                }
 		            }); //$.ajax 
 	 			}else{																	//현재 개수 1개 이상으로, 이미 업로드한게 있음!
@@ -703,7 +702,7 @@
 	        holder.addEventListener("drop", fileUpload);  
 			//-------------------------------------------드래그 앤 드랍 끝!! --------------------------------------------------//
 			
-	        //도면 첨부 모달창의 확인버튼 누를때 -> 기존파일 삭제되고 수정됩니다 안내 모달창 보여주고! -> 수정버튼을 지우고, 기존썸네일 지우고, 수정한 썸네일만 보여주기
+	        //도면 첨부 모달창의 확인버튼 누를때 -> 수정버튼을 지우고, 기존썸네일 지우고, 수정한 썸네일만 보여주기
 	        $(".drawingUploadConfirmBtn").on("click", function(e) {
 	        	console.log("도면 첨부 모달창의 확인버튼 누름");
 				e.preventDefault();
@@ -761,7 +760,7 @@
 		                    //console.log("테이블의 input값 초기화 한 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("업로드 파일 삭제하는 ajax 에러",textStatus);
+	 	                    console.log("모달창의 취소버튼,상단 X버튼 -> 업로드 파일 삭제하는 ajax 에러",textStatus);
 	 	                }
 		            }); //$.ajax 
 				} //if
@@ -880,7 +879,7 @@
 					$(".materialModifyConfirmModal").modal('show');	
 				} //if
 			});	//수정확인 버튼 누를때 끝
-						
+
 			
 			//수정확인 모달창의 확인 버튼 누를때 -> 진짜!! 수정처리 되는 부분!
 			$(document).on("click",".materialModifyConfirmBtn",function(e){
@@ -903,7 +902,7 @@
 	        	let modifyDrawingFileList = new Array();
 	        	$('.drawingFile').each(function(){
     				let modifyDrawingFile = $(this).val();
-    				//console.log("이거 잘 originalDrawingFile 읽어온건가!!",originalDrawingFile);
+    				//console.log("이거 잘 modifyDrawingFile 읽어온건가!!",modifyDrawingFile);
     				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
    					modifyDrawingFileList.push(modifyDrawingFile);
     			}); 
@@ -922,7 +921,7 @@
 	        	}
 	        	console.log("변경이 된! 보낼 원래 도면파일 리스트 만들어 진거 보자 : ",sendDrawingFileList);
 	        	
-	        	//그래서 보낼 도면파일 리스트의 값이 있을때만 ajax 보내서 삭제, 
+	        	//그래서 보낼 도면파일 리스트의 값이 있을때만 ajax 보내서 삭제하기 
 	        	if(sendDrawingFileList.length>0){
 		        	//Json 타입으로 변환시키기
 					var sendDrawingFileListToJsonData = JSON.stringify(sendDrawingFileList);	
@@ -940,7 +939,7 @@
 		                	
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("업로드된 파일 삭제하는 ajax 에러",textStatus);
+	 	                    console.log("기존의 도면파일 업로드된 거 삭제하는 ajax 에러",textStatus);
 	 	                }
 		            }); //$.ajax 
 	        	} //if
@@ -1085,10 +1084,9 @@
 						console.log("품목코드 수정 ajax 에러발생~~!!!!!");						
 					}
 				});	//$.ajax	
-				
 			});	//수정확인 모달창의 확인 버튼 누를때 끝
 			
-			//수정취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기
+			//수정취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 모든 파일 삭제 시키기
 			$(document).on("click","#materialModifyCancelBtn",function(e){
 				console.log("수정취소 버튼 누름");
 				e.preventDefault();
@@ -1100,24 +1098,24 @@
 				
 				//테이블의 태그에 넣은 타겟파일 이름을 통해서 ajax 처리하기
 				$(".attachDrawingFileImgTag").each(function(i,obj){
-		                var target = $(obj);
-		                var targetFile = target.data("file");
-		                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
-		                $.ajax({
-			                url: '/procurement1/drawing/removeFile',
-			                data: {fileName: targetFile},
-			                dataType:'text',
-			                type: 'POST',
-			                success: function(result){
-			                	//console.log("성공한거지? ",result);
-			                },
-			                error : function(jqXHR,textStatus,errorThrown){   
-								console.log("업로드 파일 삭제하는 ajax 에러!");						
-							}
-			            }); //$.ajax
+	                var target = $(obj);
+	                var targetFile = target.data("file");
+	                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
+	                $.ajax({
+		                url: '/procurement1/drawing/removeFile',
+		                data: {fileName: targetFile},
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	//console.log("성공한거지? ",result);
+		                },
+		                error : function(jqXHR,textStatus,errorThrown){   
+							console.log("수정취소 버튼에서의 도면 업로드 파일 삭제하는 ajax 에러!");						
+						}
+		            }); //$.ajax
 				}); //$(".attachDrawingFileImgTag") 끝
 				window.location.href = '/procurement1/materialList';
-			});	//등록취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 파일 삭제 시키기 끝
+			});	//수정취소 버튼 누를때 끝
 			
 			//-------------------------------------- 대분류코드 변경할때마다 중분류 코드 변경하기 --------------------------------------------------------------//
 			

@@ -501,6 +501,90 @@ public class PS1Controller {
 		
 	}
 	
+	/**
+	 * 계약 수정 처리
+	 * @param contractDTO
+	 * @param redirectAttributes
+	 * @param request
+	 */
+	@PostMapping("contractModify")
+	public String contractModify2(ContractDTO contractDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
+		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
+		//사업자등록번호
+		
+		log.info("계약 수정 처리.....");
+		
+		log.info("계약 수정 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
+		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
+		
+		List<ContractDTO> contractDTOList = new ArrayList<>();
+		
+		//계약서 번호
+		String[] contractNo = request.getParameterValues("contractNo");	
+		//품목코드 배열
+		String[] materialCode = request.getParameterValues("materialCode");	
+		//품목명 배열
+		String[] materialName = request.getParameterValues("materialName");
+		//협력회사명 배열
+		String[] companyName = request.getParameterValues("companyName");
+		//담당자 배열
+		String[] manager = request.getParameterValues("manager");
+		//담당자연락처 배열
+		String[] managerTel = request.getParameterValues("managerTel");
+		//품목공급LT 배열  -> Integer로 바꿔줘야 함
+		String[] supplyLt = request.getParameterValues("supplyLt");
+		//단가 배열  -> Integer로 바꿔줘야 함
+		String[] unitPrice = request.getParameterValues("unitPrice");
+		//거래조건 배열
+		String[] dealCondition = request.getParameterValues("dealCondition");
+		//계약서 배열
+		String[] contractFile = request.getParameterValues("contractFile");
+		//사업자등록번호 배열
+		String[] companyNo =  request.getParameterValues("companyNo");
+		//계약상태 -> 수정하는거니까 완료로 해서 보냄
+		
+		//품목코드는 null일수 없으니까, 품목코드 배열 기준으로, 각각의 DTO에 넣어주고, 그값 DTO리스트에 넣기
+		for(int i=0; i<materialCode.length; i++) {
+			ContractDTO contractDTO2 = new ContractDTO();
+			contractDTO2.setContractNo(Integer.parseInt(contractNo[i]));
+			contractDTO2.setContractStatus("완료");			
+			contractDTO2.setMaterialCode(materialCode[i]);
+			contractDTO2.setMaterialName(materialName[i]);
+			contractDTO2.setCompanyName(companyName[i]);;
+			contractDTO2.setManager(manager[i]);
+			contractDTO2.setManagerTel(managerTel[i]);
+			contractDTO2.setSupplyLt(Integer.parseInt(supplyLt[i]));
+			contractDTO2.setUnitPrice(Integer.parseInt(unitPrice[i]));
+			contractDTO2.setContractFile(contractFile[i]);
+			contractDTO2.setCompanyNo(companyNo[i]);
+			
+			if(dealCondition != null) {									//받아온 dealCondition가 존재 O
+				if(!dealCondition[i].equals("")) {						//빈값이 아닐때
+					contractDTO2.setDealCondition(dealCondition[i]);				
+				}else {													//"" 빈값으로 받아올때
+					contractDTO2.setDealCondition(null);
+				}
+			}else {														//받아온 dealCondition가 존재 X
+				contractDTO2.setDealCondition(null);
+			}
+			
+			contractDTOList.add(contractDTO2);
+		}
+		
+		log.info("계약 수정 처리에서 만든 수정할 contractDTOList 보자 : "+contractDTOList);
+		
+		//받아온 DTO리스트 각각 DB에 수정하기
+		for(ContractDTO dto : contractDTOList) {
+			contractService.modify(dto);
+		}
+		
+		return "redirect:/procurement1/contractList";
+	}
+	
+	
+	
+	
+	
 	
 	
 	

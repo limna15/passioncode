@@ -9,7 +9,6 @@ import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
-
 public interface ProcurementPlanRepository extends JpaRepository<ProcurementPlan, Integer> {
 	
 	/**
