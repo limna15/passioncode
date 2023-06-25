@@ -115,4 +115,12 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 		
 		return pNum;	
 	}
+
+	@Override
+	public Integer register(MaterialOutDTO materialOutDTO) {
+		MaterialOut materialOut= DTOtoEntity(materialOutDTO);
+		materialOutRepository.save(materialOut);
+		
+		return materialOut.getCode();
+	}
 }

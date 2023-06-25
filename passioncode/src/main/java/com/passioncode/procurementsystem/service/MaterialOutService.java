@@ -25,4 +25,10 @@ public interface MaterialOutService {
 	 * @return
 	 */
 	List<MaterialOutDTO> getDTOList();
+	
+	/**
+	 * MaterialOutDTO를 이용해서 자재입고 등록
+	 * @param MaterialOutDTO
+	 */
+	Integer register(MaterialOutDTO materialOutDTO);
 }

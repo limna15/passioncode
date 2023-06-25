@@ -468,7 +468,7 @@
   	//입고 상태 "취소"버튼 눌렀을 경우 -> DB등록 + 화면 입고 상태 '취소' 표시 + 발행 상태 '발행 불가' 표시
 	$(document).on("click", "#cancleBtn", function(e){
 		e.preventDefault();
-		console.log("완료버튼 클릭")
+		console.log("취소버튼 클릭")
 		
  		let no= getObjTR().querySelector("input[name=no]").value;
 		let code= getObjTR().querySelector("input[name=code]").value;

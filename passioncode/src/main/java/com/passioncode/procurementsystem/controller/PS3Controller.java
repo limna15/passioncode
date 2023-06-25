@@ -59,7 +59,7 @@ public class PS3Controller {
 	}
 	
 	@PostMapping(value="materialInRegister")
-	public String materialInRegister(MaterialInDTO materialInDTO, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+	public String materialInRegister(MaterialInDTO materialInDTO, HttpServletRequest request) {
 		//log.info("잘 보내지나 >>> "+ materialInDTO);
 		
 		String purchaseOrderNoStr= request.getParameter("no");

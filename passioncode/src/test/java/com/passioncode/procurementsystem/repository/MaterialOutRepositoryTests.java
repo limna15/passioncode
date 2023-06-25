@@ -145,7 +145,7 @@ public class MaterialOutRepositoryTests {
 		log.info("moList 한번 보자 >>> " + moList + ", 사이즈는 >>> " + moList.size());
 		
 		for(int i=0; i<ppList.size(); i++) {
-		log.info("ppList 완료일 한번 보자 >>> " + ppList.get(i).getCompletionDate());
+		//log.info("ppList 완료일 한번 보자 >>> " + ppList.get(i).getCompletionDate());
 			//세부구매발주서 등록 +  완료일(입고일) 등록 -> 출고 리스트(출고 상태 0(버튼))
 			if(ppList.get(i).getDetailPurchaseOrder() != null && ppList.get(i).getCompletionDate() != null) {
 				//출고 엔티티에 존재 O
@@ -174,7 +174,7 @@ public class MaterialOutRepositoryTests {
 		for(MaterialOutDTO dto: notNullMoDTOList) {
 			moDTOList.add(dto);
 		}
-		//log.info("moDTOList >>> " + moDTOList + ", 사이즈는 >>> " + moDTOList.size());	
+		log.info("moDTOList >>> " + moDTOList + ", 사이즈는 >>> " + moDTOList.size());	
 	}
 	
 }
