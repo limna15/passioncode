@@ -26,9 +26,14 @@ public class MaterialOutDTO {
 	private Integer dpoCode;
 	
 	/**
+	 * 발주코드(문자ver.)
+	 */
+	private String dpoCodeStr;
+	
+	/**
 	 * 소요일 (MRP)
 	 */
-	private Date mrpdate;
+	private Date mrpDate;
 	
 	/**
 	 * 품목코드 (품목)

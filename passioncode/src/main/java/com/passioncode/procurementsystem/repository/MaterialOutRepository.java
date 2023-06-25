@@ -15,4 +15,12 @@ public interface MaterialOutRepository extends JpaRepository<MaterialOut, Intege
 	 * @return
 	 */
 	public MaterialOut findByMrp(MRP mrp);
+	
+	/**
+	 * MRP을 이용하여 자재출고상태(완료, 버튼) 체크하기 <br>
+	 * 0= 버튼, 1= 완료
+	 * @param mrp
+	 * @return
+	 */	
+	public Boolean existsByMrp(MRP mrp);
 }

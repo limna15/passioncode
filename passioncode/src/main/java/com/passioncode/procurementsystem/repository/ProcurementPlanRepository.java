@@ -59,7 +59,4 @@ public interface ProcurementPlanRepository extends JpaRepository<ProcurementPlan
 	@Query(value="SELECT pp.code,pp.mrp_code,pp.contract_no,pp.amount,pp.due_date,pp.minimum_order_date,pp.register_date,pp.completion_date,pp.detail_purchase_order_code "
 			+ "FROM procurement_plan pp JOIN mrp m ON pp.mrp_code=m.code WHERE m.material_code = :materialCode  ", nativeQuery = true)
 	public List<ProcurementPlan> getPPJoinMRPByMaterialCode(@Param("materialCode") String materialCode);
-	
-	
-	
 }

@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 public class MaterialInServiceTests {
 	
 	@Autowired
-	MateriallInService materialInService;
+	MaterialInService materialInService;
 	@Autowired
 	DetailPurchaseOrderService dpoService;
 	
