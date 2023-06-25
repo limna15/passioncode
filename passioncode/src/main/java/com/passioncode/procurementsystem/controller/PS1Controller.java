@@ -55,16 +55,15 @@ public class PS1Controller {
 		
 		model.addAttribute("DTOList",materialService.getDTOList());	
 		List<MaterialDTO> DTOList = materialService.getDTOList();
-		log.info("어디 그 이미지 dto 읽어보자 getDrawingUploadPath() : "+DTOList.get(0).getDrawingFileDTO().getDrawingUploadPath() );
-		log.info("어디 그 이미지 dto 읽어보자 getFileName() : "+DTOList.get(0).getDrawingFileDTO().getFileName() );
-		log.info("어디 그 이미지 dto 읽어보자 getUuid() : "+DTOList.get(0).getDrawingFileDTO().getUuid() );
-		log.info("어디 그 이미지 dto 읽어보자 getFolderPath() : "+DTOList.get(0).getDrawingFileDTO().getFolderPath() );
-		log.info("어디 그 이미지 dto 읽어보자 isImage() : "+DTOList.get(0).getDrawingFileDTO().isImage() );   
-		log.info("여기 까지 필드선언 기본값~~~~~~~~~~~~~~~~");
-		log.info("어디 그 이미지 dto 읽어보자 getDrawingFile() : "+DTOList.get(0).getDrawingFileDTO().getDrawingFile() );;
-		log.info("어디 그 이미지 dto 읽어보자 getImageURL() : "+DTOList.get(0).getDrawingFileDTO().getImageURL() );
-		log.info("어디 그 이미지 dto 읽어보자 getThumbnailURL() : "+DTOList.get(0).getDrawingFileDTO().getThumbnailURL() );
-		
+//		log.info("어디 그 이미지 dto 읽어보자 getDrawingUploadPath() : "+DTOList.get(0).getDrawingFileDTO().getDrawingUploadPath() );
+//		log.info("어디 그 이미지 dto 읽어보자 getFileName() : "+DTOList.get(0).getDrawingFileDTO().getFileName() );
+//		log.info("어디 그 이미지 dto 읽어보자 getUuid() : "+DTOList.get(0).getDrawingFileDTO().getUuid() );
+//		log.info("어디 그 이미지 dto 읽어보자 getFolderPath() : "+DTOList.get(0).getDrawingFileDTO().getFolderPath() );
+//		log.info("어디 그 이미지 dto 읽어보자 isImage() : "+DTOList.get(0).getDrawingFileDTO().isImage() );   
+//		log.info("여기 까지 필드선언 기본값~~~~~~~~~~~~~~~~");
+//		log.info("어디 그 이미지 dto 읽어보자 getDrawingFile() : "+DTOList.get(0).getDrawingFileDTO().getDrawingFile() );;
+//		log.info("어디 그 이미지 dto 읽어보자 getImageURL() : "+DTOList.get(0).getDrawingFileDTO().getImageURL() );
+//		log.info("어디 그 이미지 dto 읽어보자 getThumbnailURL() : "+DTOList.get(0).getDrawingFileDTO().getThumbnailURL() );
 	}
 	
 	/**
@@ -105,7 +104,13 @@ public class PS1Controller {
 		
 		log.info("품목정보 등록 처리.....");
 		
-		log.info("화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
+		log.info("품목 정보 등록 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
+		/*
+		 * MaterialDTO(code=BS0003,CN0004, name=어디 수정 테스트2,도면 넣는 수정 테스트2, shareStatus=공용,공용, size=,, quality=,, spec=,, 
+		 * drawingNo=,CN0004D01, drawingFile=,/PassionCode/upload/drawing/2023/06/25/df918a86-6b73-4dee-aa45-e80bf03d079b_나사 도면 샘플1.pdf, 
+		 * drawingFileDTO=DrawingFileDTO(drawingUploadPath=/PassionCode/upload/drawing/, fileName=null, uuid=null, folderPath=null, image=false), 
+		 * largeCategoryName=null, middleCategoryName=null, largeCategoryCode=BB0001,CC0001, middleCategoryCode=SS0001,NN0001, middleCategoryDTOList=null)
+		 */
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
 		List<MaterialDTO> materialDTOList = new ArrayList<>();
@@ -193,7 +198,7 @@ public class PS1Controller {
 			materialDTOList.add(materialDTO2);
 		}
 		
-		log.info("만든 materialDTOList 보자 : "+materialDTOList);
+		log.info("품목 등록처리에서 만든 저장(등록)할 materialDTOList 보자 : "+materialDTOList);
 		
 		//등록된 품목코드 리스트
 		List<String> registerList = new ArrayList<>();
@@ -215,7 +220,7 @@ public class PS1Controller {
 	@GetMapping("materialModify")
 	public void materialModify(String[] materialCodeList, Model model) {
 		log.info("품목 수정 화면 보기.....");
-		log.info("받아온 품목코드 리스트 보자 : "+materialCodeList);
+		log.info("품목 등록(목록) 화면에서 받아온 품목코드 리스트 보자 : "+materialCodeList);
 		
 		//클릭한 품목코드 리스트를 통해서, 수정화면에 보낼, MaterialDTO 리스트 만들기		
 		List<MaterialDTO> materialDTOList = new ArrayList<>();
@@ -236,7 +241,6 @@ public class PS1Controller {
 		//그 중분류의 해당 대분류에서 모든 중분류들! 리스트로 만들어서 materialDTO에 다 보내짐
 	}
 	
-	
 	/**
 	 * 품목정보 수정 처리 
 	 * @param materialDTO
@@ -245,13 +249,13 @@ public class PS1Controller {
 	 * @return
 	 */
 	@PostMapping("materialModify")
-	public void materialModify2(MaterialDTO materialDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
+	public String materialModify2(MaterialDTO materialDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
 		//대분류코드, 중분류코드
 		
 		log.info("품목정보 수정 처리.....");
 		
-		log.info("화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
+		log.info("품목 수정 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
 		List<MaterialDTO> materialDTOList = new ArrayList<>();
@@ -338,22 +342,15 @@ public class PS1Controller {
 			}			
 			materialDTOList.add(materialDTO2);
 		}
+		log.info("품목 수정처리에서 만든 수정할 materialDTOList 보자 : "+materialDTOList);
 		
-		log.info("만든 materialDTOList 보자 : "+materialDTOList);
-		
-		//등록된 품목코드 리스트
-		List<String> registerList = new ArrayList<>();
-		//받아온 DTO리스트 각각 DB에 저장하기
+		//받아온 DTO리스트 각각 DB에 수정하기
 		for(MaterialDTO dto : materialDTOList) {
-			registerList.add(materialService.register(dto));
+			materialService.modify(dto);
 		}
 		
-		redirectAttributes.addFlashAttribute("registerList",registerList);
-		
-//		return "redirect:/procurement1/materialList";
+		return "redirect:/procurement1/materialList";
 	}
-	
-	
 	
 	/**
 	 * 계약 목록 화면 보기
@@ -364,9 +361,6 @@ public class PS1Controller {
 		log.info("계약 목록 화면 보기.....");
 		
 		model.addAttribute("DTOList",contractService.getDTOList());	
-		
-		//현재 등록화면에서, 버튼 클릭시 제어해야할 상황 안만들어진 상태 
-		//ex> 계약상태 미완료인것만 등록 클릭 가능 등등
 	}
 	
 	/**
@@ -390,7 +384,6 @@ public class PS1Controller {
 		}
 		
 		model.addAttribute("contractDTOList", contractDTOList);
-		
 	}	
 	
 	/**
@@ -412,7 +405,7 @@ public class PS1Controller {
 		
 		log.info("계약 등록 처리.....");
 		
-		log.info("화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
+		log.info("계약 등록 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
 		List<ContractDTO> contractDTOList = new ArrayList<>();
@@ -471,7 +464,7 @@ public class PS1Controller {
 			contractDTOList.add(contractDTO2);
 		}
 		
-		log.info("만든 contractDTOList 보자 : "+contractDTOList);
+		log.info("계약 등록 처리에서 만든 등록할 contractDTOList 보자 : "+contractDTOList);
 	
 		//등록된 계약서 번호 리스트
 		List<Integer> registerList = new ArrayList<>();
@@ -503,9 +496,6 @@ public class PS1Controller {
 		log.info("조달계획 목록 화면 보기.....");
 		
 		model.addAttribute("DTOList",procurementPlanService.getDTOList());
-		
-		//현재 등록화면에서, 버튼 클릭시 제어해야할 상황 안만들어진 상태 
-		//ex> 계약상태 완료, 조달계획 미완료 인것만 등록 클릭 가능 등등
 	}
 	
 	/**
@@ -533,7 +523,7 @@ public class PS1Controller {
 																				.contractStatus("완료").build();
 			procurementPlanDTOList.add(procurementPlanDTO);
 		}
-		log.info("만들어진 리스트 보자 : "+procurementPlanDTOList);
+		log.info("(조달계획 목록에서 받은 mrpCodeList를 통해) 조달계획 등록화면에 보낼 procurementPlanDTOList 리스트 보자 : "+procurementPlanDTOList);
 		
 		model.addAttribute("procurementPlanDTOList", procurementPlanDTOList);		
 	}
@@ -545,7 +535,7 @@ public class PS1Controller {
 				
 		log.info("조달계획 등록 처리.....");
 		
-		log.info("화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
+		log.info("조달계획 등록 화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		//받아온 date(소요일, 조달납기예정일, 최소발주일) String으로 왔기 때문에 Date 형식으로 변환해줘야함
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -673,7 +663,7 @@ public class PS1Controller {
 			procurementPlanDTOList.add(procurementPlanDTO2);
 		}
 		
-		log.info("만든 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
+		log.info("조달계획 등록 처리에서 만든 등록할 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
 	
 		//등록된 조달계획코드 리스트
 		List<Integer> registerList = new ArrayList<>();

@@ -106,7 +106,7 @@ public class ContractServiceImpl implements ContractService {
 			contractDTOList.add(contractDTO);
 		}				
 		
-		log.info("품목을 통해 뽑은 contractDTOList : "+contractDTOList);
+		//log.info("materialEntityToDTO(Material material) 함수를 통한, 품목을 통해 뽑은 contractDTOList : "+contractDTOList);
 		return contractDTOList;
 	}
 

@@ -1034,21 +1034,13 @@
 					dataType : "json" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
 					success : function(data){        						//가져오는 데이터! (응답데이터)
 						console.log("modifyMaterialCode ajax 받아온 데이터 : ",data);
-						
-						//1. 생성한 품목코드 -> 품목코드 리스트에 담기
-						let codeList = new Array();
-						
-						for(var i=0; i<data.length; i++){
-							codeList.push(data[i].code);
-						}
-						//console.log("코드리스트 안만들어지나?",codeList);
-						
-						//바뀐 행에만 품목코드 값 넣어주고, 이에따른 변경된 도면번호 바꿔서 넣어주기
+					
+						//바뀐 행에만 품목코드 값 넣어주고, 
+						//이에따른 변경된 도면번호 바꿔서 넣어주기 -> 이건 밑에서 도면파일이 있는지와 여부에 따라 체크하면서 넣어주기
 						ModifyMaterialTRList.forEach(function(item, i){
 							document.querySelector(`#materialModifyTable tr:nth-child(${item}) input[name=code]`).value = data[i].code;
-							document.querySelector(`#materialModifyTable tr:nth-child(${item}) input[name=drawingNo]`).value = data[i].code+"D01";
 						});
-
+					
 						//없는 도면에서 추가로 수정해준 경우! 도면파일명은 첨부할때 세팅해주지만, 도면번호는 null로 셋팅된게 없게 된다!
 						//그러므로 지금 도면번호는 없는데 도면파일명이 세팅이 된 경우!, 품목코드를 읽어서 도면번호의 값을 세팅해주자!
 						//모든 도면번호 인풋값을 리스트로 만들기

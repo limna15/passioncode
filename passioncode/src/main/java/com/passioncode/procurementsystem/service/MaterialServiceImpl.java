@@ -145,7 +145,7 @@ public class MaterialServiceImpl implements MaterialService {
 		for(int i=0;i<materialList.size();i++) {
 			materialDTOList.add(entityToDTO(materialList.get(i)));
 		}
-		log.info("materialDTO 리스트 제대로 되었나 봐보자! : "+materialDTOList);
+		//log.info("getDTOList()를 통해서 만든 materialDTO 리스트 : "+materialDTOList);
 		return materialDTOList;
 	}
 
