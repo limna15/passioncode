@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MaterialOut;
@@ -45,6 +46,37 @@ public class MaterialOutRepositoryTests {
 		
 		materialOutRepository.save(materialOut);
 		
+	}
+	
+	//발주코드에 문자를 넣어서 보내기
+	public String codeStr(Integer num1) {
+		String pNum = String.format("%05d", num1);
+		pNum = "DPO"+pNum;
+		
+		return pNum;	
+	}
+	
+	@Transactional
+	@Test
+	public void materialOutToDTO() {
+		MRP mrp = mrpRepository.findById(1).get();
+		ProcurementPlan pp= procurementPlanRepository.findByMrp(mrp);
+		MaterialOut mo= materialOutRepository.findByMrp(mrp);
+		MaterialOutDTO materialOutDTO= null;
+		
+		//출고 테이블에 존재하는 mrp
+		if(materialOutRepository.existsByMrp(mrp)){
+			materialOutDTO= MaterialOutDTO.builder().dpoCodeStr(codeStr(pp.getDetailPurchaseOrder().getCode()))
+					.mrpDate(mrp.getDate()).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+					.process(mrp.getProcess()).mrpAmount(mrp.getAmount()).outStatus("1").build();			
+		//출고 테이블에 존재X
+		}else {
+			materialOutDTO= MaterialOutDTO.builder().dpoCodeStr(codeStr(pp.getDetailPurchaseOrder().getCode()))
+					.mrpDate(mrp.getDate()).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+					.process(mrp.getProcess()).mrpAmount(mrp.getAmount()).outStatus("0").build();	
+		}
+		
+		log.info(materialOutDTO);
 	}
 	
 	@Transactional

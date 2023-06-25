@@ -31,6 +31,33 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 	@Autowired
 	MaterialOutRepository materialOutRepository;
 
+
+	@Override
+	public MaterialOutDTO materialOutToDTO(MRP mrp) {
+		ProcurementPlan pp= procurementPlanRepository.findByMrp(mrp);
+		MaterialOut mo= materialOutRepository.findByMrp(mrp);
+		MaterialOutDTO materialOutDTO= null;
+		
+		//출고 테이블에 존재하는 mrp
+		if(materialOutRepository.existsByMrp(mrp)){
+			materialOutDTO= MaterialOutDTO.builder().dpoCodeStr(codeStr(pp.getDetailPurchaseOrder().getCode()))
+					.mrpDate(mrp.getDate()).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+					.process(mrp.getProcess()).mrpAmount(mrp.getAmount()).outStatus("1").build();			
+		//출고 테이블에 존재X
+		}else {
+			materialOutDTO= MaterialOutDTO.builder().dpoCodeStr(codeStr(pp.getDetailPurchaseOrder().getCode()))
+					.mrpDate(mrp.getDate()).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+					.process(mrp.getProcess()).mrpAmount(mrp.getAmount()).outStatus("0").build();	
+		}	
+		return materialOutDTO;
+	}
+	
+	@Override
+	public MaterialOut DTOtoEntity(MaterialOutDTO materialOutDTO) {
+		MaterialOut materialOut= MaterialOut.builder().status(1).mrp(mrpRepository.findById(materialOutDTO.getMrpCode()).get()).build();		
+		return materialOut;
+	}
+	
 	@Override
 	public List<MaterialOutDTO> getDTOList() {
 		List<MRP> mrpList= mrpRepository.findAll();
