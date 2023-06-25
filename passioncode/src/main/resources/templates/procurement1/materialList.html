@@ -433,7 +433,7 @@
     			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
     			console.log("발주예정 체크 전역변수 확인하기(체크 전) : ",expectedPurchaseOrderCheck);
     			
-    			//3. 선택한 품목코드를 이용하여, 발주예정 여부 Ajax 로 결과 받기
+    			//3. 선택한 품목코드를 이용하여, 발주예정 여부 ajax 로 결과 받기
     			let materialCodeList = new Array();
     			materialCodeList = chkClicked();
     			console.log("이렇게 바로 함수로 해도 materialCodeList 읽는건가?? : ",materialCodeList);
@@ -509,7 +509,7 @@
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
 						//console.log(errorThrown);					
-						console.log("발주예정 여부 Ajax 에러발생~~!!!!!");						
+						console.log("발주예정 여부 ajax 에러발생~~!!!!!");						
 					}
 				});	//$.ajax
    			}); //contractRegisterBtn 등록 버튼 누를때, 끝

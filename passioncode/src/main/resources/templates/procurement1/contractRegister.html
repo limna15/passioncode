@@ -16,14 +16,14 @@
 								<table class="table table-bordered" id="contractRegisterTable" style="text-align: center;">
 									<thead>
 										<tr>
-											<th>품목코드</th>
-											<th>품목명</th>
-											<th>협력회사</th>
-											<th>담당자</th>
-											<th>담당자<br>연락처</th>
-											<th width="">품목 공급 L/T</th>
+											<th width="10%">품목코드</th>
+											<th width="10%">품목명</th>
+											<th width="">협력회사</th>
+											<th width="9%">담당자</th>
+											<th width="10%">담당자<br>연락처</th>
+											<th width="10%">품목 공급 L/T</th>
 											<th width="7%">단가</th>
-											<th>거래조건</th>
+											<th width="">거래조건</th>
 											<th width="6%">계약서</th>
 											<th></th> 
 										</tr>
@@ -40,7 +40,7 @@
 													<input type="hidden" name="companyNo" class="companyNo">
 													<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name=companyName class="companyName">
 													&nbsp;&nbsp;
-													<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right" >
+													<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right; margin-left:10px;" >
 														<i class="mdi mdi-magnify"></i>
 													</button>
 												</div>
@@ -53,7 +53,7 @@
 											<td>
 												<input type="hidden" name="contractFile" class="contractFile">
 												<div class="attachContractFile">
-								            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
+								            		<button type="button" class="btn btn-primary attachBtn" style="padding-left:10px; padding-right:10px;">
 														첨부
 													</button>
 												</div>
@@ -91,7 +91,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">협력회사 찾기</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -119,7 +119,7 @@
                     	   
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        <button type="button" class="btn btn-secondary " data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        	</button>
                     </div>
@@ -134,7 +134,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">계약 등록 확인</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -263,6 +263,8 @@
 		
 		
 		$(document).ready(function(){
+			//-------------------------------------- 협력회사 찾기 버튼 부분 --------------------------------------------------------------//
+			
 			//협력회사 찾으려고 검색한 tr을 넣어주기 위한 tr 전역변수 선언
 			var searchcompanyTR = new Object();
 			//console.log("tr 전역변수 만들고 난 값 : ",searchcompanyTR);			
@@ -278,7 +280,7 @@
 				var companyName = getObj().querySelector("input[type=text]").value;				
 				console.log("회사이름 : ",companyName);
 				
-				//협력회사 이름으로 (거래가능한)협력회사 찾는 Ajax처리
+				//협력회사 이름으로 (거래가능한)협력회사 찾는 ajax처리
 				$.ajax({
 					type : "post" ,
 					url : "/procurement1/companySearch" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
@@ -368,6 +370,8 @@
 				//그리고 자동으로 모달창 닫아주기
 				$(".companySearchModal").modal('hide');							
 			});		
+			
+			//-------------------------------------- 등록확인, 등록취소 버튼 부분 --------------------------------------------------------------//
 									
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			var contractRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
@@ -536,7 +540,7 @@
 		                	//console.log("성공한거지? ",result);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+	 	                    console.log("업로드 파일 삭제하는 ajax 에러",textStatus);
 	 	                }
 		            }); //$.ajax
 				});
@@ -648,7 +652,7 @@
 	 	                type: 'POST',
 	 	                dataType:'json',
 	 	                success: function(result){
-	 						console.log("인풋 체인지 함수의 Ajax 결과 : ",result);
+	 						console.log("인풋 체인지 함수의 ajax 결과 : ",result);
 	 	                    if(result.image){	//image 일때 아닐때, 
 	 	                    	showResultByImage(result);
 	 	                    }else{
@@ -662,7 +666,7 @@
 							console.log("테이블의 input값 제대로 넣고 난 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
 	 	                },
 	 	                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("인풋 체인지 함수의 Ajax 에러",textStatus);
+	 	                    console.log("인풋 체인지 함수의 ajax 에러",textStatus);
 	 	                }
 	 	            }); //$.ajax
 	 			}else{													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
@@ -690,7 +694,7 @@
 	 			}
 	        }); //$(".custom-file-input") click 끝
 	        
-	     	 //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
+	     	 //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
 	        function showResultByImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
 	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
@@ -712,7 +716,7 @@
 	            //document.querySelector(".uploadResult ul").innerHTML = str;
 	        } //showResultByImage(uploadResult) 함수 끝
 	        
-	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
+	        //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
 	        function showResultByNoImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
 	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
@@ -754,7 +758,7 @@
 	                    //console.log("테이블의 input값 초기화 한 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
 	                },
 	                error: function(jqXHR, textStatus, errorThrown){
- 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+ 	                    console.log("업로드 파일 삭제하는 ajax 에러",textStatus);
  	                }
 	            }); //$.ajax  
 	        });
@@ -791,7 +795,7 @@
 	        	}
 	        } //fileDragDrop 함수 끝
 	    	
-	     	//파일을 드랍했을때, Ajax 처리 되면서 업로드하게 하는 함수
+	     	//파일을 드랍했을때, ajax 처리 되면서 업로드하게 하는 함수
 	        function fileUpload(e){        	
 	        	e.stopPropagation();
 	        	e.preventDefault();
@@ -908,7 +912,7 @@
 				var targetFile = $(".uploadResult li").data("file");
 				//console.log("모야모야 제대로 읽어오는거니? ",targetFile);
 				
-				//값이 만들어 진게 있을때에만 Ajax처리 가능하게 하자! 
+				//값이 만들어 진게 있을때에만 ajax처리 가능하게 하자! 
 				var lengthCheck = $(".uploadResult li").length;
 				if(lengthCheck>0){
 					console.log("현재 길이 1개 이상이야 만든거 있어~ 갯수는 : ",lengthCheck);
@@ -927,7 +931,7 @@
 		                    //console.log("테이블의 input값 초기화 한 후 : ",attachContractFileTR.querySelector("input[name=contractFile]").value);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+	 	                    console.log("업로드 파일 삭제하는 ajax 에러",textStatus);
 	 	                }
 		            }); //$.ajax 
 				} //if
@@ -1038,7 +1042,7 @@
 										<input type="hidden" name="companyNo" class="companyNo">
 										<input type="text" style="float:left; width:70%; border: 0; text-align: center;" name="companyName" class="companyName">
 										&nbsp;&nbsp;
-										<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right">
+										<button type="button" class="btn btn-primary btn-rounded btn-icon companySearchBtn" style="float:right; margin-left:10px;">
 											<i class="mdi mdi-magnify"></i>
 										</button>
 									</div>
@@ -1057,7 +1061,7 @@
 	            	temp_html = `<td>
 	            					<input type="hidden" name="contractFile" class="contractFile">
 									<div class="attachContractFile">
-					            		<button type="button" class="btn btn-primary attachBtn" style=" padding-left: 10px;padding-right: 10px;">
+					            		<button type="button" class="btn btn-primary attachBtn" style="padding-left:10px; padding-right:10px;">
 											첨부
 										</button>
 									</div>
@@ -1081,7 +1085,7 @@
 	    	var target = getObjTR().querySelector("img");
 	    	//console.log("img 태그 읽어오나 보자 : ",target);
 	    	
-	    	//이미지 태그가 존재할때만, Ajax 처리로 이미지 첨부파일 지워주자
+	    	//이미지 태그가 존재할때만, ajax 처리로 이미지 첨부파일 지워주자
 	    	if(target != null){
 	    		var targetFile = $(target).data("file");
 	    		console.log("이미지 태그 존재하고 targetFile 읽자 : ",targetFile);
@@ -1095,7 +1099,7 @@
 	                	//console.log("성공한거지? ",result);
 	                },
 	                error: function(jqXHR, textStatus, errorThrown){
- 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+ 	                    console.log("업로드 파일 삭제하는 ajax 에러",textStatus);
  	                }
 	           }); //$.ajax
 	    	} //if

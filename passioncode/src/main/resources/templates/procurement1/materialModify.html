@@ -46,10 +46,11 @@
 											</td>
 											<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image==true}">
 												<div class="modifyDrawingFile">
-													<button th:data-file="${dto.drawingFileDTO.getImageURL()}" class="ImgClick" type="button" style="border:none; background-color:transparent;">
+													<button th:data-file="${dto.drawingFileDTO.getImageURL()}" class="ImgClick" 
+															type="button" style="border:none; background-color:transparent; margin-right:10px;">
 														<img th:src="|/procurement1/drawing/display?fileName=${dto.drawingFileDTO.getThumbnailURL()}|" > 
 													</button>
-								            		<button type="button" class="btn btn-primary drawingModifyBtn" style=" padding-left: 10px;padding-right: 10px;">
+								            		<button type="button" class="btn btn-primary drawingModifyBtn" style="padding-left:10px; padding-right:10px;">
 														수정
 													</button>
 												</div>
@@ -57,17 +58,17 @@
 											<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image!=true}">
 												<div class="modifyDrawingFile">
 													<button th:data-file="${dto.drawingFileDTO.getImageURL()}" th:data-name="${dto.drawingFileDTO.fileName}"
-															class="NoImgClick" type="button" style="border:none; background-color:transparent;">
+															class="NoImgClick" type="button" style="border:none; background-color:transparent; margin-right:10px;">
 														<img th:src="|/picture/thumb_document.jpg|" > 
 													</button>
-								            		<button type="button" class="btn btn-primary drawingModifyBtn" style=" padding-left: 10px;padding-right: 10px;">
+								            		<button type="button" class="btn btn-primary drawingModifyBtn" style="padding-left:10px; padding-right:10px;">
 														수정
 													</button>
 												</div>
 											</td>
 											<td th:if="${dto.drawingFileDTO == null}">
 												<div class="modifyDrawingFile">
-								            		<button type="button" class="btn btn-primary drawingModifyBtn" style=" padding-left: 10px;padding-right: 10px;">
+								            		<button type="button" class="btn btn-primary drawingModifyBtn" style="padding-left:10px; padding-right:10px;">
 														수정
 													</button>
 												</div>											
@@ -105,14 +106,14 @@
 							<!-- 테이블 끝 -->
 						</div>
 						<div>						
-							<!-- 등록확인, 등록취소 버튼 시작 -->						
+							<!-- 수정확인, 수정취소 버튼 시작 -->						
 							<button class="btn btn-primary" style="float:right;" type="button" id="materialModifyCancelBtn">
 								수정취소
 							</button>
 							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="submit" id="materialModifyBtn">
 								수정확인
 							</button>										
-							<!-- 등록확인, 등록취소 버튼 끝 -->
+							<!-- 수정확인, 수정취소 버튼 끝 -->
 						</div>	
 					</form>								
 				</div>
@@ -483,7 +484,7 @@
 	 	                type: 'POST',
 	 	                dataType:'json',
 	 	                success: function(result){
-	 						console.log("인풋 체인지 함수의 Ajax 결과 : ",result);
+	 						console.log("인풋 체인지 함수의 ajax 결과 : ",result);
 	 	                    if(result.image){	//image 일때 아닐때, 
 	 	                    	showResultByImage(result);
 	 	                    }else{
@@ -497,7 +498,7 @@
 							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 	 	                },
 	 	                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("인풋 체인지 함수의 Ajax 에러",textStatus);
+	 	                    console.log("인풋 체인지 함수의 ajax 에러",textStatus);
 	 	                }
 	 	            }); //$.ajax
 	 			}else{													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
@@ -525,7 +526,7 @@
 	 			}
 	        }); //$(".custom-file-input") click 끝
 	        
-	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
+	        //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
 	        function showResultByImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
 	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
@@ -547,7 +548,7 @@
 	            //document.querySelector(".uploadResult ul").innerHTML = str;
 	        } //showResultByImage(uploadResult) 함수 끝
 	        
-	        //Ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
+	        //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
 	        function showResultByNoImage(uploadResult){
 	            var uploadUL = $(".uploadResult ul");
 	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
@@ -624,7 +625,7 @@
 	        	}
 	        } //fileDragDrop 함수 끝
 			
-	        //파일을 드랍했을때, Ajax 처리 되면서 업로드하게 하는 함수
+	        //파일을 드랍했을때, ajax 처리 되면서 업로드하게 하는 함수
 	        function fileUpload(e){        	
 	        	e.stopPropagation();
 	        	e.preventDefault();
@@ -741,7 +742,7 @@
 				var targetFile = $(".uploadResult li").data("file");
 				//console.log("모야모야 제대로 읽어오는거니? ",targetFile);
 				
-				//값이 만들어 진게 있을때에만 Ajax처리 가능하게 하자! 
+				//값이 만들어 진게 있을때에만 ajax처리 가능하게 하자! 
 				var lengthCheck = $(".uploadResult li").length;
 				if(lengthCheck>0){
 					console.log("현재 길이 1개 이상이야 만든거 있어~ 갯수는 : ",lengthCheck);
@@ -760,7 +761,7 @@
 		                    //console.log("테이블의 input값 초기화 한 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("업로드 파일 삭제하는 Ajax 에러",textStatus);
+	 	                    console.log("업로드 파일 삭제하는 ajax 에러",textStatus);
 	 	                }
 		            }); //$.ajax 
 				} //if
@@ -939,7 +940,7 @@
 		                	
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
-	 	                    console.log("업로드된 파일 삭제하는 Ajax 에러",textStatus);
+	 	                    console.log("업로드된 파일 삭제하는 ajax 에러",textStatus);
 	 	                }
 		            }); //$.ajax 
 	        	} //if
@@ -1024,7 +1025,7 @@
 				var SendMiddleCategoryDTOListToJsonData = JSON.stringify(SendMiddleCategoryDTOList);	
 				//console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",SendMiddleCategoryDTOListToJsonData);
 				
-				//대분류코드, 중분류코드를 보내서 품목코드를 생성해준 값을 받아오는 Ajax처리
+				//대분류코드, 중분류코드를 보내서 품목코드를 생성해준 값을 받아오는 ajax처리
 				//materialDTO리스트 형식으로 받아옴
 				$.ajax({
 					type : "post" ,
@@ -1081,7 +1082,7 @@
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
 						//console.log(errorThrown);					
-						console.log("품목코드 수정 Ajax 에러발생~~!!!!!");						
+						console.log("품목코드 수정 ajax 에러발생~~!!!!!");						
 					}
 				});	//$.ajax	
 				
@@ -1141,7 +1142,7 @@
 				console.log("선택된 대분류 이름 : ",selectedLCName);
 				*/				
 				
-				//대분류코드로 중분류리스트 찾는 Ajax처리
+				//대분류코드로 중분류리스트 찾는 ajax처리
 				$.ajax({
 					type : "post" ,
 					url : "/procurement1/getMiddleCategoryByLargeCategory" ,     	//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
@@ -1171,7 +1172,7 @@
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
 						//console.log(errorThrown);	
-						console.log("대분류코드를 이용해서 중분류리스트 가져오는데 Ajax 오류 발생!!!!!!");
+						console.log("대분류코드를 이용해서 중분류리스트 가져오는데 ajax 오류 발생!!!!!!");
 					}
 				});	//$.ajax
 			}); //대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수 끝
@@ -1188,7 +1189,6 @@
 			
 		
 		}); //$(document).ready(function() 함수 끝
-		
     	
     	
     	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

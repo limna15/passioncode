@@ -416,5 +416,11 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		return	procurementPlanRepository.findByDetailPurchaseOrder(dpo);
 	}
 
+	@Override
+	public Boolean ppExistsByContract(Integer contractNo) {
+		
+		return procurementPlanRepository.existsByContract(contractRepository.findById(contractNo).get());
+	}
+
 	
 }

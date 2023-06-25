@@ -16,6 +16,7 @@ import com.passioncode.procurementsystem.dto.ContractFileDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.Material;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -31,6 +32,9 @@ public class ContractRepositoryTests {
 	
 	@Autowired
 	MaterialRepository materialRepository;
+	
+	@Autowired
+	ProcurementPlanRepository procurementPlanRepository;
 	
 //	@Transactional
 	@Test
@@ -261,10 +265,42 @@ public class ContractRepositoryTests {
 		}
 		
 		log.info("만든 최종 dto 리스트 보자 : "+contractDTOList);
+	}
+	
+	@Test
+	public void contractInPPCheckTest() {
+		//화면에서 받아온 계약서번호 리스트로 조회하기!!
+		//계약서번호로 조달계획 조회하는데
+		// 1. 조회가 안된다 => 아직 조달계획에 등록이 안된거라서, 계약서 수정 가능
+		// 2. 조회가 된다 => 조달계획에 등록이 된거라서, 계약서 수정 불가능
+//		boolean result = procurementPlanRepository.existsByContract(contractRepository.findById(8).get());
+//		log.info("결과 보자 : "+result);
+
+		List<String> contractNoList = new ArrayList<>();
+		contractNoList.add("1");
+		contractNoList.add("2");
+		contractNoList.add("8");
+//		contractNoList.add("12");
 		
+		boolean contractInPPCheck = false;
 		
+		for(String contractNo : contractNoList) {
+			//result -> 그 계약서가 조달계획에 있는지 여부! fasle -> 수정가능, true -> 수정 불가능!!
+			boolean result = procurementPlanRepository.existsByContract(contractRepository.findById(Integer.parseInt(contractNo)).get());
+			if(result == true) {
+				contractInPPCheck = false;
+				break;
+			}else {
+				contractInPPCheck = true;
+			}
+		}
+		
+		log.info("그래서 최종 참, 거짓 확인해 보자 : "+contractInPPCheck);
 		
 	}
+	
+	
+	
 	
 	
 	
