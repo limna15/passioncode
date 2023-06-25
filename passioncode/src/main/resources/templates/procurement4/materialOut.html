@@ -131,52 +131,17 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<tr th:each="list: ${DTOList}" id="trList">
 									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00003</td>
-									<td><input type="hidden" name="date" >2023/06/30</td>
-									<td><input type="hidden" name="materialCode" >BSa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-									<td><input type="hidden" name="amount" >200</td>
+									<td><input type="hidden" name="code" >[[${list.dpoCodeStr}]]</td>
+									<td><input type="hidden" name="date" >[[${#dates.format(list.mrpDate, 'yyyy/MM/dd')}]]</td>
+									<td><input type="hidden" name="materialCode" >[[${list.materialCode}]]</td>
+									<td><input type="hidden" name="materialName" >[[${list.materialName}]]</td>
+									<td><input type="hidden" name="amount" >[[${list.process}]]</td>
+									<td><input type="hidden" name="amount" >[[${list.mrpAmount}]]</td>
 									<td id= "status">
-										<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-									</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00004</td>
-									<td><input type="hidden" name="date" >2023/06/29</td>
-									<td><input type="hidden" name="materialCode" >BSa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-									<td><input type="hidden" name="amount" >200</td>
-									<td id= "status">
-										<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-									</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00001</td>
-									<td><input type="hidden" name="date" >2023/06/18</td>
-									<td><input type="hidden" name="materialCode" >BSa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-									<td><input type="hidden" name="amount" >200</td>
-									<td id= "status">
-										완료
-									</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00002</td>
-									<td><input type="hidden" name="date" >2023/06/18</td>
-									<td><input type="hidden" name="materialCode" >BPa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 E/L FILLING #1</td>
-									<td><input type="hidden" name="amount" >70</td>
-									<td id= "status">
-										완료
+										<span th:if="${list.outStatus} == '1'">완료</span>
+										<span th:if="${list.outStatus} == '0'"><button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button></span>
 									</td>
 								</tr>
 							</tbody>
@@ -222,13 +187,13 @@
 		</div>
 		
 		
-		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-		<script th:inline="javascript">
-		
-		$(document).ready(function(e) {
-		
-		});
-		</script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script th:inline="javascript">
+
+$(document).ready(function(e) {
+
+});
+</script>
 		
 	</th:block>
 </th:block>

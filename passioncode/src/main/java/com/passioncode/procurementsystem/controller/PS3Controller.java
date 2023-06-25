@@ -22,7 +22,7 @@ import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
 import com.passioncode.procurementsystem.service.DetailPurchaseOrderService;
-import com.passioncode.procurementsystem.service.MateriallInService;
+import com.passioncode.procurementsystem.service.MaterialInService;
 import com.passioncode.procurementsystem.service.ProcurementPlanService;
 import com.passioncode.procurementsystem.service.PurchaseOrderService;
 import com.passioncode.procurementsystem.service.PurchaseReportService;
@@ -38,7 +38,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class PS3Controller {
 	
-	private final MateriallInService materialInService;
+	private final MaterialInService materialInService;
 	private final TransactionDetailService transactionDetailService;	
 	private final PurchaseReportService purchaseReportService;
 	private final DetailPurchaseOrderService detailPurchaseOrderService;
@@ -46,7 +46,7 @@ public class PS3Controller {
 	private final ProcurementPlanService procurementPlanService;
 	
 	@GetMapping("/materialIn")
-	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO, String purchaseCode) {
+	public void materialIn(Model model, HttpServletRequest request, MaterialInDTO materialInDTO) {
 		//정렬 안된 DTOList
 		//List<MaterialInDTO> materialInDTOList2 = materialInService.getMaterialInDTOLsit();
 		
