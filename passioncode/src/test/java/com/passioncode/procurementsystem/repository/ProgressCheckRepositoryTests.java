@@ -1,7 +1,6 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,9 +50,67 @@ public class ProgressCheckRepositoryTests {
 	@Test
 	public void progressCheckDoneTest(){//검수 완료
 		//1. 검수일이 한개 이상
-		//2. 일정이 지남, 평가가 없더라도 검수는 완료된 것임
-		
-		
+		//검수일짜만 지나면 검수 완료
+		String checkDone = null;//반환해 줄 값: 완료 or 미완료
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(9).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		//Date futureDate=null;//더 미래인 날을 여기에 저장하기
+		Date date1=null;
+		Date date2=null;
+		Date today = new Date();//오늘 날짜 보는 방법
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			
+			if(date1!=null) {//비교하기 위한 값이 있다면
+				date2 = ((Date) arr[1]);//다음에 들어온 날을 넣어준다.
+				log.info("두 번째 수"+date2);
+//				int comparison2 = date1.compareTo(date2);// 날짜 비교
+//				if (comparison2 > 0) {//이게 더 빠른 날짜
+//					date1 = date2;//date2에 있음으로 date1으로 바꿔주기, 그래야 계속 비교가능
+//					System.out.println("date1이 date2보다 뒤에 있습니다."+date1);
+//				} else if (comparison2 < 0) {//이 경우가 가까운 날의 진척 검수
+//					System.out.println("date1이 date2보다 앞에 있습니다."+date1);
+//				} else {//이런 경우는 처음부터 없도록 하기
+//					System.out.println("두 날짜는 같습니다.");
+//				}
+				
+				int comparison = date2.compareTo(today);// 날짜 비교
+				if (comparison > 0) {
+					//오늘보다 뒤에 있으면 무조건 미완료
+					checkDone = "미완료";
+					System.out.println("date1이 today보다 뒤에 있습니다."+checkDone);
+				} else if (comparison < 0) {//오늘보다 앞에 있으면 null로 보내기
+					checkDone = "완료";
+					System.out.println("date1이 today보다 앞에 있습니다."+checkDone);
+				}
+			}else {//처음에 date1이 null인 경우
+				//하나만 있는 경우도 추가하기
+				if(((Date) arr[1])==null) {
+					//아예 진척검수일정이 하나도 없다는 뜻
+					checkDone = "미완료";					
+				}else {
+					date1 = ((Date) arr[1]);//비교하기 위해 무조건 담는다
+					//한개만 있는 경우 오늘보다 빠른지 보기
+					int comparison = date1.compareTo(today);// 날짜 비교
+					if (comparison > 0) {
+						//오늘보다 뒤에 있으면 무조건 미완료
+						checkDone = "미완료";
+						System.out.println("date1이 today보다 뒤에 있습니다."+checkDone);
+					} else if (comparison < 0) {//오늘보다 앞에 있으면 null로 보내기
+						checkDone = "완료";
+						System.out.println("date1이 today보다 앞에 있습니다."+checkDone);
+					}
+				}
+				log.info("처음에만 있는 수"+date1+checkDone);
+			}
+			
+			list.add(pdDTO);
+		}
+		log.info("쿼리 발주번호를 통한 진척검수: "+list);
 	}
 	
 	
@@ -145,7 +202,6 @@ public class ProgressCheckRepositoryTests {
 			pdDTO.setPcdetail((Integer) arr[4]);
 			pdDTO.setTodaydate(LocalDateTime.now());//나중에 오늘날짜만 검수할 수 있도록 넣어두기
 			pdDTO.setCountno(1);			//목록에서 열 번호를 위해
-			//log.info("Date today: ", today);;
 			log.info("dListDTO.setPccode: "+((Integer) arr[0]));
 			list.add(pdDTO);
 		}
