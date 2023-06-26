@@ -67,7 +67,7 @@ public class PS1RestController {
 	/**
 	 * 조달계획 등록 화면에서, 품목코드를 통해 계약서 찾기 <br>
 	 * 이때, 해당 품목코드를 읽어와서, 그 해당되는 계약서롤 찾기
-	 * @param companyName
+	 * @param materialCode
 	 * @return
 	 */
 	@PostMapping(value="contractSearch",produces=MediaType.APPLICATION_JSON_VALUE)

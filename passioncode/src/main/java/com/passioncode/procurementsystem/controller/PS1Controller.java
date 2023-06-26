@@ -42,11 +42,6 @@ public class PS1Controller {
 	private final ContractService contractService;
 	private final ProcurementPlanService procurementPlanService; 
 	
-	@GetMapping("test")
-	public void test() {
-		
-	}
-	
 	/**
 	 * 품목정보 목록 화면 보기 <br>	  
 	 * @param model
@@ -103,9 +98,7 @@ public class PS1Controller {
 	public String MaterialRegister2(MaterialDTO materialDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
 		//대분류코드, 중분류코드
-		
 		log.info("품목정보 등록 처리.....");
-		
 		log.info("품목 정보 등록 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
 		/*
 		 * MaterialDTO(code=BS0003,CN0004, name=어디 수정 테스트2,도면 넣는 수정 테스트2, shareStatus=공용,공용, size=,, quality=,, spec=,, 
@@ -199,7 +192,6 @@ public class PS1Controller {
 			}			
 			materialDTOList.add(materialDTO2);
 		}
-		
 		log.info("품목 등록처리에서 만든 저장(등록)할 materialDTOList 보자 : "+materialDTOList);
 		
 		//등록된 품목코드 리스트
@@ -208,7 +200,6 @@ public class PS1Controller {
 		for(MaterialDTO dto : materialDTOList) {
 			registerList.add(materialService.register(dto));
 		}
-		
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
 		return "redirect:/procurement1/materialList";
@@ -254,9 +245,7 @@ public class PS1Controller {
 	public String materialModify2(MaterialDTO materialDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
 		//대분류코드, 중분류코드
-		
 		log.info("품목정보 수정 처리.....");
-		
 		log.info("품목 수정 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
@@ -350,7 +339,6 @@ public class PS1Controller {
 		for(MaterialDTO dto : materialDTOList) {
 			materialService.modify(dto);
 		}
-		
 		return "redirect:/procurement1/materialList";
 	}
 	
@@ -404,9 +392,7 @@ public class PS1Controller {
 //			log.info("안보냈으면 이거 null 인건가????");
 //		}
 		// => 결론!!! 안보낼때 null 로 보내지는게 아니야!!!! 빈값으로 보내짐!
-		
 		log.info("계약 등록 처리.....");
-		
 		log.info("계약 등록 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
@@ -462,10 +448,8 @@ public class PS1Controller {
 			}else {														//받아온 dealCondition가 존재 X
 				contractDTO2.setDealCondition(null);
 			}
-			
 			contractDTOList.add(contractDTO2);
 		}
-		
 		log.info("계약 등록 처리에서 만든 등록할 contractDTOList 보자 : "+contractDTOList);
 	
 		//등록된 계약서 번호 리스트
@@ -475,7 +459,6 @@ public class PS1Controller {
 			registerList.add(contractService.register(dto));
 //			log.info("각각 엔티티 변환 보자 : "+contractService.dtoToEntity(dto));
 		}
-		
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
 		return "redirect:/procurement1/contractList";
@@ -483,6 +466,8 @@ public class PS1Controller {
 	
 	/**
 	 * 계약 수정 화면 보기
+	 * @param contractNoList
+	 * @param model
 	 */
 	@GetMapping("contractModify")
 	public void contractModify(String[] contractNoList,Model model) {
@@ -511,9 +496,7 @@ public class PS1Controller {
 	public String contractModify2(ContractDTO contractDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
 		//사업자등록번호
-		
 		log.info("계약 수정 처리.....");
-		
 		log.info("계약 수정 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
@@ -567,17 +550,14 @@ public class PS1Controller {
 			}else {														//받아온 dealCondition가 존재 X
 				contractDTO2.setDealCondition(null);
 			}
-			
 			contractDTOList.add(contractDTO2);
 		}
-		
 		log.info("계약 수정 처리에서 만든 수정할 contractDTOList 보자 : "+contractDTOList);
 		
 		//받아온 DTO리스트 각각 DB에 수정하기
 		for(ContractDTO dto : contractDTOList) {
 			contractService.modify(dto);
 		}
-		
 		return "redirect:/procurement1/contractList";
 	}
 	
@@ -742,7 +722,6 @@ public class PS1Controller {
 			registerList.add(procurementPlanService.register(dto));
 			log.info("각각 엔티티 변환 보자 : "+procurementPlanService.dtoToEntity(dto));
 		}
-		
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
 		return "redirect:/procurement1/procurementPlanList";
@@ -769,7 +748,6 @@ public class PS1Controller {
 		
 		model.addAttribute("procurementPlanDTOList", procurementPlanDTOList);
 	}
-
 
 	/**
 	 * 조달계획 수정 처리
@@ -891,7 +869,6 @@ public class PS1Controller {
 		for(ProcurementPlanDTO dto : procurementPlanDTOList) {
 			procurementPlanService.modify(dto);
 		}
-		
 		return "redirect:/procurement1/procurementPlanList";
 	}
 	

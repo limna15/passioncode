@@ -280,7 +280,7 @@ public class PS1UploadRestController {
      * 업로드파일 삭제하기2 <br>
      * 품목 DB에 있는 drawingFile 그대로 받았을때 삭제 처리하기 <br>
      * 이때 drawingFile 리스트로 받아와서 전부 삭제처리 해주기
-     * @param fileName
+     * @param drawingFileList
      * @return
      */
     @PostMapping("/drawing/removeFile2")
@@ -523,7 +523,7 @@ public class PS1UploadRestController {
      * 업로드파일 삭제하기2 <br>
      * 계약서 DB에 있는 contractFile 그대로 받았을때 삭제 처리하기 <br>
      * 이때 contractFile 리스트로 받아와서 전부 삭제처리 해주기
-     * @param fileName
+     * @param contractFileList
      * @return
      */
     @PostMapping("/contract/removeFile2")
