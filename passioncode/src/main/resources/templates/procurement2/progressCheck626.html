@@ -130,7 +130,7 @@
 									<button class="td-modal btn btn-primary avgClass" id="avgBtn" >평가</button>
 									</td>
 									<td><input type="hidden" name="diliveryPercent" th:value="${dto.diliveryPercent}">[[${dto.diliveryPercent}]]</td>
-									<td><input type="hidden" name="etc6" th:value="${dto.etc}">[[${dto.inspectionComplete}]]</td>
+									<td><input type="hidden" name="etc" th:value="${dto.etc}">[[${dto.inspectionComplete}]]</td>
 									<td>[[${dto.purchaseOrderDeadlineStatus}]]</td>
 								</tr>
 							</tbody>
@@ -263,21 +263,39 @@
 						<span id="companyName3">(여기에 회사 이름이 들어감)</span>  제작 진척도를 입력합니다.
 						<br>
 						<p class="card-title"><b></b></p>
-						
+						지난 검사 기록
 						<br>
 						
 						<!--거래명세서 품목 정보-->
 						<div class="table-responsive">
-						
-								<div id="diliveryPercent3">
-										지난 검사의 납기 진도율은 <span id="diliveryPercent3">납기 진도율</span> 입니다.
+							<table id="transactionDetail"  border="1">
+								<thead>
+									<tr>
+										<th>-</th>
+										<th>날짜</th>
+										<th>납기 진도율</th>
+										<th>기타사항</th>
 										
-								</div>
+									</tr>
+								</thead>
+								<tbody id="history">
+									<tr>
+										<th>-</th>
+										<th id="">2023/00/00</th>
+										<th id="diliveryPercent3">납기 진도율</th>
+										<th id="etc3">기타사항</th>
+										
+									</tr>
 									<!-- 동적 테이블 부분-->
 									
-							<br><!--여기에 조건을 걸어서 다른 날이면 안 보여줌 -->
+								</tbody>
+							</table>
+							<br>
+							<br>
+							<table><!--여기에 조건을 걸어서 다른 날이면 안 보여줌 -->
 								<div>납기 진도율: <input id="idpercent" type="number"></div>
 								<br> <div>기타 사항: <input id="idetc" type="text"></div>
+							</table>
 						</div>
 						<br>
 						<br>
@@ -315,7 +333,7 @@
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
 			var nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
 			var dPercent= getObjTR().querySelector("input[name=diliveryPercent]").value;
-			//var pEtc= getObjTR().querySelector("input[name=etc6]").value;
+			var pEtc= getObjTR().querySelector("input[name=etc]").value;
 			console.log("발주코드: ",pCode);//잘나옴
 			console.log("회사이름: ",cName);
 			console.log("납기일: ",dDate);
@@ -324,7 +342,7 @@
 			console.log("단가: ",uPrice);
 			console.log("다음 진척검수일: ",nDate);
 			console.log("납기 진도율: ",dPercent);
-			//console.log("기타사항: ",pEtc);
+			console.log("기타사항: ",pEtc);
 			codeNo=getObjTR().querySelector("input[name=purchaseOrderCode]").value;//여기에서 값 넣어서 날짜등록으로 보내보기
 			console.log("등록할때 필요한 발주번호: ",codeNo);//잘나옴
 			document.querySelector("#companyName2").innerHTML = cName;
@@ -355,7 +373,7 @@
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
 			var nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
 			var dPercent= getObjTR().querySelector("input[name=diliveryPercent]").value;
-			var pEtc= getObjTR().querySelector("input[name=etc6]").value;
+			var pEtc= getObjTR().querySelector("input[name=etc]").value;
 			console.log("발주코드: ",pCode);//잘나옴
 			console.log("회사이름: ",cName);
 			console.log("납기일: ",dDate);
@@ -367,13 +385,8 @@
 			console.log("기타사항: ",pEtc);
 			
 			document.querySelector("#companyName3").innerHTML = cName;
-			if(dPercent=="미등록"){
-				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사 기록이 존재하지 않습니다`;
-			}else{
-				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사의 납기진도율은 `+dPercent+` 입니다. `;				
-			}
-			
-			//document.querySelector("#etc3").innerHTML = pEtc;
+			document.querySelector("#diliveryPercent3").innerHTML = dPercent;
+			document.querySelector("#etc3").innerHTML = pEtc;
 			//날짜는 형태가 다르다 함document.querySelector("lastDate").innerHTML = nDate;
 			
 			//입력 버튼을 누르면
