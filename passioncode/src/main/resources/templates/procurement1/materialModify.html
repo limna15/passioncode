@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+
+	<th:block th:fragment="content">
+
+		<div class="col-md-12 stretch-card">
+			<!-- 수정 부분 시작 -->
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title" style="font-size:23px;">품목 정보 수정</p> 
+					<br>
+					<form th:action = "@{/procurement1/materialModify}" th:method="post" id="materialModifyForm">
+						<div class="table-responsive" style="margin-bottom: 10px;">
+							<!-- 테이블 시작 -->
+								<table class="table table-bordered" id="materialModifyTable" style="text-align: center;">
+									<thead>
+										<tr>
+											<th width="12%">품목명</th>
+											<th width="11%">규격</th>
+											<th width="11%">재질</th>
+											<th width="">제작 사양</th>
+											<th width="10%">도면<br>Image</th>
+											<th width="10%">공용여부</th>
+											<th width="10%">대</th>
+											<th width="10%">중</th>
+											<th width="11%">품목코드</th>
+										</tr>
+									</thead>
+									<tbody>	
+										<tr th:each="dto : ${materialDTOList}" >									
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="name" class="materialName" th:value="${dto.name}" >
+											</td>
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="size" class="size" th:value="${dto.size}" >
+											</td>
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="quality" class="quality" th:value="${dto.quality}" >
+											</td>
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center;" name="spec" class="spec" th:value="${dto.spec}" >
+												<input type="hidden" name="drawingNo" class="drawingNo" th:value="${dto.drawingNo}"  >
+												<input type="hidden" class="originalDrawingFile"  th:value="${dto.drawingFile}" >
+												<input type="hidden" name="drawingFile" class="drawingFile" th:value="${dto.drawingFile}" >
+											</td>
+											<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image==true}">
+												<div class="modifyDrawingFile">
+													<button th:data-file="${dto.drawingFileDTO.getImageURL()}" class="ImgClick" 
+															type="button" style="border:none; background-color:transparent; margin-right:10px;">
+														<img th:src="|/procurement1/drawing/display?fileName=${dto.drawingFileDTO.getThumbnailURL()}|" > 
+													</button>
+								            		<button type="button" class="btn btn-primary drawingModifyBtn" style="padding-left:10px; padding-right:10px;">
+														수정
+													</button>
+												</div>
+											</td>
+											<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image!=true}">
+												<div class="modifyDrawingFile">
+													<button th:data-file="${dto.drawingFileDTO.getImageURL()}" th:data-name="${dto.drawingFileDTO.fileName}"
+															class="NoImgClick" type="button" style="border:none; background-color:transparent; margin-right:10px;">
+														<img th:src="|/picture/thumb_document.jpg|" > 
+													</button>
+								            		<button type="button" class="btn btn-primary drawingModifyBtn" style="padding-left:10px; padding-right:10px;">
+														수정
+													</button>
+												</div>
+											</td>
+											<td th:if="${dto.drawingFileDTO == null}">
+												<div class="modifyDrawingFile">
+								            		<button type="button" class="btn btn-primary drawingModifyBtn" style="padding-left:10px; padding-right:10px;">
+														수정
+													</button>
+												</div>											
+											</td>
+											<td>
+												<select style="width:100%; border: 0; text-align: center;" name="shareStatus" class="shareStatus">
+													<option value='공용' th:selected="${dto.shareStatus == '공용'}" >공용</option>
+													<option value='전용' th:selected="${dto.shareStatus == '전용'}" >전용</option>
+												</select>											
+											</td>
+											<td>
+												<select style="width:100%; border: 0; text-align: center;" class="largeCategoryCode" name="largeCategoryCode"  >
+													<th:block th:each="LCDTO : ${LargeCategoryDTOList}">
+														<option th:value="${LCDTO.code}" th:selected="${dto.largeCategoryCode==LCDTO.code}" >
+															[[${LCDTO.category}]]
+														</option>
+													</th:block>
+												</select>
+											</td>
+											<td>
+												<select style="width:100%; border: 0; text-align: center;" class="middleCategoryCode" name="middleCategoryCode" >
+													<th:block th:each="MCDTO : ${dto.middleCategoryDTOList}">
+														<option th:value="${MCDTO.middleCode}" th:selected="${dto.middleCategoryCode==MCDTO.middleCode}" >
+															[[${MCDTO.middleCategory}]]
+														</option>
+													</th:block>
+												</select>									
+											</td>
+											<td>
+												<input type="text" style="width:100%; border: 0; text-align: center; " name="code" class="materialCode"  th:value="${dto.code}"  readonly>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							<!-- 테이블 끝 -->
+						</div>
+						<div>						
+							<!-- 수정확인, 수정취소 버튼 시작 -->						
+							<button class="btn btn-primary" style="float:right;" type="button" id="materialModifyCancelBtn">
+								수정취소
+							</button>
+							<button class="btn btn-primary" style="margin-right:10px; float:right;" type="submit" id="materialModifyBtn">
+								수정확인
+							</button>										
+							<!-- 수정확인, 수정취소 버튼 끝 -->
+						</div>	
+					</form>								
+				</div>
+			</div>
+		</div>
+		
+		<!-- 이미지 보여주는 모달창 시작 -->
+		<div class="imageModal modal " tabindex="-2" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">도면 Image</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary imageDownloadBtn" style="padding-top:10px; padding-left:15px; padding-right:15px; width:88px; height:33px;">
+                        	다운로드
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>	
+        <!-- 이미지 보여주는 모달창 끝 -->
+        
+        <!-- 첨부파일 다운로드 여부 묻는 모달창 시작-->
+		<div class="attachFileDownloadModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">첨부 파일 다운로드</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="attachFileDownloadCheckModal">
+                    	<!-- 첨부파일 이름 확인할 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary attachFileDownloadConfirmBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 첨부파일 다운로드 여부 묻는 모달창 끝 -->
+		
+		<!-- 수정확인 모달창 시작-->
+		<div class="materialModifyConfirmModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">품목 정보 수정 확인</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="materialModifyConfirmModalContent">
+                    	<!-- 품목정보 등록 확인할 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary materialModifyConfirmBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 수정확인 모달창 끝 -->
+		
+		<!-- 첨부파일 모달창 시작-->
+		<div class="drawingUploadModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">도면 Image 첨부하기</h5>
+                        <button type="button" class="close drawingUploadCancelBtn" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" >
+               			<div class="custom-file">
+		                    <input type="file" class="custom-file-input" id="customFile">
+		                    <label class="custom-file-label" for="customFile">도면 Image 첨부하기</label>
+		                </div> 
+		                <style>
+							.uploadResult {
+								width: 100%;
+								background-color: gray;
+								margin-top: 10px;                    
+							}
+							
+							.uploadResult ul {
+								display: flex;
+								flex-flow: row;
+								justify-content: center;
+								align-items: center;
+								vertical-align: top;
+								overflow: auto;                           
+								height: 220px;             
+							}
+							
+							.uploadResult ul li {
+								list-style: none;
+								padding: 10px;
+								margin-left: 2em;
+							}
+							
+							.uploadResult ul li img {
+								width: 100px;
+							}
+						</style>
+                    	<div class="uploadResult" id="holder">
+			                <ul id="boxing">
+								<h3 id="h3Text">파일을 업로드 해주세요.</h3>
+			                </ul>
+			            </div>                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary drawingUploadConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary drawingUploadCancelBtn" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 첨부파일 모달창 끝 -->
+		
+		<!-- 
+			안내와 오류시 보여줄 모달창 시작 (확인 버튼만 있는거)
+		    1. 파일업로드 오류시
+		       - 제목 : 도면 Image 첨부 확인
+		       - 내용 : 1. <span>파일 사이즈가 초과되었습니다.</span>
+						2. <span>해당 종류의 파일은 업로드할 수 없습니다.</span>
+						3. <span>파일 1개만 첨부할 수 있습니다.</span>
+		    2. 수정확인 버튼 누를때 오류시
+		       - 제목 : 품목 정보 수정 확인
+		       - 내용 : 1. <span>변경된 사항이 없습니다.</span><br>
+						   <span>다시 작성해주시길 바랍니다.</span>
+				
+		-->
+		<div class="materialInfoAndErrorModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="materialInfoAndErrorModalTitle"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="materialInfoAndErrorModalContent">   
+						<!-- 안내와 오류시 보여줄 모달창 내용 -->
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 안내와 오류시 보여줄 모달창 끝 -->
+		
+		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+		<script th:inline="javascript">
+		
+		
+		$(document).ready(function(){
+			//---------------------------------------------------- 도면 이미지 관련, 이미지 눌렀을때, 보는 모달창  -----------------------------------------------------------//
+			
+			//이미지인 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachImageDrawingFileTR = new Object();
+			
+			//도면파일 -> 이미지로 된것 클릭 했을때, -> 원본파일 모달창으로 보여주기
+			$(".ImgClick").click(function() {
+				console.log("도면이미지인거 선택함");
+				var file = $(this).data('file');
+				//console.log("file 보자! : ",file);
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachImageDrawingFileTR = getObjTR();
+				
+				//console.log(file);
+				$('.imageModal .modal-body').html("<img style='width:100%' src='/procurement1/drawing/display?fileName="+file+" ' >");
+				$(".imageModal").modal("show");
+			});
+			
+			//이미지 아닌 문서그림 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(그 해당 행의 버튼 정보를 가져오기 위해)
+			var attachNoImageDrawingFileTR = new Object();
+			
+			//도면파일 -> 이미지로 된거 아닌거! 클릭 했을때, -> 파일 다운로드 여부 묻는 모달창 보여주기
+			$(".NoImgClick").click(function() {
+				console.log("이미지 아닌거 선택함");
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachNoImageDrawingFileTR = getObjTR();
+				
+				//해당 버튼의 가지고 있는 파일이름 읽기
+				var fileName = $(this).data('name');
+				//console.log("어디 해당 파일의 data-fileName 잘 읽나 보자 : ",fileName);
+				
+				sentence = `<span><b>파일명</b> : `+fileName+`<br><br>
+							해당 파일을 다운로드 하시겠습니까?</span>`;
+				//console.log("만든 문장 봐보자 : ",sentence);
+       			document.querySelector("#attachFileDownloadCheckModal").innerHTML = sentence;					
+				$(".attachFileDownloadModal").modal('show');
+			});
+			
+			//첨부파일 다운로드 모달창의 확인 버튼 누를때
+			$(document).on("click",".attachFileDownloadConfirmBtn",function(e){
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachNoImageDrawingFileTR.querySelector(".NoImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("NoImgClick 버튼 눌렀을때의 파일의 data-file 잘 읽나 보자 : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".attachFileDownloadModal").modal('hide');
+				window.location.href = "/procurement1/drawing/download?fileName="+encodeFile;
+			});	
+			
+			//도면파일 -> 이미지로 된것 클릭 했을때,
+			//원본 이미지 모달창에서 -> 다운로드 버튼 클릭시 -> 원본 파일 다운로드 하기
+			$(document).on("click",".imageDownloadBtn",function(e){
+				console.log("이미지 모달창의 다운로드 버튼 누름");
+				e.preventDefault();			
+				//NoImgClick 버튼 클릭했을때, 가지고 있던 file 정보 읽기
+				//일단 해당 NoImgClick 버튼 먼저 읽고
+				var target = new Object();
+				target = attachImageDrawingFileTR.querySelector(".ImgClick");
+				//console.log("일단 타겟부터 읽어보자 : ",target);
+				
+				//그 버튼의 가지고 있던 file 정보 읽기
+				var encodeFile = $(target).data('file');
+				//console.log("다운로드 버튼 눌렀을때의 파일의 data-file : ",encodeFile);
+				
+				//모달창 숨기고, 파일 다운로드 시키기
+				$(".imageModal").modal('hide');
+				window.location.href = "/procurement1/drawing/download?fileName="+encodeFile;
+			});	
+			
+			//-------------------------------------- 도면 이미지 수정 첨부 부분 --------------------------------------------------------------//
+			
+			//수정 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
+			//(수정한 도면이미지를 원래 테이블에 넣어주기위해)
+			var attachDrawingFileTR = new Object();
+			
+			//도면이미지 수정버튼 클릭할때 -> 도면 첨부 모달창 보여주기
+			$(document).on("click",".drawingModifyBtn",function(e){
+				//클릭한 행의 정보 전역변수에 세팅해주기
+				attachDrawingFileTR = getObjTR();
+				//모달창 열기전에, 기존에 넣어진 값들 초기화 세팅해주기(input file값,li 값)
+				var str = `<h3 id="h3Text">파일을 업로드 해주세요.</h3>`;
+				document.querySelector(".uploadResult ul").innerHTML = str;
+				$(".custom-file-label").html("도면 Image 첨부하기");
+				$(".custom-file-input").val("");
+				$(".drawingUploadModal").modal('show');					
+			});
+			
+			var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$");
+	        var maxSize = 10485760; //10MB
+			
+	        //파일의 확장여부 체크하는 함수(파일종류,크기)
+	        function checkExtension(fileName, fileSize){
+	            if(fileSize >= maxSize){
+	                //alert("파일 사이즈 초과");
+	                document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
+					sentence = `<span>파일 사이즈가 초과되었습니다.</span>`;
+           			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".materialInfoAndErrorModal").modal('show');   
+					
+					$(".custom-file-label").html("도면 Image 첨부하기");
+	                return false;
+	            }
+	            if(regex.test(fileName)){
+	                //alert("해당 종류의 파일은 업로드할 수 없습니다.");
+	                document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
+					sentence = `<span>해당 종류의 파일은 업로드할 수 없습니다.</span>`;
+           			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".materialInfoAndErrorModal").modal('show');   
+					
+					$(".custom-file-label").html("도면 Image 첨부하기");
+	                return false;
+	            }
+	            return true;
+	        }
+	        
+	        //input file이 변할때, 파일확장 체크해서 업로드 하기
+	        $(".custom-file-input").on("change", function(e) {
+	        	console.log("인풋 체인지 함수 시작");
+	        	//console.log("이 인풋의 값을 봐보자!! : ", $(".custom-file-input").val());
+	        	//console.log("이 인풋 밑에 라벨의 값도 봐보자!! : ", $(".custom-file-label").val());
+	        	//console.log("e.target.files 보자 : ",e.target.files);
+ 				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);		//이건 값을 못읽어 에러 뜸
+	        	
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	        	if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
+	 				console.log("인풋 체인지 함수에서!! li 길이가 0개~~~~~~~~~");
+	        		//console.log("$(this).val() 이게 도대체 모야? 체인지 함수 클릭할때 값 읽어보자 : ",$(this).val()); 	// C:\fakepath\테이블정의서ver4.xlsx
+	        		//console.log("그리고 인풋 체인지 함수에서 그자체 읽어보자 $(this) : ",$(this));
+	        		
+	 				var fileName = $(this).val().split("\\").pop();
+					//console.log("인풋 체인지 함수의 fileName : ",fileName);
+		            //$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+		            $(this).siblings(".custom-file-label").html(fileName);
+		 				
+	 				var formData = new FormData();
+	 	            var inputFile = $(this);
+	 	            //console.log("인풋 체인지 함수에서!! inputFile : ",inputFile);
+					var files = inputFile[0].files;
+	 				//console.log("인풋 체인지 함수에서!! files : ",files);
+	 				/*
+					var files = e.target.files;
+	 				if(files===e.target.files){
+	 					console.log("이거 값 같은지 보자! 이러면 완전 같은거야~~")
+	 				}
+	 				*/
+	 	            var appended = false;
+
+	 	            for (var i = 0; i < files.length; i++) {
+	 	                if(!checkExtension(files[i].name, files[i].size) ){
+	 	                    return false;
+	 	                }
+	 					//console.log("인풋 체인지 함수의 files[i] : ",files[i]);
+	 	                formData.append("uploadFile", files[i]);
+	 	                appended = true;
+	 	            }
+
+	 	            //upload를 하지 않는다.
+	 	            if (!appended) {return;}
+
+	 	            for (var value of formData.values()) {
+	 	                //console.log("인풋 체인지 함수의 value of formData.values() : ",value);
+	 	            }
+
+	 	            //실제 업로드 부분
+	 	            //upload ajax
+	 	            $.ajax({
+	 	                url: '/procurement1/drawing/uploadAjax',
+	 	                processData: false,
+	 	                contentType: false,
+	 	                data: formData,
+	 	                type: 'POST',
+	 	                dataType:'json',
+	 	                success: function(result){
+	 						console.log("인풋 체인지 함수의 파일 업로드 ajax 결과 : ",result);
+	 	                    if(result.image){	//image 일때 아닐때, 
+	 	                    	showResultByImage(result);
+	 	                    }else{
+	 	                    	showResultByNoImage(result);
+	 	                    }
+	 	                    //원래 테이블의 파일이름에 만든 파일이름 넣어주기
+	 	                    var drawingFile = result.drawingFile;
+	 	                    //console.log("파일이름 잘 읽어오나 보자 : ",drawingFile);
+	 	                    //console.log("테이블의 input값 제대로 넣기 전 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+							attachDrawingFileTR.querySelector("input[name=drawingFile]").value = drawingFile;
+							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+	 	                },
+	 	                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("인풋 체인지 함수의 파일업로드 ajax 에러",textStatus);
+	 	                }
+	 	            }); //$.ajax
+	 			}else{													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
+	 				console.log("현재 인풋 체인지 함수에서 li 길이가 1개 이상!!~~~~~~~~~");
+	 				e.preventDefault();
+	 				document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
+					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
+           			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".materialInfoAndErrorModal").modal('show');   
+	 			}
+	        }); //$(".custom-file-input") change 끝
+	        
+	        //input file이 클릭할때!!! 1개만 파일 업로드 할수 있게 막기!
+	        $(".custom-file-input").on("click", function(e) {
+	        	console.log("인풋 클릭 함수 시작");
+	     		//썸네일 넣은 li의 개수를 이용하여, 1개만 파일 업로드 하게 만들기
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	        	if(isExist.length>0){													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
+	 				console.log("현재 인풋 클릭 함수에서 li 길이가 1개 이상!!~~~~~~~~~");
+	 				e.preventDefault();
+	 				document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
+					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
+           			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".materialInfoAndErrorModal").modal('show');   
+	 			}
+	        }); //$(".custom-file-input") click 끝
+	        
+	        //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 일때
+	        function showResultByImage(uploadResult){
+	            var uploadUL = $(".uploadResult ul");
+	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResultByImage 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
+	            
+	           //파일을 업로드 해주세요. 글귀 지우기 
+	           $("#h3Text").text("");
+	           //ul에 넣을 li 만들기
+				var str ="";
+				str += "<li class='liUpload' data-name='" + uploadResult.fileName + "' data-path='"+uploadResult.folderPath+"' data-uuid='"+uploadResult.uuid+"' data-file=\'" + uploadResult.imageURL + "\' >";
+				str + " <div>";
+				str += "<button type='button' data-file=\'" + uploadResult.imageURL + "\' ";
+				str += "class='btn-warning btn-sm'>X</button><br>";
+				str += "<img class='attachDrawingFileThumbImg' src='/procurement1/drawing/display?fileName=" + uploadResult.thumbnailURL + "'>";
+				str += "</div>";
+				str + "</li>";
+				uploadUL.append(str);
+                //var strTest = `<span> 입력 테스트중이야~ </span>`;
+	            //document.querySelector(".uploadResult ul").innerHTML = str;
+	        } //showResultByImage(uploadResult) 함수 끝
+	        
+	        //ajax 업로드처리한 결과 이용해서, 썸네일 보여주는 함수 / 이미지 파일 아닐때
+	        function showResultByNoImage(uploadResult){
+	            var uploadUL = $(".uploadResult ul");
+	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.fileName);
+	            //console.log("showResultByNoImage 함수안에서 테스트 중~ : ",uploadResult.drawingFile);
+	            
+	           //파일을 업로드 해주세요. 글귀 지우기 
+	           $("#h3Text").text("");
+	           //ul에 넣을 li 만들기
+	            var str ="";
+                str += "<li class='liUpload' data-file=\'" + uploadResult.imageURL + "\' >";
+                str + " <div>";
+                str += "<button type='button' data-file=\'" + uploadResult.imageURL + "\' ";
+                str += "class='btn-warning btn-sm'>X</button><br>";
+                str += "<img class='attachDrawingFileThumbImg' src='/picture/thumb_document.jpg'>";
+                str += "</div>";
+                str + "</li>";
+	            uploadUL.append(str);
+	        } //showResultByNoImage(uploadResult) 함수 끝
+			
+	        //썸네일 보여준 div에서, X버튼 클릭하면, 업로드된 파일 삭제하고, 원래대로 보여주기
+	        $(".uploadResult ").on("click", "li button", function(e){
+	            console.log("li의 X삭제 버튼 누름");
+	            var targetFile = $(this).data("file");
+				console.log("li 버튼 누를때 targetFile : ",targetFile);
+	            var targetLi = $(this).closest("li");
+				//console.log("li 버튼 누를때 targetLi : ",targetLi);
+				//console.log("테이블의 input값 초기화 하기 전 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+	            $.ajax({
+	                url: '/procurement1/drawing/removeFile',
+	                data: {fileName: targetFile},
+	                dataType:'text',
+	                type: 'POST',
+	                success: function(result){
+	                    targetLi.remove();
+	                    checkLi();
+	                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
+	                    attachDrawingFileTR.querySelector("input[name=drawingFile]").value = "";
+	                    //console.log("테이블의 input값 초기화 한 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+	                }
+	            }); //$.ajax  
+	        });
+	        
+	        //업로드할 파일을 다 지우면(liUpload 클래스가 하나도 없으면), 
+	        //파일을 업로드 해주세요. 글귀 넣기 + 도면 Image 첨부하기 글귀 넣기
+	        //그 해당 인풋의 값도 초기화 시켜주기!
+	    	function checkLi() {
+	    		var isExist = document.getElementsByClassName('liUpload');
+	 	        //console.log("모라고 찍힐까????",isExist);
+	 	        //console.log("그럼 길이를 찍어보자!!!",isExist.length); 	        
+	 			if(isExist.length==0){
+	 				$("#h3Text").text("파일을 업로드 해주세요.");
+	 				$(".custom-file-label").html("도면 Image 첨부하기");
+	 				$(".custom-file-input").val("");
+	 			}
+	    	} //checkLi 함수 끝
+	        
+	    	//-------------------------------------------드래그 앤 드랍 시작!! --------------------------------------------------//
+	        var holder = document.getElementById("holder");
+	        var boxing = document.getElementById("boxing");
+
+	        //파일을 마우스로 드래그over, 드래그leave 할때, 보여주는 박스의 스타일설정하는 함수
+	        function fileDragDrop(event){        	
+	        	event.stopPropagation();
+	        	event.preventDefault();
+	        	if (event.type == "dragover"){ // Drag Over        		
+	        		//event.target.style.border = '5px dashed #c00';
+	        		//holder.style.border = '5px dashed #c00';
+	        		boxing.style.border = '5px dashed #c00';
+	        	}else{  // File Drop        		
+	        		//event.target.style.border = '';
+	        		//holder.style.border = '';
+	        		boxing.style.border = '';
+	        	}
+	        } //fileDragDrop 함수 끝
+			
+	        //파일을 드랍했을때, ajax 처리 되면서 업로드하게 하는 함수
+	        function fileUpload(e){        	
+	        	e.stopPropagation();
+	        	e.preventDefault();
+	        	fileDragDrop(e); // (e.type != "dragover") 캔슬을위해 [여기서 별도로 작업해줘도 상관없음]
+	        	
+	        	//썸네일 넣은 li의 개수를 이용하여, 1개만 파일 업로드 하게 만들기
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
+	 				console.log("드래그엔 드롭에서!! li 길이가 0개~~~~~~~~~");
+	 				var files = e.target.files || e.dataTransfer.files; 
+	 				//console.log("e.target.files 보자 : ",e.target.files);
+	 				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);
+		        	var formData = new FormData();
+		            var appended = false;
+		            
+		            for (var i = 0; i < files.length; i++) {
+		                if(!checkExtension(files[i].name, files[i].size) ){
+		                    return false;
+		                }
+		                //console.log(files[i]);
+		                formData.append("uploadFile", files[i]);
+		                appended = true;
+		            }
+
+		            //upload를 하지 않는다.
+		            if (!appended) {return;}
+
+		            for (var value of formData.values()) {
+		                //console.log("value of formData.values() 이거야 어디 보자",value);
+		            }
+
+		            //실제 업로드 부분
+		            //upload ajax
+		            $.ajax({
+		                url: '/procurement1/drawing/uploadAjax',
+		                processData: false,
+		                contentType: false,
+		                data: formData,
+		                type: 'POST',
+		                dataType:'json',
+		                success: function(result){
+		                    //console.log(result);
+		                    if(result.image){
+		                    	showResultByImage(result);
+		                    }else{
+		                    	showResultByNoImage(result);
+		                    }
+		                    //input의 html에 파일이름 넣어주기(+ 클래스에 selected 추가??)
+		                    //document.querySelector(".custom-file-label").classList.add("selected");
+		                    $(".custom-file-label").html(result.fileName);
+		                    
+		                    //원래 테이블의 파일이름에 만든 파일이름 넣어주기
+		                    var drawingFile = result.drawingFile;
+		                    //console.log("파일이름 잘 읽어오나 보자 : ",drawingFile);
+		                    //console.log("테이블의 input값 제대로 넣기 전 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+							attachDrawingFileTR.querySelector("input[name=drawingFile]").value = drawingFile;
+							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+		                    console.log("드래그앤 드롭에서 파일업로드 ajax 에러",textStatus);
+		                }
+		            }); //$.ajax 
+	 			}else{																	//현재 개수 1개 이상으로, 이미 업로드한게 있음!
+	 				console.log("드래그엔 드롭에서!! li 길이가 1개 이상!!~~~~~~~~~");
+	 				e.preventDefault();
+	 				document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
+					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
+           			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					$(".materialInfoAndErrorModal").modal('show');   
+	 			}
+	        } //fileUpload 함수 끝
+	        
+	        holder.addEventListener("dragover", fileDragDrop);  //마지막 옵션 생략가능 기본값false
+	        holder.addEventListener("dragleave", fileDragDrop);
+	        holder.addEventListener("drop", fileUpload);  
+			//-------------------------------------------드래그 앤 드랍 끝!! --------------------------------------------------//
+			
+	        //도면 첨부 모달창의 확인버튼 누를때 -> 수정버튼을 지우고, 기존썸네일 지우고, 수정한 썸네일만 보여주기
+	        $(".drawingUploadConfirmBtn").on("click", function(e) {
+	        	console.log("도면 첨부 모달창의 확인버튼 누름");
+				e.preventDefault();
+				//썸네일 넣은 li의 개수를 이용하여, 업로드한게 없을때 첨부된게 없습니다. 안내창 띄어주기
+	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
+	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 해줘요~ 안내창 띄우기
+					document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
+					sentence = `<span>첨부된 파일이 없습니다.</span><br>
+						   		<span>다시 작성해주시길 바랍니다.</span>`;
+	       			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					
+					$(".materialInfoAndErrorModal").modal('show');
+	 			}else{																	//첨부된 파일이 존재하니 원래대로 진행
+ 					var attachDrawingFileThumbImg = $(".attachDrawingFileThumbImg").attr("src");
+    				//console.log("이거 같아 이미지 src 읽는거!!!!! : ",attachDrawingFileThumbImg);
+    				var targetFile = $(".uploadResult li").data("file");
+    				//console.log("타겟파일 제대로 읽어오나 보자 : ",targetFile);
+    				var str = `<img src='`+attachDrawingFileThumbImg+`' data-file=\'` + targetFile + `\' class='attachDrawingFileImgTag'>`;
+    				//console.log("넣으려는 행값 제대로 가져오나 보자 : ",attachDrawingFileTR);
+    				//console.log("넣을 내용 잘 셋팅 되었나 보자 : ",str);
+    				attachDrawingFileTR.querySelector(".modifyDrawingFile").innerHTML = str;
+    				
+    				$(".drawingUploadModal").modal('hide');
+	 			} //if
+	        });	//도면 첨부 모달창의 확인버튼 누를때 끝
+	        
+			//도면 첨부 모달창의 취소버튼 + 모달창 x 누를때 -> 업로드한 파일 지워주기
+	        $(".drawingUploadCancelBtn").on("click", function(e) {
+	        	console.log("도면 첨부 모달창의 취소버튼 or 상단의 X 버튼 누름");
+				e.preventDefault();
+				//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
+				//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
+				//ajax 삭제할때 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
+				// \PassionCode\upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
+				// ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
+				var targetFile = $(".uploadResult li").data("file");
+				//console.log("모야모야 제대로 읽어오는거니? ",targetFile);
+				
+				//값이 만들어 진게 있을때에만 ajax처리 가능하게 하자! 
+				var lengthCheck = $(".uploadResult li").length;
+				if(lengthCheck>0){
+					console.log("현재 길이 1개 이상이야 만든거 있어~ 갯수는 : ",lengthCheck);
+					$.ajax({
+		                url: '/procurement1/drawing/removeFile',
+		                data: {fileName: targetFile},
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	//console.log("성공한거지? ",result);
+		                	$(".uploadResult li").remove();
+		                    checkLi();
+		                    
+		                    //테이블에 셋팅해 놓은 input drawingFile의 값 초기화 시키기
+		                    attachDrawingFileTR.querySelector("input[name=drawingFile]").value = "";
+		                    //console.log("테이블의 input값 초기화 한 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("모달창의 취소버튼,상단 X버튼 -> 업로드 파일 삭제하는 ajax 에러",textStatus);
+	 	                }
+		            }); //$.ajax 
+				} //if
+	        }); //drawingUploadCancelBtn 도면 모달창 취소 버튼 끝
+			
+			//-------------------------------------- 수정확인, 수정취소 버튼 부분 --------------------------------------------------------------//
+			
+			//수정확인 버튼 누를때 -> 수정확인 모달창 보여주기
+			//변경된 사항이 없을때!!! -> 변경된 내용이 없습니다. 다시 작성해주시길 바랍니다 모달창 보여주기
+			$(document).on("click","#materialModifyBtn",function(e){
+				console.log("수정확인 버튼 누름");
+				//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();				
+				
+				//2. 원래의 품목 속성값들(품목명, 규격, 재질, 제작사양, 도면파일, 공용여부, 대분류코드, 중분류코드) -> 리스트로 만들기
+				// vs 입력받은 품목 속성값들(품목명, 규격, 재질, 제작사양, 도면파일, 공용여부, 대분류코드, 중분류코드) -> 리스트로 만들기
+				// 두개를 비교하여, 변경된 값이 하나도 없으면!! 수정된 내용이 없다는 안내 모달창 보여주기
+				// 번거롭게 각각 리스트로 만들지 말고!1 materialDTO 객체로 만들어 담고, 이걸 리스트로 담아주자!
+				
+				//원래의 품목 속성값들 리스트
+				//값은 잘읽어오는데, 만약에 없는 값들을 null로 받아오기때문에, 입력받아온 값들은 없으면 "" 빈값으로 읽기 때문에 비교가 두개가 당연히 다르다고 읽는다!
+				// 받아온 값들이 null 일 경우 "" 빈값으로 바꿔주자! (규격,재질,제작사양,도면파일)
+				let originalMaterialDTOList = [[${materialDTOList}]];
+				for(var i=0; i<originalMaterialDTOList.length; i++){
+					if(originalMaterialDTOList[i].size == null){
+						originalMaterialDTOList[i].size = "";
+					}
+					if(originalMaterialDTOList[i].quality == null){
+						originalMaterialDTOList[i].quality = "";
+					}
+					if(originalMaterialDTOList[i].spec == null){
+						originalMaterialDTOList[i].spec = "";
+					}
+					if(originalMaterialDTOList[i].drawingFile == null){
+						originalMaterialDTOList[i].drawingFile = "";
+					}
+				}
+				//console.log("원래의 originalMaterialDTOList 보자!!!!! : ",originalMaterialDTOList);
+				
+				//입력받은 수정된 품목 속성값들 리스트
+				let modifyMaterialDTOList = new Array();
+				for(var i=0; i<originalMaterialDTOList.length; i++){
+					let modifyMaterialDTO = new Object();
+					modifyMaterialDTO.name = document.querySelectorAll(".materialName")[i].value;
+					modifyMaterialDTO.size = document.querySelectorAll(".size")[i].value;
+					modifyMaterialDTO.quality = document.querySelectorAll(".quality")[i].value;
+					modifyMaterialDTO.spec = document.querySelectorAll(".spec")[i].value;
+					modifyMaterialDTO.drawingFile = document.querySelectorAll(".drawingFile")[i].value;
+					modifyMaterialDTO.shareStatus = document.querySelectorAll(".shareStatus")[i].value;
+					modifyMaterialDTO.largeCategoryCode = document.querySelectorAll(".largeCategoryCode")[i].value;
+					modifyMaterialDTO.middleCategoryCode = document.querySelectorAll(".middleCategoryCode")[i].value;
+					modifyMaterialDTOList.push(modifyMaterialDTO);
+				}
+				//console.log("입력받은 수정된 modifyMaterialDTOList 보자!!!!! : ",modifyMaterialDTOList);
+				
+				//값이 하나라도 변하지 않을때, 그 횟수를 더해주자!
+				//값이안변한 갯수 = originalMaterialDTOList.length  ==> 전부가 하나도 값이 안변한거야!! -> 하나도 변한값 없어~ 모달창 보여주기
+				var noChangeCount = 0;
+				
+				for(var i=0; i<originalMaterialDTOList.length; i++){
+					if(originalMaterialDTOList[i].name == modifyMaterialDTOList[i].name &&
+						originalMaterialDTOList[i].size == modifyMaterialDTOList[i].size &&
+						originalMaterialDTOList[i].quality == modifyMaterialDTOList[i].quality &&
+						originalMaterialDTOList[i].spec == modifyMaterialDTOList[i].spec &&
+						originalMaterialDTOList[i].drawingFile == modifyMaterialDTOList[i].drawingFile &&
+						originalMaterialDTOList[i].shareStatus == modifyMaterialDTOList[i].shareStatus &&
+						originalMaterialDTOList[i].largeCategoryCode == modifyMaterialDTOList[i].largeCategoryCode &&
+						originalMaterialDTOList[i].middleCategoryCode == modifyMaterialDTOList[i].middleCategoryCode ){
+						//console.log("지금 "+i+"번째 항목이 다 같은 경우야!!!!");
+						noChangeCount = noChangeCount +1; 
+					}
+				}
+				//console.log("최종적으로 값이 안변한 갯수 보자 : ", noChangeCount);
+				//console.log("전체 품목 속성리스트의 크기 : ",originalMaterialDTOList.length);
+				
+				if(noChangeCount == originalMaterialDTOList.length){	//값이 하나도 변한게 없어!!! -> 안내 모달창 보여주자!
+					/* 
+					수정확인 버튼 오류 모달창 보여주기
+						- 제목 : 품목 정보 수정 확인
+				       	- 내용 : 1. <span>변경된 사항이 없습니다.</span><br>
+								   	<span>다시 작성해주시길 바랍니다.</span>
+					*/
+					document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목 정보 수정 확인`;
+					sentence = `<span>변경된 사항이 없습니다.</span><br>
+						   		<span>다시 작성해주시길 바랍니다.</span>`;
+	       			document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;					
+					
+					$(".materialInfoAndErrorModal").modal('show');
+				}else{													//변경된 것이 있으니까!!  -> 원래대로 수정확인 모달창 보여주기
+					//3. 입력받은 품목명리스트를 이용해서,수정확인 모달창에 보여줄 한문장으로 만들기
+					//입력받은 품목명 -> 품목명 리스트에 담기
+	    			let materialNameList = new Array();
+	    			$('.materialName').each(function(){
+	    				let name = $(this).val();
+	    				//console.log("이거 잘 code 읽어온건가!!",name);
+	    				if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
+	    					materialNameList.push(name);
+	    				}   	
+	    			});  
+					
+	    			function makeSentence(name){
+	    				let sentence =`<span>품목명 : ${name}</span><br>`;
+	    				return sentence;    				
+	    			}
+	    			
+	    			let sentence = ``;
+	    			materialNameList.forEach(function(item){
+	   					sentence=sentence+makeSentence(item);
+	   				});
+	   				sentence=sentence+`<br><span>해당 품목을 수정 하시겠습니까?</span>`;   				
+	   				//console.log("완성된 문장보자",sentence);
+	   				
+	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
+	   				document.querySelector("#materialModifyConfirmModalContent").innerHTML = sentence;
+	   				//수정확인 모달창 보여주기
+					$(".materialModifyConfirmModal").modal('show');	
+				} //if
+			});	//수정확인 버튼 누를때 끝
+
+			
+			//수정확인 모달창의 확인 버튼 누를때 -> 진짜!! 수정처리 되는 부분!
+			$(document).on("click",".materialModifyConfirmBtn",function(e){
+				console.log("수정확인 모달창의 확인 버튼 누름");
+				e.preventDefault();
+				
+				//0. 수정하는거니까! 기존의 도면파일 업로드된거 지워주자!! (올려진 업로드 파일이 있다면!)
+				// ---> 아니아니 기존도면을 수정안했으면, 유지 시켜줘야하고!, 수정이 되었다면 지워줘야한다!
+				//기존의 도면파일 이름 모두 가져와서 리스트로 만들자
+				let originalDrawingFileList = new Array();
+				$('.originalDrawingFile').each(function(){
+    				let originalDrawingFile = $(this).val();
+    				//console.log("이거 잘 originalDrawingFile 읽어온건가!!",originalDrawingFile);
+    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+   					originalDrawingFileList.push(originalDrawingFile);
+    			}); 
+	        	console.log("만든 originalDrawingFileList 보자! : ",originalDrawingFileList);
+	        	
+	        	//입력받은 도면파일 이름 모두 가져와서 리스트로 만들기
+	        	let modifyDrawingFileList = new Array();
+	        	$('.drawingFile').each(function(){
+    				let modifyDrawingFile = $(this).val();
+    				//console.log("이거 잘 modifyDrawingFile 읽어온건가!!",modifyDrawingFile);
+    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+   					modifyDrawingFileList.push(modifyDrawingFile);
+    			}); 
+	        	console.log("만든 modifyDrawingFileList 보자! : ",modifyDrawingFileList);
+	        	
+	        	//원래 도면파일과 입력받은 거 비교해서!, 달라진게 있다면, 그 해당 원래거를 리스트에 담아주자
+	        	//근데 이럴때, 원래꺼가 빈값이라면! 담지 말자!
+	        	let sendDrawingFileList = new Array();
+	        	
+	        	for(var i=0; i<originalDrawingFileList.length; i++){
+	        		if(originalDrawingFileList[i] != modifyDrawingFileList[i] ){
+	        			if(originalDrawingFileList[i] != ""){
+		        			sendDrawingFileList.push(originalDrawingFileList[i]);
+	        			}
+	        		}	        		
+	        	}
+	        	console.log("변경이 된! 보낼 원래 도면파일 리스트 만들어 진거 보자 : ",sendDrawingFileList);
+	        	
+	        	//그래서 보낼 도면파일 리스트의 값이 있을때만 ajax 보내서 삭제하기 
+	        	if(sendDrawingFileList.length>0){
+		        	//Json 타입으로 변환시키기
+					var sendDrawingFileListToJsonData = JSON.stringify(sendDrawingFileList);	
+					//console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",sendDrawingFileListToJsonData);
+					
+		        	//기존의 업로드된 파일 삭제하는 ajax(imgurl말고! drawingFile을 바로 이용해서 하는 삭제)
+		        	$.ajax({
+		                url: '/procurement1/drawing/removeFile2',
+		                data: sendDrawingFileListToJsonData,
+		                contentType :"application/json; charset=UTF-8" ,
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	console.log("이거 현재 기존의 도면 삭제하는거야, 성공한거지!! 결과 값 보자 : ",result);
+		                	
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("기존의 도면파일 업로드된 거 삭제하는 ajax 에러",textStatus);
+	 	                }
+		            }); //$.ajax 
+	        	} //if
+	            
+				//1. 기존 원래의 품목 정보인 대분류 코드, 중분류 코드 값들 -> MiddleCategoryDTO 리스트로  만들기 
+    			//원본 대분류 코드, 중분류 코드 리스트 만들기
+				let materialDTOList = [[${materialDTOList}]];    	
+		    	let MiddleCategoryDTOList = new Array();
+		    	
+		    	materialDTOList.forEach(function(item){
+	    			let MCDTO = new Object();
+					MCDTO.largeCode = item.largeCategoryCode;
+					MCDTO.middleCode = item.middleCategoryCode;
+					MiddleCategoryDTOList.push(MCDTO);
+		    	});   
+    			//console.log("원본 대분류 코드 + 중분류 코드 -> MiddleCategoryDTOList 리스트 : ", MiddleCategoryDTOList);
+    			
+    			//2. 입력받은 수정본 대분류 코드, 중분류 코드 값들 -> MiddleCategoryDTO  리스트로 만들기
+				//대분류코드 값들 전부 읽어서 리스트에 담기
+				var allLCCodeList = document.querySelectorAll(".largeCategoryCode");
+				let allLCCodevalue = new Array();
+				
+				allLCCodeList.forEach(function(item){
+					//console.log("대분류코드 값들 보자",item.value);
+					allLCCodevalue.push(item.value);
+				});
+				//console.log("일단 입력받은 대분류 리스트 보자 : ",allLCCodevalue);
+				
+				//중분류코드 값들 전부 읽어서 리스트에 담기
+				var allMCCodeList = document.querySelectorAll(".middleCategoryCode");
+				let allMCCodevalue = new Array();
+				
+				allMCCodeList.forEach(function(item){
+					//console.log("대분류코드 값들 보자",item.value);
+					allMCCodevalue.push(item.value);
+				});
+				//console.log("일단 입력받은 중분류 리스트 보자 : ",allMCCodevalue);
+				
+				let ModifyMiddleCategoryDTOList = new Array();
+				
+				for(var i=0; i<allLCCodevalue.length; i++){
+					let MCDTO = new Object();
+					MCDTO.largeCode = allLCCodevalue[i];
+					MCDTO.middleCode = allMCCodevalue[i];
+					ModifyMiddleCategoryDTOList.push(MCDTO);
+				}
+				//console.log("수정본본 대분류 코드 + 중분류 코드 -> ModifyMiddleCategoryDTOList 리스트 : ", ModifyMiddleCategoryDTOList);
+				
+				//3. 원본과 수정본을 비교하여, 값이 다른 대분류,중분류를 코드생성ajax로 보낼 MiddleCategoryList 로 만들기
+				//몇번째 행의 정보가 바뀐건지 알기 위해 번호리스트를 만들어서 바뀐 행의 번호 넣어주기 -> 바뀐 행번호 리스트 만들기
+				let SendMiddleCategoryDTOList = new Array();
+				let ModifyMaterialTRList = new Array();
+				
+				for(var i=0; i<ModifyMiddleCategoryDTOList.length; i++){
+					if(ModifyMiddleCategoryDTOList[i].largeCode != MiddleCategoryDTOList[i].largeCode 
+							|| ModifyMiddleCategoryDTOList[i].middleCode != MiddleCategoryDTOList[i].middleCode){
+						let MCDTO = new Object();
+						MCDTO.largeCode = ModifyMiddleCategoryDTOList[i].largeCode;
+						MCDTO.middleCode = ModifyMiddleCategoryDTOList[i].middleCode;
+						MCDTO.middleCategory = "";
+						SendMiddleCategoryDTOList.push(MCDTO);
+						ModifyMaterialTRList.push(i+1);
+					}
+				}
+				//console.log("보낼 SendMiddleCategoryDTOList 잘 만들어 졌나~~ : ",SendMiddleCategoryDTOList );
+				//console.log("바뀐 행번호 리스트 ModifyMaterialTRList : ",ModifyMaterialTRList );
+				
+				//4. 바뀐행의 원래의 품목코드 리스트 만들기
+				let materialCodeList = new Array();
+				ModifyMaterialTRList.forEach(function(item, i){
+					materialCodeList.push(document.querySelector(`#materialModifyTable tr:nth-child(${item}) input[name=code]`).value);
+				});
+				//console.log("어디 원래의 품목코드리스트 봐보자 : ",materialCodeList);
+				
+				//5. 보낼 SendMiddleCategoryDTOList 에 품목코드를 middleCategory 속성에 담아서, 한방에 같이 보내기!
+				SendMiddleCategoryDTOList.forEach(function(item, i){
+					item.middleCategory = materialCodeList[i];
+				});
+				//console.log("보낼 SendMiddleCategoryDTOList 에 품목코드 잘 넣어진건가?? : ",SendMiddleCategoryDTOList );
+				
+				//Json 타입으로 변환시키기
+				var SendMiddleCategoryDTOListToJsonData = JSON.stringify(SendMiddleCategoryDTOList);	
+				//console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",SendMiddleCategoryDTOListToJsonData);
+				
+				//대분류코드, 중분류코드를 보내서 품목코드를 생성해준 값을 받아오는 ajax처리
+				//materialDTO리스트 형식으로 받아옴
+				$.ajax({
+					type : "post" ,
+					url : "/procurement1/modifyMaterialCode" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : SendMiddleCategoryDTOListToJsonData,				//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "json" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        						//가져오는 데이터! (응답데이터)
+						console.log("modifyMaterialCode ajax 받아온 데이터 : ",data);
+					
+						//바뀐 행에만 품목코드 값 넣어주고, 
+						//이에따른 변경된 도면번호 바꿔서 넣어주기 -> 이건 밑에서 도면파일이 있는지와 여부에 따라 체크하면서 넣어주기
+						ModifyMaterialTRList.forEach(function(item, i){
+							document.querySelector(`#materialModifyTable tr:nth-child(${item}) input[name=code]`).value = data[i].code;
+						});
+					
+						//없는 도면에서 추가로 수정해준 경우! 도면파일명은 첨부할때 세팅해주지만, 도면번호는 null로 셋팅된게 없게 된다!
+						//그러므로 지금 도면번호는 없는데 도면파일명이 세팅이 된 경우!, 품목코드를 읽어서 도면번호의 값을 세팅해주자!
+						//모든 도면번호 인풋값을 리스트로 만들기
+						let drawingNoList = new Array();
+						$('.drawingNo').each(function(){
+		    				let drawingNo = $(this).val();
+		    				//console.log("이거 잘 drawingNo 읽어온건가!!",drawingNo);
+		    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+		   					drawingNoList.push(drawingNo);
+		    			}); 
+			        	console.log("만든 drawingNoList 보자! : ",drawingNoList);
+						
+						//모든 도면파일의 인풋값 리스트로 만들기
+						let drawingFileList = new Array();
+						$('.drawingFile').each(function(){
+		    				let drawingFile = $(this).val();
+		    				//console.log("이거 잘 drawingFile 읽어온건가!!",drawingFile);
+		    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+		   					drawingFileList.push(drawingFile);
+		    			}); 
+			        	console.log("만든 drawingFileList 보자! : ",drawingFileList);
+						
+			        	//원래 도면번호 없는데, 도면파일 있는경우에, 도면번호 값 세팅해주기
+						drawingNoList.forEach(function(item, i){
+							if(item == "" && drawingFileList[i] != ""){
+								var materialCode = document.querySelector(`#materialModifyTable tr:nth-child(${i+1}) input[name=code]`).value;
+								console.log("어디 품목코드 읽히나 보자 : ",materialCode);
+								document.querySelector(`#materialModifyTable tr:nth-child(${i+1}) input[name=drawingNo]`).value = materialCode+"D01";
+							}
+						});
+						
+						// 폼태그에 실어서 등록하기
+						$("#materialModifyForm").submit();
+						//그리고 자동으로 모달창 닫아주기
+						$(".materialModifyConfirmModal").modal('hide');				
+					},
+					error : function(jqXHR,textStatus,errorThrown){    
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);					
+						console.log("품목코드 수정 ajax 에러발생~~!!!!!");						
+					}
+				});	//$.ajax	
+			});	//수정확인 모달창의 확인 버튼 누를때 끝
+			
+			//수정취소 버튼 누를때, 목록으로 페이지 이동하기 전에, 업로드한 모든 파일 삭제 시키기
+			$(document).on("click","#materialModifyCancelBtn",function(e){
+				console.log("수정취소 버튼 누름");
+				e.preventDefault();
+				//var drawingFile = attachDrawingFileTR.querySelector("input[name=drawingFile]").value;
+				//받아온 파일이름 = 저장한 파일이름 ->  \PassionCode\upload\drawing\2023\06\22\b7f997f2-afff-43fa-bff9-3e1564fa1b9d_문서아이콘.jpg
+				//ajax 삭제할대 줘야하는 파일이름 -> 2023%2F06%2F22%2Fb7f997f2-afff-43fa-bff9-3e1564fa1b9d_%EB%AC%B8%EC%84%9C%EC%95%84%EC%9D%B4%EC%BD%98.jpg
+				// \PassionCode\upload\drawing 경로도 빠져있고, 인코딩 된 이름으로 보내진다!
+				// ajax에서 디코딩해서 처리함으로 인코딩 된거 보내줘야한다.
+				
+				//테이블의 태그에 넣은 타겟파일 이름을 통해서 ajax 처리하기
+				$(".attachDrawingFileImgTag").each(function(i,obj){
+	                var target = $(obj);
+	                var targetFile = target.data("file");
+	                //console.log("어디 여러개니까 이렇게 읽나 보자 : ",targetFile);
+	                $.ajax({
+		                url: '/procurement1/drawing/removeFile',
+		                data: {fileName: targetFile},
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	//console.log("성공한거지? ",result);
+		                },
+		                error : function(jqXHR,textStatus,errorThrown){   
+							console.log("수정취소 버튼에서의 도면 업로드 파일 삭제하는 ajax 에러!");						
+						}
+		            }); //$.ajax
+				}); //$(".attachDrawingFileImgTag") 끝
+				window.location.href = '/procurement1/materialList';
+			});	//수정취소 버튼 누를때 끝
+			
+			//-------------------------------------- 대분류코드 변경할때마다 중분류 코드 변경하기 --------------------------------------------------------------//
+			
+			//대분류코드 변경될때마다 처리되는 함수
+			//대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수
+			$(document).on("change",".largeCategoryCode",function(){
+				let selectedLCCode = $(this).val();
+				//console.log("선택된 대분류 코드 : ",selectedLCCode); 
+				
+				//console.log("text 값 테스트1 : ",$(this).text()); 
+				//-> 그해당 셀렉트의 모든 값을 가져온다.
+				
+				//지금 변하는 것의 td의 다음 td에서 중분류 클래스 찾기 -> 여기에 넣을 option 만들어서 넣기
+				var middleCategoryCodeOptions = getObj().nextElementSibling.querySelector('.middleCategoryCode');
+				//console.log("중분류 select",middleCategoryCodeOptions);
+				
+				/*
+				//선택된 대분류코드
+				let selectedLCCode = $(".largeCategoryCode > option:selected").val();
+				let selectedLCName = $(".largeCategoryCode > option:selected").text();
+				console.log("선택된 대분류 코드 : ",selectedLCCode);
+				console.log("선택된 대분류 이름 : ",selectedLCName);
+				*/				
+				
+				//대분류코드로 중분류리스트 찾는 ajax처리
+				$.ajax({
+					type : "post" ,
+					url : "/procurement1/getMiddleCategoryByLargeCategory" ,     	//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : selectedLCCode ,                							//보내는 데이터!(요청 데이터)
+					contentType :"text/plain; charset=UTF-8" ,  					//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "json" ,							 					//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        								//가져오는 데이터! (응답데이터)
+						//console.log("받아온 데이터 : ",data);
+						//console.log("json 리스트 사이즈 보자 : ",data.length);
+						
+						//data를 이용해서, 중분류 셀렉트 옵션에 넣을 옵션들 -> html 만들기
+						let completeHtml =``;    	
+								
+						data.forEach(function(item){
+							completeHtml = completeHtml + makeOption(item.middleCode,item.middleCategory);							
+						});						
+						//console.log("완성된 html 보자",completeHtml);								
+						
+						/*
+						//완성된 옵션들은 기존의 중분류코드 셀렉트에 바꿔주기
+						$("#middleCategoryCode option").remove();
+						$("#middleCategoryCode").append(completeHtml);		
+						*/
+						middleCategoryCodeOptions.innerHTML = completeHtml;
+					},
+					error : function(jqXHR,textStatus,errorThrown){    
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);	
+						console.log("대분류코드를 이용해서 중분류리스트 가져오는데 ajax 오류 발생!!!!!!");
+					}
+				});	//$.ajax
+			}); //대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수 끝
+			
+			//code와 category 값을 넣어서 option 만들기
+	    	function makeOption(code,category){
+	    		return `<option value=${code}>${category}</option>`;
+	    	};    
+			
+			
+			
+			
+			
+			
+		
+		}); //$(document).ready(function() 함수 끝
+    	
+    	
+    	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    	
+    	//이벤트 발생한 요소의 상위의 TD 객체 찾기
+        function getObj(){
+            var obj = event.srcElement
+            while (obj.tagName !='TD'){  //TD가 나올때까지의 Object추출
+                obj = obj.parentElement
+            }
+            return obj
+        }
+    	
+    	//이벤트 발생한 요소의 상위의 TR 객체 찾기
+        function getObjTR(){
+            var obj = event.srcElement
+            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+                obj = obj.parentElement
+            }
+            return obj
+        }
+	    
+    	
+		
+		</script>
+		
+	</th:block>
+</th:block>
+</html>

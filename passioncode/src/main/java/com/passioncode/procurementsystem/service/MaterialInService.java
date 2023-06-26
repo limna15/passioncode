@@ -8,7 +8,7 @@ import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 
-public interface MateriallInService {
+public interface MaterialInService {
 
 	/**
 	 * 세부구매발주서 엔티티를 이용해 materialInDTO 만들기(detailPurchaseOrder -> materialInDTO)
@@ -16,7 +16,6 @@ public interface MateriallInService {
 	 * @return
 	 */
 	MaterialInDTO materialInToDTO(DetailPurchaseOrder detailPurchaseOrder);
-	//MaterialInDTO materialInToDTO(MaterialIn materialIn);
 	
 	/**
 	 * materialInDTO를 이용해 자재입고 엔티티 만들기(materialInDTO -> materialIn)
@@ -64,6 +63,9 @@ public interface MateriallInService {
 	 */
 	MaterialIn getMeterialInByDetailPurchaseOrder(Integer code);
 	
-	List<Object[]> getOrderByList();
-	
+	/**
+	 * MaterialInDTO 리스트 가져오기(정렬)
+	 * @return
+	 */
+	List<MaterialInDTO> getSortDTOLsit();
 }

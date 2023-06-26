@@ -93,6 +93,7 @@
 							</form>
 						</div> 
 						<!-- 목록 내려보기 끝 -->
+						<!--<button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button>&nbsp;-->
 						<!-- 발주서 발행 버튼 시작 -->
 						<div class="col-md-6" >	
 							<button style="float: right;" class="btn btn-primary" onclick="print();">
@@ -132,9 +133,7 @@
 									</th>
 									<th>발주서<br>발행 상태
 									</th>
-									<th>조달계획코드</th>
-									<th>발주코드</th>
-									<th>발주서 번호</th>
+									<th>보낼정보(조달계획코드)</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -159,8 +158,6 @@
 									<td><input type="hidden" name="supplyPrice" th:value="${dto.supplyPrice}">[[${dto.supplyPrice}]]</td>
 									<td><input type="hidden" name="purchaseOrderStatus" th:value="${dto.purchaseOrderStatus}">[[${dto.purchaseOrderStatus}]]</td>
 									<td><input type="hidden" name="procurementPlan" th:value="${dto.procurementPlan}">[[${dto.procurementPlan}]]</td>
-									<td><input type="hidden" name="detailCode" th:value="${dto.detailCode}">[[${dto.detailCode}]]</td>
-									<td><input type="hidden" name="detailNo" th:value="${dto.detailNo}">[[${dto.detailNo}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -210,6 +207,9 @@
                 <div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">발주서 발행 시작~</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        				<span aria-hidden="true">&times;</span>
+    					</button>
 					</div>
                     <div class="modal-body" >
 						<!-- 여기서 새로 작성해 보기 -->
@@ -306,7 +306,7 @@
         </div>
         <!-- 발주서가 이미 존재하는 경우 뜨는 모달창 끝 -->
         
-       	<!--1번 모달 창 여러개의 발주서 발행 모달창 시작 -->
+       	<!-- 여러개의 발주서 발행 모달창 시작 -->
 		<div class="multiplePublish modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -318,19 +318,16 @@
                     </div>
                     
                     <div class="modal-body" >
-						<table id="thead01">
-							<!-- 동적이게 만들기
-							발주서 번호, 협력회사, 발주일자, 납기 예정일 총4개
-							-->
-							
-						</table>
-						발주 번호: <br>
-						<!-- 발주코드, 품목코드, 품목, 발주수량, 단가, 공급가격 총 6개 -->
+	                    협력 회사: <span id="cName2">(회사이름)</span><br><!--회사이름은 다른 곳에 찍기 -->
+							<!-- 발주코드, 품목코드, 품목, 발주수량, 단가, 공급가격 총 6개 -->
 	                    <!--여기 있는거 대부분 지우기-->
 						발주일자: <span id="today2">오늘 날짜</span><br>
-	                    납기 예정일: <span id="dDate2">조달납기 예정일</span><br>
+	                    조달납기 예정일: <span id="dDate2">조달납기 예정일</span><br>
 	                    품목 코드: <span id="mCode2">품목코드</span><br>
 	                    품목명: <span id="mName2">품목명</span><br>
+	                    주문수량 <span id="oAmount2">주문수량</span><br>
+	                    단가: <span id="uPrice2">단가</span><br>
+	                    공급가격: <span id="pPrice2">공급가격</span><br>
 						<br>
 						<table id="poInfo" border="1">
 							<thead>
@@ -343,7 +340,7 @@
 									<th>공급가격</th>
 								</tr>
 							</thead>
-							<tbody id="tbody01">
+							<tbody id="detail">
 								<!-- 동적 테이블 부분-->
 								
 							</tbody>
@@ -378,11 +375,10 @@
                     </div>
                     
                     <div class="modal-body" >
-						발주 번호: <br>
 	                    협력 회사: <span id="cName2">(회사이름)</span><br><!--회사이름은 다른 곳에 찍기 -->
 							<!-- 발주코드, 품목코드, 품목, 발주수량, 단가, 공급가격 총 6개 -->
 	                    <!--여기 있는거 대부분 지우기-->
-						발주일자: <span id="today2">오늘 날짜</span><br>
+						발주일자: <br>
 	                    조달납기 예정일: <span id="dDate2">조달납기 예정일</span><br>
 	                    품목 코드: <span id="mCode2">품목코드</span><br>
 	                    품목명: <span id="mName2">품목명</span><br>
@@ -430,7 +426,6 @@
 		//////
 		var clNo=''; //cList의 값 갖고 보낼 부분
 		let tList =new Array();
-		var todaydate;
 		$(".showInfo").click(function(){
 			console.log("내가 원하는 정보를 담고있는 체크박스를 누름");
 			//여기서 리스트에 담아서 길이만큼 반복해서 열어주기
@@ -473,15 +468,16 @@
 			var year = today.getFullYear();
 			var month = today.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줌
 			var day = today.getDate();
-			todaydate = (year + '/' + month + '/' + day);
+			var todaydate = (year + '/' + month + '/' + day);
 			
-			//document.querySelector("#cName2").innerHTML = cName;
+			//값을 넣어서 보내주는 구간
+			document.querySelector("#cName2").innerHTML = cName;
 			document.querySelector("#dDate2").innerHTML = dDate;
 			document.querySelector("#mCode2").innerHTML = mCode;
 			document.querySelector("#mName2").innerHTML = mName;
-			//document.querySelector("#oAmount2").innerHTML = oAmount;
-			//document.querySelector("#uPrice2").innerHTML = uPrice;
-			//document.querySelector("#pPrice2").innerHTML = pPrice;//잘 나옴
+			document.querySelector("#oAmount2").innerHTML = oAmount;
+			document.querySelector("#uPrice2").innerHTML = uPrice;
+			document.querySelector("#pPrice2").innerHTML = pPrice;//잘 나옴
 			document.querySelector("#today2").innerHTML = todaydate;//오늘 날짜 만들어서 넣기
 			//테이블 만들어서 보여주기
 			
@@ -490,50 +486,29 @@
 			console.log("tList 리스트 ~~~~", tList);
 			//tList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>>~~~  "+ i));//여기 오브젝트로 나옴	
 			//console.log("길이가 찍히는 값, 총 개수: " + tList.length)
-			
-			
-			//여기에서 발주코드를 걸러서 보여줘야함
-			//const bb = purchaseOrderList;
-			//var needNum2=1;//여기에 원하는 자리수 숫자의 날짜 담기
-			//	for(let num6 = 0;num6<bb.length; num6++){
-			//		var check = bb[num6];
-			//		var ppNo = check.procurementPlan;
-			//		if(ppNo==num1){//내가 원하는 조달번호
-			//			if(check.purchaseOrderDate==null){
-			//				console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check.procurementPlan);
-			//				$(".myPublish").modal("show");
-			//			}else{
-			//				console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
-			//				$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
-			//			}
-			//		
-			
-	});		
-			
+	});
+	
 			$(".mypublish").click(function(){
 				//발행 버튼 누름
-				
 				console.log("밖에 있는 발행버튼 누름");
-				
 				
 				$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
 					const chkChecked = 'input[name="checkBox"]:checked';
 					const selectedEls = document.querySelectorAll(chkChecked);
 					
 				})
-				let cList =new Array();//체크한 번호를 담을 리스트
 				
+				let cList =new Array();//체크한 번호를 담을 리스트
 				$("input[name=checkBox]:checked").each(function(){
 					let no= $(this).val();
 					no = Number(no);//숫자로 담아진다. 그냥 두면 문자로 담아줌
 					cList.push(no);	//리스트에 담는다				
 					
-				})
-				
-				
-				//cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));	
+				});
+				//cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));	//이거 두번 나옴;;
 				//console.log("길이가 찍히는 값>>> " + cList.length)
 				console.log("번호 리스트 >>> ", cList);	//잘 나옴
+				
 				//cList길이만큼 반복 해보기
 				for (let q = 0; q < cList.length; q++) {	//두 번씩 실행되서 나옴
     				console.log("반복문 실험",q);
@@ -544,7 +519,7 @@
 						//console.log("1번 모달창 실행");
 						//console.log("cList의 길이가 변하나",cList.length);
 						//console.log("cList의 pop하기 전",cList);
-						//cList.pop([0]);//나중에 들어간 것 부터 나온다			
+						cList.pop([0]);//나중에 들어간 것 부터 나온다			
 						//console.log("cList의 pop하고 후",cList);
 					}
 				//cList가 0일 때까지 반복하기, 너무 빨라서 안보이는거라 함
@@ -571,29 +546,25 @@
     				openModalWithDelay(j);
 				}
 				
-				
 				//동적인 테이블 시작
 				//두개 선택하면 값이 누적되어 나옴
 				let mylength = new Array();
 				for(var i =0; i<tList.length; i++){//총 **길이** 만큼 반복 모두 가지고 있는 것: tList
 					var mycheck = tList[i];
-					var ppNo = mycheck.procurementPlan;//조달계획 번호를 출력하는 것
-					var cName3 = mycheck.companyName;//회사 이름
-					//console.log("cName3: ", cName3); 
+					var ppNo = mycheck.procurementPlan;//발주서 번호를 출력하는 것
+					//console.log("ppNo: ", ppNo); tList의 모든 조달번호
 					
 					for(var j =0; j<tList.length; j++){//cList를 비교해서 같은 것을 가져오기
 						var checkC = cList[j];
 						if(checkC == ppNo){ //조달번호와 cList의 갑이 같은 것 출력
 							clNo = checkC;
-							console.log("cName3: ", cName3); 
 							//mylength.push(clNo);//나온 발주 번호를 리스트에 저장
 							//console.log("리스트에 담은 내 조달번호 ",mylength);
 							//이 아래걸 한번 만 실행하는 것 부터 해보기
 							console.log("내가 선택한 계획서 번호: ", clNo);//선택한 것 잘 나옴
-							var div01 = '<div>'+"발주 번호: " +tList[i].companyName +'</div>';
-								div01 += '<div>'+"협력 회사: " +tList[i].companyName +'</div>';
-								div01 += '<div>'+"발주 일자: " +tList[i].companyName +'</div>';
-								div01 += '<div>'+"납기 예정일: " +tList[i].dueDate +'</div>';
+							
+							//두개 선택하면 4줄 나오는데 어떻게 한 줄만 보여주지>>,,
+							//2개를 선택하면 2*2 모든 값의 제곱이 된다. 
 							var tableTd01 = '<tr>';
 								tableTd01 += '<td>' + "발주코드" +'</td>';
 								tableTd01 += '<td>' + tList[i].materialCode +'</td>';
@@ -603,108 +574,46 @@
 								tableTd01 += '<td>' + tList[i].supplyPrice +'</td>';
 								tableTd01 += '</tr>';
 								
-							$('#thead01').append(div01);//여기서 축척됨
-							$('#tbody01').append(tableTd01);//여기서 축척됨
+								//여기서도 개수만큼만 나옴
+							//$('#detail').append(tableTd01);//여기서 축척됨
 							
 							}
 						}
 					}
 					//이 밖에 있으면 마지막 값만 선택한 갯수만큼 나옴
-					//$('#detail').append(tableTd01);//여기서 축척됨
+					$('#detail').append(tableTd01);//여기서 축척됨
+				
 				
 				});
 			
-		
-		//if(window.location.search!=''){//테이터가 있을 경우에만
-			var mych=window.location.search;
-			//console.log(" 값>>>>>>>>>>>>>>> " + mych);
-			const last2 = mych.substring(10);//0부터 
-			
-			$(document).ready(function(){
-				//데이터가 있을때만뜨게 해라
-				console.log("여기에서 이미 발주된 거라고 검사하는 구간");
-				//여기에서 담아야함
-				
-				$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
-					const chkChecked45 = 'input[name="checkBox"]:checked';
-					const selectedEls = document.querySelectorAll(chkChecked45);
-					
-				})
-				let cList =new Array();//체크한 번호를 담을 리스트
-				
-				$("input[name=checkBox]:checked").each(function(){
-					let no= $(this).val();
-					cList.push(no);	//리스트에 담는다
-				})
-				
-				var mych=window.location.search;
-				//이거 이제 못 쓸 예정
-				const last2 = mych.substring(10);//조달계획 번호
-				console.log("조달계획번호 나와라: ", last2);
-				//console.log("안에 있는 purchaseOrderList 입니다===>>",purchaseOrderList);
-				//var num1 = Number(last2);
-				var num1 = cList[0];
-				var num1 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
-				var num4 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
-				console.log("num1번호 나와라: ", num1);//숫자로 잘 나옴
-				var num2 = purchaseOrderList[num1];//번째가 아니라 procurementPlan이 같은게 나와야함
-				//console.log("num2번호 나와라: ", num2);//잘 나온다 ==> ???? ==값이 널일때는 나오지 않는다.
-				
-				purchaseOrderList.forEach(function(item){
-					dtoOrderDate= item.purchaseOrderDate;
-					orderDateList.push(dtoOrderDate);
-				});
-				//console.log("orderDateList가 제대로 오나 >>> ", orderDateList)//현재 길이 16, 배열 0부터 시작
-				
-				console.log("for문 밖에있는 숫자 num1의 값: ",num1);//이 숫자랑 비교해야 한다. 
-				var needNum=1;//여기에 원하는 자리수 숫자의 날짜 담기
-				for(let num3 = 0;num3<num1; num3++){
-					needNum =num3;
-					//console.log("needNum >>> ",needNum);
-					//console.log("orderDateList의 ", num3," 번째의 값: ",orderDateList[num3]);
-					//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
-					//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
-					
-				}
-				
-				function findppPlan(element){
-					if(element.procurementPlan = num4){//배열이라 다른 값 가져온다. 
-						console.log("이상한거 같은데 숫자 잘 나옴: ",num4)
-						return true;
-					}
-				}
-				
-				const bb = purchaseOrderList;
+
+
+			//	const bb = purchaseOrderList;
 				//console.log("00000000purchaseOrderList2 입니다===>>",bb);
 				//변수명 너무 기니까 bb로 쓰기 
 				
-				var needNum2=1;//여기에 원하는 자리수 숫자의 날짜 담기
-				for(let num6 = 0;num6<bb.length; num6++){
-					var check = bb[num6];
-					var ppNo = check.procurementPlan;
-					if(ppNo==num1){//내가 원하는 조달번호
-						if(check.purchaseOrderDate==null){
-							console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check.procurementPlan);
+			//	var needNum2=1;//여기에 원하는 자리수 숫자의 날짜 담기
+			//	for(let num6 = 0;num6<bb.length; num6++){
+				//	var check = bb[num6];
+				//	var ppNo = check.procurementPlan;
+				//	if(ppNo==num1){//내가 원하는 조달번호
+					//	if(check.purchaseOrderDate==null){
+					//		console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check.procurementPlan);
 							//$(".myPublish").modal("show");
-						}else{
-							console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
-							$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
-						}
+					//	}else{
+					//		console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
+					//		$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
+					//	}
 					
-					}
+					//}
 					
 					//needNum2 =num6;
 					//console.log("needNum2 >>> ",needNum2);
 					//console.log("orderDateList의 ", num6," 번째의 값: ",orderDateList[num6]);
 					//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
 					//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
-				}
-				
-				///////////
-				
-			});
-		//}else{
-		//};
+				//}
+			
 		
 		$("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을 누르면
 			console.log("발주서 진짜 발행을 눌러봐요>>> ");
@@ -740,12 +649,8 @@
 				
 			})
 			
-			
 			////////여기 시작 실험
 			//$(".multiplePublish").modal("show");
-			//////
-			
-			//location.href="/procurement2/purchaseOrder?lengthList="+cList;
 			
 			var purchaseNo='';//빈값 넣기
 			
@@ -781,6 +686,8 @@
 				//location.href="/procurement2/purchaseOrder?checkBox="+cList[0]+"&checkBox3="+cList[1];
 				
 				const cc = purchaseOrderList;
+				var num1 = cList[0];
+				
 				
 				for(let num6 = 0;num6<cc.length; num6++){
 					var check2 = cc[num6];
@@ -794,16 +701,12 @@
 						}
 					
 					}
-				//location.href="/procurement2/purchaseOrder?checkBox="+cList[0]+"";
-				
 			}
 			}
 			
-			//발주서 여러개를 한 번에 발행하는 경우
-			//cList에 담아서 가능할듯
-			
-				
 			});
+			
+			
 			
 		var purchaseOrderList = [[${purchaseOrderList}]];
 		//console.log("purchaseOrderList 입니다===>>",purchaseOrderList);//이거 잘 나옴
@@ -838,15 +741,6 @@
 		
 		
 		};	
-		
-		function aaa(){
-			console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
-			purchaseNo = purchaseNo.replaceAll(" ","");
-			console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
-			//아래 두개 없어도 잘됨
-			//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
-			//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
-		};
 		
 		////////////////////////////////////////////////////////////////////////////////////
 		//이벤트 발생한 요소의 상위의 TD 객체 찾기

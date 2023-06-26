@@ -44,7 +44,7 @@ public class DetailProgressCheckDTO {
 	/**
 	 * 품목명
 	 */
-	private String materialName;//품목명
+	private String materialName;
 	
 	/**
 	 *다음 진척 검수 일정

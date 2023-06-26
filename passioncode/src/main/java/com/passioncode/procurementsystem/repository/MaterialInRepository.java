@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 public interface MaterialInRepository extends JpaRepository<MaterialIn, Integer> {
 	
@@ -25,13 +26,13 @@ public interface MaterialInRepository extends JpaRepository<MaterialIn, Integer>
 	 */
 	public MaterialIn findByDetailPurchaseOrder(DetailPurchaseOrder detailPurchaseOrder);
 	
-	@Query(value= "SELECT po.no, dpo.code, pp.dueDate, m.code, m.name, dpo.amount, mi.status, mi.transactionStatus "
-			+ "FROM MaterialIn mi "
-			+ "right outer JOIN DetailPurchaseOrder dpo ON dpo =mi.detailPurchaseOrder "
-			+ "JOIN PurchaseOrder po ON po=dpo.purchaseOrder "
-			+ "JOIN ProcurementPlan pp ON pp.detailPurchaseOrder=dpo "
-			+ "JOIN Contract c ON c=pp.contract "
-			+ "JOIN material m ON m =c.material "
-			+ "ORDER BY COALESCE(mi.status, 2) desc, binary(mi.transactionStatus)")
-	public List<Object[]> getOrderByList();
+	/**
+	 * 세부구매발주서와 조인해서 자재입고 등록된 리스트 가져오기
+	 * 입고상태(내림차순) - 발행상태(오름차순) 으로 정렬
+	 * @return
+	 */
+	@Query(value="SELECT mi.code, mi.date, mi.status, mi.transaction_status, mi.detail_purchase_order_code "
+			+ "FROM material_in mi JOIN detail_purchase_order dpo ON mi.detail_purchase_order_code=dpo.code "
+			+ "ORDER BY STATUS DESC, transaction_status", nativeQuery = true)
+	public List<MaterialIn> getJoinDpo();
 }

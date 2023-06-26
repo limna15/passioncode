@@ -131,52 +131,18 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00003</td>
-									<td><input type="hidden" name="date" >2023/06/30</td>
-									<td><input type="hidden" name="materialCode" >BSa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-									<td><input type="hidden" name="amount" >200</td>
+								<tr th:each="list: ${DTOList}" id="trList">
+									<td></td>
+									<td><input type="hidden" name="dpoCode" th:value="${list.dpoCodeStr}">[[${list.dpoCodeStr}]]</td>
+									<td><input type="hidden" name="mrpDate" th:value="${list.mrpDate}">[[${#dates.format(list.mrpDate, 'yyyy/MM/dd')}]]</td>
+									<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
+									<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>
+									<td><input type="hidden" name="process" th:value="${list.process}">[[${list.process}]]</td>
+									<td><input type="hidden" name="mrpAmount" th:value="${list.mrpAmount}">[[${list.mrpAmount}]]</td>
 									<td id= "status">
-										<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-									</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00004</td>
-									<td><input type="hidden" name="date" >2023/06/29</td>
-									<td><input type="hidden" name="materialCode" >BSa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-									<td><input type="hidden" name="amount" >200</td>
-									<td id= "status">
-										<button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button>
-									</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00001</td>
-									<td><input type="hidden" name="date" >2023/06/18</td>
-									<td><input type="hidden" name="materialCode" >BSa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 B/P WELDING</td>
-									<td><input type="hidden" name="amount" >200</td>
-									<td id= "status">
-										완료
-									</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="checkBox"  onclick="chkClicked()"></td>
-									<td><input type="hidden" name="code" >00002</td>
-									<td><input type="hidden" name="date" >2023/06/18</td>
-									<td><input type="hidden" name="materialCode" >BPa0001</td>
-									<td><input type="hidden" name="materialName" >Gear1</td>
-									<td><input type="hidden" name="amount" >1각형 E/L FILLING #1</td>
-									<td><input type="hidden" name="amount" >70</td>
-									<td id= "status">
-										완료
+										<input type="hidden" name="outStatus" th:value="1">
+										<span th:if="${list.outStatus} == '1'">완료</span>
+										<span th:if="${list.outStatus} == '0'"><button class="btn btn-primary" id="doneBtn" name="done" value="완료" style="height:25px;">완료</button></span>
 									</td>
 								</tr>
 							</tbody>
@@ -222,13 +188,70 @@
 		</div>
 		
 		
-		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-		<script th:inline="javascript">
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script th:inline="javascript">
+
+	//출고 상태 "완료"버튼 눌렀을 경우 -> DB등록 + 화면 입고 상태 '완료' 표시
+	$(document).on("click", "#doneBtn", function(e){
+		e.preventDefault();
+		console.log("완료버튼 클릭")
 		
-		$(document).ready(function(e) {
+		let code= getObjTR().querySelector("input[name=dpoCode]").value;
+		let materialCode= getObjTR().querySelector("input[name=materialCode]").value;
+		let materialName= getObjTR().querySelector("input[name=materialName]").value;
+		let process= getObjTR().querySelector("input[name=process]").value;
+		let amount= getObjTR().querySelector("input[name=mrpAmount]").value;
+
+ 		code= code.substring(3);
+ 		console.log("code 읽기 >>> ", code)
+		console.log("materialCode 읽기 >>> ", materialCode)
+		console.log("materialName 읽기 >>> ", materialName)
+		console.log("process 읽기 >>> ", process)
+		console.log("amount 읽기 >>> ", amount)
+ 		
+		//create element (form)
+		let inForm = $('<form></form>');
 		
-		});
-		</script>
+		//set attribute (form) 
+		inForm.attr("name","inForm");
+		inForm.attr("method","post");
+		inForm.attr("action","/procurement4/materialOutRegister");
+
+		//create element & set attribute (input)
+		inForm.append($('<input/>', {type: 'hidden', name: 'dpoCode', value: code }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'materialCode', value: materialCode }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'materialName', value: materialName }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'process', value: process }));
+		inForm.append($('<input/>', {type: 'hidden', name: 'amount', value: amount}));
+		inForm.append($('<input/>', {type: 'hidden', name: 'status', value: "1" }));
+
+		//append form (to body) 
+		inForm.appendTo('body');
+
+		//submit form
+		inForm.submit();
+	});
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	
+	//이벤트 발생한 요소의 상위의 TD 객체 찾기
+    function getObj(){
+        var obj = event.srcElement
+        while (obj.tagName !='TD'){  //TD가 나올때까지의 Object추출
+            obj = obj.parentElement
+        }
+        return obj
+    }
+	
+  	//이벤트 발생한 요소의 상위의 TR 객체 찾기
+    function getObjTR(){
+        var obj = event.srcElement
+        while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+            obj = obj.parentElement
+        }
+        return obj
+    }
+</script>
 		
 	</th:block>
 </th:block>

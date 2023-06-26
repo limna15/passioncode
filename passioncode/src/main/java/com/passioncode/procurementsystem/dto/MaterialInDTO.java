@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class MaterialInDTO {
 
 	/**
-	 * 발주서 번호
+	 * 발주서 번호 (구매발주서)
 	 */
 	private Integer no;
 	
@@ -36,7 +36,7 @@ public class MaterialInDTO {
 	private String noStr;
 	
 	/**
-	 * 발주코드
+	 * 발주코드 (세부구매발주서)
 	 */
 	private Integer code;
 	
@@ -46,22 +46,22 @@ public class MaterialInDTO {
 	private String codeStr;
 	
 	/**
-	 * 조달납기예정일
+	 * 조달납기예정일 (조달계획)
 	 */
 	private Date dueDate;
 	
 	/**
-	 * 품목코드
+	 * 품목코드 (품목)
 	 */
 	private String materialCode;
 
 	/**
-	 * 품목명
+	 * 품목명 (품목)
 	 */
 	private String materialName;
 	
 	/**
-	 * 발주수량
+	 * 발주수량 (세부구매발주서)
 	 */
 	private Integer amount;
 	
@@ -83,5 +83,4 @@ public class MaterialInDTO {
 	 * 입고 완료 + 거래명세서 발행: 발행 완료
 	 */
 	private String transactionStatus;
-
 }

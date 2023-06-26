@@ -469,4 +469,24 @@ public class ProcurementPlanRepositoryTests {
 		procurementPlan = procurementPlan.toBuilder().completionDate(localDateTime).build();
 		log.info("나중 값 보자 : "+procurementPlan);
 	}
+	
+	
+	@Test
+	public void getPPJoinMRPByMaterialCodeTest() {
+//		List<ProcurementPlan> list = procurementPlanRepository.getPPJoinMRPByMaterialCode("BP0001");
+		List<ProcurementPlan> list = procurementPlanRepository.getPPJoinMRPByMaterialCode("BP0002");
+		log.info("어디 제대로 리스트 읽나 보자 : "+list);
+		if(list == null) {
+			log.info("이게 그럼 null 인건가???");
+		}
+		if(list.size()==0) {
+			log.info("아니네 null이 아니고 앞에서 선언해서 받아왔으니 있고, 길이가 0인거 겠지! 빈값인거");
+		}
+		
+	}
+	
+	
+	
+	
+	
 }

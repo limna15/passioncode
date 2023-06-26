@@ -96,5 +96,7 @@ public class MaterialSeviceTests {
 		MaterialDTO materialDTO = materialService.entityToDTO(material);
 		log.info("어디 도면 없는 dto 찍어보자 : "+materialDTO);
 	}
+	
+	
 
 }

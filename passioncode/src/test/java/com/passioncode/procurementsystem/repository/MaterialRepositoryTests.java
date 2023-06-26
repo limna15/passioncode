@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -32,6 +33,9 @@ public class MaterialRepositoryTests {
 	
 	@Autowired
 	ContractRepository contractRepository;
+	
+	@Autowired
+	ProcurementPlanRepository procurementPlanRepository;
 	
 	//트랜잭션 처리는 테스트에서 쓰면 자동 롤백된다! 그래서 지연로딩부분때문에 하는거 아니면 쓰면 안돼! 삽입 안돼!
 //	@Transactional
@@ -245,6 +249,80 @@ public class MaterialRepositoryTests {
 		String test = URLDecoder.decode("2023%2F06%2F21%2F132d1fea-7240-4cf5-89c0-cffc758f00d4_a+a.jpg","UTF-8");
 		log.info("test 결과 : "+test);
 	}
+	
+	@Test
+	public void expectedPurchaseOrderCheckTest() {
+		//품목코드로 조달계획 조회하는데 
+		// 1. 조회가 안된다 => mrp조차 등록안되서, 혹은 조달계획조차 등록이 안된거니까, 등록한지 얼마 안된 품목! 수정 가능!
+		// 2. 조회가 되는데, 리스트에서 조달완료일,세부구매발주서 둘다 전부 null => 한번도 발주한적이 없는거니까, 얼마안된 등록이라 수정 가능!!
+		
+		boolean expectedPurchaseOrderCheck = false;
+		
+		List<String> materialCodeList = new ArrayList<>();
+		materialCodeList.add("CN0007");
+		materialCodeList.add("CG0002");
+		log.info("품목리스트 봐보자 : "+materialCodeList);
+		
+		for(String materialCode : materialCodeList) {
+			List<ProcurementPlan> ppList = procurementPlanRepository.getPPJoinMRPByMaterialCode(materialCode);
+			
+			if(ppList.size()==0) {
+				expectedPurchaseOrderCheck = true;
+			}else {
+				for(int i=0; i<ppList.size(); i++) {
+					if(ppList.get(i).getCompletionDate()!=null) {
+						expectedPurchaseOrderCheck = false;
+						break;
+					}else {
+						if(ppList.get(i).getDetailPurchaseOrder()!=null) {
+							expectedPurchaseOrderCheck = false;
+							break;
+						}else {
+							expectedPurchaseOrderCheck = true;
+						}
+					}
+				}
+			}
+			
+			if(!expectedPurchaseOrderCheck) {
+				break;
+			}
+		}
+		
+		log.info("그래서 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
+		
+		
+//		boolean expectedPurchaseOrderCheck = false;
+//		
+//		List<ProcurementPlan> ppList = procurementPlanRepository.getPPJoinMRPByMaterialCode("CN0001");
+//		
+//		if(ppList.size()==0) {
+//			expectedPurchaseOrderCheck = true;
+//		}else {
+//			for(int i=0; i<ppList.size(); i++) {
+//				if(ppList.get(i).getCompletionDate()!=null) {
+//					expectedPurchaseOrderCheck = false;
+//					break;
+//				}else {
+//					if(ppList.get(i).getDetailPurchaseOrder()!=null) {
+//						expectedPurchaseOrderCheck = false;
+//						break;
+//					}else {
+//						expectedPurchaseOrderCheck = true;
+//					}
+//				}
+//			}
+//		}
+//		log.info("그래서 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 

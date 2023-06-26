@@ -110,12 +110,13 @@
 							<form style="float: right;">
 								<button class="btn btn-primary" type="submit">삭제</button>
 							</form>
-							<form style="float: right;">
-								&nbsp;&nbsp;<button type="submit" class="btn btn-primary" >수정</button>&nbsp;&nbsp;
+							<form style="float: right;" th:action = "@{/procurement1/contractModify}" th:method="get" id="contractModifyForm">
+								<input type="hidden" name="contractNoList" id="contractNoList">
+								<button class="btn btn-primary" id="contractModifyBtn" type="submit" style="margin-right:10px">수정</button>
 							</form>
-							<form style="float: right;" th:action = "@{/procurement1/contractRegister}" th:method="get" id="registerForm">
+							<form style="float: right;" th:action = "@{/procurement1/contractRegister}" th:method="get" id="contractRegisterForm">
 								<input type="hidden" name="materialCodeList" id="materialCodeList">
-								<button class="btn btn-primary" id="registerBtn" type="submit">등록</button>
+								<button class="btn btn-primary" id="contractRegisterBtn" type="submit" style="margin-right:10px">등록</button>
 							</form>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->
@@ -125,7 +126,8 @@
 						<table id="recent-purchases-listing" class="table" style="text-align: center;">
 							<thead>
 								<tr>
-									<th></th>
+									<th ></th>
+									<th style="display:none;">원래 계약서 번호</th>
 									<th>계약서 번호</th>
 									<th>품목코드</th>
 									<th>품목명</th>
@@ -142,6 +144,7 @@
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
 									<td><input type="checkbox" name="checkBox" th:value="${dto.materialCode}" onclick="chkClicked(); getContractStatus();"></td>
+									<td style="display:none;">[[${dto.contractNo}]]</td>
 									<td>[[${dto.contractNoStr}]]</td>
 									<td>[[${dto.materialCode}]]</td>
 									<td>[[${dto.materialName}]]</td>
@@ -210,24 +213,37 @@
 		</div>
 		
 		<!-- 
-			등록버튼 누를때, 오류시 보여줄 모달창 시작
-			(상황1. 계약상태 미완료인 것만 눌렀을때)
+			등록버튼+수정버튼+삭제버튼 누를때, 오류시 보여줄 모달창 시작
+			-- 등록버튼 누를때
+			(상황1. 계약상태 미완료인 것만 안 눌렀을때)
 			(상황2. 체크한게 아무것도 없을때)
+			- 제목 : 계약 등록
 			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'미완료'</span>인 것만 계약등록이 가능합니다.</span><br>
                     	<span>다시 선택해주시길 바랍니다.</span>
 					 2. <span>체크한 항목이 없습니다.</span><br>
 						<span>다시 선택해주시길 바랍니다.</span>
+			-- 수정버튼 누를때
+			(상황1. 계약상태 미완료인 것이 포함되어 있을때)
+			(상황2. 계약상태 완료 중에서 이미 조달계획에 등록된 계약이 포함되어 있을때)
+			(상황3. 체크한게 아무것도 없을때)
+			- 제목 : 계약 수정
+			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것만 계약수정이 가능합니다.</span><br>
+                    	<span>다시 선택해주시길 바랍니다.</span>
+                     2. <span>조달계획에 등록되어 진행 중인 계약이 있습니다.</span><br>
+                 		<span>다시 선택해주시길 바랍니다.</span>	
+                 	 3. <span>체크한 항목이 없습니다.</span><br>
+						<span>다시 선택해주시길 바랍니다.</span>	
 		-->
-		<div class="contractRegisterErrorModal modal" tabindex="-1" role="dialog">
+		<div class="contractRMDErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">계약 등록</h5>
+                        <h5 class="modal-title" id="contractRMDErrorModalTitle"></h5>
                         <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="contractRegisterErrorModalContent">   
+                    <div class="modal-body" id="contractRMDErrorModalContent">   
 						<!-- 오류시 보여줄 내용 -->	
 							
                     </div>
@@ -326,25 +342,59 @@
 				var tr = chkChecked.parent().parent().eq(i);
 				var td = tr.children();
 								
-				// td.eq(0)은 체크박스 이므로  td.eq(11)의 값인 계약상태를 리스트에 넣어준다.
-				contractStatusList.push(td.eq(11).text());
+				// td.eq(0)은 체크박스 이므로  td.eq(12)의 값인 계약상태를 리스트에 넣어준다.
+				contractStatusList.push(td.eq(12).text());
 			});
 			//console.log("어디 만들어진 계약상태 리스트 봐보자 : ",contractStatusList);		
 			return contractStatusList;
 		}
+		
+		//체크박스 체크 한것 -> 그 해당 행의 계약서번호 존재할때, 계약서번호 리스트로 만들기
+		function getContractNoByChecked(){
+			const chkChecked = $('input[name="checkBox"]:checked');			
+			var contractNoList = new Array();
+			
+			// 체크된 체크박스 값을 가져온다
+			chkChecked.each(function(i) {	
+				// chkChecked.parent() : checkbox의 부모는 <td>이다.
+				// chkChecked.parent().parent() : <td>의 부모이므로 <tr>이다.
+				var tr = chkChecked.parent().parent().eq(i);
+				var td = tr.children();
+								
+				// td.eq(0)은 체크박스 이므로  td.eq(1)의 값인 원래 계약서번호를 리스트에 넣어준다.
+				// 계약서 번호가 존재할때만 넣어주기 
+				//console.log("계약서 번호 값 읽어보자 : ",td.eq(1).text());
+				if(td.eq(1).text() != ""){
+					contractNoList.push(td.eq(1).text());
+				}
+			});
+			//console.log("어디 만들어진 계약상태 리스트 봐보자 : ",contractStatusList);		
+			return contractNoList;
+		}
+		
+		//이벤트 발생한 요소의 상위의 TR 객체 찾기
+        function getObjTR(){
+            var obj = event.srcElement
+            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+                obj = obj.parentElement
+            }
+            return obj
+        }
+		
 				
 		$(document).ready(function(){
+			//-------------------------------------------- 등록 버튼 관련 -----------------------------------------------------------//
 			
 			//계약상태 값에 완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
-			var contractStatusValueCheck = true;		//-> 하나라도 완료 일 경우에 false로 바꿔주기 
-			console.log("계약상태 전역변수 확인하기1 : ",contractStatusValueCheck);
+			var contractStatusValueCheckForRegister = true;		//-> 하나라도 완료 일 경우에 false로 바꿔주기 
+			console.log("계약상태 전역변수 확인하기1 : ",contractStatusValueCheckForRegister);
 			
 			//체크박스를 체크를 했는지 안했는지 체크하기 위한, 전역변수 체크값 선언해주기
 			var checkBoxValueCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
 			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
 			
 			//등록버튼 눌렀을때, 계약상태 미완료인것만! 등록가능하게! + 아무것도 체크 하지 않으면 다시 체크하게!
-    		$("#registerBtn").on("click",function(e){
+    		$("#contractRegisterBtn").on("click",function(e){
     			//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
     			
@@ -356,60 +406,212 @@
     			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
     				checkBoxValueCheck = false;
     			}
-    			console.log("계약상태 전역변수 확인하기(체크 전) : ",contractStatusValueCheck);
+    			console.log("계약상태 전역변수 확인하기(체크 전) : ",contractStatusValueCheckForRegister);
     			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
     			
-    			//3. 계약상태 값 리스트 가져와서, 하나라도 완료일경우 contractStatusValueCheck false로 바꿔주기
+    			//3. 계약상태 값 리스트 가져와서, 하나라도 완료일경우 contractStatusValueCheckForRegister false로 바꿔주기
     			let contractStatusList = new Array();
     			contractStatusList = getContractStatus();
     			contractStatusList.forEach(function(item){
    					if(item=="완료"){
-   						contractStatusValueCheck = false;
+   						contractStatusValueCheckForRegister = false;
    					}   					
    				});
-    			console.log("계약상태 전역변수 확인하기(체크한 후) : ",contractStatusValueCheck);
+    			//console.log("contractStatusList : ",contractStatusList );
+    			console.log("계약상태 전역변수 확인하기(체크한 후) : ",contractStatusValueCheckForRegister);
     			
-    			//오류 모달창의 contractRegisterErrorModalContent 에 넣을 내용
+    			//오류 모달창의 contractRMDErrorModalContent 에 넣을 내용
     			let sentence = ``;
     			
     			//4. 계약상태 전역변수가 true + 체크박스 체크전역변수가 true 일때만, 등록가능~
-    			if(contractStatusValueCheck && checkBoxValueCheck){			// 현재 계약상태 미완료인것 + 체크박스 체크된게 있을 시! ->등록가능하게
+    			if(contractStatusValueCheckForRegister && checkBoxValueCheck){			// 현재 계약상태 미완료인것 + 체크박스 체크된게 있을 시! ->등록가능하게
 	    			//만든 품목코드 리스트를 input 히든에 담기
-	    			let materialCodeList = new Array();
-	    			materialCodeList = $('input[name=materialCodeList]').attr('value',chkClicked());
-	    			//console.log("이렇게 만든 리스트 되는건가?",materialCodeList);
+	    			$('input[name=materialCodeList]').attr('value',chkClicked());
+	    			//console.log("input hidden에 잘 담겼나 보자 : ",$('input[name=materialCodeList]').attr('value'));
 	    			
 	    			//var test = $('input[name=materialCodeList]').attr('value');
 	    			//console.log("값을 봐보자.. 흠",test);
 	    			//alert(test);
 	    			
 	   				//담은거 submit으로 보내자
-	    			$("#registerForm").submit();
+	    			$("#contractRegisterForm").submit();
+	    			//그리고 체크된 값들 전부 체크 해제 해주기
+					$("input:checkbox").prop("checked", false);
     			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 등록오류 모달창 보여주기				
     				//오류 모달창 보여주기
     				sentence = `<span>체크한 항목이 없습니다.</span><br>
 								<span>다시 선택해주시길 바랍니다.</span>`;
-           			document.querySelector("#contractRegisterErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#contractRMDErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#contractRMDErrorModalTitle").innerHTML = `계약 등록`;
     				
-					$(".contractRegisterErrorModal").modal('show');    					
+					$(".contractRMDErrorModal").modal('show');    					
 					//그리고 다시 등록체크 값 true로 다시 세팅해주기
 					checkBoxValueCheck = true;   
-    			}else if(!contractStatusValueCheck){						//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
+    			}else if(!contractStatusValueCheckForRegister){						//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
     				//오류 모달창 보여주기
     				sentence = `<span>계약상태가 <span style='color:red;'>'미완료'</span>인 것만 계약등록이 가능합니다.</span><br>
                     			<span>다시 선택해주시길 바랍니다.</span>`;
-           			document.querySelector("#contractRegisterErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#contractRMDErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#contractRMDErrorModalTitle").innerHTML = `계약 등록`;
     				
-					$(".contractRegisterErrorModal").modal('show'); 
+					$(".contractRMDErrorModal").modal('show'); 
     				
     				//그리고 다시 등록체크 값 true로 다시 세팅해주기
-					contractStatusValueCheck = true;   
+					contractStatusValueCheckForRegister = true;   
 					//그리고 체크된 값들 전부 체크 해제 해주기
 					$("input:checkbox").prop("checked", false);
     			}
-   			}); //registerBtn 등록 버튼 누를때, 끝
+   			}); //contractRegisterBtn 등록 버튼 누를때, 끝
    			
-   			//--------------------------------- 계약서 첨부파일 관련 --------------------------------------------------------------//
+   			//-------------------------------------------- 수정 버튼 관련 -----------------------------------------------------------//
+   			
+   			/*
+   			-- 수정버튼 누를때
+			(상황1. 계약상태 미완료인 것이 포함되어 있을때)
+			(상황2. 계약상태 완료 중에서 이미 조달계획에 등록된 계약이 포함되어 있을때)
+			(상황3. 체크한게 아무것도 없을때)
+			- 제목 : 계약 수정
+			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것만 계약수정이 가능합니다.</span><br>
+                    	<span>다시 선택해주시길 바랍니다.</span>
+                     2. <span>조달계획에 등록되어 진행 중인 계약이 있습니다.</span><br>
+                 		<span>다시 선택해주시길 바랍니다.</span>	
+                 	 3. <span>체크한 항목이 없습니다.</span><br>
+						<span>다시 선택해주시길 바랍니다.</span>
+   			*/
+   			
+			//체크박스를 체크여부 체크, 전역변수 체크값 선언해주기
+			var checkBoxValueCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
+			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
+			
+   			//계약상태 여부 체크, 전역변수 체크값 선언해주기
+			var contractStatusValueCheckForModify = true;		//-> 하나라도 미완료인 계약을 체크 했다면 false로 바꿔주기 
+			console.log("계약상태 여부 체크 전역변수 확인하기1 : ", contractStatusValueCheckForModify);
+			
+			//조달계획에 등록여부 체크, 전역변수 체크값 선언해주기
+			var contractInPPCheck = true;		//-> 하나라도 조달계획에 등록이 된 계약서이면 false로 바꿔주기 
+			console.log("조달계획 등록여부 체크 전역변수 확인하기1 : ", contractInPPCheck);
+			
+			$("#contractModifyBtn").on("click",function(e){
+    			//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			
+    			//2. 체크박스가 체크 된게 있는지 체크하기, 하나라도 미체크시 checkBoxValueCheck false로 바꿔주기
+    			const chkChecked = 'input[name="checkBox"]:checked';
+    			const selectedEls = document.querySelectorAll(chkChecked);
+    			//console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+    			//console.log("길이로 체크하면 되겠지? : ",selectedEls.length);
+    			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
+    				checkBoxValueCheck = false;
+    			}
+    			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
+    			console.log("계약상태 여부 체크 전역변수 확인하기(체크 전) : ",contractStatusValueCheckForModify);
+    			console.log("조달계획 등록여부 체크 전역변수 확인하기(체크 전) : ",contractInPPCheck);
+    			
+    			//3. 계약상태 값 리스트 가져와서, 하나라도 미완료일경우 contractStatusValueCheckForModify false로 바꿔주기
+    			let contractStatusList = new Array();
+    			contractStatusList = getContractStatus();
+    			contractStatusList.forEach(function(item){
+   					if(item=="미완료"){
+   						contractStatusValueCheckForModify = false;
+   					}   					
+   				});
+    			console.log("계약상태 전역변수 확인하기(체크한 후) : ",contractStatusValueCheckForModify);
+    			console.log("조달계획 등록여부 체크 전역변수 확인하기(체크 전) : ",contractInPPCheck);
+    			
+    			//4. 선택한 계약서번호 리스트를 이용하여, 조달계획 등록여부 ajax 로 결과 받기 
+    			//선택한 사항 중 계약서번호가 존재할때, 계약서번호리스트에 담기
+    			let contractNoList = getContractNoByChecked();
+    			console.log("어디 계약서번호 리스트 체크된거 잘읽나 보자 : ",contractNoList);
+    			
+    			var contractNoListToJsonData = JSON.stringify(contractNoList);	
+    			console.log("변경된 제이슨 타입 데이터 보자 : "+contractNoListToJsonData);
+    			
+    			$.ajax({
+					type : "post" ,
+					url : "/procurement1/contractInPPCheck" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : contractNoListToJsonData ,                		//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "text" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        						//가져오는 데이터! (응답데이터)
+						//console.log("받아온 데이터 : ",data);
+						
+						//받아온 결과는 String이라서 boolean으로 바꿔서 -> 발주예정 체크 전역변수에 넣어주기
+						if(data=="true"){
+							contractInPPCheck = true;
+						}else{
+							contractInPPCheck = false;
+						}
+						//console.log("문자열에서 boolean로 바꿔서 세팅해준거 contractInPPCheck 보자 : ",contractInPPCheck);
+						console.log("조달계획 등록여부 체크 전역변수 확인하기(체크 후) : ",contractInPPCheck);
+						
+						//ajax 처리후 밑에 진행사항 진행하게 하니까! ajax 처리다하고 받아와서 가는게 아니라, 
+						//이거는 이거대로 밑에는 밑에대로 진행되서, 원하는 순서대로 안됨! 그래서 여기에서 뒤에 진행사항을 처리하자!!
+						
+						//오류 모달창의 materialModifyErrorModalContent 에 넣을 내용
+		    			let sentence = ``;
+		    			
+		    			//4. 체크박스 체크 전역변수 true + 계약상태 여부 전역변수 true + 조달계획 등록여부 전연벽수 true 일때만, 수정가능~
+		    			if(checkBoxValueCheck && contractStatusValueCheckForModify && contractInPPCheck){			//체크박스 체크된것 + 계약상태 완료 중 조달계획 등록 X  ->수정가능하게
+			    			//console.log("현재 셋다 통과! 이거 수정 가능한거야!!!");
+		    				//만든 품목코드 리스트를 input 히든에 담기
+			    			$('input[name=contractNoList]').attr('value',getContractNoByChecked());
+			    			console.log("input hidden에 잘 담겼나 보자 : ",$('input[name=contractNoList]').attr('value'));
+			    			
+			   				//담은거 submit으로 보내자
+			    			$("#contractModifyForm").submit();
+			    			//그리고 체크된 값들 전부 체크 해제 해주기
+							$("input:checkbox").prop("checked", false);
+		    			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 등록오류 모달창 보여주기				
+		    				console.log("체크박스 전역변수만 실패!!");
+		    				//오류 모달창 보여주기
+		    				sentence = `<span>체크한 항목이 없습니다.</span><br>
+										<span>다시 선택해주시길 바랍니다.</span>`;
+		           			document.querySelector("#contractRMDErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#contractRMDErrorModalTitle").innerHTML = `계약 수정`;
+		    				
+							$(".contractRMDErrorModal").modal('show');    					
+							//그리고 다시 체크 값 true로 다시 세팅해주기
+							checkBoxValueCheck = true;   
+		    			}else if(!contractStatusValueCheckForModify){						//체크박스 선택한것 중에 계약상태 미완료 인것이 있음 -> 등록오류 모달창 보여주기
+		    				console.log("계약상태 체크 전역변수만 실패!!");
+		    				//오류 모달창 보여주기
+		    				sentence = `<span>계약상태가 <span style='color:red;'>'완료'</span>인 것만 계약수정이 가능합니다.</span><br>
+	                    				<span>다시 선택해주시길 바랍니다.</span>`;
+		           			document.querySelector("#contractRMDErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#contractRMDErrorModalTitle").innerHTML = `계약 수정`;
+		    				
+							$(".contractRMDErrorModal").modal('show'); 
+		    				
+		    				//그리고 다시 계약상태 체크 값 true로 다시 세팅해주기
+							contractStatusValueCheckForModify = true;   
+							//그리고 체크된 값들 전부 체크 해제 해주기
+							$("input:checkbox").prop("checked", false);
+		    			}else if(!contractInPPCheck){										//체크박스 선택한것 중에 계약상태 완료중 조달계획에 등록된것이 있음 -> 등록오류 모달창 보여주기
+		    				console.log("조달계획 등록여부 체크 전역변수만 실패!!");
+		    				//오류 모달창 보여주기
+		    				sentence = `<span>조달계획에 등록되어 진행 중인 계약이 있습니다.</span><br>
+		                 				<span>다시 선택해주시길 바랍니다.</span>`;
+		           			document.querySelector("#contractRMDErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#contractRMDErrorModalTitle").innerHTML = `계약 수정`;
+		    				
+							$(".contractRMDErrorModal").modal('show'); 
+		    				
+		    				//그리고 다시 조달계획 등록여부 체크 값 true로 다시 세팅해주기
+							contractInPPCheck = true;   
+							//그리고 체크된 값들 전부 체크 해제 해주기
+							$("input:checkbox").prop("checked", false);
+		    			} //if
+					},
+					error : function(jqXHR,textStatus,errorThrown){    
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);					
+						console.log("조달계획 등록여부 체크 ajax 에러발생~~!!!!!");						
+					}
+				});	//$.ajax
+   			}); //contractModifyBtn 수정 버튼 누를때, 끝
+   			
+   			//-------------------------------------------- 계약서 첨부파일 관련 -----------------------------------------------------------//
    			
     		//이미지인 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
 			//(그 해당 행의 버튼 정보를 가져오기 위해)
@@ -417,7 +619,7 @@
 			
 			//계약서파일 -> 이미지로 된것 클릭 했을때, -> 원본파일 모달창으로 보여주기
 			$(".ImgClick").click(function() {
-				console.log("도면이미지인거 선택함");
+				console.log("계약서 이미지인거 선택함");
 				var file = $(this).data('file');
 				//console.log("file 보자! : ",file);
 				//클릭한 행의 정보 전역변수에 세팅해주기
@@ -490,18 +692,10 @@
 			});	
 			
 			
-			//이벤트 발생한 요소의 상위의 TR 객체 찾기
-	        function getObjTR(){
-	            var obj = event.srcElement
-	            while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
-	                obj = obj.parentElement
-	            }
-	            return obj
-	        }
+			
    			
    			
-   			
-   		});	
+   		});	//$(document).ready(function() 끝
 		
 		
 		

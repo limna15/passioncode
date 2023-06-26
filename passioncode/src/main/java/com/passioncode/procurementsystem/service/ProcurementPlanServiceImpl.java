@@ -48,6 +48,11 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		return contractRepository.findById(no).get();
 	}
 	
+	@Override
+	public List<ProcurementPlan> getPPJoinMRPByMaterialCode(String materialCode) {		
+		return procurementPlanRepository.getPPJoinMRPByMaterialCode(materialCode);
+	}	
+	
 	/**
 	 * 조달계획 진행사항 만들어주는 메소드 (조달계획을 이용해서) <br>
 	 * 등록 후 발주코드 존재X, 조달완료일 존재X : 발주 예정  <br>
@@ -222,8 +227,8 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		//2. 조달계획등록 완료인 조달계획 가져오기 
 		//조달계획진행사항을  발주 예정 -> 조달 진행 중 -> 조달 완료  순서로 셋팅해주기!
 		List<ProcurementPlan> ppList = procurementPlanRepository.getPPJoinMRPWithOrder();
-		log.info("조달계획에서 가져온 전체 조달계획 리스트 한번 보자 : "+ppList);
-		log.info("조달계획에서 가져온 전체 조달계획 리스트크기 : "+ppList.size());
+		//log.info("조달계획에서 가져온 전체 조달계획 리스트 한번 보자 : "+ppList);
+		//log.info("조달계획에서 가져온 전체 조달계획 리스트크기 : "+ppList.size());
 		
 		//받아온 리스트, 일단 DTO로 바꿔주기
 		List<ProcurementPlanDTO> ppListToDTOList = new ArrayList<>();		
@@ -409,5 +414,13 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	public ProcurementPlan getPpByDetailPurchaseOrder(Integer code) {
 		DetailPurchaseOrder dpo= detailPurchaseOrderRepository.findById(code).get();
 		return	procurementPlanRepository.findByDetailPurchaseOrder(dpo);
-	}	
+	}
+
+	@Override
+	public Boolean ppExistsByContract(Integer contractNo) {
+		
+		return procurementPlanRepository.existsByContract(contractRepository.findById(contractNo).get());
+	}
+
+	
 }

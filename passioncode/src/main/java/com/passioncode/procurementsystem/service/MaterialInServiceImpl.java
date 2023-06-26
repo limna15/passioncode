@@ -21,7 +21,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class MaterialInServiceImpl implements MateriallInService {
+public class MaterialInServiceImpl implements MaterialInService {
 	
 	private final MaterialInRepository materialInRepository;
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
@@ -171,10 +171,71 @@ public class MaterialInServiceImpl implements MateriallInService {
 		return	materialInRepository.findByDetailPurchaseOrder(dpo);
 	}
 
+	//자재입고 테이블에 등록된 것과 등록안된것(입고상태가 null인것) 구분한 List
 	@Override
-	public List<Object[]> getOrderByList() {
+	public List<MaterialInDTO> getSortDTOLsit() {
 		
-		return null;
+		List<DetailPurchaseOrder> dpoList= detailPurchaseOrderRepository.findAll();
+		
+		List<MaterialInDTO> MaterialInDTOList= new ArrayList<>();
+		List<MaterialInDTO> nullMaterialInDTOList= new ArrayList<>();
+		List<MaterialInDTO> notNullMaterialInDTOList= new ArrayList<>();
+		MaterialInDTO materialInDTO= null;
+		
+		List<ProcurementPlan> ppList= new ArrayList<>();
+		List<ProcurementPlan> ppList2= new ArrayList<>();
+		
+		List<MaterialIn> miList= new ArrayList<>();
+		
+		for(int i=0; i<dpoList.size(); i++) {
+			ppList.add(procurementPlanRepository.findByDetailPurchaseOrder(dpoList.get(i)));
+	
+			if(materialInRepository.findByDetailPurchaseOrder(dpoList.get(i)) != null) {
+				//세부구매발주서와 조인한 자재입고 List 가져오기
+				miList= materialInRepository.getJoinDpo();
+			}
+		}
+		
+		for(int i=0; i<miList.size(); i++) {
+			ppList2.add(procurementPlanRepository.findByDetailPurchaseOrder(miList.get(i).getDetailPurchaseOrder()));
+		}	
+		
+		//정렬된 자재입고List DTO로 바꾸기
+		for(int i=0; i<miList.size(); i++) {
+			materialInDTO= MaterialInDTO.builder()
+					.noStr(noStr(miList.get(i).getDetailPurchaseOrder().getPurchaseOrder().getNo())).codeStr(codeStr(miList.get(i).getDetailPurchaseOrder().getCode()))
+					.dueDate(ppList2.get(i).getDueDate())
+					.materialCode(ppList2.get(i).getMrp().getMaterial().getCode()).materialName(ppList2.get(i).getMrp().getMaterial().getName())
+					.amount(miList.get(i).getDetailPurchaseOrder().getAmount())
+					.status(miList.get(i).getStatus()).transactionStatus(miList.get(i).getTransactionStatus()).build();
+					
+			notNullMaterialInDTOList.add(materialInDTO);	
+		}
+		
+		
+		
+		for(int i=0; i<ppList.size(); i++) {
+			//materialIn에 존재 X 때 설정
+			if(!materialInRepository.existsById(i+1)) {
+				materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
+						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
+						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
+						.status(null).transactionStatus(null).inDate(null).build();
+				nullMaterialInDTOList.add(materialInDTO);
+				log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
+				}
+		}
+		log.info("nullMaterialInDTOList 보기 >>> " + nullMaterialInDTOList);
+		
+		//입고상태 null값 -> 정렬된 List 순으로 넣기
+		for(MaterialInDTO dto : nullMaterialInDTOList) {
+			MaterialInDTOList.add(dto);
+		}
+		for(MaterialInDTO dto : notNullMaterialInDTOList) {
+			MaterialInDTOList.add(dto);
+		}
+		
+		return MaterialInDTOList;
 	}
 
 }

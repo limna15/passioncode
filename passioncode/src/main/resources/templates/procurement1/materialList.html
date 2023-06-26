@@ -109,10 +109,13 @@
 							<form style="float: right;">
 								<button class="btn btn-primary" >삭제</button>
 							</form>
-							<form style="float: right;">
-								&nbsp;&nbsp;<button class="btn btn-primary" >수정</button>&nbsp;&nbsp;
+							<form style="float: right;" th:action = "@{/procurement1/materialModify}" th:method="get" id="materialModifyForm">
+								<input type="hidden" name="materialCodeList" id="materialCodeList">
+								<button class="btn btn-primary" id="materialModifyBtn" type="submit" style="margin-right:10px">수정</button>
 							</form>
-							<button class="btn btn-primary" style="float: right;" onclick="location.href='/procurement1/materialRegister'">등록</button>
+							<button class="btn btn-primary" style="float:right; margin-right:10px" type="button" onclick="location.href='/procurement1/materialRegister'">
+								등록
+							</button>
 						</div>
 						<!-- 등록, 수정, 삭제 버튼 끝 -->
 					</div>	
@@ -136,7 +139,7 @@
 							</thead>
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
-									<td><input type="checkbox"></td>
+									<td><input type="checkbox" name="checkBox" th:value="${dto.code}" onclick="chkClicked();"></td>
 									<td>[[${dto.largeCategoryName}]]</td>
 									<td>[[${dto.middleCategoryName}]]</td>
 									<td>[[${dto.code}]]</td>
@@ -256,10 +259,59 @@
         </div>
 		<!-- 첨부파일 다운로드 여부 묻는 모달창 끝 -->
 		
+		<!-- 
+			수정버튼 누를때, 오류시 보여줄 모달창 시작
+			(상황1. 현재 조달진행중 or 조달완료 했던 경우 O ->이것만 눌렀을때)(즉, 막 새로 작성한것만 수정되게, 발주예정인것만 수정되게)
+			(상황2. 체크한게 아무것도 없을때)
+			- 내용 : 1. <span>발주되어 진행 중인 품목이 있습니다.</span><br>
+                 		<span>다시 선택해주시길 바랍니다.</span>
+					 2. <span>체크한 항목이 없습니다.</span><br>
+						<span>다시 선택해주시길 바랍니다.</span>
+		-->
+		<div class="materialModifyErrorModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">품목 수정</h5>
+                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="materialModifyErrorModalContent">   
+						<!-- 오류시 보여줄 내용 -->	
+							
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 수정버튼 누를때, 오류시 보여줄 모달창 끝 -->
+		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
 		
+		//체크박스 체크한것 -> 품목코드 리스트로 만들기
+		function chkClicked(){
+			const chkChecked = 'input[name="checkBox"]:checked';
+			const selectedEls = document.querySelectorAll(chkChecked);
+	 		//console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+	 		let materialCodeList = new Array();
+	 		
+	 		selectedEls.forEach((el) => {
+				//console.log("체크된거 어떻게 찍히나 보자", el.value);
+				materialCodeList.push(el.value);
+		 	});
+	 		//console.log("만들어진 리스트 보자",materialCodeList);
+	 		
+	 		return materialCodeList;
+		}
+		
 		$(document).ready(function(e) {
+			//---------------------------------------------------- 도면 이미지 관련 -----------------------------------------------------------//
 			
 			//이미지인 버튼을 눌렀을때의 해당 tr을 넣어주기 위한 tr 전역변수 선언
 			//(그 해당 행의 버튼 정보를 가져오기 위해)
@@ -337,7 +389,6 @@
 				window.location.href = "/procurement1/drawing/download?fileName="+encodeFile;
 			});	
 			
-			
 			//이벤트 발생한 요소의 상위의 TR 객체 찾기
 	        function getObjTR(){
 	            var obj = event.srcElement
@@ -346,6 +397,123 @@
 	            }
 	            return obj
 	        }
+			
+	      	//---------------------------------------------------- 수정 버튼 관련 -----------------------------------------------------------//
+	      	
+	      	
+			//체크박스를 체크를 했는지 안했는지 체크하기 위한, 전역변수 체크값 선언해주기
+			var checkBoxValueCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
+			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
+			
+			//발주예정인지 체크하기 위한, 전역변수 체크값 선언해주기
+			var expectedPurchaseOrderCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
+			console.log("발주예정 체크 전역변수 확인하기1 : ", expectedPurchaseOrderCheck);
+			
+	      	//수정버튼 눌렀을때,  -> 1. 발주 예정 인것만 수정 가능하게!, 즉 단순하게, 지금 막 등록한거 수정하는 정도
+			//						    -> 즉, 한번이라도 조달계획에서 조달완료를 받았던 품목은 수정 불가, 그리고 현재 발주되서 조달 진행 중인거 수정 불가
+			//					  -> 2. 체크한 사항이 있어야 수정 가능하게
+			/*
+	      	수정(삭제)할 품목을 선택해주세요.
+			Or
+			발주되어 진행 중인 품목입니다. 
+			수정(삭제)이 불가능합니다.
+			*/
+    		$("#materialModifyBtn").on("click",function(e){
+    			//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			
+    			//2. 체크박스가 체크 된게 있는지 체크하기, 하나라도 미체크시 checkBoxValueCheck false로 바꿔주기
+    			const chkChecked = 'input[name="checkBox"]:checked';
+    			const selectedEls = document.querySelectorAll(chkChecked);
+    			//console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+    			//console.log("길이로 체크하면 되겠지? : ",selectedEls.length);
+    			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
+    				checkBoxValueCheck = false;
+    			}
+    			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
+    			console.log("발주예정 체크 전역변수 확인하기(체크 전) : ",expectedPurchaseOrderCheck);
+    			
+    			//3. 선택한 품목코드를 이용하여, 발주예정 여부 ajax 로 결과 받기
+    			let materialCodeList = new Array();
+    			materialCodeList = chkClicked();
+    			console.log("이렇게 바로 함수로 해도 materialCodeList 읽는건가?? : ",materialCodeList);
+    			
+    			var changeJsonData = JSON.stringify(materialCodeList);	
+    			console.log("변경된 제이슨 타입 데이터 보자 : "+changeJsonData);
+    			
+    			$.ajax({
+					type : "post" ,
+					url : "/procurement1/expectedPurchaseOrderCheck" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : changeJsonData ,                						//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  			//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "text" ,							 				//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        							//가져오는 데이터! (응답데이터)
+						//console.log("받아온 데이터 : ",data);
+						
+						//받아온 결과는 String이라서 boolean으로 바꿔서 -> 발주예정 체크 전역변수에 넣어주기
+						if(data=="true"){
+							expectedPurchaseOrderCheck = true;
+						}else{
+							expectedPurchaseOrderCheck = false;
+						}
+						//console.log("문자열에서 boolean로 바꿔서 세팅해준거 expectedPurchaseOrderCheck 보자 : ",expectedPurchaseOrderCheck);
+						console.log("발주예정 체크 전역변수 확인하기(체크 후) : ",expectedPurchaseOrderCheck);
+						
+						//ajax 처리후 밑에 진행사항 진행하게 하니까! ajax 처리다하고 받아와서 가는게 아니라, 
+						//이거는 이거대로 밑에는 밑에대로 진행되서, 원하는 순서대로 안됨! 그래서 여기에서 뒤에 진행사항을 처리하자!!
+						
+						//오류 모달창의 materialModifyErrorModalContent 에 넣을 내용
+		    			let sentence = ``;
+		    			
+		    			//4. 체크박스 체크 전역변수 true + 발주예정 체크 전역변수 true 일때만, 수정가능~
+		    			if(checkBoxValueCheck && expectedPurchaseOrderCheck){			// 체크박스 체크된것 + 발주예정이 X(신규건 일때) ->수정가능하게
+			    			//console.log("현재 둘다 통과! 이거 수정 가능한거야!!!");
+		    				//만든 품목코드 리스트를 input 히든에 담기
+			    			$('input[name=materialCodeList]').attr('value',chkClicked());
+			    			console.log("input hidden에 잘 담겼나 보자 : ",$('input[name=materialCodeList]').attr('value'));
+			    			
+			    			//var test = $('input[name=materialCodeList]').attr('value');
+			    			//console.log("값을 봐보자.. 흠",test);
+			    			//alert(test);
+			    			
+			   				//담은거 submit으로 보내자
+			    			$("#materialModifyForm").submit();
+			    			//그리고 체크된 값들 전부 체크 해제 해주기
+							$("input:checkbox").prop("checked", false);
+		    			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 등록오류 모달창 보여주기				
+		    				//console.log("체크박스 전연변수만 실패!!");
+		    				//오류 모달창 보여주기
+		    				sentence = `<span>체크한 항목이 없습니다.</span><br>
+										<span>다시 선택해주시길 바랍니다.</span>`;
+		           			document.querySelector("#materialModifyErrorModalContent").innerHTML = sentence;
+		    				
+							$(".materialModifyErrorModal").modal('show');    					
+							//그리고 다시 등록체크 값 true로 다시 세팅해주기
+							checkBoxValueCheck = true;   
+		    			}else if(!expectedPurchaseOrderCheck){						//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
+		    				//console.log("발주예정 체크 전연변수만 실패!!");
+		    				//오류 모달창 보여주기
+		    				sentence = `<span>발주되어 진행 중인 품목이 있습니다.</span><br>
+		                    			<span>다시 선택해주시길 바랍니다.</span>`;
+		           			document.querySelector("#materialModifyErrorModalContent").innerHTML = sentence;
+		    				
+							$(".materialModifyErrorModal").modal('show'); 
+		    				
+		    				//그리고 다시 등록체크 값 true로 다시 세팅해주기
+							expectedPurchaseOrderCheck = true;   
+							//그리고 체크된 값들 전부 체크 해제 해주기
+							$("input:checkbox").prop("checked", false);
+		    			} //if
+					},
+					error : function(jqXHR,textStatus,errorThrown){    
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);					
+						console.log("발주예정 여부 ajax 에러발생~~!!!!!");						
+					}
+				});	//$.ajax
+   			}); //contractRegisterBtn 등록 버튼 누를때, 끝
+	      	
 			
 		
 		});

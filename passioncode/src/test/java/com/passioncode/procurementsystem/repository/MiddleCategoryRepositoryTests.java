@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
@@ -59,5 +60,12 @@ public class MiddleCategoryRepositoryTests {
 //		log.info("이거 괜찮나아? : "+test.get());
 	}
 	
+	@Transactional
+	@Test
+	public void findByLargeCategoryTest() {
+		List<MiddleCategory> middleCategories = middleCategoryRepository.findByLargeCategory(largeCategoryRepository.findById("CC0001").get());
+		log.info("어디 대분류 이용해서 중분류리스트 찾은거 좀 보자 : "+middleCategories);
+		
+	}
 	
 }

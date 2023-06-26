@@ -51,7 +51,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 협력회사, 발주일, 조달납기 예정일, 품목공급LT, 최소 발주일, 품목코드, 품목명
 		// , 기존재고수량, 필요수량, 발주수량, 단가, 공급가격, 발주서 발행상태
 		// 총 13개 DTO
-		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder()
+		PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder().detailNo(detailNo(procurementPlan.getCode()))
+				.detailCode(detailCode(procurementPlan.getCode()))
 				.companyName(procurementPlan.getContract().getCompany().getName())
 				.purchaseOrderDate(extistPurchaseOrderDate(procurementPlan)).dueDate(procurementPlan.getDueDate()).supplyLT(procurementPlan.getContract().getSupplyLt())
 				.minimumOrderDate(procurementPlan.getMinimumOrderDate()).materialCode(procurementPlan.getMrp().getMaterial().getCode())
@@ -104,6 +105,33 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public PurchaseOrder getPurchaseOrder(Integer no) {
 	
 		return purchaseOrderRepository.findById(no).get();
+	}
+	
+	public Integer detailCode(Integer num1) {//발주코드 구하기
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(num1).get();
+		//PurchaseOrderDTO purchaseOrderDTO = 
+		Integer mycode = 0;
+		if(procurementPlan.getDetailPurchaseOrder()==null) {
+			mycode = 0;//발주되지 않은 것
+		}else {
+			mycode = procurementPlan.getDetailPurchaseOrder().getCode();
+		}
+		log.info(mycode+"<<코드번호");
+		
+		return mycode;
+	}
+	
+	public Integer detailNo(Integer num1) {//발주서 번호 구하기
+		ProcurementPlan procurementPlan = procurementPlanRepository.findById(num1).get();
+		//PurchaseOrderDTO purchaseOrderDTO = 
+		Integer myno = 0;
+		if(procurementPlan.getDetailPurchaseOrder()==null) {
+			myno = 0;//발주되지 않은 것
+		}else {
+			myno = procurementPlan.getDetailPurchaseOrder().getPurchaseOrder().getNo();
+		}
+		log.info(myno+"<<발주서 번호");
+		return myno;
 	}
 		
 }
