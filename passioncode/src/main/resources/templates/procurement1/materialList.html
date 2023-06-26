@@ -106,8 +106,9 @@
 						
 						<!-- 등록, 수정, 삭제 버튼 시작 -->
 						<div class="col-md-6" >	
-							<form style="float: right;">
-								<button class="btn btn-primary" >삭제</button>
+							<form style="float: right;" th:action = "@{/procurement1/materialDelete}" th:method="post" id="materialDeleteForm">
+								<input type="hidden" name="materialCodeList" >
+								<button class="btn btn-primary" id="materialDeleteBtn" type="submit">삭제</button>
 							</form>
 							<form style="float: right;" th:action = "@{/procurement1/materialModify}" th:method="get" id="materialModifyForm">
 								<input type="hidden" name="materialCodeList" >
@@ -134,6 +135,7 @@
 									<th width="13%">제작 사양</th>
 									<th>도면 번호</th>
 									<th>도면<br>Image</th>
+									<th style="display:none;">도면파일</th>
 									<th width="9%">공용여부</th>
 								</tr>
 							</thead>
@@ -162,6 +164,7 @@
 									<td th:if="${dto.drawingFileDTO == null}">
 									
 									</td>
+									<td style="display:none;">[[${dto.drawingFile}]]</td>
 									<td>[[${dto.shareStatus}]]</td>
 								</tr>
 							</tbody>
@@ -262,13 +265,21 @@
 		<!-- 
 			수정버튼+삭제버튼 누를때, 오류시 보여줄 모달창 시작
 			-- 수정버튼
-			(상황1. 현재 조달진행중 or 조달완료 했던 경우 O ->이것만 눌렀을때)(즉, 막 새로 작성한것만 수정되게, 발주예정인것만 수정되게)
+			(상황1. 계약상태 완료인 품목을 수정하려 할때)(즉, 막 새로 작성한것만 수정되게, 계약상태 미완료만 수정되게)
 			(상황2. 체크한게 아무것도 없을때)
 			- 제목 : 품목 수정
-			- 내용 : 1. <span>발주되어 진행 중인 품목이 있습니다.</span><br>
+			- 내용 : 1. <span>계약이 <span style='color:red;'>'완료'</span>된 품목은 수정이 <span style='color:red;'>'불가능'</span>합니다.</span><br>
                  		<span>다시 선택해주시길 바랍니다.</span>
 					 2. <span>체크한 항목이 없습니다.</span><br>
 						<span>다시 선택해주시길 바랍니다.</span>
+			-- 삭제버튼
+			(상황1. 계약상태 완료인 품목을 삭제하려 할때)(즉, 막 새로 작성한것만 삭제되게, 계약상태 미완료만 삭제되게)
+			(상황2. 체크한게 아무것도 없을때)
+			- 제목 : 품목 삭제
+			- 내용 : 1. <span>계약이 <span style='color:red;'>'완료'</span>된 품목은 삭제가 <span style='color:red;'>'불가능'</span>합니다.</span><br>
+                 		<span>다시 선택해주시길 바랍니다.</span>
+					 2. <span>체크한 항목이 없습니다.</span><br>
+						<span>다시 선택해주시길 바랍니다.</span>			
 		-->
 		<div class="materialMDErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -291,7 +302,34 @@
                 </div>
             </div>
         </div>
-		<!-- 수정버튼 누를때, 오류시 보여줄 모달창 끝 -->
+		<!-- 오류시 보여줄 모달창 끝 -->
+		
+		<!-- 삭제확인 모달창 시작-->
+		<div class="materialDeleteConfirmModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">품목 정보 삭제 확인</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="materialDeleteConfirmModalContent">
+                    	<!-- 품목정보 등록 확인할 내용 -->    
+                    	
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary materialDeleteConfirmBtn " style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	취소
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 삭제확인 모달창 끝 -->
 		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script th:inline="javascript">
@@ -311,6 +349,48 @@
 	 		
 	 		return materialCodeList;
 		}
+		
+		//체크박스 체크 한것 -> 그 해당 행의 품목명 값 리스트로 만들기
+		function getMaterialName(){
+			const chkChecked = $('input[name="checkBox"]:checked');			
+			var materialNameList = new Array();
+			
+			// 체크된 체크박스 값을 가져온다
+			chkChecked.each(function(i) {	
+				// chkChecked.parent() : checkbox의 부모는 <td>이다.
+				// chkChecked.parent().parent() : <td>의 부모이므로 <tr>이다.
+				var tr = chkChecked.parent().parent().eq(i);
+				var td = tr.children();
+								
+				// td.eq(0)은 체크박스 이므로  td.eq(4)의 값인 품목명을 리스트에 넣어준다.
+				materialNameList.push(td.eq(4).text());
+			});
+			//console.log("어디 만들어진 계약상태 리스트 봐보자 : ",contractStatusList);		
+			return materialNameList;
+		}
+		
+		//체크박스 체크 한것 -> 그 해당 행의 도면파일 값 리스트로 만들기
+		function getDrawingFile(){
+			const chkChecked = $('input[name="checkBox"]:checked');			
+			var drawingFileList = new Array();
+			
+			// 체크된 체크박스 값을 가져온다
+			chkChecked.each(function(i) {	
+				// chkChecked.parent() : checkbox의 부모는 <td>이다.
+				// chkChecked.parent().parent() : <td>의 부모이므로 <tr>이다.
+				var tr = chkChecked.parent().parent().eq(i);
+				var td = tr.children();
+								
+				// td.eq(0)은 체크박스 이므로  td.eq(10)의 값인 도면파일을 리스트에 넣어준다.
+				//도면파일이 존재할때만 넣어준다.
+				if(td.eq(10).text() != ""){
+					drawingFileList.push(td.eq(10).text());
+				}
+			});
+			//console.log("어디 만들어진 도면파일 리스트 봐보자 : ",drawingFileList);		
+			return drawingFileList;
+		}
+		
 		
 		$(document).ready(function(e) {
 			//---------------------------------------------------- 도면 이미지 관련 -----------------------------------------------------------//
@@ -402,24 +482,16 @@
 			
 	      	//---------------------------------------------------- 수정 버튼 관련 -----------------------------------------------------------//
 	      	
-	      	
 			//체크박스를 체크를 했는지 안했는지 체크하기 위한, 전역변수 체크값 선언해주기
 			var checkBoxValueCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
 			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
 			
-			//발주예정인지 체크하기 위한, 전역변수 체크값 선언해주기
-			var expectedPurchaseOrderCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
-			console.log("발주예정 체크 전역변수 확인하기1 : ", expectedPurchaseOrderCheck);
+			//계약상태 체크하기 위한, 전역변수 체크값 선언해주기
+			var contractStatusCheck = true;		//-> 하나라도 계약상태 완료 있을 경우에 false로 바꿔주기 
+			console.log("계약상태 체크 전역변수 확인하기1 : ", contractStatusCheck);
 			
-	      	//수정버튼 눌렀을때,  -> 1. 발주 예정 인것만 수정 가능하게!, 즉 단순하게, 지금 막 등록한거 수정하는 정도
-			//						    -> 즉, 한번이라도 조달계획에서 조달완료를 받았던 품목은 수정 불가, 그리고 현재 발주되서 조달 진행 중인거 수정 불가
+	      	//수정버튼 눌렀을때,  -> 1. 계약상태가 미완료인 것만 수정 가능하게!, 즉 단순하게, 지금 막 등록한거 수정하는 정도 -> 즉, 계약상태가 완료가 되면 수정 불가
 			//					  -> 2. 체크한 사항이 있어야 수정 가능하게
-			/*
-	      	수정(삭제)할 품목을 선택해주세요.
-			Or
-			발주되어 진행 중인 품목입니다. 
-			수정(삭제)이 불가능합니다.
-			*/
     		$("#materialModifyBtn").on("click",function(e){
     			//1. 버튼 이벤트(submit)금지
     			e.preventDefault();
@@ -432,34 +504,32 @@
     			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
     				checkBoxValueCheck = false;
     			}
-    			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
-    			console.log("발주예정 체크 전역변수 확인하기(체크 전) : ",expectedPurchaseOrderCheck);
+    			console.log("수정버튼 / 체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
+    			console.log("수정버튼 / 계약상태 체크 전역변수 확인하기(체크 전) : ",contractStatusCheck);
     			
-    			//3. 선택한 품목코드를 이용하여, 발주예정 여부 ajax 로 결과 받기
-    			let materialCodeList = new Array();
-    			materialCodeList = chkClicked();
-    			console.log("이렇게 바로 함수로 해도 materialCodeList 읽는건가?? : ",materialCodeList);
+    			//3. 선택한 품목코드를 이용하여, 계약상태 여부 ajax 로 결과 받기
+    			let materialCodeList = chkClicked();
     			
-    			var changeJsonData = JSON.stringify(materialCodeList);	
-    			console.log("변경된 제이슨 타입 데이터 보자 : "+changeJsonData);
+    			var materialCodeListToJsonData = JSON.stringify(materialCodeList);	
+    			//console.log("변경된 제이슨 타입 데이터 보자 : "+materialCodeListToJsonData);
     			
     			$.ajax({
 					type : "post" ,
-					url : "/procurement1/expectedPurchaseOrderCheck" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
-					data : changeJsonData ,                						//보내는 데이터!(요청 데이터)
-					contentType :"application/json; charset=UTF-8" ,  			//보내는 데이터 형식 (전송 데이터,요청데이터)
-					dataType : "text" ,							 				//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
-					success : function(data){        							//가져오는 데이터! (응답데이터)
+					url : "/procurement1/contractStatusCheck" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : materialCodeListToJsonData ,                		//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "text" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        						//가져오는 데이터! (응답데이터)
 						//console.log("받아온 데이터 : ",data);
 						
-						//받아온 결과는 String이라서 boolean으로 바꿔서 -> 발주예정 체크 전역변수에 넣어주기
+						//받아온 결과는 String이라서 boolean으로 바꿔서 -> 계약상태 체크 전역변수에 넣어주기
 						if(data=="true"){
-							expectedPurchaseOrderCheck = true;
+							contractStatusCheck = true;
 						}else{
-							expectedPurchaseOrderCheck = false;
+							contractStatusCheck = false;
 						}
-						//console.log("문자열에서 boolean로 바꿔서 세팅해준거 expectedPurchaseOrderCheck 보자 : ",expectedPurchaseOrderCheck);
-						console.log("발주예정 체크 전역변수 확인하기(체크 후) : ",expectedPurchaseOrderCheck);
+						//console.log("문자열에서 boolean로 바꿔서 세팅해준거 contractStatusCheck 보자 : ",contractStatusCheck);
+						console.log("수정버튼 / ajax 계약상태 체크 전역변수 확인하기(체크 후) : ",contractStatusCheck);
 						
 						//ajax 처리후 밑에 진행사항 진행하게 하니까! ajax 처리다하고 받아와서 가는게 아니라, 
 						//이거는 이거대로 밑에는 밑에대로 진행되서, 원하는 순서대로 안됨! 그래서 여기에서 뒤에 진행사항을 처리하자!!
@@ -467,12 +537,12 @@
 						//오류 모달창의 materialMDErrorModalContent 에 넣을 내용
 		    			let sentence = ``;
 		    			
-		    			//4. 체크박스 체크 전역변수 true + 발주예정 체크 전역변수 true 일때만, 수정가능~
-		    			if(checkBoxValueCheck && expectedPurchaseOrderCheck){			// 체크박스 체크된것 + 발주예정이 X(신규건 일때) ->수정가능하게
+		    			//4. 체크박스 체크 전역변수 true + 계약상태 체크 전역변수 true 일때만, 수정가능~
+		    			if(checkBoxValueCheck && contractStatusCheck){				// 체크박스 체크된것 + 계약상태 미완료 ->수정가능하게
 			    			//console.log("현재 둘다 통과! 이거 수정 가능한거야!!!");
 		    				//만든 품목코드 리스트를 input 히든에 담기
 			    			$('input[name=materialCodeList]').attr('value',chkClicked());
-			    			console.log("input hidden에 잘 담겼나 보자 : ",$('input[name=materialCodeList]').attr('value'));
+			    			console.log("수정버튼 / input hidden에 잘 담겼나 보자 : ",$('input[name=materialCodeList]').attr('value'));
 			    			
 			    			//var test = $('input[name=materialCodeList]').attr('value');
 			    			//console.log("값을 봐보자.. 흠",test);
@@ -482,8 +552,8 @@
 			    			$("#materialModifyForm").submit();
 			    			//그리고 체크된 값들 전부 체크 해제 해주기
 							$("input:checkbox").prop("checked", false);
-		    			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 등록오류 모달창 보여주기				
-		    				//console.log("체크박스 전연변수만 실패!!");
+		    			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 오류 모달창 보여주기				
+		    				//console.log("체크박스 전역변수만 실패!!");
 		    				//오류 모달창 보여주기
 		    				sentence = `<span>체크한 항목이 없습니다.</span><br>
 										<span>다시 선택해주시길 바랍니다.</span>`;
@@ -491,20 +561,20 @@
 		           			document.querySelector("#materialMDErrorModalTitle").innerHTML = `품목 수정`;
 		    				
 							$(".materialMDErrorModal").modal('show');    					
-							//그리고 다시 등록체크 값 true로 다시 세팅해주기
+							//그리고 체크박스 체크 값 true로 다시 세팅해주기
 							checkBoxValueCheck = true;   
-		    			}else if(!expectedPurchaseOrderCheck){						//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
-		    				//console.log("발주예정 체크 전연변수만 실패!!");
+		    			}else if(!contractStatusCheck){								//체크박스 선택한것 중에 계약상태 완료 인것이 있음 -> 오류 모달창 보여주기
+		    				//console.log("계약상태 체크 전역변수만 실패!!");
 		    				//오류 모달창 보여주기
-		    				sentence = `<span>발주되어 진행 중인 품목이 있습니다.</span><br>
-		                    			<span>다시 선택해주시길 바랍니다.</span>`;
+		    				sentence = `<span>계약이 <span style='color:red;'>'완료'</span>된 품목은 수정이 <span style='color:red;'>'불가능'</span>합니다.</span><br>
+		                 				<span>다시 선택해주시길 바랍니다.</span>`;
 		           			document.querySelector("#materialMDErrorModalContent").innerHTML = sentence;
 		           			document.querySelector("#materialMDErrorModalTitle").innerHTML = `품목 수정`;
 		    				
 							$(".materialMDErrorModal").modal('show'); 
 		    				
-		    				//그리고 다시 등록체크 값 true로 다시 세팅해주기
-							expectedPurchaseOrderCheck = true;   
+		    				//그리고 계약상태 체크 값 true로 다시 세팅해주기
+							contractStatusCheck = true;   
 							//그리고 체크된 값들 전부 체크 해제 해주기
 							$("input:checkbox").prop("checked", false);
 		    			} //if
@@ -513,11 +583,161 @@
 						//console.log(jqXHR); 			//응답 메시지
 						//console.log(textStatus); 		//"error"로 고정인듯함
 						//console.log(errorThrown);					
-						console.log("발주예정 여부 ajax 에러발생~~!!!!!");						
+						console.log("수정버튼 / 계약상태 여부 ajax 에러발생~~!!!!!");						
 					}
 				});	//$.ajax
-   			}); //contractRegisterBtn 등록 버튼 누를때, 끝
+   			}); //수정 버튼 누를때, 끝
 	      	
+   			//---------------------------------------------------- 삭제 버튼 관련 -----------------------------------------------------------//
+   			
+			//삭제버튼 눌렀을때,  -> 1. 계약상태가 미완료인 것만 삭제 가능하게!, 즉 단순하게, 지금 막 등록한거 삭제하는 정도 -> 즉, 계약상태가 완료가 되면 삭제 불가
+			//					  -> 2. 체크한 사항이 있어야 삭제 가능하게
+    		$("#materialDeleteBtn").on("click",function(e){
+    			//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			
+    			//2. 체크박스가 체크 된게 있는지 체크하기, 하나라도 미체크시 checkBoxValueCheck false로 바꿔주기
+    			const chkChecked = 'input[name="checkBox"]:checked';
+    			const selectedEls = document.querySelectorAll(chkChecked);
+    			//console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+    			//console.log("길이로 체크하면 되겠지? : ",selectedEls.length);
+    			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
+    				checkBoxValueCheck = false;
+    			}
+    			console.log("삭제버튼 / 체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
+    			console.log("삭제버튼 / 계약상태 체크 전역변수 확인하기(체크 전) : ",contractStatusCheck);
+    			
+    			//3. 선택한 품목코드를 이용하여, 계약상태 여부 ajax 로 결과 받기
+    			let materialCodeList = chkClicked();
+    			
+    			var materialCodeListToJsonData = JSON.stringify(materialCodeList);	
+    			//console.log("변경된 제이슨 타입 데이터 보자 : "+materialCodeListToJsonData);
+    			
+    			$.ajax({
+					type : "post" ,
+					url : "/procurement1/contractStatusCheck" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					data : materialCodeListToJsonData ,                		//보내는 데이터!(요청 데이터)
+					contentType :"application/json; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
+					dataType : "text" ,							 			//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
+					success : function(data){        						//가져오는 데이터! (응답데이터)
+						//console.log("받아온 데이터 : ",data);
+						
+						//받아온 결과는 String이라서 boolean으로 바꿔서 -> 계약상태 체크 전역변수에 넣어주기
+						if(data=="true"){
+							contractStatusCheck = true;
+						}else{
+							contractStatusCheck = false;
+						}
+						//console.log("문자열에서 boolean로 바꿔서 세팅해준거 contractStatusCheck 보자 : ",contractStatusCheck);
+						console.log("삭제버튼 / ajax 계약상태 체크 전역변수 확인하기(체크 후) : ",contractStatusCheck);
+						
+						//ajax 처리후 밑에 진행사항 진행하게 하니까! ajax 처리다하고 받아와서 가는게 아니라, 
+						//이거는 이거대로 밑에는 밑에대로 진행되서, 원하는 순서대로 안됨! 그래서 여기에서 뒤에 진행사항을 처리하자!!
+						
+						//오류 모달창의 materialMDErrorModalContent 에 넣을 내용
+		    			let sentence = ``;
+		    			
+		    			//4. 체크박스 체크 전역변수 true + 계약상태 체크 전역변수 true 일때만, 삭제가능~
+		    			if(checkBoxValueCheck && contractStatusCheck){				// 체크박스 체크된것 + 계약상태 미완료 ->삭제가능하게
+			    			//console.log("현재 둘다 통과! 이거 삭제 가능한거야!!!");
+		    				//만든 품목코드 리스트를 input 히든에 담기
+			    			$('input[name=materialCodeList]').attr('value',chkClicked());
+			    			console.log("삭제버튼 / input hidden에 잘 담겼나 보자 : ",$('input[name=materialCodeList]').attr('value'));
+			    			
+			    			//submit 보내기 전에, 정말로 삭제할건지, 삭제확인 모달창 보여주자
+			    			//체크한 품목명리스트와 품목코드리스트를 이용하여, 삭제확인 모달창 내용에 넣을 문장 만들기
+			    			let materialNameList = getMaterialName();
+			    			let materialCodeList = chkClicked(); 
+			    			
+			    			function makeSentence(code,name){
+			    				let sentence =`<span>품목코드 : ${code},&nbsp;&nbsp; 품목명 : ${name}</span><br>`;
+			    				return sentence;    				
+			    			}
+			    			
+			    			for(var i=0; i<materialNameList.length; i++){
+			    				sentence = sentence + makeSentence(materialCodeList[i],materialNameList[i]);
+			    			}
+			    			sentence=sentence+`<br><span>해당 품목을 정말로 삭제 하시겠습니까?</span>`;
+			    			
+			    			document.querySelector("#materialDeleteConfirmModalContent").innerHTML = sentence;
+				   				
+			   				//삭제확인 모달창 보여주기
+							$(".materialDeleteConfirmModal").modal('show');
+							//그리고 체크된 값들 전부 체크 해제 해주기
+							//$("input:checkbox").prop("checked", false);	//이거 지워주면, 삭제확인 모달창의 확인 버튼 누를때, 도면파일 값을 못읽는다!
+		    			}else if(!checkBoxValueCheck){								//체크박스 선택한 것이 없음 -> 오류 모달창 보여주기				
+		    				//console.log("체크박스 전역변수만 실패!!");
+		    				//오류 모달창 보여주기
+		    				sentence = `<span>체크한 항목이 없습니다.</span><br>
+										<span>다시 선택해주시길 바랍니다.</span>`;
+		           			document.querySelector("#materialMDErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#materialMDErrorModalTitle").innerHTML = `품목 삭제`;
+		    				
+							$(".materialMDErrorModal").modal('show');    					
+							//그리고 체크박스 체크 값 true로 다시 세팅해주기
+							checkBoxValueCheck = true;   
+		    			}else if(!contractStatusCheck){								//체크박스 선택한것 중에 계약상태 완료 인것이 있음 -> 오류 모달창 보여주기
+		    				//console.log("계약상태 체크 전역변수만 실패!!");
+		    				//오류 모달창 보여주기
+		    				sentence = `<span>계약이 <span style='color:red;'>'완료'</span>된 품목은 삭제가 <span style='color:red;'>'불가능'</span>합니다.</span><br>
+		                 				<span>다시 선택해주시길 바랍니다.</span>`;
+		           			document.querySelector("#materialMDErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#materialMDErrorModalTitle").innerHTML = `품목 삭제`;
+		    				
+							$(".materialMDErrorModal").modal('show'); 
+		    				
+		    				//그리고 계약상태 체크 값 true로 다시 세팅해주기
+							contractStatusCheck = true;   
+							//그리고 체크된 값들 전부 체크 해제 해주기
+							$("input:checkbox").prop("checked", false);
+		    			} //if
+					},
+					error : function(jqXHR,textStatus,errorThrown){    
+						//console.log(jqXHR); 			//응답 메시지
+						//console.log(textStatus); 		//"error"로 고정인듯함
+						//console.log(errorThrown);					
+						console.log("삭제버튼 / 계약상태 여부 ajax 에러발생~~!!!!!");						
+					}
+				});	//$.ajax
+   			}); //삭제 버튼 누를때, 끝
+   			
+   			//삭제확인 모달창의 확인 버튼 누를때 --> 해당 도면파일인 업로드 된 파일도 지워주자 --> 즉 실제로 삭제되는 부분
+			$(document).on("click",".materialDeleteConfirmBtn",function(e){
+				e.preventDefault();	
+				let drawingFileList = getDrawingFile();
+				//console.log("만들어진 도면파일 리스트 보자 : ",drawingFileList);
+				
+				//도면파일 리스트의 값이 있을때만 ajax 보내서 삭제하기 
+	        	if(drawingFileList.length>0){
+		        	//Json 타입으로 변환시키기
+					var drawingFileListToJsonData = JSON.stringify(drawingFileList);	
+					//console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",drawingFileListToJsonData);
+					
+		        	//기존의 업로드된 파일 삭제하는 ajax(imgurl말고! drawingFile을 바로 이용해서 하는 삭제)
+		        	$.ajax({
+		                url: '/procurement1/drawing/removeFile2',
+		                data: drawingFileListToJsonData,
+		                contentType :"application/json; charset=UTF-8" ,
+		                dataType:'text',
+		                type: 'POST',
+		                success: function(result){
+		                	console.log("품목삭제를 하면서 도면 삭제하는 ajax, 성공한거지!! 결과 값 보자 : ",result);
+		                },
+		                error: function(jqXHR, textStatus, errorThrown){
+	 	                    console.log("품목삭제와 동시에 기존의 도면파일 업로드된 거 삭제하는 ajax 에러",textStatus);
+	 	                }
+		            }); //$.ajax 
+	        	} //if
+				
+				//담은거 submit으로 보내자
+    			$("#materialDeleteForm").submit();				
+				//그리고 자동으로 모달창 닫아주기
+				$(".materialDeleteConfirmModal").modal('hide');				
+			});	//삭제확인 모달창의 확인 버튼 누를때 끝
+   			
+   			
+   			
+   			
 			
 		
 		}); //$(document).ready(function() 끝

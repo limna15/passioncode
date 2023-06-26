@@ -19,6 +19,7 @@ import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MRP;
+import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.ContractService;
@@ -52,6 +53,7 @@ public class PS1Controller {
 		
 		model.addAttribute("DTOList",materialService.getDTOList());	
 		List<MaterialDTO> DTOList = materialService.getDTOList();
+//		log.info("품목정보 목록 화면 에서의 DTOList 봐보자~~~~~~~~~~~ : "+DTOList);
 //		log.info("어디 그 이미지 dto 읽어보자 getDrawingUploadPath() : "+DTOList.get(0).getDrawingFileDTO().getDrawingUploadPath() );
 //		log.info("어디 그 이미지 dto 읽어보자 getFileName() : "+DTOList.get(0).getDrawingFileDTO().getFileName() );
 //		log.info("어디 그 이미지 dto 읽어보자 getUuid() : "+DTOList.get(0).getDrawingFileDTO().getUuid() );
@@ -342,6 +344,28 @@ public class PS1Controller {
 		return "redirect:/procurement1/materialList";
 	}
 	
+	@PostMapping("materialDelete")
+	public String materialDelete(String[] materialCodeList,RedirectAttributes redirectAttributes) {
+		log.info("품목 정보 삭제 처리.....");
+		log.info("품목 목록(등록)에서 보낸 삭제하기 위한 materialCodeList"+materialCodeList);
+		
+		for(String code : materialCodeList) {
+			Material material = materialService.getMaterial(code);
+			MaterialDTO materialDTO = materialService.entityToDTO(material);
+			materialService.delete(materialDTO);
+		}
+		
+		//삭제된 품목코드 리스트
+		redirectAttributes.addFlashAttribute("materialCodeList",materialCodeList);
+		
+		return "redirect:/procurement1/materialList";
+	}
+	
+	
+	
+	
+	
+	
 	/**
 	 * 계약 목록 화면 보기
 	 * @param model
@@ -362,7 +386,6 @@ public class PS1Controller {
 	public void ContractRegister(String[] materialCodeList, Model model) {
 		 //계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
 		 //사업자등록번호
-		
 		log.info("계약 등록 화면 보기.....");
 		
 		//클릭한 품목코드 리스트를 통해서, 등록화면에 보낼, ContractDTO 리스트 만들기		

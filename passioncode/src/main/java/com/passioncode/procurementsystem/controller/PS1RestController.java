@@ -277,52 +277,83 @@ public class PS1RestController {
 	
 	/**
 	 * 품목 정보 수정화면 진입을 위한, 수정가능여부 체크해주기<br>
-	 * 품목코드 리스트를 이용해서, 수정이 가능한 품목코드 확인해주기
+	 * 품목코드 리스트를 이용해서, 계약상태 여부 체크하기
 	 * @param materialCodeList
 	 * @return
 	 */
-	@PostMapping(value="expectedPurchaseOrderCheck", produces=MediaType.TEXT_PLAIN_VALUE)
-	public String expectedPurchaseOrderCheck(@RequestBody List<String> materialCodeList) {
+	@PostMapping(value="contractStatusCheck", produces=MediaType.TEXT_PLAIN_VALUE)
+	public String contractStatusCheck(@RequestBody List<String> materialCodeList) {
 		//주의사항!! 반환타입은 boolean이 안된다! 그래서 String 문자열로 반환해주기!
 		//화면에서 받아온 품목코드 리스트로 조회하기!!
-		//품목코드로 조달계획 조회하는데 
-		// 1. 조회가 안된다 => mrp조차 등록안되서, 혹은 조달계획조차 등록이 안된거니까, 등록한지 얼마 안된 품목! 수정 가능!
-		// 2. 조회가 되는데, 리스트에서 조달완료일,세부구매발주서 둘다 전부 null => 한번도 발주한적이 없는거니까, 얼마안된 등록이라 수정 가능!!
-		
+		//품목코드로 계약서 조회하는데 
+		// 1. 조회가 안된다 => 계약 미완료 -> 수정 가능
+		// 2. 조회가 된다 => 계약 완료 -> 수정 불가능
 		log.info("받아온 품목코드 리스트 봐보자 : "+materialCodeList);
 		
-		boolean expectedPurchaseOrderCheck = false;
+		boolean contractStatusCheck = false;
 		
 		for(String materialCode : materialCodeList) {
-			List<ProcurementPlan> ppList = procurementPlanService.getPPJoinMRPByMaterialCode(materialCode);
-			
-			if(ppList.size()==0) {
-				expectedPurchaseOrderCheck = true;
-			}else {
-				for(int i=0; i<ppList.size(); i++) {
-					if(ppList.get(i).getCompletionDate()!=null) {
-						expectedPurchaseOrderCheck = false;
-						break;
-					}else {
-						if(ppList.get(i).getDetailPurchaseOrder()!=null) {
-							expectedPurchaseOrderCheck = false;
-							break;
-						}else {
-							expectedPurchaseOrderCheck = true;
-						}
-					}
-				}
-			}
-			
-			if(!expectedPurchaseOrderCheck) {
+			Material material = materialService.getMaterial(materialCode);
+			String contractStatus = materialService.contractStatusCheck(material);
+			if(contractStatus.equals("완료")) {
+				contractStatusCheck = false;
 				break;
+			}else {
+				contractStatusCheck = true;
 			}
 		}
-		log.info("그래서 expectedPurchaseOrderCheck 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
+		log.info("그래서 contractStatusCheck 최종 참, 거짓 확인해 보자 : "+contractStatusCheck);
 		
-		return expectedPurchaseOrderCheck+"";
+		return contractStatusCheck+"";
 	}
 	
+//	/**
+//	 * 품목 정보 수정화면 진입을 위한, 수정가능여부 체크해주기<br>
+//	 * 품목코드 리스트를 이용해서, 수정이 가능한 품목코드 확인해주기
+//	 * @param materialCodeList
+//	 * @return
+//	 */
+//	@PostMapping(value="expectedPurchaseOrderCheck", produces=MediaType.TEXT_PLAIN_VALUE)
+//	public String expectedPurchaseOrderCheck(@RequestBody List<String> materialCodeList) {
+//		//주의사항!! 반환타입은 boolean이 안된다! 그래서 String 문자열로 반환해주기!
+//		//화면에서 받아온 품목코드 리스트로 조회하기!!
+//		//품목코드로 조달계획 조회하는데 
+//		// 1. 조회가 안된다 => mrp조차 등록안되서, 혹은 조달계획조차 등록이 안된거니까, 등록한지 얼마 안된 품목! 수정 가능!
+//		// 2. 조회가 되는데, 리스트에서 조달완료일,세부구매발주서 둘다 전부 null => 한번도 발주한적이 없는거니까, 얼마안된 등록이라 수정 가능!!
+//		
+//		log.info("받아온 품목코드 리스트 봐보자 : "+materialCodeList);
+//		
+//		boolean expectedPurchaseOrderCheck = false;
+//		
+//		for(String materialCode : materialCodeList) {
+//			List<ProcurementPlan> ppList = procurementPlanService.getPPJoinMRPByMaterialCode(materialCode);
+//			
+//			if(ppList.size()==0) {
+//				expectedPurchaseOrderCheck = true;
+//			}else {
+//				for(int i=0; i<ppList.size(); i++) {
+//					if(ppList.get(i).getCompletionDate()!=null) {
+//						expectedPurchaseOrderCheck = false;
+//						break;
+//					}else {
+//						if(ppList.get(i).getDetailPurchaseOrder()!=null) {
+//							expectedPurchaseOrderCheck = false;
+//							break;
+//						}else {
+//							expectedPurchaseOrderCheck = true;
+//						}
+//					}
+//				}
+//			}
+//			
+//			if(!expectedPurchaseOrderCheck) {
+//				break;
+//			}
+//		}
+//		log.info("그래서 expectedPurchaseOrderCheck 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
+//		
+//		return expectedPurchaseOrderCheck+"";
+//	}
 	
 	/**
 	 * 품목 정보 수정화면 진입을 위한, 수정가능여부 체크해주기<br>

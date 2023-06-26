@@ -283,12 +283,10 @@ public class MaterialRepositoryTests {
 					}
 				}
 			}
-			
 			if(!expectedPurchaseOrderCheck) {
 				break;
 			}
 		}
-		
 		log.info("그래서 최종 참, 거짓 확인해 보자 : "+expectedPurchaseOrderCheck);
 		
 		
