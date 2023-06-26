@@ -302,7 +302,7 @@
                 </div>
             </div>
         </div>
-		<!-- 오류시 보여줄 모달창 끝 -->
+		<!-- 수정버튼+삭제버튼 누를때, 오류시 보여줄 모달창 끝 -->
 		
 		<!-- 삭제확인 모달창 시작-->
 		<div class="materialDeleteConfirmModal modal" tabindex="-2" role="dialog">
@@ -315,7 +315,7 @@
                         </button>
                     </div>
                     <div class="modal-body" id="materialDeleteConfirmModalContent">
-                    	<!-- 품목정보 등록 확인할 내용 -->    
+                    	<!-- 품목정보 삭제 확인할 내용 -->    
                     	
                     </div>
                     <div class="modal-footer">
@@ -365,7 +365,7 @@
 				// td.eq(0)은 체크박스 이므로  td.eq(4)의 값인 품목명을 리스트에 넣어준다.
 				materialNameList.push(td.eq(4).text());
 			});
-			//console.log("어디 만들어진 계약상태 리스트 봐보자 : ",contractStatusList);		
+			//console.log("어디 만들어진 materialNameList 리스트 봐보자 : ",materialNameList);		
 			return materialNameList;
 		}
 		

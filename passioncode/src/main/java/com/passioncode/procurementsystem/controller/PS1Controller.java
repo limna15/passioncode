@@ -344,6 +344,12 @@ public class PS1Controller {
 		return "redirect:/procurement1/materialList";
 	}
 	
+	/**
+	 * 품목 삭제 처리
+	 * @param materialCodeList
+	 * @param redirectAttributes
+	 * @return
+	 */
 	@PostMapping("materialDelete")
 	public String materialDelete(String[] materialCodeList,RedirectAttributes redirectAttributes) {
 		log.info("품목 정보 삭제 처리.....");
@@ -360,11 +366,6 @@ public class PS1Controller {
 		
 		return "redirect:/procurement1/materialList";
 	}
-	
-	
-	
-	
-	
 	
 	/**
 	 * 계약 목록 화면 보기
@@ -581,6 +582,29 @@ public class PS1Controller {
 		for(ContractDTO dto : contractDTOList) {
 			contractService.modify(dto);
 		}
+		return "redirect:/procurement1/contractList";
+	}
+	
+	/**
+	 * 계약서 삭제 처리
+	 * @param contractNoList
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@PostMapping("contractDelete")
+	public String contractDelete(String[] contractNoList,RedirectAttributes redirectAttributes) {
+		log.info("계약서 삭제 처리.....");
+		log.info("계약 목록(등록)에서 보낸 삭제하기 위한 contractNoList"+contractNoList);
+		
+		for(String contractNo : contractNoList) {
+			Contract contract = contractService.getContract(Integer.parseInt(contractNo));
+			ContractDTO contractDTO = contractService.contractEntityToDTO(contract);
+			contractService.delete(contractDTO);
+		}
+		
+		//삭제된 계약서번호 리스트
+		redirectAttributes.addFlashAttribute("contractNoList",contractNoList);
+		
 		return "redirect:/procurement1/contractList";
 	}
 	
