@@ -281,7 +281,7 @@
 								<tbody id="history">
 									<tr>
 										<th>-</th>
-										<th id="">검수일자</th>
+										<th id="">2023/00/00</th>
 										<th id="diliveryPercent3">납기 진도율</th>
 										<th id="etc3">기타사항</th>
 										
@@ -417,9 +417,11 @@
 					console.log("받아온 데이터 : ",data);
 					}
 				})
+				console.log("평가 등록~~ ");
+				location.href="/procurement2/progressCheck";
 			})
 		});
-
+		
 		//진척검수 일정등록의 등록 버튼
 		$(".sendDate").click(function(){
 			console.log("날짜 등록 버튼을 누름");
@@ -443,6 +445,8 @@
 					console.log("받아온 데이터 : ",data);
 				}
 			})
+			console.log("일정등록~~ ");
+			location.href="/procurement2/progressCheck";
 			
 		});
 
