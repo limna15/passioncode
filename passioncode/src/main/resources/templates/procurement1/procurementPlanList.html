@@ -128,6 +128,7 @@
 							<thead>
 								<tr>
 									<th></th>
+									<th style="display:none;">조달계획 코드</th>
 									<th>품목코드</th>
 									<th>품목명</th>
 									<th>소요공정</th>
@@ -145,6 +146,7 @@
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
 									<td><input type="checkbox" name="checkBox" th:value="${dto.mrpCode}" onclick="chkClicked(); getContractStatus();"></td>
+									<td style="display:none;">[[${dto.ppcode}]]</td>
 									<td>[[${dto.materialCode}]]</td>
 									<td>[[${dto.materialName}]]</td>
 									<td>[[${dto.process}]]</td>
@@ -201,25 +203,38 @@
 		</div>
 		
 		<!-- 
-			등록버튼 누를때, 오류시 보여줄 모달창 시작
+			등록버튼+수정버튼+삭제버튼 누를때, 오류시 보여줄 모달창 시작
+			-- 등록버튼 누를때
 			(상황1. 계약상태 완료 + 조달계획 등록상태 미완료 => 말고 다른값을 눌렀을때)
 			(상황2. 체크한게 아무것도 없을때)
+			- 제목 : 조달 계획 등록
 			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
-                    		  조달계획 등록상태가 <span style='color:red;'>'미완료'</span>인 것만 조달계획등록이 가능합니다.</span><br>
+                    		  조달계획 등록상태가 <span style='color:red;'>'미완료'</span>인 것만 조달계획 등록이 가능합니다.</span><br>
                     	<span>다시 선택해주시길 바랍니다.</span>
 					 2. <span>체크한 항목이 없습니다.</span><br>
 						<span>다시 선택해주시길 바랍니다.</span>
+			-- 수정버튼 누를때
+			(상황1. 계약상태 완료 + 조달계획 등록상태 완료 => 말고 다른값을 눌렀을때)
+			(상황2. 둘다 완료 중에서 이미 발주 된 경우(발주예정 말고 전부)
+			(상황3. 체크한게 아무것도 없을때)
+			- 제목 : 조달 계획 수정
+			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
+                    		  조달계획 등록상태가 <span style='color:red;'>'완료'</span>인 것만 조달계획 수정이 가능합니다.</span><br>
+                     2. <span>발주되어 진행 중인 조달계획이 있습니다.</span><br>
+                 		<span>다시 선택해주시길 바랍니다.</span>	
+                 	 3. <span>체크한 항목이 없습니다.</span><br>
+						<span>다시 선택해주시길 바랍니다.</span>				
 		-->
-		<div class="ppRegisterErrorModal modal" tabindex="-1" role="dialog">
+		<div class="ppRMDErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog " role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">조달 계획 등록</h5>
-                        <button type="button" class="close AllResetSetting" data-dismiss="modal" aria-label="Close">
+                        <h5 class="modal-title" id="ppRMDErrorModalTitle"></h5>
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="ppRegisterErrorModalContent">  
+                    <div class="modal-body" id="ppRMDErrorModalContent">  
                     	<!-- 등록 오류시 보여줄 내용 -->
                     	
                     </div>
@@ -276,6 +291,7 @@
 		}
 		
 		$(document).ready(function(){
+			//-------------------------------------------- 등록 버튼 관련 -----------------------------------------------------------//
 			
 			//계약상태 값에 미완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			var contractStatusValueCheck = true;		//-> 하나라도 미완료 일 경우에 false로 바꿔주기 
@@ -332,12 +348,25 @@
         			//그리고 체크된 값들 전부 체크 해제 해주기
 					$("input:checkbox").prop("checked", false);
     			}else if(!checkBoxValueCheck){													//체크박스 선택된게 X -> 등록오류 모달창 보여주기		
+    				/*
+    				-- 등록버튼 누를때
+						(상황1. 계약상태 완료 + 조달계획 등록상태 미완료 => 말고 다른값을 눌렀을때)
+						(상황2. 체크한게 아무것도 없을때)
+						- 제목 : 조달 계획 등록
+						- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
+			                    		  조달계획 등록상태가 <span style='color:red;'>'미완료'</span>인 것만 조달계획 등록이 가능합니다.</span><br>
+			                    	<span>다시 선택해주시길 바랍니다.</span>
+								 2. <span>체크한 항목이 없습니다.</span><br>
+									<span>다시 선택해주시길 바랍니다.</span>
+    				*/
+    				
     				//오류 모달창 보여주기
     				sentence = `<span>체크한 항목이 없습니다.</span><br>
 								<span>다시 선택해주시길 바랍니다.</span>`;
-           			document.querySelector("#ppRegisterErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#ppRMDErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#ppRMDErrorModalTitle").innerHTML = `조달 계획 등록`;
     				
-					$(".ppRegisterErrorModal").modal('show');    					
+					$(".ppRMDErrorModal").modal('show');    					
 					//그리고 다시 등록체크 값 true로 다시 세팅해주기
 					checkBoxValueCheck = true;   
     			}else if(!contractStatusValueCheck || !ppStatusValueCheck){						//체크박스 선택한것 중에 하나라도 완료 인것이 있음 -> 등록오류 모달창 보여주기
@@ -345,9 +374,10 @@
     				sentence = `<span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
                     				  조달계획 등록상태가 <span style='color:red;'>'미완료'</span>인 것만 조달계획등록이 가능합니다.</span><br>
                     			<span>다시 선택해주시길 바랍니다.</span>`;
-           			document.querySelector("#ppRegisterErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#ppRMDErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#ppRMDErrorModalTitle").innerHTML = `조달 계획 등록`;
     				
-					$(".ppRegisterErrorModal").modal('show'); 
+					$(".ppRMDErrorModal").modal('show'); 
     				
     				//그리고 다시 등록체크 값 true로 다시 세팅해주기
 					contractStatusValueCheck = true;   
@@ -355,9 +385,35 @@
 					//그리고 체크된 값들 전부 체크 해제 해주기
 					$("input:checkbox").prop("checked", false);
     			}
-    			
    			});
-   		});	
+			
+    		//-------------------------------------------- 수정 버튼 관련 -----------------------------------------------------------//
+			/*
+			-- 수정버튼 누를때
+			(상황1. 계약상태 완료 + 조달계획 등록상태 완료 => 말고 다른값을 눌렀을때)
+			(상황2. 둘다 완료 중에서 이미 발주 된 경우(발주예정 말고 전부)
+			(상황3. 체크한게 아무것도 없을때)
+			- 제목 : 조달 계획 수정
+			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
+                    		  조달계획 등록상태가 <span style='color:red;'>'완료'</span>인 것만 조달계획 수정이 가능합니다.</span><br>
+                     2. <span>발주되어 진행 중인 조달계획이 있습니다.</span><br>
+                 		<span>다시 선택해주시길 바랍니다.</span>	
+                 	 3. <span>체크한 항목이 없습니다.</span><br>
+						<span>다시 선택해주시길 바랍니다.</span>
+			*/
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+   		});	//$(document).ready(function() 끝
 			
 		
 		
