@@ -254,10 +254,13 @@ public class MaterialInRepositoryTests {
 	@Test
 	public void getOrderByDTOListTest() {
 		List<Object[]> materialInList= materialInRepository.getOrderByList();
+		List<MaterialInDTO> miDTOList= new ArrayList<>();
+		MaterialInDTO miDTO= null;
 		
 		for(Object[] aa: materialInList) {
-			log.info("list 한번 보자 >>> " + Arrays.toString(aa));
-
+			for(Object bb: aa) {
+			log.info("list 한번 보자 >>> " + bb);
+			}
 		}
 	}
 }
