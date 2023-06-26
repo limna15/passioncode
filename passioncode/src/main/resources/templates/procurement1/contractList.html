@@ -293,7 +293,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="attachFileDownloadCheckModal">
+                    <div class="modal-body" id="attachFileDownloadModalContent">
                     	<!-- 첨부파일 이름 확인할 내용 -->    
                     	
                     </div>
@@ -649,7 +649,7 @@
 				sentence = `<span><b>파일명</b> : `+fileName+`<br><br>
 							해당 파일을 다운로드 하시겠습니까?</span>`;
 				//console.log("만든 문장 봐보자 : ",sentence);
-       			document.querySelector("#attachFileDownloadCheckModal").innerHTML = sentence;					
+       			document.querySelector("#attachFileDownloadModalContent").innerHTML = sentence;					
 				$(".attachFileDownloadModal").modal('show');
 			});
 			

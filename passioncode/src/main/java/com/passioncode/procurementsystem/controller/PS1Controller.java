@@ -519,7 +519,7 @@ public class PS1Controller {
 		
 		List<ContractDTO> contractDTOList = new ArrayList<>();
 		
-		//계약서 번호
+		//계약서 번호 배열
 		String[] contractNo = request.getParameterValues("contractNo");	
 		//품목코드 배열
 		String[] materialCode = request.getParameterValues("materialCode");	
@@ -661,29 +661,18 @@ public class PS1Controller {
 		List<Date> mrpDateList = new ArrayList<>();
 		for(int i=0;i<mrpDateStr.length;i++) {
 			try {
-//				mrpDate[i] = simpleDateFormat.parse(mrpDateStr[i]);
 				mrpDateList.add(simpleDateFormat.parse(mrpDateStr[i]));
 			} catch (ParseException e) {
-				//e.printStackTrace();
 				log.info("소요일 date 변환시 오류 발생함!!");
 			}
-//			log.info("변경되서 넣어진 소요일 날짜 형식 봐보자 : "+mrpDate[i]);
 			log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpDateList);
 		}	
 		//소요량 배열 -> Integer로 변경
-		String[] mrpAmountStr = request.getParameterValues("mrpAmount");	
-		List<Integer> mrpAmountList = new ArrayList<>();
-		for(int i=0;i<mrpAmountStr.length;i++) {
-			mrpAmountList.add(Integer.parseInt(mrpAmountStr[i]));
-		}	
+		String[] mrpAmount = request.getParameterValues("mrpAmount");	
 		//협력회사 배열
 		String[] companyName = request.getParameterValues("companyName");				
 		//품목공급LT 배열 -> Integer로 변경
-		String[] supplyLtStr = request.getParameterValues("supplyLt");	
-		List<Integer> supplyLtList = new ArrayList<>();
-		for(int i=0;i<supplyLtStr.length;i++) {
-			supplyLtList.add(Integer.parseInt(supplyLtStr[i]));
-		}
+		String[] supplyLt = request.getParameterValues("supplyLt");	
 		//조달납기예정일 배열 -> Date 형식으로 변환
 		String[] dueDateStr = request.getParameterValues("dueDate");		
 		List<Date> dueDateList = new ArrayList<>();
@@ -691,7 +680,6 @@ public class PS1Controller {
 			try {
 				dueDateList.add(simpleDateFormat.parse(dueDateStr[i]));
 			} catch (ParseException e) {
-				e.printStackTrace();
 				log.info("조달납기예정일 date 변환시 오류 발생함!!");
 			}
 			log.info("변경되서 넣어진 조달납기예정일 날짜 리스트 봐보자 : "+dueDateList);
@@ -703,38 +691,20 @@ public class PS1Controller {
 			try {
 				minimumOrderDateList.add(simpleDateFormat.parse(minimumOrderDateStr[i]));
 			} catch (ParseException e) {
-				e.printStackTrace();
 				log.info("최소발주일일 date 변환시 오류 발생함!!");
 			}
 			log.info("변경되서 넣어진 최소발주일 날짜 리스트 봐보자 : "+minimumOrderDateList);
 		}
 		//필요수량 배열 -> Integer로 변경
-		String[] ppAmountStr = request.getParameterValues("ppAmount");	
-		List<Integer> ppAmountList = new ArrayList<>();
-		for(int i=0;i<ppAmountStr.length;i++) {
-			ppAmountList.add(Integer.parseInt(ppAmountStr[i]));
-		}
+		String[] ppAmount = request.getParameterValues("ppAmount");	
 		//자재소요계획코드 배열 -> Integer로 변경
-		String[] mrpCodeStr = request.getParameterValues("mrpCode");	
-		List<Integer> mrpCodeList = new ArrayList<>();
-		for(int i=0;i<mrpCodeStr.length;i++) {
-			mrpCodeList.add(Integer.parseInt(mrpCodeStr[i]));
-		}
-		//log.info("mrp 코드 리스트 셋팅된거 바보자!! "+mrpCodeList);
+		String[] mrpCode = request.getParameterValues("mrpCode");	
 		//사업자등록번호 배열 
 		String[] companyNo = request.getParameterValues("companyNo");		
 		//계약서번호 -> Integer로 변경
-		String[] contractNoStr = request.getParameterValues("contractNo");	
-		List<Integer> contractNoList = new ArrayList<>();
-		for(int i=0;i<contractNoStr.length;i++) {
-			contractNoList.add(Integer.parseInt(contractNoStr[i]));
-		}	
+		String[] contractNo = request.getParameterValues("contractNo");	
 		//기본여유기간 배열 -> Integer로 변경
-		String[] freePeriodStr = request.getParameterValues("freePeriod");	
-		List<Integer> freePeriodList = new ArrayList<>();
-		for(int i=0;i<freePeriodStr.length;i++) {
-			freePeriodList.add(Integer.parseInt(freePeriodStr[i]));
-		}		
+		String[] freePeriod = request.getParameterValues("freePeriod");	
 		//계약상태, 조달계획 등록상태 -> 완료
 		//조달계획 진행사항 -> 발주 예정
 		
@@ -750,20 +720,19 @@ public class PS1Controller {
 			procurementPlanDTO2.setMaterialName(materialName[i]);
 			procurementPlanDTO2.setProcess(process[i]);
 			procurementPlanDTO2.setMrpDate(mrpDateList.get(i));
-			procurementPlanDTO2.setMrpAmount(mrpAmountList.get(i));
+			procurementPlanDTO2.setMrpAmount(Integer.parseInt(mrpAmount[i]));
 			procurementPlanDTO2.setCompanyName(companyName[i]);;
-			procurementPlanDTO2.setSupplyLt(supplyLtList.get(i));
+			procurementPlanDTO2.setSupplyLt(Integer.parseInt(supplyLt[i]));
 			procurementPlanDTO2.setDueDate(dueDateList.get(i));
 			procurementPlanDTO2.setMinimumOrderDate(minimumOrderDateList.get(i));
-			procurementPlanDTO2.setPpAmount(ppAmountList.get(i));
-			procurementPlanDTO2.setMrpCode(mrpCodeList.get(i));
+			procurementPlanDTO2.setPpAmount(Integer.parseInt(ppAmount[i]));
+			procurementPlanDTO2.setMrpCode(Integer.parseInt(mrpCode[i]));
 			procurementPlanDTO2.setCompanyNo(companyNo[i]);
-			procurementPlanDTO2.setContractNo(contractNoList.get(i));
-			
+			procurementPlanDTO2.setContractNo(Integer.parseInt(contractNo[i]));
+			procurementPlanDTO2.setFreePeriod(Integer.parseInt(freePeriod[i]));
 			//받아온 데이터에 null값으로 오는 항목이 없음! 그대로 리스트에 넣어주기			
 			procurementPlanDTOList.add(procurementPlanDTO2);
 		}
-		
 		log.info("조달계획 등록 처리에서 만든 등록할 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
 	
 		//등록된 조달계획코드 리스트
@@ -802,7 +771,129 @@ public class PS1Controller {
 	}
 
 
+	/**
+	 * 조달계획 수정 처리
+	 * @param procurementPlanDTO
+	 * @param redirectAttributes
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("procurementPlanModify")
+	public String procurementPlanModify2(ProcurementPlanDTO procurementPlanDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
+		//품목코드, 품목명, 소요공정, 소요일, 소요량, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항 <br>
+		//조달계획코드, 자재소요계획코드, 사업자등록번호, 계약서번호 // 기본 여유기간
+				
+		log.info("조달계획 수정 처리.....");
+		
+		log.info("조달계획 수정 화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
+		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
+		//받아온 date(소요일, 조달납기예정일, 최소발주일) String으로 왔기 때문에 Date 형식으로 변환해줘야함
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		List<ProcurementPlanDTO> procurementPlanDTOList = new ArrayList<>();
+		
+		//조달계획코드 배열 -> Integer로 변환
+		String[] ppCode = request.getParameterValues("ppCode");	
+		//품목코드 배열
+		String[] materialCode = request.getParameterValues("materialCode");	
+		//품목명 배열
+		String[] materialName = request.getParameterValues("materialName");
+		//소요공정 배열
+		String[] process = request.getParameterValues("process");		
+		//소요일 배열 -> Date 형식으로 변환
+		String[] mrpDateStr = request.getParameterValues("mrpDate");		
+//		log.info("지금 이 mrpDate를 못 읽어서 오는건가???? 봐보자!!!");
+//		for(String test:mrpDateStr) {
+//			log.info("받아온 mrpDate 하나씩 봐보자 : "+test);
+//		}		
+//		Date[] mrpDate = null; 	 => 이렇게 했더니, 밑에 try catch 에서 잡게 되므로 null이 존재할 가능성때문에, 자바 에러가 뜸
+		List<Date> mrpDateList = new ArrayList<>();
+		for(int i=0;i<mrpDateStr.length;i++) {
+			try {
+				mrpDateList.add(simpleDateFormat.parse(mrpDateStr[i]));
+			} catch (ParseException e) {
+				log.info("소요일 date 변환시 오류 발생함!!");
+			}
+			log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpDateList);
+		}	
+		//소요량 배열 -> Integer로 변경
+		String[] mrpAmount = request.getParameterValues("mrpAmount");	
+		//협력회사 배열
+		String[] companyName = request.getParameterValues("companyName");				
+		//품목공급LT 배열 -> Integer로 변경
+		String[] supplyLt = request.getParameterValues("supplyLt");	
+		//조달납기예정일 배열 -> Date 형식으로 변환
+		String[] dueDateStr = request.getParameterValues("dueDate");		
+		List<Date> dueDateList = new ArrayList<>();
+		for(int i=0;i<dueDateStr.length;i++) {
+			try {
+				dueDateList.add(simpleDateFormat.parse(dueDateStr[i]));
+			} catch (ParseException e) {
+				e.printStackTrace();
+				log.info("조달납기예정일 date 변환시 오류 발생함!!");
+			}
+			log.info("변경되서 넣어진 조달납기예정일 날짜 리스트 봐보자 : "+dueDateList);
+		}
+		//최소발주일 배열 -> Date 형식으로 변환
+		String[] minimumOrderDateStr = request.getParameterValues("minimumOrderDate");		
+		List<Date> minimumOrderDateList = new ArrayList<>();
+		for(int i=0;i<minimumOrderDateStr.length;i++) {
+			try {
+				minimumOrderDateList.add(simpleDateFormat.parse(minimumOrderDateStr[i]));
+			} catch (ParseException e) {
+				e.printStackTrace();
+				log.info("최소발주일일 date 변환시 오류 발생함!!");
+			}
+			log.info("변경되서 넣어진 최소발주일 날짜 리스트 봐보자 : "+minimumOrderDateList);
+		}
+		//필요수량 배열 -> Integer로 변경
+		String[] ppAmount = request.getParameterValues("ppAmount");	
+		//자재소요계획코드 배열 -> Integer로 변경
+		String[] mrpCode = request.getParameterValues("mrpCode");	
+		//사업자등록번호 배열 
+		String[] companyNo = request.getParameterValues("companyNo");		
+		//계약서번호 -> Integer로 변경
+		String[] contractNo = request.getParameterValues("contractNo");	
+		//기본여유기간 배열 -> Integer로 변경
+		String[] freePeriod = request.getParameterValues("freePeriod");	
+		//수정할 수 있는 상태가, 둘다 완료이고 발주예정 인것만 가능하니까!
+		//계약상태, 조달계획 등록상태 -> 완료
+		//조달계획 진행사항 -> 발주 예정
+		
+		//품목코드는 null일수 없으니까, 품목코드 배열 기준으로, 각각의 DTO에 넣어주고, 그값 DTO리스트에 넣기
+		for(int i=0; i<materialCode.length; i++) {
+			ProcurementPlanDTO procurementPlanDTO2 = new ProcurementPlanDTO();
+			//조달계획코드 null
+			procurementPlanDTO2.setContractStatus("완료");		
+			procurementPlanDTO2.setPpRegisterStatus("완료");
+			procurementPlanDTO2.setPpProgress("발주 예정");
+			procurementPlanDTO2.setPpCode(Integer.parseInt(ppCode[i]));	
+			procurementPlanDTO2.setMaterialCode(materialCode[i]);
+			procurementPlanDTO2.setMaterialName(materialName[i]);
+			procurementPlanDTO2.setProcess(process[i]);
+			procurementPlanDTO2.setMrpDate(mrpDateList.get(i));
+			procurementPlanDTO2.setMrpAmount(Integer.parseInt(mrpAmount[i]));
+			procurementPlanDTO2.setCompanyName(companyName[i]);;
+			procurementPlanDTO2.setSupplyLt(Integer.parseInt(supplyLt[i]));
+			procurementPlanDTO2.setDueDate(dueDateList.get(i));
+			procurementPlanDTO2.setMinimumOrderDate(minimumOrderDateList.get(i));
+			procurementPlanDTO2.setPpAmount(Integer.parseInt(ppAmount[i]));
+			procurementPlanDTO2.setMrpCode(Integer.parseInt(mrpCode[i]));
+			procurementPlanDTO2.setCompanyNo(companyNo[i]);
+			procurementPlanDTO2.setContractNo(Integer.parseInt(contractNo[i]));
+			procurementPlanDTO2.setFreePeriod(Integer.parseInt(freePeriod[i]));
+			//받아온 데이터에 null값으로 오는 항목이 없음! 그대로 리스트에 넣어주기			
+			procurementPlanDTOList.add(procurementPlanDTO2);
+		}
+		log.info("조달계획 수정 처리에서 만든 수정할 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
 	
+		//받아온 DTO리스트 각각 DB에 수정하기
+		for(ProcurementPlanDTO dto : procurementPlanDTOList) {
+			procurementPlanService.modify(dto);
+		}
+		
+		return "redirect:/procurement1/procurementPlanList";
+	}
 	
 	
 	

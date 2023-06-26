@@ -10,13 +10,13 @@
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">조달 계획 수정</p> 
 					<br>
-					<form th:action = "@{/procurement1/procurementPlanRegister}" th:method="post" id="ppRegisterForm">
+					<form th:action = "@{/procurement1/procurementPlanModify}" th:method="post" id="ppModifyForm">
 						<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
 								<table class="table table-bordered" id="ppRegisterTable" style="text-align: center;">
 									<thead>
 										<tr>
-											<th width="9%">조달계획 코드</th>
+											<th width="9%">조달계획<br>코드</th>
 											<th width="9%">품목코드</th>
 											<th width="9%">품목명</th>
 											<th width="11%">소요공정</th>
@@ -53,13 +53,13 @@
 														<i class="mdi mdi-magnify"></i>
 													</button>
 													<input type="hidden" name="companyNo" class="companyNo" th:value="${dto.companyNo}" >
-													<input type="hidden" name="contractNo" class="contractNo" th:value="${dto.companyNo}">
+													<input type="hidden" name="contractNo" class="contractNo" th:value="${dto.contractNo}">
 													<input type="hidden" name="freePeriod" class="freePeriod" th:value="${dto.freePeriod}" >
 													<input type="text" style="float:left; width:65%; border: 0; text-align: center;" name=companyName class="companyName" th:value="${dto.companyName}" readonly>
 												</div>
 											</td>
 											<td>
-												<input type="hidden" name="supplyLt" class="supplyLt">
+												<input type="hidden" name="supplyLt" class="supplyLt" th:value="${dto.supplyLt}">
 												<input type="date" style="width:100%; border: 0; text-align: center;" name="dueDate" class="dueDate" th:value="${#dates.format(dto.dueDate, 'yyyy-MM-dd')}" readonly>
 											</td>
 											<td><input type="date" style="width:100%; border: 0; text-align: center;" name="minimumOrderDate" class="minimumOrderDate" th:value="${#dates.format(dto.minimumOrderDate, 'yyyy-MM-dd')}" readonly></td>
@@ -101,7 +101,7 @@
                     			(소요일-조달납기 예정일)
                     		</div>
                     		<div style="margin-left:10px; margin-top:5px;">
-                    			<input type="number" name="freePeriod" value="2" class="freePeriod" id="freePeriodSetting" style="width:45px; text-align: center;"> 일
+                    			<input type="number" name="freePeriod" value="2" id="freePeriodSetting" style="width:45px; text-align: center;"> 일
                     		</div>
                     	</div>
                     
@@ -139,22 +139,22 @@
         </div>
 		<!-- 계약서 찾기 모달창 끝 -->
 				
-		<!-- 등록확인 모달창 시작-->
-		<div class="ppRegisterConfirmModal modal" tabindex="-2" role="dialog">
+		<!-- 수정확인 모달창 시작-->
+		<div class="ppModifyConfirmModal modal" tabindex="-2" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">조달 계획 등록 확인</h5>
+                        <h5 class="modal-title">조달 계획 수정 확인</h5>
                         <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="ppRegisterCheckModal">
+                    <div class="modal-body" id="ppModifyConfirmModalContent">
                     	<!-- 조달계획 등록 확인할 내용 -->    
                     	
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary ppRegisterConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
+                        <button type="button" class="btn btn-primary ppModifyConfirmBtn" style="padding-left:15px; padding-right:15px; width:60px;">
                         	확인
                        	</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
@@ -164,21 +164,27 @@
                 </div>
             </div>
         </div>
-		<!-- 등록확인 모달창 끝 -->
+		<!-- 수정확인 모달창 끝 -->
 		
-		<!-- 등록확인 모달창의 오류시 보여줄 모달창 시작 -->
-		<div class="ppRegisterConfirmErrorModal modal" tabindex="-1" role="dialog">
+		<!-- 
+			오류시 보여줄 모달창 시작
+			1. 수정확인 모달창의 오류시
+				- 제목 : 조달 계획 수정 확인
+				- 내용 : 1. <span>변경된 사항이 없습니다.</span><br>
+					   		<span>다시 작성해주시길 바랍니다.</span>
+		-->
+		<div class="ppInfoAndErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">조달 계획 등록 확인</h5>
+                        <h5 class="modal-title">조달 계획 수정 확인</h5>
                         <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">   
-                    	<span>등록해야할 값들이 누락되어있습니다.</span><br>
-                    	<span>다시 작성해주시길 바랍니다.</span>
+                    	<span>변경된 사항이 없습니다.</span><br>
+				   		<span>다시 작성해주시길 바랍니다.</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
@@ -188,7 +194,7 @@
                 </div>
             </div>
         </div>
-		<!-- 등록확인 모달창의 오류시 보여줄 모달창 끝 -->
+		<!-- 오류시 보여줄 모달창 끝 -->
 		
 		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -196,31 +202,33 @@
 		
 		
 		$(document).ready(function(){
+			//-------------------------------------- 계약서 찾기 버튼 부분 --------------------------------------------------------------//
+			
 			//계약서 찾으려고 검색한 tr을 넣어주기 위한 tr 전역변수 선언
 			var searchContractTR = new Object();
-			console.log("tr 전역변수 만들고 난 값 : ",searchContractTR);			
+			//console.log("tr 전역변수 만들고 난 값 : ",searchContractTR);			
 			
 			//계약서(협력회사) 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
 			$(document).on("click",".contractSearchBtn",function(){
 				console.log("계약서 찾기 버튼 누름");
 				//계약서 찾기 버튼 누르고 난 후 해당 TR의 값 세팅해주기
 				searchContractTR=getObjTR();
-				console.log("계약서 찾기 버튼 누르고 난 후 해당 TR의 값 세팅 : ",searchContractTR);
+				//console.log("계약서 찾기 버튼 누르고 난 후 해당 TR의 값 세팅 : ",searchContractTR);
 				
 				//검색 버튼위의 td위에 tr을 통해서 품목코드 찾기 -> 즉 검색버튼 누른 행에서 품목코드 찾기
 				//위에서 셋팅 해놓은 searchContractTR 이용하기
 				var materialCode = searchContractTR.querySelector("input[name=materialCode]").value;	
-				console.log("품목코드 : ",materialCode);
+				//console.log("품목코드 : ",materialCode);
 				
 				//품목코드로 계약서 찾는 ajax처리
 				$.ajax({
 					type : "post" ,
-					url : "/procurement1/contractSearch2" ,     		//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
+					url : "/procurement1/contractSearch" ,     			//꼭 절대경로로! /붙이기 // .json 넣으면 응답을 json으로 함!
 					data : materialCode ,                				//보내는 데이터!(요청 데이터)
 					contentType :"text/plain; charset=UTF-8" ,  		//보내는 데이터 형식 (전송 데이터,요청데이터)
 					dataType : "json" ,							 		//받아오는 데이터 형식 (응답데이터) text, json, xml -생략시는 content type을 보고 자동처리
 					success : function(data){        					//가져오는 데이터! (응답데이터)
-						console.log("품목코드로 계약서 찾는 ajax에서 받아온 데이터 : ",data);
+						//console.log("품목코드로 계약서 찾는 ajax에서 받아온 데이터 : ",data);
 						//console.log("json 리스트 사이즈 보자 : ",data.length);
 						
 						//data를 이용해서, 모달창에 넣을 tr 행 html 만들기
@@ -230,7 +238,7 @@
 						data.forEach(function(item){
 							completeHtml = completeHtml + makeContractSearchList(item.companyNo,item.contractNo,item.contractNoStr,item.companyName,item.manager,item.managerTel,item.supplyLt,item.unitPrice,item.dealCondition);						
 						});						
-						console.log("완성된 html 보자",completeHtml);	
+						//console.log("완성된 html 보자",completeHtml);	
 						
 						//시작 태그 바로 뒤에, 계약서 찾기 모달창 -> 본문에 html 넣기
 						//document.querySelector("#searchContractListModal").insertAdjacentHTML('afterbegin', completeHtml);	
@@ -247,7 +255,7 @@
 						console.log("계약서 찾기 ajax 오류 발생~!!!");
 					}
 				});	//$.ajax
-			});	////계약서(협력회사) 찾기 버튼 누를때 끝
+			});	//계약서(협력회사) 찾기 버튼 누를때 끝
 			
 			//console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchContractTR);
 			
@@ -255,8 +263,7 @@
 			$(document).on("click",".contractSelectBtn",function(){
 				console.log("선택 버튼 누름");
 				//console.log("그러면 이건 읽겠지?",getObjTR());
-				
-				console.log("계약서 찾기 버튼 -> 선택버튼 누르고 난 후도 초기의 TR의 값 유지중인지 : ",searchContractTR);
+				//console.log("계약서 찾기 버튼 -> 선택버튼 누르고 난 후도 초기의 TR의 값 유지중인지 : ",searchContractTR);
 				
 				//선택된 계약서의 정보 각각 읽기
 				var contractNo = getObjTR().querySelector("input[name=contractNo]").value;
@@ -332,127 +339,97 @@
 				document.querySelector("input[id=freePeriodSetting]").value = 2;
 				
 				//선택하고 창 닫기 전에 원래 조달계획 등록 테이블에 값들 어떻게 되어있는지 보자
-				console.log("선택하고 창 닫기 전에 원래 조달계획 등록 테이블에 값들 어떻게 되어있는지 보자");
-				console.log("어디!! 계약서 번호 : ", searchContractTR.querySelector("input[name=contractNo]").value);
-				console.log("어디!! 사업자등록번호 : ", searchContractTR.querySelector("input[name=companyNo]").value);
-				console.log("어디!! mrp코드 : ", searchContractTR.querySelector("input[name=mrpCode]").value);
-				console.log("어디!! 소요량 : ", searchContractTR.querySelector("input[name=mrpAmount]").value);
-				console.log("어디!! 소요일 : ", searchContractTR.querySelector("input[name=mrpDate]").value);
-				console.log("어디!! 품목공급LT : ", searchContractTR.querySelector("input[name=supplyLt]").value);
-				console.log("어디!! 필요수량 : ", searchContractTR.querySelector("input[name=ppAmount]").value);
-				console.log("어디!! 조달납기예정일 : ", searchContractTR.querySelector("input[name=dueDate]").value);
-				console.log("어디!! 최소발주일 : ", searchContractTR.querySelector("input[name=minimumOrderDate]").value);
+				//console.log("선택하고 창 닫기 전에 원래 조달계획 등록 테이블에 값들 어떻게 되어있는지 보자");
+				//console.log("어디!! 계약서 번호 : ", searchContractTR.querySelector("input[name=contractNo]").value);
+				//console.log("어디!! 사업자등록번호 : ", searchContractTR.querySelector("input[name=companyNo]").value);
+				//console.log("어디!! mrp코드 : ", searchContractTR.querySelector("input[name=mrpCode]").value);
+				//console.log("어디!! 소요량 : ", searchContractTR.querySelector("input[name=mrpAmount]").value);
+				//console.log("어디!! 소요일 : ", searchContractTR.querySelector("input[name=mrpDate]").value);
+				//console.log("어디!! 품목공급LT : ", searchContractTR.querySelector("input[name=supplyLt]").value);
+				//console.log("어디!! 필요수량 : ", searchContractTR.querySelector("input[name=ppAmount]").value);
+				//console.log("어디!! 조달납기예정일 : ", searchContractTR.querySelector("input[name=dueDate]").value);
+				//console.log("어디!! 최소발주일 : ", searchContractTR.querySelector("input[name=minimumOrderDate]").value);
 				console.log("어디!! 기본여유기간 : ", searchContractTR.querySelector("input[name=freePeriod]").value);
-				
-			});		
+			});	//계약서 찾기 모달창안에 선택 버튼 누를때 끝
 			
+			//-------------------------------------- 수정확인, 수정확인 모달창의 확인 버튼 부분 --------------------------------------------------------------//
 						
-			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
-			var ppRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
-			console.log("등록체크 전역변수 확인하기1 : ",ppRegisterValueCheck);
-			
-			//등록확인 버튼 누를때 -> 등록확인 모달창 보여주기
-			$(document).on("click","#ppRegisterBtn",function(e){
-				console.log("등록확인 버튼 누름");
+			//수정확인 버튼 누를때 -> 수정확인 모달창 보여주기
+			//변경된 사항이 없을때!!! -> 변경된 내용이 없습니다. 다시 작성해주시길 바랍니다 모달창 보여주기
+			$(document).on("click","#ppModifyBtn",function(e){
+				console.log("수정확인 버튼 누름");
 				//1. 버튼 이벤트(submit)금지
-    			e.preventDefault();
+    			e.preventDefault();				
 				
-    			console.log("등록확인 누르고 난 후도 초기의 TR의 값 유지중인지 : ",searchContractTR);
+				//2. 원래의 조달계획 속성값들 : 계약서번호(협력회사명), 기본여유기간(조달납기예정일,최소발주일,필요수량 파악가능) -> 리스트로 만들기
+				// vs 입력받은 조달계획 속성값들 : 계약서번호(협력회사명), 기본여유기간(조달납기예정일,최소발주일,필요수량 파악가능) -> 리스트로 만들기
+				// 두개를 비교하여, 변경된 값이 하나도 없으면!! 수정된 내용이 없다는 안내 모달창 보여주기
+				// 번거롭게 각각 리스트로 만들지 말고! ProcurementPlanDTO 객체로 만들어 담고, 이걸 리스트로 담아주자!
 				
-    			//2. 입력창으로 값을 받기
-    			
-    			//2-1. 등록확인 모달창에 띄울 값 받기(품목코드, 품목명)
-				    			
-    			//입력받은 품목코드 -> 품목코드 리스트에 담기
-    			let codeList = new Array();
-    			$('.materialCode').each(function(){
-    				let code = $(this).val();
-    				//console.log("이거 잘 code 읽어온건가!!",code);
-    				if(code != ""){
-    					codeList.push(code);
-    				}    				
-    			});
-    			//입력받은 품목명 -> 품목명 리스트에 담기
-    			let nameList = new Array();
-    			$('.materialName').each(function(){
-    				let name = $(this).val();
-    				//console.log("이거 잘 code 읽어온건가!!",name);
-    				if(name != ""){
-    					nameList.push(name);
-    				}    				
-    			});    			
-    			//각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
-    			let codenameList = new Array();
-    			
-    			for(var i = 0; i<codeList.length; i++){
-    				let codenameObj = new Object();
-    				codenameObj.code = codeList[i];
-    				codenameObj.name = nameList[i];
-    				codenameList.push(codenameObj);
-    			}    			
-    			//console.log("제대로 넣어 졌는지 보자",codenameList[0]);
-    			//console.log("제대로 넣어 졌는지 보자",codenameList[1]);
-    			
-    			//2-2. 등록할 값들이 제대로 들어갔는지 체크해주기 위한 값 받기(계약서번호)
-    			console.log("등록체크 전역변수 확인하기(체크하기 전) : ",ppRegisterValueCheck);
-    			
-    			//계약서번호 값 체크해주기 
-    			//(계약서번호, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량  5개 체크 모두 가능 )
-    			//화면에서 계약서를  선택 해서, 히든 input인 계약서번호를 셋팅해 주기 때문에,
-    			//계약서번호에 값이 셋팅되어 있으면, 값을 입력한것!  아니면 안한것! 
-    			//모든 값을 세팅해서 넣어주기 때문에, 계약서번호만 체크하면 됨!
-    			$('.contractNo').each(function(){
-    				let contractNo = $(this).val();
-    				console.log("들어간건가 보자 : ",contractNo);
-    				if(contractNo==""){		//빈값일때, false로 바꿔주기
-    					ppRegisterValueCheck = false;
-    				}
-    			});
-				console.log("등록체크 전역변수 확인하기(계약서번호 체크 후) : ",ppRegisterValueCheck);
-    			
-    			//3. 입력받은 리스트를 이용해서, 모달창에 보여줄 한문장으로 만들기
-    			let sentence = ``;
-    			
-    			function makeSentence(code,name){
-    				let sentence =`<span>품목코드 : ${code},&nbsp;&nbsp; 품목명 : ${name}</span><br>`;
-    				return sentence;    				
-    			}	
-    			
-    			if(ppRegisterValueCheck){		//등록체크 값이=>true 일때, 등록하려는 값들이 모두 들어간 상태 ->등록확인 모달창 보여주기
-	   				codenameList.forEach(function(item){
-	   					sentence=sentence+makeSentence(item.code,item.name);
+				//원래의 조달계획 속성값들 리스트
+				//값은 잘읽어오는데, 만약에 없는 값들을 null로 받아오기때문에, 입력받아온 값들은 없으면 "" 빈값으로 읽기 때문에 비교가 두개가 당연히 다르다고 읽는다!
+				// 받아온 값들이 null 일 경우 "" 빈값으로 바꿔주자! --> 하지만 여기선 null인 경우가 없어! 
+				let originalPPDTOList = [[${procurementPlanDTOList}]];
+				console.log("원래의 originalPPDTOList 보자!!!!! : ",originalPPDTOList);
+				
+				//입력받은 수정된 조달계획 속성값들 리스트
+				let modifyPPDTOList = new Array();
+				for(var i=0; i<originalPPDTOList.length; i++){
+					let modifyPPDTO = new Object();
+					modifyPPDTO.contractNo = document.querySelectorAll(".contractNo")[i].value;  //contractNo 클래스는 원래 테이블에만 있어
+					modifyPPDTO.freePeriod = document.querySelectorAll(".freePeriod")[i].value;	 //freePeriod 클래스도 원래 테이블에만 있어
+					modifyPPDTOList.push(modifyPPDTO);
+				}
+				console.log("입력받은 수정된 modifyPPDTOList 보자!!!!! : ",modifyPPDTOList);
+				
+				//값이 하나라도 변하지 않을때, 그 횟수를 더해주자!
+				//값이안변한 갯수 = originalPPDTOList.length  ==> 전부가 하나도 값이 안변한거야!! -> 하나도 변한값 없어~ 모달창 보여주기
+				var noChangeCount = 0;
+				
+				for(var i=0; i<originalPPDTOList.length; i++){
+					if(originalPPDTOList[i].contractNo == modifyPPDTOList[i].contractNo &&
+							originalPPDTOList[i].freePeriod == modifyPPDTOList[i].freePeriod){
+						//console.log("지금 "+i+"번째 항목이 다 같은 경우야!!!!");
+						noChangeCount = noChangeCount +1; 
+					}
+				}
+				console.log("최종적으로 값이 안변한 갯수 보자 : ", noChangeCount);
+				console.log("전체 계약서 속성리스트의 크기 : ",originalPPDTOList.length);
+				
+				if(noChangeCount == originalPPDTOList.length){	//값이 하나도 변한게 없어!!! -> 안내 모달창 보여주자!
+					//수정확인 버튼 오류 모달창 보여주기
+					$(".ppInfoAndErrorModal").modal('show');
+				}else{													//변경된 것이 있으니까!!  -> 원래대로 수정확인 모달창 보여주기
+					//3. 받은 originalPPDTOList의 조달계획코드,품목명을 이용해서,수정확인 모달창에 보여줄 한문장으로 만들기
+	    			function makeSentence(ppCodeStr,materialName){
+	    				let sentence =`<span>조달계획 코드 : ${ppCodeStr},&nbsp;&nbsp; 품목명 : ${materialName}</span><br>`;
+	    				return sentence;    				
+	    			}
+					
+	    			let sentence = ``;
+	    			originalPPDTOList.forEach(function(item){
+	   					sentence=sentence+makeSentence(item.ppCodeStr,item.materialName);
 	   				});
-	   				//console.log("현재까지 만들어진 문장보자",sentence);
-	   				
-	   				sentence=sentence+`<br><span>조달계획을 등록 하시겠습니까?</span>`;   				
+	   				sentence=sentence+`<br><span>해당 조달계획을 수정 하시겠습니까?</span>`;   				
 	   				//console.log("완성된 문장보자",sentence);
 	   				
-	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
-	   				//document.querySelector("#ppRegisterCheckModal").insertAdjacentHTML('afterbegin', sentence);
-	   				document.querySelector("#ppRegisterCheckModal").innerHTML = sentence;;
-	   				   				
-	   				//등록확인 모달창 보여주기
-					$(".ppRegisterConfirmModal").modal('show');	   				
-    			}else{								//등록체크 값이=>false 일때, 등록하려는 값들 중 하나라도 빠진 상태 ->오류 모달창 보여주기
-					//오류 모달창 보여주기
-					$(".ppRegisterConfirmErrorModal").modal('show');    					
-					//그리고 다시 등록체크 값 true로 다시 세팅해주기
-					ppRegisterValueCheck = true;
-    			}
-				console.log("등록체크 전역변수 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",ppRegisterValueCheck);
-			});	//등록확인 버튼 누를때 끝
+	   				//4. 완성된 문장을 모달창 넣어서 수정여부 물어보기
+	   				document.querySelector("#ppModifyConfirmModalContent").innerHTML = sentence;
+	   				//수정확인 모달창 보여주기
+					$(".ppModifyConfirmModal").modal('show');	
+				} //if
+			});	//수정확인 버튼 누를때 끝
 			
-			console.log("등록체크 전역변수 확인하기(중간에 확인) : ",ppRegisterValueCheck);
-						
-			//등록확인 모달창의 확인 버튼 누를때
-			$(document).on("click",".ppRegisterConfirmBtn",function(e){
+			//수정확인 모달창의 확인 버튼 누를때
+			$(document).on("click",".ppModifyConfirmBtn",function(e){
 				e.preventDefault();					
 				//폼태그에 실어서 등록하기
-				$("#ppRegisterForm").submit();
+				$("#ppModifyForm").submit();
 				//그리고 자동으로 모달창 닫아주기
-				$(".ppRegisterConfirmModal").modal('hide');				
+				$(".ppModifyConfirmModal").modal('hide');				
 			});	
 						
+			
 			
 		});	//$(document).ready(function() 끝	
 		

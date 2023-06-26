@@ -96,7 +96,6 @@
                         </button>
                     </div>
                     <div class="modal-body" >
-                    
                     	<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
 							<table class="table table-bordered" id="searchCompanyListTable" style="text-align:center;">
@@ -116,7 +115,6 @@
 							</table>
 							<!-- 테이블 끝 -->
 						</div>    
-                    	   
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary " data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
@@ -138,7 +136,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="contractRegisterCheckModal">
+                    <div class="modal-body" id="contractRegisterConfirmModalContent">
                     	<!-- 계약 등록 확인할 내용 -->    
                     	
                     </div>
@@ -481,8 +479,8 @@
 	   				//console.log("완성된 문장보자",sentence);
 	   				
 	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
-	   				//document.querySelector("#contractRegisterCheckModal").insertAdjacentHTML('afterbegin', sentence);
-					document.querySelector("#contractRegisterCheckModal").innerHTML = sentence;
+	   				//document.querySelector("#contractRegisterConfirmModalContent").insertAdjacentHTML('afterbegin', sentence);
+					document.querySelector("#contractRegisterConfirmModalContent").innerHTML = sentence;
 	   				   				
 	   				//등록확인 모달창 보여주기
 					$(".contractRegisterConfirmModal").modal('show');	   				

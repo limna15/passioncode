@@ -144,7 +144,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="ppRegisterCheckModal">
+                    <div class="modal-body" id="ppRegisterConfirmModalContent">
                     	<!-- 조달계획 등록 확인할 내용 -->    
                     	
                     </div>
@@ -161,8 +161,14 @@
         </div>
 		<!-- 등록확인 모달창 끝 -->
 		
-		<!-- 등록확인 모달창의 오류시 보여줄 모달창 시작 -->
-		<div class="ppRegisterConfirmErrorModal modal" tabindex="-1" role="dialog">
+		<!-- 
+			오류시 보여줄 모달창 시작
+			1. 등록확인 모달창의 오류시
+				- 제목 : 조달 계획 등록 확인
+				- 내용 : 1. <span>등록해야할 값들이 누락되어있습니다.</span><br>
+                    		<span>다시 작성해주시길 바랍니다.</span>
+		-->
+		<div class="ppInfoAndErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -183,7 +189,7 @@
                 </div>
             </div>
         </div>
-		<!-- 등록확인 모달창의 오류시 보여줄 모달창 끝 -->
+		<!-- 오류시 보여줄 모달창 끝 -->
 		
 		
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -191,11 +197,13 @@
 		
 		
 		$(document).ready(function(){
+			//-------------------------------------- 계약서 찾기 버튼 부분 --------------------------------------------------------------//
+			
 			//계약서 찾으려고 검색한 tr을 넣어주기 위한 tr 전역변수 선언
 			var searchContractTR = new Object();
 			console.log("tr 전역변수 만들고 난 값 : ",searchContractTR);			
 			
-			//계약서(협력회사) 찾기 버튼 누를때 -> 협력회사 찾기 모달창 보여주기
+			//계약서(협력회사) 찾기 버튼 누를때 -> 계약서 찾기 모달창 보여주기
 			$(document).on("click",".contractSearchBtn",function(){
 				console.log("계약서 찾기 버튼 누름");
 				//계약서 찾기 버튼 누르고 난 후 해당 TR의 값 세팅해주기
@@ -242,9 +250,9 @@
 						console.log("계약서 찾기 ajax 오류 발생~!!!");
 					}
 				});	//$.ajax				
-			});	
+			});	//계약서(협력회사) 찾기 버튼 누를때 끝
 			
-			console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchContractTR);
+			//console.log("세팅이 된 TR 값 유지중인지 체크 : ",searchContractTR);
 			
 			//계약서 찾기 모달창안에 선택 버튼 누를때
 			$(document).on("click",".contractSelectBtn",function(){
@@ -338,9 +346,9 @@
 				console.log("어디!! 조달납기예정일 : ", searchContractTR.querySelector("input[name=dueDate]").value);
 				console.log("어디!! 최소발주일 : ", searchContractTR.querySelector("input[name=minimumOrderDate]").value);
 				console.log("어디!! 기본여유기간 : ", searchContractTR.querySelector("input[name=freePeriod]").value);
-				
-			});		
+			});	//계약서 찾기 모달창안에 선택 버튼 누를때 끝	
 			
+			//-------------------------------------- 등록확인, 등록확인 모달창의 확인 버튼 부분 --------------------------------------------------------------//
 						
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			var ppRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
@@ -355,7 +363,6 @@
     			console.log("등록확인 누르고 난 후도 초기의 TR의 값 유지중인지 : ",searchContractTR);
 				
     			//2. 입력창으로 값을 받기
-    			
     			//2-1. 등록확인 모달창에 띄울 값 받기(품목코드, 품목명)
 				    			
     			//입력받은 품목코드 -> 품목코드 리스트에 담기
@@ -423,19 +430,19 @@
 	   				//console.log("완성된 문장보자",sentence);
 	   				
 	   				//4. 완성된 문장을 모달창 넣어서 등록여부 물어보기
-	   				//document.querySelector("#ppRegisterCheckModal").insertAdjacentHTML('afterbegin', sentence);
-	   				document.querySelector("#ppRegisterCheckModal").innerHTML = sentence;;
+	   				//document.querySelector("#ppRegisterConfirmModalContent").insertAdjacentHTML('afterbegin', sentence);
+	   				document.querySelector("#ppRegisterConfirmModalContent").innerHTML = sentence;;
 	   				   				
 	   				//등록확인 모달창 보여주기
 					$(".ppRegisterConfirmModal").modal('show');	   				
     			}else{								//등록체크 값이=>false 일때, 등록하려는 값들 중 하나라도 빠진 상태 ->오류 모달창 보여주기
 					//오류 모달창 보여주기
-					$(".ppRegisterConfirmErrorModal").modal('show');    					
+					$(".ppInfoAndErrorModal").modal('show');    					
 					//그리고 다시 등록체크 값 true로 다시 세팅해주기
 					ppRegisterValueCheck = true;
-    			}
+    			} //if
 				console.log("등록체크 전역변수 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",ppRegisterValueCheck);
-			});	
+			});	//등록확인 버튼 누를때 끝
 			
 			console.log("등록체크 전역변수 확인하기(중간에 확인) : ",ppRegisterValueCheck);
 						
