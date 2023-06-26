@@ -280,10 +280,10 @@
 				var tr = chkChecked.parent().parent().eq(i);
 				var td = tr.children();
 								
-				// td.eq(0)은 체크박스 이므로  td.eq(10) -> 계약상태, td.eq(11) -> 조달계획 등록상태, 객체에 담아 객체리스트에 넣어준다.
+				// td.eq(0)은 체크박스 이므로  td.eq(11) -> 계약상태, td.eq(12) -> 조달계획 등록상태, 객체에 담아 객체리스트에 넣어준다.
 				let statusObj = new Object();
-				statusObj.contractStatus = td.eq(10).text();
-				statusObj.ppStatus = td.eq(11).text();
+				statusObj.contractStatus = td.eq(11).text();
+				statusObj.ppStatus = td.eq(12).text();
 				statusCheckList.push(statusObj);
 			});
 			console.log("어디 만들어진 상태체크 리스트 봐보자 : ",statusCheckList);		
