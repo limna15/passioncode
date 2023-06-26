@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -201,6 +202,79 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		return pNum;
 		
 	}
+	//2번째 검수일정
+	public String compareDateTest(Integer num1) throws ParseException {// 리턴 스트링으로 하기?(date1이 null이라면 미래가 없는 것) 고민중, 검수일정 없음을 위해
+		// 날짜 비교하기
+		// 오늘과 가까운 미래 날짜 가져오기
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(7).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		// Date futureDate=null;//더 미래인 날을 여기에 저장하기
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date date1 = null;
+		Date date2 = null;
+		Date today5 = new Date();// 오늘 날짜 보는 방법
+		String today6 = targetFormat.format(today5);
+		Date today = targetFormat.parse(today6);
+		
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setTodaydate(LocalDateTime.now());
+
+			if (date1 != null) {// 비교하기 위한 값이 있다면
+				date2 = ((Date) arr[1]);// 다음에 들어온 날을 넣어준다.
+				log.info("두 번째 수" + date2);
+				int comparison2 = date1.compareTo(date2);// 날짜 비교
+
+				if (comparison2 > 0) {// 이게 더 빠른 날짜
+					date1 = date2;// date2에 있음으로 date1으로 바꿔주기, 그래야 계속 비교가능
+					System.out.println("date1이 date2보다 뒤에 있습니다.");
+				} else if (comparison2 < 0) {// 이 경우가 가까운 날의 진척 검수
+					System.out.println("date1이 date2보다 앞에 있습니다.");
+					System.out.println("다음 진척 검수일정" + date1);
+				} else {// 이런 경우는 처음부터 없도록 하기
+					date1 = date2;
+					System.out.println("두 날짜는 같습니다.");
+				}
+			} else {// 처음에 date1이 null인 경우
+				date1 = ((Date) arr[1]);// 무조건 담는다
+				log.info("처음에만 있는 수" + date1);
+				log.info("오늘 날짜" + today);
+				int comparison = date1.compareTo(today);// 날짜 비교
+				if (comparison > 0) {// 이게 더 빠른 날짜
+					System.out.println("date1이 today보다 뒤에 있습니다.");
+				} else if (comparison < 0) {// 오늘보다 앞에 있으면 null로 보내기
+					date1 = null;
+					System.out.println("date1이 today보다 앞에 있습니다.");
+				}else {//검수일이 오늘 이라면
+					date1 = ((Date) arr[1]);
+		            System.out.println("두 날짜는 같습니다.");
+		        }
+			}
+
+			list.add(pdDTO);
+		}
+		/*
+		 * log.info("날짜: " + date1);// 마지막 한개만 나옴 SimpleDateFormat dateFormat = new
+		 * SimpleDateFormat("yyyy/MM/dd"); String date6= dateFormat.format(date1);;
+		 * return date6;
+		 */		
+		String dateString;
+		if(date1 == null) {
+			dateString = "미등록";
+		}else {
+			log.info("날짜: "+date1);//마지막 한개만 나옴
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			dateString = dateFormat.format(date1);
+			
+		}
+		return dateString;
+		
+
+	}
 	
 	public String compareDate(Integer num1) {//리턴 스트링으로 하기?(date1이 null이라면 미래가 없는 것) 고민중, 검수일정 없음을 위해
 		//날짜 비교하기
@@ -210,9 +284,21 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		List<DetailProgressCheckListDTO> list = new ArrayList<>();
 		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
 		//Date futureDate=null;//더 미래인 날을 여기에 저장하기
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
 		Date date1=null;
 		Date date2=null;
-		Date today = new Date();//오늘 날짜 보는 방법
+		Date today5 = new Date();// 오늘 날짜 보는 방법
+		String today6 = targetFormat.format(today5);
+		//Date today = targetFormat.parse(today6);
+		Date today =null;
+        try {
+            // 문자열을 Date 객체로 변환
+            today = targetFormat.parse(today6);
+            // 변환된 Date 객체 출력
+            System.out.println("변환된 날짜: " + today);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		
 		for (Object[] arr : pcList) {
 			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
@@ -236,6 +322,7 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		            System.out.println("date1이 date2보다 앞에 있습니다.");
 		            System.out.println("다음 진척 검수일정"+date1);
 		        } else {//이런 경우는 처음부터 없도록 하기
+		        	date1 = date2;
 		            System.out.println("두 날짜는 같습니다.");
 		        }
 			}else {//처음에 date1이 null인 경우
@@ -247,6 +334,9 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		        } else if (comparison < 0) {//오늘보다 앞에 있으면 null로 보내기
 		        	date1 = null;
 		            System.out.println("date1이 today보다 앞에 있습니다.");
+		        }else {//검수일이 오늘 이라면
+		        	date1 = ((Date) arr[1]);
+		            System.out.println("두 날짜는 같습니다.");
 		        }
 			}
 			
@@ -324,7 +414,13 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 					}
 					date1 = null;
 					System.out.println("date1이 today보다 앞에 있습니다."+rate+"%");
-				}
+				}else {//검수일이 오늘 이라면
+					//값이 이미 등록되어 있다면
+					if(((Integer) arr[3]) != null) {
+						rate = ((Integer) arr[3]);
+					}
+		            System.out.println("두 날짜는 같습니다.");
+		        }
 			}
 			
 			list.add(pdDTO);
@@ -368,7 +464,15 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 				} else if (comparison < 0) {//오늘보다 앞에 있으면 null로 보내기
 					checkDone = "완료";
 					System.out.println("date1이 today보다 앞에 있습니다."+checkDone);
-				}
+				}else {//검수일이 오늘 이라면
+					if(((Integer) arr[3])!=null) {
+						//평가가 존재 한다면
+						checkDone = "완료";
+					}else {//검수기록이 없다면
+						checkDone = "미완료";
+					}
+		            System.out.println("두 날짜는 같습니다.");
+		        }
 			}else {//처음에 date1이 null인 경우
 				//하나만 있는 경우도 추가하기
 				if(((Date) arr[1])==null) {

@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.repository;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -114,7 +115,15 @@ public class ProgressCheckRepositoryTests {
 				} else if (comparison < 0) {// 오늘보다 앞에 있으면 null로 보내기
 					checkDone = "완료";
 					System.out.println("date1이 today보다 앞에 있습니다." + checkDone);
-				}
+				}else {//검수일이 오늘 이라면
+					if(((Integer) arr[3])!=null) {
+						//평가가 존재 한다면
+						checkDone = "완료";
+					}else {//검수기록이 없다면
+						checkDone = "미완료";
+					}
+		            System.out.println("두 날짜는 같습니다.");
+		        }
 			} else {// 처음에 date1이 null인 경우
 					// 하나만 있는 경우도 추가하기
 				if (((Date) arr[1]) == null) {
@@ -131,7 +140,15 @@ public class ProgressCheckRepositoryTests {
 					} else if (comparison < 0) {// 오늘보다 앞에 있으면 null로 보내기
 						checkDone = "완료";
 						System.out.println("date1이 today보다 앞에 있습니다." + checkDone);
-					}
+					}else {//검수일이 오늘 이라면
+						if(((Integer) arr[3])!=null) {
+							//평가가 존재 한다면
+							checkDone = "완료";
+						}else {//검수기록이 없다면
+							checkDone = "미완료";
+						}
+			            System.out.println("두 날짜는 같습니다.");
+			        }
 				}
 				log.info("처음에만 있는 수" + date1 + checkDone);
 			}
@@ -144,7 +161,7 @@ public class ProgressCheckRepositoryTests {
 	@Transactional
 	@Test
 	public void checkPercentTest() { // 납기 진도율, 오늘과 가까운 과거기록 가져오기
-		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(7).get();
 		List<DetailProgressCheckListDTO> list = new ArrayList<>();
 		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
 
@@ -199,7 +216,13 @@ public class ProgressCheckRepositoryTests {
 					}
 					date1 = null;
 					System.out.println("date1이 today보다 앞에 있습니다." + rate + "%");
-				}
+				}else {//검수일이 오늘 이라면
+					//값이 이미 등록되어 있다면
+					if(((Integer) arr[3]) != null) {
+						rate = ((Integer) arr[3]);
+					}
+		            System.out.println("두 날짜는 같습니다.");
+		        }
 			}
 
 			list.add(pdDTO);
@@ -239,18 +262,21 @@ public class ProgressCheckRepositoryTests {
 
 	@Transactional
 	@Test
-	public void compareDateTest() {// 리턴 스트링으로 하기?(date1이 null이라면 미래가 없는 것) 고민중, 검수일정 없음을 위해
+	public void compareDateTest() throws ParseException {// 리턴 스트링으로 하기?(date1이 null이라면 미래가 없는 것) 고민중, 검수일정 없음을 위해
 		// 날짜 비교하기
 		// 오늘과 가까운 미래 날짜 가져오기
-		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(7).get();
 		// 아래 리스트에 더하기
 		List<DetailProgressCheckListDTO> list = new ArrayList<>();
 		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
 		// Date futureDate=null;//더 미래인 날을 여기에 저장하기
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
 		Date date1 = null;
 		Date date2 = null;
-		Date today = new Date();// 오늘 날짜 보는 방법
-
+		Date today5 = new Date();// 오늘 날짜 보는 방법
+		String today6 = targetFormat.format(today5);
+		Date today = targetFormat.parse(today6);
+		
 		for (Object[] arr : pcList) {
 			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
 			pdDTO.setPccode((Integer) arr[0]);
@@ -275,31 +301,26 @@ public class ProgressCheckRepositoryTests {
 					System.out.println("date1이 date2보다 앞에 있습니다.");
 					System.out.println("다음 진척 검수일정" + date1);
 				} else {// 이런 경우는 처음부터 없도록 하기
+					date1 = date2;
 					System.out.println("두 날짜는 같습니다.");
 				}
 			} else {// 처음에 date1이 null인 경우
 				date1 = ((Date) arr[1]);// 무조건 담는다
 				log.info("처음에만 있는 수" + date1);
+				log.info("오늘 날짜" + today);
 				int comparison = date1.compareTo(today);// 날짜 비교
 				if (comparison > 0) {// 이게 더 빠른 날짜
 					System.out.println("date1이 today보다 뒤에 있습니다.");
 				} else if (comparison < 0) {// 오늘보다 앞에 있으면 null로 보내기
 					date1 = null;
 					System.out.println("date1이 today보다 앞에 있습니다.");
-				}
+				}else {//검수일이 오늘 이라면
+					date1 = ((Date) arr[1]);
+		            System.out.println("두 날짜는 같습니다.");
+		        }
 			}
 
 			list.add(pdDTO);
-
-			// log.info("쿼리 발주번호를 통한 진척검수: "+list);
-
-//	     for (DetailProgressCheckListDTO item : list) {
-//	         int pccode = item.getPccode();
-//	         Date pcdate = item.getPcdate();
-//	         
-//	         System.out.println("pccode: " + pccode);
-//	         System.out.println("pcdate: " + pcdate);
-//	     }
 		}
 		log.info("날짜: " + date1);// 마지막 한개만 나옴
 

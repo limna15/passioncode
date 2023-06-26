@@ -263,39 +263,24 @@
 						<span id="companyName3">(여기에 회사 이름이 들어감)</span>  제작 진척도를 입력합니다.
 						<br>
 						<p class="card-title"><b></b></p>
-						지난 검사 기록
+						
 						<br>
 						
 						<!--거래명세서 품목 정보-->
 						<div class="table-responsive">
-							<table id="transactionDetail"  border="1">
-								<thead>
-									<tr>
-										<th>-</th>
-										<th>날짜</th>
-										<th>납기 진도율</th>
-										<th>기타사항</th>
+						
+								<div id="diliveryPercent3">
+										지난 검사의 납기 진도율은 <span id="diliveryPercent3">납기 진도율</span> 입니다.
+										<span id="etc3">기타사항</span>
 										
-									</tr>
-								</thead>
-								<tbody id="history">
-									<tr>
-										<th>-</th>
-										<th id="">2023/00/00</th>
-										<th id="diliveryPercent3">납기 진도율</th>
-										<th id="etc3">기타사항</th>
-										
-									</tr>
+								</div>
 									<!-- 동적 테이블 부분-->
 									
-								</tbody>
-							</table>
-							<br>
-							<br>
-							<table><!--여기에 조건을 걸어서 다른 날이면 안 보여줌 -->
-								<div>납기 진도율: <input id="idpercent" type="number"></div>
+							<br><!--여기에 조건을 걸어서 다른 날이면 안 보여줌 -->
+							<div>
+								<div >납기 진도율: <input id="idpercent" type="number"></div>
 								<br> <div>기타 사항: <input id="idetc" type="text"></div>
-							</table>
+							</div>
 						</div>
 						<br>
 						<br>
@@ -385,7 +370,11 @@
 			console.log("기타사항: ",pEtc);
 			
 			document.querySelector("#companyName3").innerHTML = cName;
-			document.querySelector("#diliveryPercent3").innerHTML = dPercent;
+			if(dPercent=="미등록"){
+				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사 기록이 존재하지 않습니다.`;
+			}else{
+				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사의 납기진도율은 `+dPercent+` 입니다. `;				
+			}
 			document.querySelector("#etc3").innerHTML = pEtc;
 			//날짜는 형태가 다르다 함document.querySelector("lastDate").innerHTML = nDate;
 			
