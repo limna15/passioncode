@@ -920,6 +920,35 @@ public class PS1Controller {
 	}
 	
 	
+	/**
+	 * 조달계획 삭제 처리
+	 * @param ppCodeList
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@PostMapping("procurementPlanDelete")
+	public String procurementPlanDelete(String[] ppCodeList,RedirectAttributes redirectAttributes) {
+		log.info("조달계획 삭제 처리.....");
+		log.info("조달계획 목록(등록)에서 보낸 삭제하기 위한 ppCodeList"+ppCodeList);
+		
+		for(String ppCode : ppCodeList) {
+			ProcurementPlan procurementPlan = procurementPlanService.getProcurementPlan(Integer.parseInt(ppCode));
+			ProcurementPlanDTO procurementPlanDTO = procurementPlanService.ppEntityToDTO(procurementPlan);
+			procurementPlanService.delete(procurementPlanDTO);
+		}
+		
+		//삭제된 조달계획코드 리스트
+		redirectAttributes.addFlashAttribute("ppCodeList",ppCodeList);
+		
+		return "redirect:/procurement1/procurementPlanList";
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

@@ -276,13 +276,13 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">품목 정보 삭제 확인</h5>
+                        <h5 class="modal-title">계약 삭제 확인</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body" id="contractDeleteConfirmModalContent">
-                    	<!-- 품목정보 삭제 확인할 내용 -->    
+                    	<!-- 계약 삭제 확인할 내용 -->    
                     	
                     </div>
                     <div class="modal-footer">
@@ -647,7 +647,7 @@
 						//ajax 처리후 밑에 진행사항 진행하게 하니까! ajax 처리다하고 받아와서 가는게 아니라, 
 						//이거는 이거대로 밑에는 밑에대로 진행되서, 원하는 순서대로 안됨! 그래서 여기에서 뒤에 진행사항을 처리하자!!
 						
-						//오류 모달창의 materialModifyErrorModalContent 에 넣을 내용
+						//오류 모달창의 contractRMDErrorModalContent 에 넣을 내용
 		    			let sentence = ``;
 		    			
 		    			//4. 체크박스 체크 전역변수 true + 계약상태 여부 전역변수 true + 조달계획 등록여부 전연벽수 true 일때만, 수정가능~
@@ -790,7 +790,7 @@
 						//ajax 처리후 밑에 진행사항 진행하게 하니까! ajax 처리다하고 받아와서 가는게 아니라, 
 						//이거는 이거대로 밑에는 밑에대로 진행되서, 원하는 순서대로 안됨! 그래서 여기에서 뒤에 진행사항을 처리하자!!
 						
-						//오류 모달창의 materialModifyErrorModalContent 에 넣을 내용
+						//오류 모달창의 contractRMDErrorModalContent 에 넣을 내용
 		    			let sentence = ``;
 		    			
 		    			//4. 체크박스 체크 전역변수 true + 계약상태 여부 전역변수 true + 조달계획 등록여부 전연벽수 true 일때만, 삭제가능~
@@ -813,7 +813,7 @@
 			    			for(var i=0; i<materialNameList.length; i++){
 			    				sentence = sentence + makeSentence(contractNoStrList[i],materialNameList[i]);
 			    			}
-			    			sentence=sentence+`<br><span>해당 계약서를 정말로 삭제 하시겠습니까?</span>`;
+			    			sentence=sentence+`<br><span>해당 계약서를 정말로 <span style='color:red;'>'삭제'</span> 하시겠습니까?</span>`;
 			    			
 			    			document.querySelector("#contractDeleteConfirmModalContent").innerHTML = sentence;
 				   				

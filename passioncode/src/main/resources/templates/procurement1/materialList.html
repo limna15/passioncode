@@ -657,7 +657,7 @@
 			    			for(var i=0; i<materialNameList.length; i++){
 			    				sentence = sentence + makeSentence(materialCodeList[i],materialNameList[i]);
 			    			}
-			    			sentence=sentence+`<br><span>해당 품목을 정말로 삭제 하시겠습니까?</span>`;
+			    			sentence=sentence+`<br><span>해당 품목을 정말로 <span style='color:red;'>'삭제'</span> 하시겠습니까?</span>`;
 			    			
 			    			document.querySelector("#materialDeleteConfirmModalContent").innerHTML = sentence;
 				   				
