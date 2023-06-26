@@ -55,12 +55,12 @@ public class ProcurementPlanServiceTests {
 	/**
 	 * 기본 여유기간 계산해주기 <br>
 	 * 소요일 - 조달납기예정일
-	 * @param mrpdate
+	 * @param mrpDate
 	 * @param duedate
 	 * @return
 	 */
-	public Integer makefreePeriod(Date mrpdate,Date duedate) {
-		Long timeDifferent = mrpdate.getTime() - duedate.getTime();
+	public Integer makefreePeriod(Date mrpDate,Date duedate) {
+		Long timeDifferent = mrpDate.getTime() - duedate.getTime();
 //		log.info("결과뺀 시간 차이 봐보자 : "+timeDifferent);		
 		TimeUnit time = TimeUnit.DAYS;
 		Long different = time.convert(timeDifferent, TimeUnit.MILLISECONDS);
@@ -73,16 +73,16 @@ public class ProcurementPlanServiceTests {
 	/**
 	 * 조달납기예정일 계산해주기 <br>
 	 * 소요일 - 기본 여유기간
-	 * @param mrpdate
+	 * @param mrpDate
 	 * @param freePeriod
 	 * @return
 	 */
-	public Date makeDuedate(Date mrpdate,Integer freePeriod) {
+	public Date makeDuedate(Date mrpDate,Integer freePeriod) {
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일"); 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(mrpdate);
-		mrpdate=cal.getTime();
-//		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpdate));
+		cal.setTime(mrpDate);
+		mrpDate=cal.getTime();
+//		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpDate));
 		
 		//소요일 - 기본 여유기간 => 납기예정일 만들기
 		cal.add(Calendar.DATE,-freePeriod);
@@ -134,7 +134,7 @@ public class ProcurementPlanServiceTests {
 		
 		//조달계획 등록하는 상황이라 조달계획코드는 모른다! 없이 만들고 엔티티로 만들어주면, save에서 자동으로 만들어준다!
 		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-																			.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+																			.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount())
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))
@@ -173,8 +173,8 @@ public class ProcurementPlanServiceTests {
 		//화면에서 계약상태, 조달계획 등록상태 숨겨서 완료 로 보내주자, 조달계획 진행사항 발주 예정 으로 보내주자
 		
 		//조달계획 수정하는 상황이라, 조달계획 코드값이 들어간다!
-		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(18).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-																			.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppCode(18).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+																			.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount())
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))

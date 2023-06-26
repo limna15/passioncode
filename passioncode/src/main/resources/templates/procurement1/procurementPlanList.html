@@ -109,14 +109,15 @@
 						
 						<!-- 등록, 수정, 삭제 버튼 시작 -->
 						<div class="col-md-6" >	
-							<form style="float: right;">
+							<form style="float:right;">
 								<button class="btn btn-primary" type="submit">삭제</button>
 							</form>
-							<form style="float: right;">
-								<button type="submit" class="btn btn-primary" style="margin-right:10px">수정</button>
+							<form style="float:right;" th:action = "@{/procurement1/procurementPlanModify}" th:method="get" id="ppModifyForm">
+								<input type="hidden" name="ppCodeList" >
+								<button class="btn btn-primary" id="ppModifyBtn" type="submit" style="margin-right:10px">수정</button>
 							</form>
-							<form style="float: right;" th:action = "@{/procurement1/procurementPlanRegister}" th:method="get" id="ppRegisterForm">
-								<input type="hidden" name="mrpCodeList" id="mrpCodeList">
+							<form style="float:right;" th:action = "@{/procurement1/procurementPlanRegister}" th:method="get" id="ppRegisterForm">
+								<input type="hidden" name="mrpCodeList" >
 								<button class="btn btn-primary" id="ppRegisterBtn" type="submit" style="margin-right:10px">등록</button>
 							</form>
 						</div>
@@ -145,12 +146,12 @@
 							</thead>
 							<tbody>			
 								<tr th:each="dto : ${DTOList}">
-									<td><input type="checkbox" name="checkBox" th:value="${dto.mrpCode}" onclick="chkClicked(); getContractStatus();"></td>
-									<td style="display:none;">[[${dto.ppcode}]]</td>
+									<td><input type="checkbox" name="checkBox" th:value="${dto.mrpCode}" onclick="chkClicked(); getContractStatusPPStatusPPProgress();"></td>
+									<td style="display:none;">[[${dto.ppCode}]]</td>
 									<td>[[${dto.materialCode}]]</td>
 									<td>[[${dto.materialName}]]</td>
 									<td>[[${dto.process}]]</td>
-									<td>[[${#dates.format(dto.mrpdate, 'yyyy/MM/dd')}]]</td>
+									<td>[[${#dates.format(dto.mrpDate, 'yyyy/MM/dd')}]]</td>
 									<td>[[${dto.mrpAmount}]]</td>
 									<td>[[${dto.companyName}]]</td>
 									<td>[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
@@ -220,8 +221,9 @@
 			- 제목 : 조달 계획 수정
 			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
                     		  조달계획 등록상태가 <span style='color:red;'>'완료'</span>인 것만 조달계획 수정이 가능합니다.</span><br>
-                     2. <span>발주되어 진행 중인 조달계획이 있습니다.</span><br>
                  		<span>다시 선택해주시길 바랍니다.</span>	
+                     2. <span><span style='color:red;'>'발주 예정'</span>인 조달계획만 수정이 가능합니다.</span><br>
+	                 	<span>다시 선택해주시길 바랍니다.</span>	
                  	 3. <span>체크한 항목이 없습니다.</span><br>
 						<span>다시 선택해주시길 바랍니다.</span>				
 		-->
@@ -268,8 +270,8 @@
 	 		return mrpCodeList;
 		}
 		
-		//체크박스 체크 한것 -> 그 해당 행의 상태확인(계약상태,조달계획등록상태)값 객체리스트로 만들기
-		function getContractStatus(){
+		//체크박스 체크 한것 -> 그 해당 행의 상태확인(계약상태,조달계획등록상태,조달계획 진행사항)값 객체리스트로 만들기
+		function getContractStatusPPStatusPPProgress(){
 			const chkChecked = $('input[name="checkBox"]:checked');					
 			var statusCheckList = new Array();
 			
@@ -280,25 +282,51 @@
 				var tr = chkChecked.parent().parent().eq(i);
 				var td = tr.children();
 								
-				// td.eq(0)은 체크박스 이므로  td.eq(11) -> 계약상태, td.eq(12) -> 조달계획 등록상태, 객체에 담아 객체리스트에 넣어준다.
+				// td.eq(0)은 체크박스 이므로  td.eq(11) -> 계약상태, td.eq(12) -> 조달계획 등록상태, td.eq(13) -> 조달계획 진행사항 ==> 객체에 담아 객체리스트에 넣어준다.
 				let statusObj = new Object();
 				statusObj.contractStatus = td.eq(11).text();
 				statusObj.ppStatus = td.eq(12).text();
+				statusObj.ppProgress = td.eq(13).text();
 				statusCheckList.push(statusObj);
 			});
 			console.log("어디 만들어진 상태체크 리스트 봐보자 : ",statusCheckList);		
 			return statusCheckList;
 		}
 		
+		//체크박스 체크 한것 -> 그 해당 행의 조달계획코드 존재할때, 조달계획코드 리스트로 만들기
+		function getPPCodeByChecked(){
+			const chkChecked = $('input[name="checkBox"]:checked');			
+			var ppCodeList = new Array();
+			
+			// 체크된 체크박스 값을 가져온다
+			chkChecked.each(function(i) {	
+				// chkChecked.parent() : checkbox의 부모는 <td>이다.
+				// chkChecked.parent().parent() : <td>의 부모이므로 <tr>이다.
+				var tr = chkChecked.parent().parent().eq(i);
+				var td = tr.children();
+								
+				// td.eq(0)은 체크박스 이므로  td.eq(1)의 값인 조달계획코드를 리스트에 넣어준다.
+				// 조달계획코드가 존재할때만 넣어주기 
+				//console.log("조달계획코드 값 읽어보자 : ",td.eq(1).text());
+				if(td.eq(1).text() != ""){
+					ppCodeList.push(td.eq(1).text());
+				}
+			});
+			//console.log("어디 만들어진 계약상태 리스트 봐보자 : ",contractStatusList);		
+			return ppCodeList;
+		}
+		
+		
+		
 		$(document).ready(function(){
 			//-------------------------------------------- 등록 버튼 관련 -----------------------------------------------------------//
 			
 			//계약상태 값에 미완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
-			var contractStatusValueCheck = true;		//-> 하나라도 미완료 일 경우에 false로 바꿔주기 
-			console.log("계약상태 전역변수 확인하기1 : ",contractStatusValueCheck);
+			var contractStatusValueCheckForRegister = true;		//-> 하나라도 미완료 일 경우에 false로 바꿔주기 
+			console.log("계약상태 전역변수 확인하기1 : ",contractStatusValueCheckForRegister);
 			//조달계획 등록상태 값에 완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
-			var ppStatusValueCheck = true;		//-> 하나라도 완료 일 경우에 false로 바꿔주기 
-			console.log("조달계획 등록상태 전역변수 확인하기1 : ",ppStatusValueCheck);
+			var ppStatusValueCheckForRegister = true;		//-> 하나라도 완료 일 경우에 false로 바꿔주기 
+			console.log("조달계획 등록상태 전역변수 확인하기1 : ",ppStatusValueCheckForRegister);
 			//체크박스를 체크를 했는지 안했는지 체크하기 위한, 전역변수 체크값 선언해주기
 			var checkBoxValueCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
 			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
@@ -316,29 +344,28 @@
     			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
     				checkBoxValueCheck = false;
     			}
-    			console.log("계약상태 전역변수 확인하기(체크 전) : ",contractStatusValueCheck);
-    			console.log("조달계획 등록상태 전역변수 확인하기(체크 전) : ",ppStatusValueCheck);
+    			console.log("계약상태 전역변수 확인하기(체크 전) : ",contractStatusValueCheckForRegister);
+    			console.log("조달계획 등록상태 전역변수 확인하기(체크 전) : ",ppStatusValueCheckForRegister);
     			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
     			
-    			//3. 상태확인(계약상태,조달계획등록상태) 객체 리스트 가져와서, 
+    			//3. 상태확인(계약상태,조달계획등록상태,조달계획 진행사항) 객체 리스트 가져와서, 
     			// 계약상태 하나라도 미완료일경우 false로 바꿔주기
     			// 조달계획 등록상태 하나라도 완료일경우 false로 바꿔주기
-    			let statusCheckList = new Array();
-    			statusCheckList = getContractStatus();
+    			let statusCheckList = getContractStatusPPStatusPPProgress();
     			statusCheckList.forEach(function(item){
    					if(item.contractStatus=="미완료"){
-   						contractStatusValueCheck = false;
+   						contractStatusValueCheckForRegister = false;
    					}   
    					if(item.ppStatus=="완료"){
-   						ppStatusValueCheck = false;
+   						ppStatusValueCheckForRegister = false;
    					}  
    				});
-    			console.log("계약상태 전역변수 확인하기(체크한 후) : ",contractStatusValueCheck);
-    			console.log("조달계획 등록상태 전역변수 확인하기(체크한 후) : ",ppStatusValueCheck);
+    			console.log("계약상태 전역변수 확인하기(체크한 후) : ",contractStatusValueCheckForRegister);
+    			console.log("조달계획 등록상태 전역변수 확인하기(체크한 후) : ",ppStatusValueCheckForRegister);
     			
     			
     			//4. 계약상태 + 조달계획 등록상태 전역변수가 true + 체크박스 체크전역변수가 true 일때만, 등록가능~
-    			if(contractStatusValueCheck && ppStatusValueCheck && checkBoxValueCheck){		//현재 계약상태 완료+조달계획 등록상태 미완료 인것만! ->등록가능하게
+    			if(contractStatusValueCheckForRegister && ppStatusValueCheckForRegister && checkBoxValueCheck){		//현재 계약상태 완료+조달계획 등록상태 미완료 인것만! ->등록가능하게
     				//만든 mrp코드 리스트를 input 히든에 담기
         			$('input[name=mrpCodeList]').attr('value',chkClicked());
         			//console.log("input hidden mrpCodeList에 잘 담겼는지 보자 : ",$('input[name=mrpCodeList]').attr('value'));
@@ -367,9 +394,9 @@
            			document.querySelector("#ppRMDErrorModalTitle").innerHTML = `조달 계획 등록`;
     				
 					$(".ppRMDErrorModal").modal('show');    					
-					//그리고 다시 등록체크 값 true로 다시 세팅해주기
+					//그리고 다시 체크박스 체크 값 true로 다시 세팅해주기
 					checkBoxValueCheck = true;   
-    			}else if(!contractStatusValueCheck || !ppStatusValueCheck){						//체크박스 선택한것 중에 하나라도 완료 인것이 있음 -> 등록오류 모달창 보여주기
+    			}else if(!contractStatusValueCheckForRegister || !ppStatusValueCheckForRegister){						//체크박스 선택한것 중에 하나라도 완료 인것이 있음 -> 등록오류 모달창 보여주기
     				//오류 모달창 보여주기
     				sentence = `<span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
                     				  조달계획 등록상태가 <span style='color:red;'>'미완료'</span>인 것만 조달계획등록이 가능합니다.</span><br>
@@ -379,34 +406,131 @@
     				
 					$(".ppRMDErrorModal").modal('show'); 
     				
-    				//그리고 다시 등록체크 값 true로 다시 세팅해주기
-					contractStatusValueCheck = true;   
-					ppStatusValueCheck = true;
+    				//그리고 다시 계약상태,조달계획 등록상태 체크 값 true로 다시 세팅해주기
+					contractStatusValueCheckForRegister = true;   
+					ppStatusValueCheckForRegister = true;
 					//그리고 체크된 값들 전부 체크 해제 해주기
 					$("input:checkbox").prop("checked", false);
-    			}
-   			});
+    			} //if
+   			}); //등록버튼 눌렀을때 끝
 			
     		//-------------------------------------------- 수정 버튼 관련 -----------------------------------------------------------//
-			/*
-			-- 수정버튼 누를때
-			(상황1. 계약상태 완료 + 조달계획 등록상태 완료 => 말고 다른값을 눌렀을때)
-			(상황2. 둘다 완료 중에서 이미 발주 된 경우(발주예정 말고 전부)
-			(상황3. 체크한게 아무것도 없을때)
-			- 제목 : 조달 계획 수정
-			- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
-                    		  조달계획 등록상태가 <span style='color:red;'>'완료'</span>인 것만 조달계획 수정이 가능합니다.</span><br>
-                     2. <span>발주되어 진행 중인 조달계획이 있습니다.</span><br>
-                 		<span>다시 선택해주시길 바랍니다.</span>	
-                 	 3. <span>체크한 항목이 없습니다.</span><br>
-						<span>다시 선택해주시길 바랍니다.</span>
-			*/
 			
+    		//계약상태 값에 미완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
+			var contractStatusValueCheckForModify = true;		//-> 하나라도 미완료 일 경우에 false로 바꿔주기 
+			console.log("계약상태 전역변수 확인하기1 : ",contractStatusValueCheckForModify);
+			//조달계획 등록상태 값에 미완료 있는지 체크하기 위해, 전역변수 체크값 선언해주기
+			var ppStatusValueCheckForModify = true;		//-> 하나라도 미완료 일 경우에 false로 바꿔주기 
+			console.log("조달계획 등록상태 전역변수 확인하기1 : ",ppStatusValueCheckForModify);
+			//체크박스를 체크를 했는지 안했는지 체크하기 위한, 전역변수 체크값 선언해주기
+			var checkBoxValueCheck = true;		//-> 하나라도 체크 안되어 있을 경우에 false로 바꿔주기 
+			console.log("체크박스 체크 전역변수 확인하기1 : ", checkBoxValueCheck);
+			//발주예정 체크 전연벽수
+			var expectedPurchaseCheck = true;		//-> 발주예정을 제외한 모든 값일 경우에 false로 바꿔주기 
+			console.log("발주예정 체크 전역변수 확인하기1 : ", expectedPurchaseCheck);
 			
-			
-			
-			
-			
+			//수정버튼 눌렀을때, 계약상태 완료 + 조달계획 등록상태 완료 + 발주예정 만 -> 수정 가능하게!
+    		$("#ppModifyBtn").on("click",function(e){
+    			//1. 버튼 이벤트(submit)금지
+    			e.preventDefault();
+    			
+    			//2. 체크박스가 체크 된게 있는지 체크하기, 하나라도 미체크시 checkBoxValueCheck false로 바꿔주기
+    			const chkChecked = 'input[name="checkBox"]:checked';
+    			const selectedEls = document.querySelectorAll(chkChecked);
+    			//console.log("체크 된것들이 어떻게 찍히나 보자 ", selectedEls);
+    			//console.log("길이로 체크하면 되겠지? : ",selectedEls.length);
+    			if(selectedEls.length==0){ 		//체크 된게 없을시 -> false 로 변경
+    				checkBoxValueCheck = false;
+    			}
+    			console.log("체크박스 체크 전역변수 확인하기(체크 후) : ",checkBoxValueCheck);
+    			console.log("계약상태 전역변수 확인하기(체크 전) : ",contractStatusValueCheckForModify);
+    			console.log("조달계획 등록상태 전역변수 확인하기(체크 전) : ",ppStatusValueCheckForModify);
+    			console.log("발주예정 체크 전역변수 확인하기(체크 전) : ", expectedPurchaseCheck);
+    			
+    			//3. 상태확인(계약상태,조달계획등록상태,조달계획 진행사항) 객체 리스트 가져와서, 
+    			// 계약상태 하나라도 미완료일경우 false로 바꿔주기
+    			// 조달계획 등록상태 하나라도 미완료일경우 false로 바꿔주기
+    			// 조달계획 진행사항 발주예정을 아닌 경우 false로 바꿔주기
+    			let statusCheckList = getContractStatusPPStatusPPProgress();
+    			statusCheckList.forEach(function(item){
+   					if(item.contractStatus=="미완료"){
+   						contractStatusValueCheckForModify = false;
+   					}   
+   					if(item.ppStatus=="미완료"){
+   						ppStatusValueCheckForModify = false;
+   					}
+   					if(item.ppProgress != "발주 예정"){
+   						expectedPurchaseCheck = false;
+   					}
+   				});
+    			console.log("계약상태 전역변수 확인하기(체크 후) : ",contractStatusValueCheckForModify);
+    			console.log("조달계획 등록상태 전역변수 확인하기(체크 후) : ",ppStatusValueCheckForModify);
+    			console.log("발주예정 체크 전역변수 확인하기(체크 후) : ", expectedPurchaseCheck);
+    			
+    			//4. 계약상태 + 조달계획 등록상태 전역변수가 true + 체크박스 체크전역변수가 true + 발주예정 체크 전역변수 true 일때만, 수정가능~
+    			if(contractStatusValueCheckForModify && ppStatusValueCheckForModify && checkBoxValueCheck && expectedPurchaseCheck){		//현재 계약상태 완료+조달계획 등록상태 완료+발주예정 인것만! ->수정가능하게
+    				//만든 ppCode 리스트를 input 히든에 담기
+        			$('input[name=ppCodeList]').attr('value',getPPCodeByChecked());
+        			//console.log("input hidden ppCodeList에 잘 담겼는지 보자 : ",$('input[name=ppCodeList]').attr('value'));
+        			
+       				//담은거 submit으로 보내자
+        			$("#ppModifyForm").submit();
+        			//그리고 체크된 값들 전부 체크 해제 해주기
+					$("input:checkbox").prop("checked", false);
+    			}else if(!checkBoxValueCheck){																//체크박스 선택된게 X -> 등록오류 모달창 보여주기		
+    				/*
+    				-- 수정버튼 누를때
+    				(상황1. 계약상태 완료 + 조달계획 등록상태 완료 => 말고 다른값을 눌렀을때)
+    				(상황2. 둘다 완료 중에서 이미 발주 된 경우(발주예정 말고 전부)
+    				(상황3. 체크한게 아무것도 없을때)
+    				- 제목 : 조달 계획 수정
+    				- 내용 : 1. <span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
+    	                    		  조달계획 등록상태가 <span style='color:red;'>'완료'</span>인 것만 조달계획 수정이 가능합니다.</span><br>
+    	                 		<span>다시 선택해주시길 바랍니다.</span>	
+    	                     2. <span><span style='color:red;'>'발주 예정'</span>인 조달계획만 수정이 가능합니다.</span><br>
+    	                 		<span>다시 선택해주시길 바랍니다.</span>	
+    	                 	 3. <span>체크한 항목이 없습니다.</span><br>
+    							<span>다시 선택해주시길 바랍니다.</span>
+    				*/
+    				//오류 모달창 보여주기
+    				sentence = `<span>체크한 항목이 없습니다.</span><br>
+								<span>다시 선택해주시길 바랍니다.</span>`;
+           			document.querySelector("#ppRMDErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#ppRMDErrorModalTitle").innerHTML = `조달 계획 수정`;
+    				
+					$(".ppRMDErrorModal").modal('show');    					
+					//그리고 다시 체크박스 체크 값 true로 다시 세팅해주기
+					checkBoxValueCheck = true;   
+    			}else if(!contractStatusValueCheckForModify || !ppStatusValueCheckForModify){				//체크박스 선택한것 중에 하나라도 미완료 인것이 있음 -> 수정오류 모달창 보여주기
+    				//오류 모달창 보여주기
+    				sentence = `<span>계약상태가 <span style='color:red;'>'완료'</span>인 것과 <br> 
+              		  					조달계획 등록상태가 <span style='color:red;'>'완료'</span>인 것만 조달계획 수정이 가능합니다.</span><br>
+                    			<span>다시 선택해주시길 바랍니다.</span>`;
+           			document.querySelector("#ppRMDErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#ppRMDErrorModalTitle").innerHTML = `조달 계획 수정`;
+    				
+					$(".ppRMDErrorModal").modal('show'); 
+    				
+    				//그리고 다시 계약상태, 조달계획 등록상태 체크 값 true로 다시 세팅해주기
+					contractStatusValueCheckForModify = true;   
+					ppStatusValueCheckForModify = true;
+					//그리고 체크된 값들 전부 체크 해제 해주기
+					$("input:checkbox").prop("checked", false);
+    			}else if(!expectedPurchaseCheck){															//체크박스 선택한것중, 둘다 완료 중, 발주예정 아닌거 -> 수정오류 모달창 보여주기
+    				//오류 모달창 보여주기
+    				sentence = `<span><span style='color:red;'>'발주 예정'</span>인 조달계획만 수정이 가능합니다.</span><br>
+                 				<span>다시 선택해주시길 바랍니다.</span>`;
+           			document.querySelector("#ppRMDErrorModalContent").innerHTML = sentence;
+           			document.querySelector("#ppRMDErrorModalTitle").innerHTML = `조달 계획 수정`;
+    				
+					$(".ppRMDErrorModal").modal('show'); 
+    				
+    				//그리고 다시 발주예정 체크 값 true로 다시 세팅해주기
+					expectedPurchaseCheck = true;   
+					//그리고 체크된 값들 전부 체크 해제 해주기
+					$("input:checkbox").prop("checked", false);
+    			} //if
+   			}); //수정 버튼 누를때 끝
 			
 			
 			

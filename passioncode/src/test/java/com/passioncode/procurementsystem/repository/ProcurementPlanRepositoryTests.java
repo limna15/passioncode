@@ -60,14 +60,14 @@ public class ProcurementPlanRepositoryTests {
 //		log.info("mrp의 material 보자! : "+ mrp.getMaterial());  이런식의 직접적인 외래키를 읽으려면(지연로딩된거! 그러면 어노테이션 @Transactional 필요!
 		//하지만 그 외래키를 이용해서 쓰는거에는 어노테이션 필요 X
 		
-		//mrpdate 소요일 불러오기
-		Date mrpdate=mrp.getDate();		
+		//mrpDate 소요일 불러오기
+		Date mrpDate=mrp.getDate();		
 		
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일"); 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(mrpdate);
-		mrpdate=cal.getTime();
-		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpdate));
+		cal.setTime(mrpDate);
+		mrpDate=cal.getTime();
+		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpDate));
 		
 		//소요일에서 기본값 2일 빼서, 납기예정일 만들기
 		cal.add(Calendar.DATE,-2);
@@ -76,15 +76,15 @@ public class ProcurementPlanRepositoryTests {
 		log.info("제대로 뺀, 납기예정일 : "+simpleDateFormat.format(duedate));
 		
 		// 소요일 - 납기예정일 해서 Integer 구하기!
-		Date mrpdate2 = mrpdate;
-		log.info("위에서 받아온 mrp 소요일 : "+mrpdate2);
+		Date mrpDate2 = mrpDate;
+		log.info("위에서 받아온 mrp 소요일 : "+mrpDate2);
 		Date duedate2 = duedate;
 		log.info("위에서 받아온 납기예정일 : "+duedate2);
 		
-//		Integer test = duedate2.compareTo(mrpdate2);
+//		Integer test = duedate2.compareTo(mrpDate2);
 //		log.info("오오오!! 이렇게 날짜 차이 볼수 있으려나??? : "+test);
 		
-		long timeDifferent = mrpdate2.getTime() - duedate2.getTime();
+		long timeDifferent = mrpDate2.getTime() - duedate2.getTime();
 		log.info("결과뺀 시간 차이 봐보자 : "+timeDifferent);
 		
 		TimeUnit time = TimeUnit.DAYS;
@@ -156,16 +156,16 @@ public class ProcurementPlanRepositoryTests {
 	/**
 	 * 조달납기예정일 계산해주기 <br>
 	 * 소요일 - 기본 여유기간
-	 * @param mrpdate
+	 * @param mrpDate
 	 * @param freePeriod
 	 * @return
 	 */
-	public Date makeDuedate(Date mrpdate,Integer freePeriod) {
+	public Date makeDuedate(Date mrpDate,Integer freePeriod) {
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일"); 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(mrpdate);
-		mrpdate=cal.getTime();
-		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpdate));
+		cal.setTime(mrpDate);
+		mrpDate=cal.getTime();
+		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpDate));
 		
 		//소요일 - 기본 여유기간 => 납기예정일 만들기
 		cal.add(Calendar.DATE,-freePeriod);
@@ -179,12 +179,12 @@ public class ProcurementPlanRepositoryTests {
 	/**
 	 * 기본 여유기간 계산해주기 <br>
 	 * 소요일 - 조달납기예정일
-	 * @param mrpdate
+	 * @param mrpDate
 	 * @param duedate
 	 * @return
 	 */
-	public Integer makefreePeriod(Date mrpdate,Date duedate) {
-		Long timeDifferent = mrpdate.getTime() - duedate.getTime();
+	public Integer makefreePeriod(Date mrpDate,Date duedate) {
+		Long timeDifferent = mrpDate.getTime() - duedate.getTime();
 //		log.info("결과뺀 시간 차이 봐보자 : "+timeDifferent);		
 		TimeUnit time = TimeUnit.DAYS;
 		Long different = time.convert(timeDifferent, TimeUnit.MILLISECONDS);
@@ -272,6 +272,20 @@ public class ProcurementPlanRepositoryTests {
 		log.info("조달계획 진행사항 결과 보자 : "+ppProgressCheck(procurementPlan));	
 	}
 	
+	/**
+	 * 조달계획코드 문자버전으로 바꾸기 <br>
+	 * 조달계획코드 1 -> PP00001 로 바꿔주기
+	 * @param contractNo
+	 * @return
+	 */
+	public String makePPCodeStr(Integer ppCode) {
+		//조달계획코드 1 -> PP00001 로 바꿔주기
+		String ppCodeStr = String.format("%05d",ppCode);
+		ppCodeStr = "PP" + ppCodeStr;
+		log.info("바꾼 조달계획코드 좀 보자 : ",ppCodeStr);
+		return ppCodeStr;
+	}
+	
 	@Transactional
 	@Test
 	public void ProcurementPlanDTOTest() {
@@ -284,10 +298,11 @@ public class ProcurementPlanRepositoryTests {
 		
 		//조달계획 등록 완료인 조달계획DTO 만들기 (사실상 조달계획 엔티티를 이용해서 만들면 등록완료된 DTO)
 		ProcurementPlan procurementPlan = procurementPlanRepository.findById(1).get();		
-		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppCode(procurementPlan.getCode())
+																			.ppCodeStr(makePPCodeStr(procurementPlan.getCode()))
 																			.materialName(procurementPlan.getMrp().getMaterial().getName())
 																			.process(procurementPlan.getMrp().getProcess())
-																			.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
+																			.mrpDate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
 																			.freePeriod(makefreePeriod(procurementPlan.getMrp().getDate(),procurementPlan.getDueDate()))
 																			.companyName(procurementPlan.getContract().getCompany().getName())
 																			.supplyLt(procurementPlan.getContract().getSupplyLt())
@@ -306,7 +321,7 @@ public class ProcurementPlanRepositoryTests {
 		MRP mrp = mrpRepository.findById(2).get();
 		
 		ProcurementPlanDTO procurementPlanDTO2 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-													.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+													.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount())
 													.contractStatus(contractStatusCheck(mrp.getMaterial())).ppRegisterStatus("미완료")
 													.mrpCode(mrp.getCode()).build();				
 
@@ -324,9 +339,10 @@ public class ProcurementPlanRepositoryTests {
 		
 		//procurementPlan2 가 존재할때, 조달계획 등록 완료된 상태
 		if(procurementPlan2!=null) {
-			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(procurementPlan2.getMrp().getMaterial().getCode()).ppcode(procurementPlan2.getCode())
+			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(procurementPlan2.getMrp().getMaterial().getCode()).ppCode(procurementPlan2.getCode())
+																.ppCodeStr(makePPCodeStr(procurementPlan2.getCode()))
 																.materialName(procurementPlan2.getMrp().getMaterial().getName()).process(procurementPlan2.getMrp().getProcess())
-																.mrpdate(procurementPlan2.getMrp().getDate()).mrpAmount(procurementPlan2.getMrp().getAmount())
+																.mrpDate(procurementPlan2.getMrp().getDate()).mrpAmount(procurementPlan2.getMrp().getAmount())
 																.freePeriod(makefreePeriod(procurementPlan2.getMrp().getDate(),procurementPlan2.getDueDate()))
 																.companyName(procurementPlan2.getContract().getCompany().getName())
 																.supplyLt(procurementPlan2.getContract().getSupplyLt())
@@ -339,7 +355,7 @@ public class ProcurementPlanRepositoryTests {
 			ppDTOList.add(procurementPlanDTO3);
 		}else {  ////procurementPlan2 가 존재X, 조달계획 등록 미완료된 상태
 			procurementPlanDTO3 = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-									.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+									.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount())
 									.contractStatus(contractStatusCheck(mrp.getMaterial())).ppRegisterStatus("미완료")
 									.mrpCode(mrp.getCode()).build();	
 			ppDTOList.add(procurementPlanDTO3);
@@ -369,7 +385,7 @@ public class ProcurementPlanRepositoryTests {
 		
 		//조달계획 등록하는 상황이라 조달계획코드는 모른다! 없이 만들고 엔티티로 만들어주면, save에서 자동으로 만들어준다!
 		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-																			.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+																			.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount())
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))
@@ -386,22 +402,22 @@ public class ProcurementPlanRepositoryTests {
 //																	.minimumOrderDate(procurementPlanDTO.getMinimumOrderDate()).build();
 //		log.info("제대로 만들어 진건가? : "+procurementPlan);
 		
-//		ProcurementPlan procurementPlan = ProcurementPlan.builder().code(procurementPlanDTO.getPpcode()).mrp(mrpRepository.findById(procurementPlanDTO.getMrpCode()).get())
+//		ProcurementPlan procurementPlan = ProcurementPlan.builder().code(procurementPlanDTO.getPpCode()).mrp(mrpRepository.findById(procurementPlanDTO.getMrpCode()).get())
 //															.contract(contractRepository.findById(procurementPlanDTO.getContractNo()).get())
 //															.amount(procurementPlanDTO.getPpAmount())
 //															.dueDate(procurementPlanDTO.getDueDate()).minimumOrderDate(procurementPlanDTO.getMinimumOrderDate())
-//															.registerDate(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getRegisterDate())
-//															.completionDate(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getCompletionDate())
-//															.detailPurchaseOrder(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getDetailPurchaseOrder())
+//															.registerDate(procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getRegisterDate())
+//															.completionDate(procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getCompletionDate())
+//															.detailPurchaseOrder(procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getDetailPurchaseOrder())
 //															.build();	
 //		
 //		log.info("제대로 만들어 진건가? : "+procurementPlan);
 		
-		log.info("값들 한번 찍어 보자 : "+procurementPlanDTO.getPpcode());
-		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null));
-//		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getRegisterDate());
-//		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getCompletionDate());
-//		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getDetailPurchaseOrder());
+		log.info("값들 한번 찍어 보자 : "+procurementPlanDTO.getPpCode());
+		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null));
+//		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getRegisterDate());
+//		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getCompletionDate());
+//		log.info("값들 한번 찍어 보자 : "+procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getDetailPurchaseOrder());
 //		
 //		procurementPlanRepository.save(procurementPlan);		
 		
@@ -425,8 +441,8 @@ public class ProcurementPlanRepositoryTests {
 		//화면에서 계약상태, 조달계획 등록상태 숨겨서 완료 로 보내주자, 조달계획 진행사항 발주 예정 으로 보내주자
 		
 		//조달계획 수정하는 상황이라, 조달계획 코드값이 들어간다!
-		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(15).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-																			.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppCode(15).materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
+																			.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount())
 																			.companyName(contract.getCompany().getName()).supplyLt(contract.getSupplyLt())
 																			.dueDate(makeDuedate(mrp.getDate(), freePeriod))
 																			.minimumOrderDate(makeMinimumOrderDate(makeDuedate(mrp.getDate(), freePeriod), contract.getSupplyLt()))
@@ -435,7 +451,7 @@ public class ProcurementPlanRepositoryTests {
 																			.freePeriod(freePeriod).build();
 		log.info("제대로 만들어 진건가? : "+procurementPlanDTO);
 		
-		ProcurementPlan procurementPlan = ProcurementPlan.builder().code(procurementPlanDTO.getPpcode())
+		ProcurementPlan procurementPlan = ProcurementPlan.builder().code(procurementPlanDTO.getPpCode())
 																	.mrp(mrpRepository.findById(procurementPlanDTO.getMrpCode()).get())
 																	.contract(contractRepository.findById(procurementPlanDTO.getContractNo()).get())
 																	.amount(procurementPlanDTO.getPpAmount()).dueDate(procurementPlanDTO.getDueDate())
@@ -447,9 +463,9 @@ public class ProcurementPlanRepositoryTests {
 	
 	@Test
 	public void deleteByDTOTest() {
-		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppcode(15).build();		
+		ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().ppCode(15).build();		
 		
-		procurementPlanRepository.deleteById(procurementPlanDTO.getPpcode());
+		procurementPlanRepository.deleteById(procurementPlanDTO.getPpCode());
 	}
 	
 	@Test

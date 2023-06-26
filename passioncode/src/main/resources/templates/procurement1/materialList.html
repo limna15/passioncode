@@ -110,7 +110,7 @@
 								<button class="btn btn-primary" >삭제</button>
 							</form>
 							<form style="float: right;" th:action = "@{/procurement1/materialModify}" th:method="get" id="materialModifyForm">
-								<input type="hidden" name="materialCodeList" id="materialCodeList">
+								<input type="hidden" name="materialCodeList" >
 								<button class="btn btn-primary" id="materialModifyBtn" type="submit" style="margin-right:10px">수정</button>
 							</form>
 							<button class="btn btn-primary" style="float:right; margin-right:10px" type="button" onclick="location.href='/procurement1/materialRegister'">
@@ -260,24 +260,26 @@
 		<!-- 첨부파일 다운로드 여부 묻는 모달창 끝 -->
 		
 		<!-- 
-			수정버튼 누를때, 오류시 보여줄 모달창 시작
+			수정버튼+삭제버튼 누를때, 오류시 보여줄 모달창 시작
+			-- 수정버튼
 			(상황1. 현재 조달진행중 or 조달완료 했던 경우 O ->이것만 눌렀을때)(즉, 막 새로 작성한것만 수정되게, 발주예정인것만 수정되게)
 			(상황2. 체크한게 아무것도 없을때)
+			- 제목 : 품목 수정
 			- 내용 : 1. <span>발주되어 진행 중인 품목이 있습니다.</span><br>
                  		<span>다시 선택해주시길 바랍니다.</span>
 					 2. <span>체크한 항목이 없습니다.</span><br>
 						<span>다시 선택해주시길 바랍니다.</span>
 		-->
-		<div class="materialModifyErrorModal modal" tabindex="-1" role="dialog">
+		<div class="materialMDErrorModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">품목 수정</h5>
+                        <h5 class="modal-title" id="materialMDErrorModalTitle"></h5>
                         <button type="button" class="close " data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="materialModifyErrorModalContent">   
+                    <div class="modal-body" id="materialMDErrorModalContent">   
 						<!-- 오류시 보여줄 내용 -->	
 							
                     </div>
@@ -462,7 +464,7 @@
 						//ajax 처리후 밑에 진행사항 진행하게 하니까! ajax 처리다하고 받아와서 가는게 아니라, 
 						//이거는 이거대로 밑에는 밑에대로 진행되서, 원하는 순서대로 안됨! 그래서 여기에서 뒤에 진행사항을 처리하자!!
 						
-						//오류 모달창의 materialModifyErrorModalContent 에 넣을 내용
+						//오류 모달창의 materialMDErrorModalContent 에 넣을 내용
 		    			let sentence = ``;
 		    			
 		    			//4. 체크박스 체크 전역변수 true + 발주예정 체크 전역변수 true 일때만, 수정가능~
@@ -485,9 +487,10 @@
 		    				//오류 모달창 보여주기
 		    				sentence = `<span>체크한 항목이 없습니다.</span><br>
 										<span>다시 선택해주시길 바랍니다.</span>`;
-		           			document.querySelector("#materialModifyErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#materialMDErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#materialMDErrorModalTitle").innerHTML = `품목 수정`;
 		    				
-							$(".materialModifyErrorModal").modal('show');    					
+							$(".materialMDErrorModal").modal('show');    					
 							//그리고 다시 등록체크 값 true로 다시 세팅해주기
 							checkBoxValueCheck = true;   
 		    			}else if(!expectedPurchaseOrderCheck){						//체크박스 선택한것 중에 완료 인것이 있음 -> 등록오류 모달창 보여주기
@@ -495,9 +498,10 @@
 		    				//오류 모달창 보여주기
 		    				sentence = `<span>발주되어 진행 중인 품목이 있습니다.</span><br>
 		                    			<span>다시 선택해주시길 바랍니다.</span>`;
-		           			document.querySelector("#materialModifyErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#materialMDErrorModalContent").innerHTML = sentence;
+		           			document.querySelector("#materialMDErrorModalTitle").innerHTML = `품목 수정`;
 		    				
-							$(".materialModifyErrorModal").modal('show'); 
+							$(".materialMDErrorModal").modal('show'); 
 		    				
 		    				//그리고 다시 등록체크 값 true로 다시 세팅해주기
 							expectedPurchaseOrderCheck = true;   

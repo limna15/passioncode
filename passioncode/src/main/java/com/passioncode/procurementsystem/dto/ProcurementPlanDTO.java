@@ -28,7 +28,12 @@ public class ProcurementPlanDTO {
 	/**
 	 * 조달계획코드 (조달계획)
 	 */
-	private Integer ppcode;
+	private Integer ppCode;
+	
+	/**
+	 * 조달계획코드(문자.ver) (조달계획)
+	 */
+	private String ppCodeStr;
 	
 	/**
 	 * 자재소요계획코드 (MRP)
@@ -60,7 +65,7 @@ public class ProcurementPlanDTO {
 	 */
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-	private Date mrpdate;	
+	private Date mrpDate;	
 	
 	/**
 	 * 사업자등록번호 (협력회사)

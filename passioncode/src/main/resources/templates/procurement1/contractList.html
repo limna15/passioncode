@@ -111,11 +111,11 @@
 								<button class="btn btn-primary" type="submit">삭제</button>
 							</form>
 							<form style="float: right;" th:action = "@{/procurement1/contractModify}" th:method="get" id="contractModifyForm">
-								<input type="hidden" name="contractNoList" id="contractNoList">
+								<input type="hidden" name="contractNoList" >
 								<button class="btn btn-primary" id="contractModifyBtn" type="submit" style="margin-right:10px">수정</button>
 							</form>
 							<form style="float: right;" th:action = "@{/procurement1/contractRegister}" th:method="get" id="contractRegisterForm">
-								<input type="hidden" name="materialCodeList" id="materialCodeList">
+								<input type="hidden" name="materialCodeList" >
 								<button class="btn btn-primary" id="contractRegisterBtn" type="submit" style="margin-right:10px">등록</button>
 							</form>
 						</div>

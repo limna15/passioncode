@@ -20,6 +20,7 @@ import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
+import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.ContractService;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialService;
@@ -498,7 +499,6 @@ public class PS1Controller {
 		log.info("계약 수정화면에 보내는 contractDTOList 봐보자 : "+contractDTOList);
 		
 		model.addAttribute("contractDTOList", contractDTOList);
-		
 	}
 	
 	/**
@@ -581,15 +581,6 @@ public class PS1Controller {
 		return "redirect:/procurement1/contractList";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * 조달계획 목록 화면보기
 	 * @param model
@@ -622,7 +613,7 @@ public class PS1Controller {
 		for(int i=0;i<mrpCodeList.length;i++) {
 			MRP mrp = procurementPlanService.getMRP(Integer.parseInt(mrpCodeList[i]));
 			ProcurementPlanDTO procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-																				.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount()).mrpCode(mrp.getCode())
+																				.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount()).mrpCode(mrp.getCode())
 																				.contractStatus("완료").build();
 			procurementPlanDTOList.add(procurementPlanDTO);
 		}
@@ -631,6 +622,13 @@ public class PS1Controller {
 		model.addAttribute("procurementPlanDTOList", procurementPlanDTOList);		
 	}
 	
+	/**
+	 * 조달계획 등록 처리
+	 * @param procurementPlanDTO
+	 * @param redirectAttributes
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("procurementPlanRegister")
 	public String ProcurementPlanRegister2(ProcurementPlanDTO procurementPlanDTO,RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		//품목코드, 품목명, 소요공정, 소요일, 소요량, 협력회사, 품목공급LT, 조달납기예정일, 최소발주일, 필요수량, 계약상태, 조달계획 등록상태, 조달계획 진행사항 <br>
@@ -654,23 +652,23 @@ public class PS1Controller {
 		//소요공정 배열
 		String[] process = request.getParameterValues("process");		
 		//소요일 배열 -> Date 형식으로 변환
-		String[] mrpdateStr = request.getParameterValues("mrpdate");		
-//		log.info("지금 이 mrpdate를 못 읽어서 오는건가???? 봐보자!!!");
-//		for(String test:mrpdateStr) {
-//			log.info("받아온 mrpdate 하나씩 봐보자 : "+test);
+		String[] mrpDateStr = request.getParameterValues("mrpDate");		
+//		log.info("지금 이 mrpDate를 못 읽어서 오는건가???? 봐보자!!!");
+//		for(String test:mrpDateStr) {
+//			log.info("받아온 mrpDate 하나씩 봐보자 : "+test);
 //		}		
-//		Date[] mrpdate = null; 	 => 이렇게 했더니, 밑에 try catch 에서 잡게 되므로 null이 존재할 가능성때문에, 자바 에러가 뜸
-		List<Date> mrpdateList = new ArrayList<>();
-		for(int i=0;i<mrpdateStr.length;i++) {
+//		Date[] mrpDate = null; 	 => 이렇게 했더니, 밑에 try catch 에서 잡게 되므로 null이 존재할 가능성때문에, 자바 에러가 뜸
+		List<Date> mrpDateList = new ArrayList<>();
+		for(int i=0;i<mrpDateStr.length;i++) {
 			try {
-//				mrpdate[i] = simpleDateFormat.parse(mrpdateStr[i]);
-				mrpdateList.add(simpleDateFormat.parse(mrpdateStr[i]));
+//				mrpDate[i] = simpleDateFormat.parse(mrpDateStr[i]);
+				mrpDateList.add(simpleDateFormat.parse(mrpDateStr[i]));
 			} catch (ParseException e) {
 				//e.printStackTrace();
 				log.info("소요일 date 변환시 오류 발생함!!");
 			}
-//			log.info("변경되서 넣어진 소요일 날짜 형식 봐보자 : "+mrpdate[i]);
-			log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpdateList);
+//			log.info("변경되서 넣어진 소요일 날짜 형식 봐보자 : "+mrpDate[i]);
+			log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpDateList);
 		}	
 		//소요량 배열 -> Integer로 변경
 		String[] mrpAmountStr = request.getParameterValues("mrpAmount");	
@@ -751,7 +749,7 @@ public class PS1Controller {
 			procurementPlanDTO2.setMaterialCode(materialCode[i]);
 			procurementPlanDTO2.setMaterialName(materialName[i]);
 			procurementPlanDTO2.setProcess(process[i]);
-			procurementPlanDTO2.setMrpdate(mrpdateList.get(i));
+			procurementPlanDTO2.setMrpDate(mrpDateList.get(i));
 			procurementPlanDTO2.setMrpAmount(mrpAmountList.get(i));
 			procurementPlanDTO2.setCompanyName(companyName[i]);;
 			procurementPlanDTO2.setSupplyLt(supplyLtList.get(i));
@@ -782,11 +780,31 @@ public class PS1Controller {
 	}
 	
 	/**
-	 * 계약 수정 화면 보기
+	 * 조달계획 수정 화면 보기
+	 * @param ppCodeList
+	 * @param model
 	 */
 	@GetMapping("procurementPlanModify")
-	public void procurementPlanModify() {
+	public void procurementPlanModify(String[] ppCodeList,Model model) {
+		log.info("조달계획 수정 화면 보기.....");
+		log.info("조달계획 등록(목록) 화면에서 받아온 조달계획코드 리스트 보자 : "+ppCodeList);
 		
+		//받아온 조달계획코드 리스트를 통해서, 수정화면에 보낼, ProcurementPlanDTO 리스트 만들기
+		List<ProcurementPlanDTO> procurementPlanDTOList = new ArrayList<>();
+		for(int i=0; i<ppCodeList.length; i++) {
+			ProcurementPlan procurementPlan = procurementPlanService.getProcurementPlan(Integer.parseInt(ppCodeList[i]));
+			ProcurementPlanDTO procurementPlanDTO = procurementPlanService.ppEntityToDTO(procurementPlan);
+			procurementPlanDTOList.add(procurementPlanDTO);
+		}
+		log.info("조달계획 수정화면에 보내는 procurementPlanDTOList 봐보자 : "+procurementPlanDTOList);
+		
+		model.addAttribute("procurementPlanDTOList", procurementPlanDTOList);
 	}
+
+
+	
+	
+	
+	
 
 }

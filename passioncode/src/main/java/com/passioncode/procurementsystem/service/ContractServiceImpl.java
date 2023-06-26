@@ -66,12 +66,12 @@ public class ContractServiceImpl implements ContractService {
 	
 	/**
 	 * 계약서번호 문자버전으로 바꾸기 <br>
-	 * 계약서번호 1 -> C00001 로 바꿔주기
+	 * 계약서번호 1 -> C00000001 로 바꿔주기
 	 * @param contractNo
 	 * @return
 	 */
 	public String makeContractNoStr(Integer contractNo) {
-		//계약서번호 1 -> C00001 로 바꿔주기
+		//계약서번호 1 -> C00000001 로 바꿔주기
 		String contractNoStr = String.format("%08d",contractNo);
 		contractNoStr = "C" + contractNoStr;
 		log.info("바꾼 계약서 번호 좀 보자 : ",contractNoStr);

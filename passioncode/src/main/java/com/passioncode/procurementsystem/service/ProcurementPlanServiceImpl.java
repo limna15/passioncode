@@ -54,6 +54,20 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	}	
 	
 	/**
+	 * 조달계획코드 문자버전으로 바꾸기 <br>
+	 * 조달계획코드 1 -> PP00001 로 바꿔주기
+	 * @param contractNo
+	 * @return
+	 */
+	public String makePPCodeStr(Integer ppCode) {
+		//조달계획코드 1 -> PP00001 로 바꿔주기
+		String ppCodeStr = String.format("%05d",ppCode);
+		ppCodeStr = "PP" + ppCodeStr;
+		log.info("바꾼 조달계획코드 좀 보자 : ",ppCodeStr);
+		return ppCodeStr;
+	}
+	
+	/**
 	 * 조달계획 진행사항 만들어주는 메소드 (조달계획을 이용해서) <br>
 	 * 등록 후 발주코드 존재X, 조달완료일 존재X : 발주 예정  <br>
 	 * 등록 후 발주코드 존재O, 조달완료일 존재X : 조달 진행 중 <br> 
@@ -79,12 +93,12 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	/**
 	 * 기본 여유기간 계산해주기 <br>
 	 * 소요일 - 조달납기예정일
-	 * @param mrpdate
+	 * @param mrpDate
 	 * @param duedate
 	 * @return
 	 */
-	public Integer makefreePeriod(Date mrpdate,Date duedate) {
-		Long timeDifferent = mrpdate.getTime() - duedate.getTime();
+	public Integer makefreePeriod(Date mrpDate,Date duedate) {
+		Long timeDifferent = mrpDate.getTime() - duedate.getTime();
 //		log.info("결과뺀 시간 차이 봐보자 : "+timeDifferent);		
 		TimeUnit time = TimeUnit.DAYS;
 		Long different = time.convert(timeDifferent, TimeUnit.MILLISECONDS);
@@ -118,9 +132,10 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		
 		//procurementPlan 가 존재할때, 조달계획 등록 완료된 상태
 		if(procurementPlan!=null) {
-			procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
+			procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppCode(procurementPlan.getCode())
+															.ppCodeStr(makePPCodeStr(procurementPlan.getCode()))
 															.materialName(procurementPlan.getMrp().getMaterial().getName()).process(procurementPlan.getMrp().getProcess())
-															.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
+															.mrpDate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
 															.freePeriod(makefreePeriod(procurementPlan.getMrp().getDate(),procurementPlan.getDueDate()))
 															.companyName(procurementPlan.getContract().getCompany().getName())
 															.supplyLt(procurementPlan.getContract().getSupplyLt())
@@ -132,7 +147,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 															.contractNo(procurementPlan.getContract().getNo()).build();
 		}else {  ////procurementPlan 가 존재X, 조달계획 등록 미완료된 상태
 			procurementPlanDTO =  ProcurementPlanDTO.builder().materialCode(mrp.getMaterial().getCode()).materialName(mrp.getMaterial().getName())
-																.process(mrp.getProcess()).mrpdate(mrp.getDate()).mrpAmount(mrp.getAmount())
+																.process(mrp.getProcess()).mrpDate(mrp.getDate()).mrpAmount(mrp.getAmount())
 																.contractStatus(contractStatusCheck(mrp.getMaterial())).ppRegisterStatus("미완료")
 																.mrpCode(mrp.getCode()).build();
 		}		
@@ -141,10 +156,10 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 
 	@Override
 	public ProcurementPlanDTO ppEntityToDTO(ProcurementPlan procurementPlan) {
-		ProcurementPlanDTO procurementPlanDTO =ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
+		ProcurementPlanDTO procurementPlanDTO =ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppCode(procurementPlan.getCode())
 																			.materialName(procurementPlan.getMrp().getMaterial().getName())
-																			.process(procurementPlan.getMrp().getProcess())
-																			.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
+																			.process(procurementPlan.getMrp().getProcess()).ppCodeStr(makePPCodeStr(procurementPlan.getCode()))
+																			.mrpDate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
 																			.freePeriod(makefreePeriod(procurementPlan.getMrp().getDate(),procurementPlan.getDueDate()))
 																			.companyName(procurementPlan.getContract().getCompany().getName())
 																			.supplyLt(procurementPlan.getContract().getSupplyLt())
@@ -167,14 +182,14 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		//필요수량, 조달납기예정일, 최소발주일, 조달계획 등록일, 조달계획 완료일, 발주코드(외래키)	
 		ProcurementPlan procurementPlan = null;
 		
-		if(procurementPlanDTO.getPpcode()!=null) {  //조달계획코드가 존재O -> 기존에 있던 DTO 값들을 엔티티로 바꿀때!
-			procurementPlan = ProcurementPlan.builder().code(procurementPlanDTO.getPpcode()).mrp(mrpRepository.findById(procurementPlanDTO.getMrpCode()).get())
+		if(procurementPlanDTO.getPpCode()!=null) {  //조달계획코드가 존재O -> 기존에 있던 DTO 값들을 엔티티로 바꿀때!
+			procurementPlan = ProcurementPlan.builder().code(procurementPlanDTO.getPpCode()).mrp(mrpRepository.findById(procurementPlanDTO.getMrpCode()).get())
 													.contract(contractRepository.findById(procurementPlanDTO.getContractNo()).get())
 													.amount(procurementPlanDTO.getPpAmount())
 													.dueDate(procurementPlanDTO.getDueDate()).minimumOrderDate(procurementPlanDTO.getMinimumOrderDate())
-													.registerDate(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getRegisterDate())
+													.registerDate(procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getRegisterDate())
 													.completionDate(procurementPlanDTO.getCompletionDate())
-													.detailPurchaseOrder(procurementPlanRepository.findById(procurementPlanDTO.getPpcode()).orElse(null).getDetailPurchaseOrder())
+													.detailPurchaseOrder(procurementPlanRepository.findById(procurementPlanDTO.getPpCode()).orElse(null).getDetailPurchaseOrder())
 													.build();		
 		}else {		//조달계획코드가 존재X -> 새로운 DTO로 엔티티로 바꾸어서 등록할때!
 			procurementPlan = ProcurementPlan.builder().mrp(mrpRepository.findById(procurementPlanDTO.getMrpCode()).get())
@@ -296,9 +311,9 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 			
 			//procurementPlan 가 존재할때, 조달계획 등록 완료된 상태
 			if(procurementPlan!=null) {
-				procurementPlanDTO =ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppcode(procurementPlan.getCode())
+				procurementPlanDTO =ProcurementPlanDTO.builder().materialCode(procurementPlan.getMrp().getMaterial().getCode()).ppCode(procurementPlan.getCode())
 																.materialName(procurementPlan.getMrp().getMaterial().getName()).process(procurementPlan.getMrp().getProcess())
-																.mrpdate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
+																.mrpDate(procurementPlan.getMrp().getDate()).mrpAmount(procurementPlan.getMrp().getAmount())
 																.freePeriod(makefreePeriod(procurementPlan.getMrp().getDate(),procurementPlan.getDueDate()))
 																.companyName(procurementPlan.getContract().getCompany().getName())
 																.supplyLt(procurementPlan.getContract().getSupplyLt())
@@ -311,7 +326,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 				ppDTOList.add(procurementPlanDTO);
 			}else {  ////procurementPlan 가 존재X, 조달계획 등록 미완료된 상태
 				procurementPlanDTO = ProcurementPlanDTO.builder().materialCode(mrpList.get(i).getMaterial().getCode()).materialName(mrpList.get(i).getMaterial().getName())
-																.process(mrpList.get(i).getProcess()).mrpdate(mrpList.get(i).getDate()).mrpAmount(mrpList.get(i).getAmount())
+																.process(mrpList.get(i).getProcess()).mrpDate(mrpList.get(i).getDate()).mrpAmount(mrpList.get(i).getAmount())
 																.contractStatus(contractStatusCheck(mrpList.get(i).getMaterial())).ppRegisterStatus("미완료")
 																.mrpCode(mrpList.get(i).getCode()).build();	
 				ppDTOList.add(procurementPlanDTO);
@@ -344,7 +359,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	@Override
 	public void delete(ProcurementPlanDTO procurementPlanDTO) {
 		log.info("삭제된 조달계획(procurementPlan) 정보 : "+dtoToEntity(procurementPlanDTO));
-		procurementPlanRepository.deleteById(procurementPlanDTO.getPpcode());
+		procurementPlanRepository.deleteById(procurementPlanDTO.getPpCode());
 	}
 	
 	/**
@@ -373,16 +388,16 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 	/**
 	 * 조달납기예정일 계산해주기 <br>
 	 * 소요일 - 기본 여유기간
-	 * @param mrpdate
+	 * @param mrpDate
 	 * @param freePeriod
 	 * @return
 	 */
-	public Date makeDuedate(Date mrpdate,Integer freePeriod) {
+	public Date makeDuedate(Date mrpDate,Integer freePeriod) {
 		DateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일"); 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(mrpdate);
-		mrpdate=cal.getTime();
-		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpdate));
+		cal.setTime(mrpDate);
+		mrpDate=cal.getTime();
+		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpDate));
 		
 		//소요일 - 기본 여유기간 => 납기예정일 만들기
 		cal.add(Calendar.DATE,-freePeriod);
@@ -400,7 +415,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		//기본여유기간, 품목공급LT -> 계약서 찾기 모달창에서 얻기
 		
 		//조달납기 예정일 구하기 -> procurementPlanDTO 에 값 셋팅해주기
-		Date dueDate = makeDuedate(procurementPlanDTO.getMrpdate(), procurementPlanDTO.getFreePeriod());
+		Date dueDate = makeDuedate(procurementPlanDTO.getMrpDate(), procurementPlanDTO.getFreePeriod());
 		procurementPlanDTO.setDueDate(dueDate);
 		
 		//최소발주일 구하기 -> procurementPlanDTO 에 값 셋팅해주기
