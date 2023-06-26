@@ -210,14 +210,12 @@ public class MaterialInServiceImpl implements MaterialInService {
 					.status(miList.get(i).getStatus()).transactionStatus(miList.get(i).getTransactionStatus()).build();
 					
 			notNullMaterialInDTOList.add(materialInDTO);	
-		}
-		
-		
+		}	
 		
 		for(int i=0; i<ppList.size(); i++) {
 			//materialIn에 존재 X 때 설정
 			if(!materialInRepository.existsById(i+1)) {
-				materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
+				materialInDTO=  MaterialInDTO.builder().noStr(noStr(ppList.get(i).getDetailPurchaseOrder().getPurchaseOrder().getNo())).codeStr(codeStr(ppList.get(i).getDetailPurchaseOrder().getCode()))
 						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 						.status(null).transactionStatus(null).inDate(null).build();

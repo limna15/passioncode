@@ -322,19 +322,18 @@ public class MaterialInRepositoryTests {
 		}
 		
 		
+		//log.info("ppList >>> " + ppList + ", 사이즈 >>> " + ppList.size()); //8
+		log.info("8번 존재하는데!! >>> " + materialInRepository.existsById(8)); //false
 		
-		for(int i=0; i<ppList.size(); i++) {
+		for(int i=0; i<ppList.size(); i++) { //0~7
 			//materialIn에 존재 X 때 설정
-			if(!materialInRepository.existsById(i+1)) {
-				materialInDTO=  MaterialInDTO.builder().no(dpoList.get(i).getPurchaseOrder().getNo()).code(dpoList.get(i).getCode())
-						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
-						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
-						.status(null).transactionStatus(null).inDate(null).build();
-				nullMaterialInDTOList.add(materialInDTO);
-				log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
-				}
+			if(!materialInRepository.existsById(i+1)) { //1~8
+				materialInDTO=  null;
+				//log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);		
+			}
 		}
 		log.info("nullMaterialInDTOList 보기 >>> " + nullMaterialInDTOList);
+		//log.info("notNullMaterialInDTOList 보기 >>> " + notNullMaterialInDTOList);
 		
 		//입고상태 null값 -> 정렬된 List 순으로 넣기
 		for(MaterialInDTO dto : nullMaterialInDTOList) {
