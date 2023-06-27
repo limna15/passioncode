@@ -101,8 +101,6 @@
 							
 							<button class="td-modal btn btn-primary mypublish" id="publishBtn" style="float:right; margin-right:10px">
 								발주서 발행
-								<tr th:each="dto: ${purchaseOrderList}">
-								<input type="hidden" name="poDate" th:value="${dto.purchaseOrderDate}"></tr>
 							</button>
 							
 						</div>
@@ -349,7 +347,7 @@
 		                -->
                     </div>
                     <div class="modal-footer">
-						<button id="publishBtn22" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+						<button id="publishBtn01" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
 						</button>
 						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
@@ -404,7 +402,7 @@
 		                -->
                     </div>
                     <div class="modal-footer">
-						<button id="publishBtn22" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+						<button id="publishBtn02" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
 						</button>
 						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
@@ -458,7 +456,7 @@
 		                -->
                     </div>
                     <div class="modal-footer">
-						<button id="publishBtn22" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+						<button id="publishBtn03" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
 						</button>
 						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
@@ -760,6 +758,16 @@
 							tableTd01 += '<td>' + tList[num01].supplyPrice +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody03').append(tableTd01);//여기서 축척됨 어펜드에 나누어서 보내주면 된다. 
+						$.ajax({
+							type:"post",
+							url:"/procurement2/publish",
+							data: JSON.stringify(com03),
+							contentType :"application/json; charset=UTF-8",
+							dataType: "json",
+							success: function(data){
+								console.log("받아온 데이터 : ",data);
+				}
+			})
 						}
 							
 						}if(com03.length>0){

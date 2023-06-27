@@ -196,48 +196,6 @@
 								등록
 							</button>
 						</div>
-						<!--  <div id="myplan"></div>
-						<script>
-						var arrInput = new Array(0);
-						  var arrInputValue = new Array(0);
-						 
-						function addInput() {
-						  arrInput.push(arrInput.length);
-						  arrInputValue.push("");
-						  display();
-						}
-						 
-						function display() {
-						  document.getElementById('myplan').innerHTML="";
-						  for (intI=0;intI<arrInput.length;intI++) {
-						    document.getElementById('myplan').innerHTML+=createInput(arrInput[intI], arrInputValue[intI]);
-						  }
-						}
-						 
-						function saveValue(intId,strValue) {
-						  arrInputValue[intId]=strValue;
-						}  
-						 
-						function createInput(id,value) {
-						  return "<input type='date' id='test "+ id +"' onChange='javascript:saveValue("+ id +",this.value)' value='"+ 
-						 
-						value +"'>"+"&nbsp;"+"<input type='button' id='test2' value='삭제' onclick='deleteInput(this);'>"+"<br>"+"<br>";
-						//value +"'><br>"; ->이게 원본
-						}
-						 
-						function deleteInput() {
-						  if (arrInput.length > 0) { 
-						     arrInput.pop(); 
-						     arrInputValue.pop();
-						  }
-						  display(); 
-						}
-						</script>
-						<form method="post" action="/procurement2/progressCheck">
-						<input type="button" value="추가" onclick="addInput();" />
-						<input type="submit" value="전송"/>
-						</form>
-						-->
                     </div>
                     <div class="modal-footer">
 						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
@@ -328,16 +286,6 @@
 			codeNo=getObjTR().querySelector("input[name=purchaseOrderCode]").value;//여기에서 값 넣어서 날짜등록으로 보내보기
 			console.log("등록할때 필요한 발주번호: ",codeNo);//잘나옴
 			document.querySelector("#companyName2").innerHTML = cName;
-			
-			//create element (form)
-			//var inForm = $('<form></form>');
-			
-			//set attribute (form) 
-			
-			//inForm.attr("name","inForm");
-			//inForm.attr("method","post");
-			//inForm.attr("action","/procurement2/progressCheck");
-			
 			
 		});
 

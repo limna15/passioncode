@@ -33,6 +33,20 @@ public class PS2RestController {
 	private final DetailPurchaseOrderService detailPurchaseOrderService;
 	private final ProgressCheckService progressCheckService;
 	
+	@PostMapping(value ="/publish")
+	public void publish(@RequestBody Integer[] publishCode, HttpServletResponse response) {
+		log.info("이상하게 찍히는 >>"+publishCode);
+		log.info("날짜 >>> " + publishCode[0]);
+		log.info("발주 코드 >>> " + publishCode[1]);
+		//LocalDateTime localDateTime = LocalDateTime.parse(dateAndCode[0]);
+		//Integer mycode = Integer.parseInt(dateAndCode[1]);
+		//여기서 서비스 해서 저장하기 
+		//progressCheckService.nextCheckDate(localDateTime, mycode);
+		//log.info("등록되는 검수일정:  ");
+		
+		
+	}
+	
 	@PostMapping(value ="/progressCheck2")
 	public void addDate(@RequestBody String[] dateAndCode, HttpServletResponse response) {
 		log.info("이상하게 찍히는 >>"+dateAndCode);
