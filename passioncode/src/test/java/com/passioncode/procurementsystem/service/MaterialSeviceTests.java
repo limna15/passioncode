@@ -1,5 +1,7 @@
 package com.passioncode.procurementsystem.service;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -95,6 +97,19 @@ public class MaterialSeviceTests {
 		log.info("도면 없는 품목 자체를 읽어보자 : "+material);
 		MaterialDTO materialDTO = materialService.entityToDTO(material);
 		log.info("어디 도면 없는 dto 찍어보자 : "+materialDTO);
+	}
+	
+	@Test
+	public void  getMaterialListByCodeContainingTest() {
+		List<Material> materialList = materialService.getMaterialListByCodeContaining("TM");
+		log.info("여기가 에러일거 같은데?? : "+materialList);
+		
+		if(materialList==null) {
+			log.info("null 값인가???");
+		}
+		if(materialList.size()==0) {
+			log.info("size가 0인건가??");
+		}
 	}
 	
 	
