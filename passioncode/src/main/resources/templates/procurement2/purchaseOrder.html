@@ -499,6 +499,11 @@
 		var month = today.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줌
 		var day = today.getDate();
 		todaydate = (year + '/' + month + '/' + day);//오늘 날짜 예쁘게 찍기
+		let ppNoList01 =new Array();
+		let ppNoList02 =new Array();
+		let ppNoList03 =new Array();
+		let ppNoList04 =new Array();
+		let ppNoList05 =new Array();
 		$(".showInfo").click(function(){
 			//console.log("내가 발주하고싶은 정보를 담고있는 체크박스를 누름");
 			
@@ -642,38 +647,37 @@
 						console.log("cList: 길이 구해줘~~~",  cList.length); 
 						//console.log("cName3 이건 회사 이름: ", cName3); 
 						mylength.push(i);		//***나온 자리의 번호를 저장
+						//console.log(tList);
 						//console.log("리스트에 담은 내 조달의 자리 번호 ",mylength);
 						//일단 회사이름별로 구분해서 보여줘보기
 						//console.log("선택된 i: ", i);//i는 조달 번호가 아니라 내가 원하는 배열 주소
-						
-						//테스트
-						//const numbers8 = [[1, 2], 3];
-						//const numbers7 = numbers8.pop();
-						//console.log("하기 전 값: ", numbers8);
-						//console.log("pop하고 난 뒤,  ",numbers7);
-						
-						//pop()하는 순서를 정하기-> 같은 것 부터 중복 검사한 뒤에 중복된 것을 빼고 다시 돌려서 하기
 						if(name01===null){//첫번째 
+							ppNoList01.push(tList[i].procurementPlan);
 							com01.push(i);
 							name01 = tList[i].companyName;
 							console.log("name01 첫 번째 회사 이름 ", name01, i);
 						}else if(name01==tList[i].companyName){//첫 번째 회사와 이름이 같은 경우
+							ppNoList01.push(tList[i].procurementPlan);
 							com01.push(i);
 							console.log("com01 ", com01);
 							console.log("첫 번째 회사와 이름이 같다.  ", name01);
 						}else if(name02==null){//두 번째
+							ppNoList02.push(tList[i].procurementPlan);
 							com02.push(i);
 							name02 = tList[i].companyName;
 							console.log("name02 두 번째 회사 이름 ", name02);
 						}else if(name02==tList[i].companyName){//첫 번째 회사와 이름이 같은 경우
+							ppNoList02.push(tList[i].procurementPlan);
 							com02.push(i);
 							console.log("com02 ", com02);
 							console.log("두 번째 회사와 이름이 같다.  ", name02);
-						}else if(name03==null){//두 번째
+						}else if(name03==null){//세 번째
+							ppNoList03.push(tList[i].procurementPlan);
 							com03.push(i);
 							name03 = tList[i].companyName;
 							console.log("name03 번째 회사 이름 ", name03);
 						}else if(name03==tList[i].companyName){//첫 번째 회사와 이름이 같은 경우
+							ppNoList03.push(tList[i].procurementPlan);
 							com03.push(i);
 							console.log("com03 ", com03);
 							console.log("name03 회사와 이름이 같다.  ", name03);
@@ -758,16 +762,8 @@
 							tableTd01 += '<td>' + tList[num01].supplyPrice +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody03').append(tableTd01);//여기서 축척됨 어펜드에 나누어서 보내주면 된다. 
-						$.ajax({
-							type:"post",
-							url:"/procurement2/publish",
-							data: JSON.stringify(com03),
-							contentType :"application/json; charset=UTF-8",
-							dataType: "json",
-							success: function(data){
-								console.log("받아온 데이터 : ",data);
-				}
-			})
+						
+						//console.log("######발주서 발행 되었나..");
 						}
 							
 						}if(com03.length>0){
@@ -785,27 +781,59 @@
 					}
 				}
 				
-			
-				function openModalWithDelay(index) {
-    			let $modal = $(".multiplePublish2").eq(index);
-    			//console.log("2번 모달창 실행");//두번 실행
-    			//2번 모달창이 먼저 실행되고, 아무 정보도 나오지 않는다. 
-    			//$modal.modal("show");
-    			$modal.find('.close').on('click', function() {
-    				//$(".multiplePublish").modal("show");
-       				$modal.modal("hide");
-   				 });
-
-    			$modal.on("hide.bs.modal", function (e) {
-        		//e.preventDefault();//이거 끄면 안 닫혀서 그냥 함
-        		e.stopImmediatePropagation();
-    			});
-				}
-
-				for (let j = 0; j < cList.length; j++) {
-					//console.log("1번으로 진행");
-    				openModalWithDelay(j);
-				}
+				$("#publishBtn01").click(function(){
+					console.log("1번 조달계획 발행 버튼을 누름");
+					//조달 계획 번호 가져오기
+					$.ajax({
+							type:"post",
+							url:"/procurement2/publish",
+							data: JSON.stringify(ppNoList01),
+							contentType :"application/json; charset=UTF-8",
+							dataType: "json",
+							success: function(data){
+								console.log("받아온 데이터 : ",data);
+							}
+						})
+						$(".multiplePublish").modal("hide");
+								console.log("잘 발행 되었나? ");
+						
+				})
+				
+				$("#publishBtn02").click(function(){
+					console.log("1번 조달계획 발행 버튼을 누름");
+					//조달 계획 번호 가져오기
+					$.ajax({
+							type:"post",
+							url:"/procurement2/publish",
+							data: JSON.stringify(ppNoList02),
+							contentType :"application/json; charset=UTF-8",
+							dataType: "json",
+							success: function(data){
+								console.log("받아온 데이터 : ",data);
+							}
+						})
+						$(".multiplePublish2").modal("hide");
+								console.log("잘 발행 되었나? ");
+						
+				})
+				
+				$("#publishBtn03").click(function(){
+					console.log("1번 조달계획 발행 버튼을 누름");
+					//조달 계획 번호 가져오기
+					$.ajax({
+							type:"post",
+							url:"/procurement2/publish",
+							data: JSON.stringify(ppNoList03),
+							contentType :"application/json; charset=UTF-8",
+							dataType: "json",
+							success: function(data){
+								console.log("받아온 데이터 : ",data);
+							}
+						})
+						$(".multiplePublish3").modal("hide");
+								console.log("잘 발행 되었나? ");
+						
+				})
 			
 			
 			var purchaseNo='';//빈값 넣기, 필요 없어보이는데 위에서 쓰이고 있음
@@ -814,16 +842,10 @@
 				$(".noPurchaseNoModal").modal('show');
 				console.log("아무것도 선택하지 않음===>>");
 			}else if(cList.length===1 || cList.length<1){//한개 선택된 경우
-				$(".myPublish").modal('show');//발주서 발행 모달
+				//$(".myPublish").modal('show');//발주서 발행 모달
 				console.log("발주서 한개 발행일 경우 이거 사용하기>>", cList);
 			}else if(cList.length>1){
 				console.log("체크박스가 2개 이상 선택됨");
-				//회사 이름 여기에 찍어보기
-				//$(".multiplePublish").modal("show");
-				//$(".multiplePublish2").modal("show");
-				//$(".multiplePublish3").modal("show");
-				//cList.forEach((i) => console.log("내가 발주하고싶은 조달계획 번호 cList >>> " + i));
-				//for 길이 구하고 
 				var codeList7= new Array();
 				var orderDateList7= new Array();
 				var dtoOrderDate7= new Object();

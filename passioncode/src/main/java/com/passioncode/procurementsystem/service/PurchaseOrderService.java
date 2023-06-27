@@ -34,4 +34,11 @@ public interface PurchaseOrderService {
 	 */
 	PurchaseOrder getPurchaseOrder(Integer no);
 
+
+	/**
+	 * 여러개의 발주서 발행
+	 * @param num1
+	 */
+	void makePoCode(Integer[] num1);
+
 }

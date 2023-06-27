@@ -35,6 +35,54 @@ public class PurchaseOrderRepositoryTests {
 	@Autowired
 	ProgressCheckRepository progressCheckRepository;
 	
+	//1. 발주서 번호만 만드는 곳
+	public PurchaseOrder makePONo() {
+		PurchaseOrder po = PurchaseOrder.builder().build();
+		purchaseOrderRepository.save(po);//발주서 번호 생성 후 저장
+		return po;
+	}
+	
+	//2. 발주 코드 만드는 곳(1개 이상의)
+	@Test
+	public void makePoCode() {
+		//여기서 반복해서 만들기
+		PurchaseOrder poNo = makePONo();//발주서 번호
+		log.info("발주서 번호: "+poNo);
+		DetailPurchaseOrder detailPurchaseOrder;
+		Integer[] num2 = new Integer[2];
+		num2[0] = 17;
+		num2[1] = 19;
+		ProcurementPlan pp= null; //= procurementPlanRepository.findById(num1).get();
+		if(num2.length>0) {//1개 이상의 조달계획 번호가 오면
+			for(int i=0;i<num2.length;i++) {
+				pp = procurementPlanRepository.findById(num2[i]).get();
+				detailPurchaseOrder = DetailPurchaseOrder.builder()
+						.amount(pp.getAmount()).date(LocalDateTime.now())
+						.purchaseOrder(poNo)//발주서 번호 생성하는 곳
+						.build();
+				detailPurchaseOrderRepository.save(detailPurchaseOrder);
+				//procurementPlanRepository.save(pp);필요 없는 것 같아 지움 없어도 잘 됨
+				//총 9개
+				ProcurementPlan pp2 = ProcurementPlan.builder()
+						.amount(pp.getAmount())
+						.code(pp.getCode())
+						.completionDate(pp.getCompletionDate())
+						.contract(pp.getContract())
+						.detailPurchaseOrder(detailPurchaseOrder)
+						.dueDate(pp.getDueDate())
+						.minimumOrderDate(pp.getMinimumOrderDate())
+						.mrp(pp.getMrp())
+						.registerDate(pp.getRegisterDate()).build();
+				procurementPlanRepository.save(pp2);
+				log.info("저장하는 조달계획번호  ~~~>>" + pp2);
+			}
+			
+		}
+		
+	}
+	
+	
+	
 	@Transactional
 	@Test
 	public void detailNo() {//발주서 번호 구하기

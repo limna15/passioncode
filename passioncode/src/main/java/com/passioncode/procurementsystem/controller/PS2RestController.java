@@ -1,23 +1,13 @@
 package com.passioncode.procurementsystem.controller;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.passioncode.procurementsystem.entity.ProgressCheck;
 import com.passioncode.procurementsystem.service.DetailPurchaseOrderService;
 import com.passioncode.procurementsystem.service.ProgressCheckService;
 import com.passioncode.procurementsystem.service.PurchaseOrderService;
-
-import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,14 +26,10 @@ public class PS2RestController {
 	@PostMapping(value ="/publish")
 	public void publish(@RequestBody Integer[] publishCode, HttpServletResponse response) {
 		log.info("이상하게 찍히는 >>"+publishCode);
-		log.info("날짜 >>> " + publishCode[0]);
-		log.info("발주 코드 >>> " + publishCode[1]);
-		//LocalDateTime localDateTime = LocalDateTime.parse(dateAndCode[0]);
-		//Integer mycode = Integer.parseInt(dateAndCode[1]);
-		//여기서 서비스 해서 저장하기 
-		//progressCheckService.nextCheckDate(localDateTime, mycode);
-		//log.info("등록되는 검수일정:  ");
-		
+		log.info("첫 번째 값 >>> " + publishCode[0]);
+		log.info("두 번째 값 >>> " + publishCode[1]);
+		purchaseOrderService.makePoCode(publishCode);
+		log.info("발주서 발행:  "+publishCode);
 		
 	}
 	
@@ -59,15 +45,7 @@ public class PS2RestController {
 		log.info("시간으로 변환 >>> " + localDateTime);
 		//여기서 서비스 해서 저장하기 
 		progressCheckService.nextCheckDate(localDateTime, mycode);
-		//log.info("등록되는 검수일정:  ");
-		String redirect_url="/procurement2/progressCheck";
-		try {
-			response.sendRedirect(redirect_url);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			log.info("리다이렉트 실패");
-		}
+		
 	}
 		
 		@PostMapping(value ="/progressCheck3")
@@ -82,17 +60,6 @@ public class PS2RestController {
 			Integer mycode = Integer.parseInt(percentAndEct[2]);
 			//여기서 서비스 해서 저장하기
 			progressCheckService.addAvg(mypercent, myetc, mycode);
-			
-			//log.info("등록되는 검수일정:  ");
-			
-			String redirect_url="/procurement2/progressCheck";
-			try {
-				response.sendRedirect(redirect_url);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				log.info("리다이렉트 실패");
-			}
 		
 	}
 
