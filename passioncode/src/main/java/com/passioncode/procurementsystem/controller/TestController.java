@@ -12,17 +12,17 @@ public class TestController {
 //	}
 	@GetMapping("layout/basic")
 	public String layoutTest() {
-		return "/layout/layoutTest";
+		return "layout/layoutTest";
 	}
 	
 	@GetMapping("passioncode/procurementSystem")
 	public String mainTest() {
-		return "/layout/procurementSystem";
+		return "layout/procurementSystem";
 	}
 	
 	@GetMapping("passioncode/procurementSystem2")
 	public String mainTest2() {
-		return "/layout/procurementSystem2";
+		return "layout/procurementSystem2";
 	}
 
 }

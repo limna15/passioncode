@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+<th:block th:replace="~{layout/basic::setContent(~{::content})}">
 
 	<th:block th:fragment="content">
 
@@ -216,7 +216,7 @@
 
 		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
 		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">발주서 번호 체크하기</h5>
@@ -236,7 +236,7 @@
 		
 		<!-- 입고가 안됐을 때 거래명세서를 누른 경우 뜨는 모달창 시작 -->
 		<div class="noMaterialInModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">입고 상태 체크하기</h5>
@@ -256,7 +256,7 @@
 		
 		<!-- 입고취소인 경우 뜨는 모달창 시작 -->
 		<div class="cancleMaterialInModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">입고 상태 체크하기</h5>
@@ -276,7 +276,7 @@
 		
 		<!-- 입고완료 + 발행완료일 경우 뜨는 모달창 시작 -->
 		<div class="doneTransactionModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">거래명세서 발행 완료</h5>
@@ -296,7 +296,7 @@
 		
 		<!-- 발주서 번호가 다를 때 뜨는 모달창 시작 -->
 		<div class="purchaseNoCheckModal modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">발주서 번호 확인하기</h5>
