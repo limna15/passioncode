@@ -85,6 +85,10 @@
 	font-size: 95%;
 }
 
+.text-red {
+  color: red;
+}
+
 </style>
 		
 		<div class="col-md-12 stretch-card">
@@ -120,7 +124,7 @@
 						<table id="recent-purchases-listing" class="table" style="text-align: center;">
 							<thead>
 								<tr>
-									<th></th>
+									<th style="display:none;"></th>
 									<th>발주 코드</th>
 									<th>소요일</th>
 									<th>품목코드</th>
@@ -132,8 +136,52 @@
 							</thead>
 							<tbody>
 								<tr th:each="list: ${DTOList}" id="trList">
-									<td></td>
+									<td style="display:none;"></td>
 									<td><input type="hidden" name="dpoCode" th:value="${list.dpoCodeStr}">[[${list.dpoCodeStr}]]</td>
+									<!-- 
+									소요일... 오늘날짜와 비교하기 위한 테스트들... 추후에 다시하자 안된다...
+									
+									<td>
+									  <input type="hidden" name="mrpDate" th:value="${list.mrpDate}">
+									  <span th:text="${#dates.format(#dates.createNow(), 'yyyy/MM/dd')}" >
+									  </span>
+									</td>
+									
+									<td>
+									  <input type="hidden" name="mrpDate" th:value="${list.mrpDate}">
+									  <span th:text="${#dates.format(list.mrpDate, 'yyyy/MM/dd')}" >
+									  </span>
+									</td>
+									
+									<td>
+									  <input type="hidden" name="mrpDate" th:value="${list.mrpDate}">
+									  <span th:text="${#dates.format(list.mrpDate, 'yyyy/MM/dd')}"
+									        th:classappend="${#dates.format(list.mrpDate, 'yyyy/MM/dd') &lt; #dates.format(#dates.createNow(), 'yyyy/MM/dd')} ? 'red-text'"></span>
+									</td>
+									
+									<td>
+									  <input type="hidden" name="mrpDate" th:value="${list.mrpDate}">
+									  <span th:text="${#dates.format(list.mrpDate, 'yyyy/MM/dd')}" 
+									        th:classappend="${#dates.createNow().isAfter(list.mrpDate)} ? 'text-red' : ''">
+									  </span>
+									</td>
+									
+									<td>
+									  <input type="hidden" name="mrpDate" th:value="${list.mrpDate}">
+									  <span th:mrpDate="${list.mrpDate}" th:if="${#dates.createNow().isAfter(this.getAttribute('mrpDate'))}">
+									  		테스트
+									  </span>
+									</td>
+									
+									<td>
+									  <input type="hidden" name="mrpDate" th:value="${list.mrpDate}">
+									  <span th:todayDate="${#dates.createNow()}" th:if="${#dates.isBefore(list.mrpDate,this.getAttribute('todayDate'))}" >
+									  		테스트
+									  </span>
+									</td>
+									
+									 -->
+									
 									<td><input type="hidden" name="mrpDate" th:value="${list.mrpDate}">[[${#dates.format(list.mrpDate, 'yyyy/MM/dd')}]]</td>
 									<td><input type="hidden" name="materialCode" th:value="${list.materialCode}">[[${list.materialCode}]]</td>
 									<td><input type="hidden" name="materialName" th:value="${list.materialName}">[[${list.materialName}]]</td>

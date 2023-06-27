@@ -162,24 +162,36 @@ public class PS1RestController {
 		List<String> maxOnlyNumByStringList = new ArrayList<>();
 		
 		//생성된 품목코드의 문자부분 리스트를 통해서, 모든 품목 찾아와서, 숫자부분만 추출후 최대값 가져오고, 최대값 +1 문자로 만들어서 리스트로 만들기
-		for(String getLCWithMC:getLCWithMCList) {			
+		for(int i=0; i<getLCWithMCList.size(); i++) {
 			//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
-			List<Material> materialList=materialService.getMaterialListByCodeContaining(getLCWithMC);
+			List<Material> materialList=materialService.getMaterialListByCodeContaining(getLCWithMCList.get(i));
 			
-			//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
-			List<Integer> onlyNumList = new ArrayList<>();
-			for(Material m:materialList) {
-				onlyNumList.add(Integer.parseInt(m.getCode().substring(2)));
+			//검색해서 찾아온 값이 존재하면 ->거기서 +1 , 없다면! 신규!!! -> 0001 로!!
+			if(materialList.size()>0) {
+				//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
+				List<Integer> onlyNumList = new ArrayList<>();
+				for(Material m:materialList) {
+					onlyNumList.add(Integer.parseInt(m.getCode().substring(2)));
+				}
+				
+				//뽑아낸 숫자 리스트 중에서 최고값 (ex> 2)
+				Integer maxOnlyNumByInt = Collections.max(onlyNumList);
+				
+				//최고 숫자에 +1 하고, 4자릿수로 맞춰서 문자로 만들기 (ex> 2+1 =3 -> 0003)
+				String maxOnlyNumByString = String.format("%04d",maxOnlyNumByInt+1);
+				
+				//만든 숫자리스트 -> 위에서 선언한, 생성된 품목코드의 숫자부분 리스트에 넣기
+				maxOnlyNumByStringList.add(maxOnlyNumByString);			
+			}else { 	//검색해서 찾아온 품목이 없어!! 이건 완전 신규 품목이야!!! 
+				//시작하는 숫자 
+				Integer startNum = i+1;
+				
+				//시작하는 숫자, 4자릿수 맞춰서 문자로 만들기 (ex> 1 -> 0001)
+				String startNumByString = String.format("%04d",startNum);
+				
+				//만든 숫자리스트 -> 위에서 선언한, 생성된 품목코드의 숫자부분 리스트에 넣기
+				maxOnlyNumByStringList.add(startNumByString);	
 			}
-			
-			//뽑아낸 숫자 리스트 중에서 최고값 (ex> 2)
-			Integer maxOnlyNumByInt = Collections.max(onlyNumList);
-			
-			//최고 숫자에 +1 하고, 4자릿수로 맞춰서 문자로 만들기 (ex> 2+1 =3 -> 0003)
-	        String maxOnlyNumByString = String.format("%04d",maxOnlyNumByInt+1);
-			
-			//만든 숫자리스트 -> 위에서 선언한, 생성된 품목코드의 숫자부분 리스트에 넣기
-	        maxOnlyNumByStringList.add(maxOnlyNumByString);			
 		}
 		log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
 		

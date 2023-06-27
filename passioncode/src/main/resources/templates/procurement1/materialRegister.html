@@ -237,9 +237,10 @@
 			//-------------------------------------- 등록확인, 등록취소 버튼 부분 --------------------------------------------------------------//
 			
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
-			//품목코드와 품목명 2개 각각 체크하기
+			//품목코드 전역변수 체크하기
 			var materialCodeRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
 			console.log("등록체크 전역변수 품목코드 확인하기1 : ",materialCodeRegisterValueCheck);
+			//품목명 전역변수 체크하기
 			var materialNameRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
 			console.log("등록체크 전역변수 품목명 확인하기1 : ",materialNameRegisterValueCheck);
 			
@@ -428,6 +429,8 @@
 			
 			//-------------------------------------- 코드생성 부분 --------------------------------------------------------------//
 			
+			//품목명 전역변수 체크하기 -> 위에서 선언한것 이용
+			
 			//코드생성 버튼 누를때, -> 코드생성 안내 모달창 보여주기
 			$(document).on("click","#materialcodeGenerateBtn",function(e){
 				console.log("코드생성 버튼 누름");
@@ -440,7 +443,7 @@
 					//console.log("대분류코드 값들 보자",item.value);
 					allLCCodevalue.push(item.value);
 				});
-				console.log("대분류코드 값들...",allLCCodevalue);
+				//console.log("대분류코드 값들...",allLCCodevalue);
 				
 				//중분류코드 값들 전부 읽어서 리스트에 담기
 				var allMCCodeList = document.querySelectorAll(".middleCategoryCode");
@@ -450,7 +453,7 @@
 					//console.log("대분류코드 값들 보자",item.value);
 					allMCCodevalue.push(item.value);
 				});
-				console.log("중분류코드 값들...",allMCCodevalue);
+				//console.log("중분류코드 값들...",allMCCodevalue);
 				
 				//ajax에 보내기 위한, 위에 코드들 List<MiddleCategoryDTO> 만들어서 담기
 				let middleCategoryDTOSendList = new Array();
@@ -461,11 +464,11 @@
 					MCDTO.middleCode = allMCCodevalue[i];
 					middleCategoryDTOSendList.push(MCDTO);
 				}
-				console.log("어디 보낼 MCDTO리스트 값 보자 : ",middleCategoryDTOSendList);
+				//console.log("어디 보낼 MCDTO리스트 값 보자 : ",middleCategoryDTOSendList);
 				
 				//Json 타입으로 변환시키기
 				var changeJsonData = JSON.stringify(middleCategoryDTOSendList);	
-				console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",changeJsonData);
+				//console.log("객체리스트 Json 타입으로 변환 제대로 된건가?? : ",changeJsonData);
 				
 				//대분류코드, 중분류코드를 보내서 품목코드를 생성해준 값을 받아오는 ajax처리
 				//materialDTO리스트 형식으로 받아옴
@@ -490,11 +493,14 @@
 						let nameList = new Array();
 						$('.materialName').each(function(){
 							let name = $(this).val();
-							//console.log("이거 잘 code 읽어온건가!!",name);
+							console.log("품목명~~~~~~~~~~~~이거 잘 name 읽어온건가!!",name);
 							if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
 							nameList.push(name);
-							}   	
+							}else{						//빈값 상태, materialNameRegisterValueCheck 전역변수 -> false 바꾸기
+		    					materialNameRegisterValueCheck = false;
+		    				}    	
 						});
+						console.log("일단 품목명 리스트 만들어진거 보자~~~~~~: ",nameList);
 						
 						//3. 각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
 		    			let codenameList = new Array();
@@ -515,8 +521,9 @@
 						}
 						
 						//품목명이 기입되어 있을때만! 품목코드 생성한것 넣어주기!
-						//품목명 리스트 길이가 0이면 -> 품목명 기입하고 와라! 창 띄어주기
-						if(nameList.length==0){
+						//품목명 리스트 길이가 0이면 -> 품목명 기입하고 와라! 창 띄어주기 --> 단순이 길이로만 체크하면 2개중에서 1개만 기입되었을때도 모달창이 뜬다!!
+						//그래서 위에서 선언한 품목명 전역변수를 이용해서!! false -> 안내 모달창, true -> 정상 진행하기!!
+						if(!materialNameRegisterValueCheck){
 							document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `품목코드 생성 안내`;
 							
 							sentence = `<span>품목명이 누락되어있습니다.</span><br>
@@ -524,8 +531,10 @@
 							
 							document.querySelector("#materialInfoAndErrorModalContent").innerHTML = sentence;	
 							$(".materialInfoAndErrorModal").modal('show'); 
-							
-						}else{	 //품목명 리스트 길이 1이상일때, 품목명 기입되어있을때, 품목코드 값 넣어주기
+							//그리고 다시 품목명 전역변수 체크 값 true로 다시 세팅해주기
+							materialNameRegisterValueCheck = true;
+						}else{																	
+							//품목명 리스트 길이 1이상일때, 품목명 기입되어있을때, 품목코드 값 넣어주기  --> 품목명 전역변수 true 면 정상진행!!
 							//품목코드 생성해서 받아온 품목코드 리스트를, 테이블의 품목코드 값에 넣어주기
 							var inputMaterialCodeList = document.querySelectorAll(".materialCode");
 												
@@ -681,12 +690,13 @@
 	 	            var inputFile = $(this);
 	 	            //console.log("인풋 체인지 함수에서!! inputFile : ",inputFile);
 					//var files = inputFile[0].files;
-	 	            
+	 	            /*
 					var files = e.target.files;
 	 				//console.log("인풋 체인지 함수에서!! files : ",files);
 	 				if(files===e.target.files){
 	 					console.log("이거 값 같은지 보자! 이러면 완전 같은거야~~")
 	 				}
+	 				*/
 	 	            var appended = false;
 
 	 	            for (var i = 0; i < files.length; i++) {
@@ -702,7 +712,7 @@
 	 	            if (!appended) {return;}
 
 	 	            for (var value of formData.values()) {
-	 	                console.log("인풋 체인지 함수의 value of formData.values() : ",value);
+	 	                //console.log("인풋 체인지 함수의 value of formData.values() : ",value);
 	 	            }
 
 	 	            //실제 업로드 부분
@@ -715,7 +725,7 @@
 	 	                type: 'POST',
 	 	                dataType:'json',
 	 	                success: function(result){
-	 						console.log("인풋 체인지 함수의 ajax 결과 : ",result);
+	 						//console.log("인풋 체인지 함수의 ajax 결과 : ",result);
 	 	                    if(result.image){	//image 일때 아닐때, 
 	 	                    	showResultByImage(result);
 	 	                    }else{
@@ -803,7 +813,7 @@
 	        $(".uploadResult ").on("click", "li button", function(e){
 	            console.log("li의 X삭제 버튼 누름");
 	            var targetFile = $(this).data("file");
-				console.log("li 버튼 누를때 targetFile : ",targetFile);
+				//console.log("li 버튼 누를때 targetFile : ",targetFile);
 	            var targetLi = $(this).closest("li");
 				//console.log("li 버튼 누를때 targetLi : ",targetLi);
 				//console.log("테이블의 input값 초기화 하기 전 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
@@ -870,8 +880,8 @@
 	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
 	 				console.log("드래그엔 드롭에서!! li 길이가 0개~~~~~~~~~");
 	 				var files = e.target.files || e.dataTransfer.files; 
-	 				console.log("e.target.files 보자 : ",e.target.files);
-	 				console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);
+	 				//console.log("e.target.files 보자 : ",e.target.files);
+	 				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);
 		        	var formData = new FormData();
 		            var appended = false;
 		            
@@ -1104,14 +1114,14 @@
 		    	
 	    	// table element 찾기
 	    	const table = document.getElementById('materialRegisterTable');
-	    	console.log("가져온 table 정보",table)
+	    	//console.log("가져온 table 정보",table)
 	    	
 	    	// 새 행(Row) 추가
 	    	const new_row = table.insertRow();
 	    	
 	    	// Cell의 길이
 	    	const cell_length = table.rows[1].cells.length;
-	    	console.log("Cell의 길이",cell_length)    	
+	    	//console.log("Cell의 길이",cell_length)    	
 	    	
 	    	//각 Cell html 작성 및, 행에 추가
 	    	for(let i = 0; i < cell_length; i++) {
