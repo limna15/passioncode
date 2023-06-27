@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+	<th:block th:fragment="content">
+
+<style>
+.search-box {
+    position: relative;        
+    float: right;
+}
+.search-box input {
+    height: 34px;
+    border-radius: 20px;
+    padding-left: 35px;
+    border-color: #ddd;
+    box-shadow: none;
+}
+.search-box input:focus {
+    border-color: #3FBAE4;
+}
+.search-box i {
+    color: #a0a5b1;
+    position: absolute;
+    font-size: 19px;
+    top: 8px;
+    left: 10px;
+}
+
+   
+.pagination {
+    float: right;
+    margin: 0 0 5px;
+}
+.pagination li a {
+    border: none;
+    font-size: 95%;
+    width: 30px;
+    height: 30px;
+    color: #999;
+    margin: 0 2px;
+    line-height: 30px;
+    border-radius: 30px !important;
+    text-align: center;
+    padding: 0;
+}
+.pagination li a:hover {
+    color: #666;
+}	
+.pagination li.active a {
+    background: #03A9F4;
+}
+.pagination li.active a:hover {        
+    background: #0397d6;
+}
+.pagination li.disabled i {
+    color: #ccc;
+}
+.pagination li i {
+    font-size: 16px;
+    padding-top: 6pxrow
+}
+.hint-text {
+    float: left;
+    margin-top: 6px;
+    font-size: 95%;
+}    
+</style>
+
+		<div class="col-md-12 stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<p class="card-title" style="font-size:23px;">발주서 발행</p>
+					<br>
+                    <div class="row" style="margin-bottom: 5px;">
+						<!-- 목록 내려보기 시작 -->
+						<div class="col-md-6"> 
+							<form>
+								<div style="display:inline-block;">
+									<select class="custom-select mr-sm-2"  style="display:inline-block;">
+										<option selected>검색 조건 선택</option>
+										<option value="1">대분류</option>
+										<option value="2">중분류</option>
+										<option value="3">품목코드</option>
+										<option value="4">품목명</option>
+									</select>
+								</div> 
+								&nbsp;	
+								<input type="text" style="width: 150px; height: 40px; display:inline-block;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+								&nbsp;
+								<div style="display:inline-block;"> 
+									<button class="btn btn-primary" style="display:inline-block;">검색</button>
+								</div>
+							</form>
+						</div> 
+						<!-- 목록 내려보기 끝 -->
+						<!-- 발주서 발행 버튼 시작 -->
+						<div class="col-md-6" >	
+							<button style="float: right;" class="btn btn-primary" onclick="print();">
+								인쇄
+							</button>
+							
+							<button class="td-modal btn btn-primary mypublish" id="publishBtn" style="float:right; margin-right:10px">
+								발주서 발행
+								<tr th:each="dto: ${purchaseOrderList}">
+								<input type="hidden" name="poDate" th:value="${dto.purchaseOrderDate}"></tr>
+							</button>
+							
+						</div>
+						<!-- 발주서 발행 버튼 끝 -->
+					</div>
+					<div class="table-responsive">
+						<!-- 테이블 시작 -->
+						<table id="recent-purchases-listing" class="table" style="text-align: center;">
+							<thead>
+								<tr>
+									<th>ch</th>
+									<th>협력<br> 회사
+									</th>
+									<th>발주일</th>
+									<th>조달납기<br> 예정일
+									</th>
+									<th>품목 공급<br> L/T
+									</th>
+									<th>최소<br> 발주일
+									</th>
+									<th>품목 코드</th>
+									<th>품목명</th>
+									<th>필요 수량</th>
+									<th>발주 수량</th>
+									<th>단가</th>
+									<th>공급<br>가격
+									</th>
+									<th>발주서<br>발행 상태
+									</th>
+									<th style="display:none;">조달계획코드</th>
+									<th style="display:none;">발주코드</th>
+									<th style="display:none;">발주서 번호</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="dto: ${purchaseOrderList}">
+									<td>
+										<input class="showInfo" type="checkbox" name="checkBox" th:id="idcheckBox" th:value="${dto.procurementPlan}" >
+												<!-- 조달계획코드를 안보이게 보내야함 [[${dto.procurementPlan}]]-->
+												<!--총 13개의 정보companyName,purchaseOrderDate ,dueDate ,supplyLT ,minimumOrderDate
+												materialCode ,materialName ,needAmount 
+												,orderAmount ,unitPrice , supplyPrice, purchaseOrderStatus,  procurementPlan  -->
+									</td>
+									<td><input type="hidden" name="companyName" th:value="${dto.companyName}">[[${dto.companyName}]]</td>
+									<td><input type="hidden" name="purchaseOrderDate" th:value="${dto.purchaseOrderDate}">[[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</td>
+									<td><input type="hidden" name="dueDate" th:value="${dto.dueDate}">[[${#dates.format(dto.dueDate, 'yyyy/MM/dd')}]]</td>
+									<td><input type="hidden" name="supplyLT" th:value="${dto.supplyLT}">[[${dto.supplyLT}]]</td>
+									<td><input type="hidden" name="minimumOrderDate" th:value="${dto.minimumOrderDate}">[[${#dates.format(dto.minimumOrderDate, 'yyyy/MM/dd')}]]</td>
+									<td><input type="hidden" name="materialCode" th:value="${dto.materialCode}">[[${dto.materialCode}]]</td>
+									<td><input type="hidden" name="materialName" th:value="${dto.materialName}">[[${dto.materialName}]]</td>
+									<td><input type="hidden" name="needAmount" th:value="${dto.needAmount}">[[${dto.needAmount}]]</td>
+									<td><input type="hidden" name="orderAmount" th:value="${dto.orderAmount}">[[${dto.orderAmount}]]</td>
+									<td><input type="hidden" name="unitPrice" th:value="${dto.unitPrice}">[[${dto.unitPrice}]]</td>
+									<td><input type="hidden" name="supplyPrice" th:value="${dto.supplyPrice}">[[${dto.supplyPrice}]]</td>
+									<td><input type="hidden" name="purchaseOrderStatus" th:value="${dto.purchaseOrderStatus}">[[${dto.purchaseOrderStatus}]]</td>
+									<td style="display:none;"><input type="hidden" name="procurementPlan" th:value="${dto.procurementPlan}">[[${dto.procurementPlan}]]</td>
+									<td style="display:none;"><input type="hidden" name="detailCode" th:value="${dto.detailCode}">[[${dto.detailCode}]]</td>
+									<td style="display:none;"><input type="hidden" name="detailNo" th:value="${dto.detailNo}">[[${dto.detailNo}]]</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- 테이블 끝 -->
+						<!-- 페이지 번호 시작 -->
+						<div class="clearfix">
+							<div class="hint-text">
+								Showing <b>5</b> out of <b>25</b> entries
+							</div>
+							<ul class="pagination">
+								<li class="page-item disabled">
+									<a href="#"> 
+										<< <i class="fa fa-angle-double-left"></i>
+									</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">1</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">2</a>
+								</li>
+								<li class="page-item active">
+									<a href="#" class="page-link">3</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">4</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">5</a>
+								</li>
+								<li class="page-item">
+									<a href="#" class="page-link">
+										>> <i class="fa fa-angle-double-right"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<!-- 페이지 번호 끝 -->
+								</div>
+					
+				</div>
+			</div>
+		</div>
+				<!-- 발주서 발행 모달창 시작 -->
+		<div class="myPublish modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title">발주서 발행 시작~</h5>
+                    </div>
+                    <div class="modal-body" >
+                    <div class="table-responsive" th:each="dto: ${myPublishDTO}">
+						<h4> 발주서 번호: [[${dto.showPono}]]</h4>
+						<h4> 협력 회사 : [[${dto.cname}]]</h4>
+						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
+						<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
+						
+						<br>
+                    <table id="transactionDetail" border="1">
+								<thead>
+									<tr>
+										<th>발주코드</th>
+										<th>품목코드</th>
+										<th>품목명</th>
+										<th>발주 수량</th>
+										<th>단가</th>
+										<th>공급<br>가격</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="dto: ${myPublishDTO}">
+									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
+										<td>[[${dto.showPocode}]]</td>
+										<td>[[${dto.mname}]]</td>
+										<td>[[${dto.mname}]]</td>
+										<td>[[${dto.ppamount}]]</td>
+										<td>[[${dto.unit_price}]]</td>
+										<td>[[${dto.supply_price}]]</td>
+									</tr>
+								</tbody>
+							</table>
+							<br>
+                    </div>
+                    <div class="modal-footer">
+                       <button id="publishBtn22" href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">발행
+                       </button>
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                       </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+		
+		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
+		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">발주서 번호 체크하기</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>선택된 발주회사가 없습니다. <br>발주하고 싶은 발주서 번호를 선택해주세요.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                    
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+				
+		<!-- 발주서가 이미 존재하는 경우 뜨는 모달창 시작 -->
+		<div class="existPurchaseOrderModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">이미 발주서가 발행되었습니다.</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>발주서는 한 번만 발행할 수 있습니다. <br></span><br>
+                    </div>
+                    <div class="modal-footer">
+                    
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		<!-- 스크립트 시작 -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script th:inline="javascript" type="text/javascript">
+if(window.location.search!=''){//테이터가 있을 경우에만
+	var mych=window.location.search;
+	console.log(" 값>>>>>>>>>>>>>>> " + mych);
+	console.log("길이 보여줘 제발", mych.length);
+	const last2 = mych.substring(10);//0부터 
+	console.log("길이??????????~~~@", last2);
+	
+	$(document).ready(function(){
+		//데이터가 있을때만뜨게 해라
+		console.log("여기에서 이미 발주된 거라고 검사하는 구간");
+		
+		//이 아래에 발주일 갖고오기
+		//var cDate=document.getElementById('idmydate').value;
+		//console.log("날짜 나와라: ", cDate);
+		var mych=window.location.search;
+		const last2 = mych.substring(10);//조달계획 번호
+		console.log("조달계획번호 나와라: ", last2);
+		console.log("안에 있는 purchaseOrderList 입니다===>>",purchaseOrderList);
+		//var num1 = Number(last2);
+		var num1 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
+		var num4 = last2;//안에 배열로 들어있어서 1을 추가해줘야 한다. 
+		console.log("num1번호 나와라: ", num1);//숫자로 잘 나옴
+		var num2 = purchaseOrderList[num1];//번째가 아니라 procurementPlan이 같은게 나와야함
+		//console.log("num2번호 나와라: ", num2);//잘 나온다 ==> ???? ==값이 널일때는 나오지 않는다.
+		
+		purchaseOrderList.forEach(function(item){
+			dtoOrderDate= item.purchaseOrderDate;
+			orderDateList.push(dtoOrderDate);
+		});
+		console.log("orderDateList가 제대로 오나 >>> ", orderDateList)//현재 길이 16
+		//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])//1번 조달계획은 null 그래서 null나옴
+		
+		console.log("for문 밖에있는 숫자 num1의 값: ",num1);//이 숫자랑 비교해야 한다. 
+		var needNum=1;//여기에 원하는 자리수 숫자의 날짜 담기
+		for(let num3 = 0;num3<num1; num3++){
+			needNum =num3;
+			//console.log("needNum >>> ",needNum);
+			//console.log("orderDateList의 ", num3," 번째의 값: ",orderDateList[num3]);
+			//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
+			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
+			
+		}
+		const purchaseOrderList2 = [[${purchaseOrderList}]];
+		//console.log("두 번째 purchaseOrderList2 입니다===>>",purchaseOrderList2);
+		
+		
+		function findppPlan(element){
+			if(element.procurementPlan = num4){//배열이라 다른 값 가져온다. 
+				console.log("이상한거 같은데 숫자 잘 나옴: ",num4)
+				return true;
+			}
+		}
+		
+		const nn = purchaseOrderList2.find(findppPlan);
+		//console.log("이상한 것만 나옴,, 회사이름: ",nn);//왜 고정값이 나오지?
+		
+		//다른 방법
+		//function makeMyppList(){
+		//	let newArr2 = [];
+		//	for
+		//}
+		const bb = purchaseOrderList;
+		//console.log("00000000purchaseOrderList2 입니다===>>",bb);
+		//변수명 너무 기니까 bb로 쓰기 
+		var codeList2= new Array();
+		var orderDateList2= new Array();
+		var dtoOrderDate2= new Object();
+		var dtoCode2= new Object();
+		var codeList3= new Array();//3은 계획번호
+		var orderDateList3= new Array();
+		var dtoprocurementPlan3= new Object();
+		var dtoCode3= new Object();
+		var nullList4= new Array();//널값인 계획 번호를 넣을 것이다. 
+		
+		
+		////////////
+		var needNum2=1;//여기에 원하는 자리수 숫자의 날짜 담기
+		for(let num6 = 0;num6<bb.length; num6++){
+			var check = bb[num6];
+			var ppNo = check.procurementPlan;
+			if(ppNo==num1){//내가 원하는 조달번호
+				if(check.purchaseOrderDate==null){
+					console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check.procurementPlan);
+					$(".myPublish").modal("show");
+				}else{
+					console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
+					$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
+				}
+			
+			}
+			
+			//needNum2 =num6;
+			//console.log("needNum2 >>> ",needNum2);
+			//console.log("orderDateList의 ", num6," 번째의 값: ",orderDateList[num6]);
+			//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
+			//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
+		}
+		
+		///////////
+		
+	});
+}else{
+};
+
+$("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을 누르면
+	console.log("발주서 진짜 발행을 눌러봐요>>> ");
+	//여기에서 체크번호 받고 그 번호를 전달하기
+	//발주서 발행 버튼을 클릭했을때 
+	var mych=window.location.search;
+	const last2 = mych.substring(10);//""?checkBox="이렇게 찍히면 10번 자리부터 자르기(길이는 11) 
+	
+	//const last = mych.substr(-1);//문자의 마지막 글자
+	
+	//console.log(last); //이 문자를 보내기
+	//여기서 checkBox라는 이름으로 보내기
+	location.href="/procurement2/purchaseNo?checkBox2="+last2;//리다이렉트 잘 된다. 
+	
+});
+
+var poDate2 ='';
+//poDate2= getObjTR().querySelector("input[name=poDate]").value;//이거 쓰면 발행안됨
+//console.log("발주일: ",poDate2);
+$(".mypublish").click(function(){//발주서 발행 버튼을 누르면, 클래스로 가져와야 tr, td정보 불러오기 가능
+	//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
+	
+	$("input[name=checkBox]:checked").each(function(){	//체크한 것의 번호 가져옴
+		const chkChecked = 'input[name="checkBox"]:checked';
+		const selectedEls = document.querySelectorAll(chkChecked);
+		
+	})
+	let cList =new Array();//체크한 번호를 담을 리스트
+	
+	$("input[name=checkBox]:checked").each(function(){
+		let no= $(this).val();
+		cList.push(no);	//리스트에 담는다				
+	})
+	
+	cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));	
+	console.log("길이가 찍히는 값>>> " + cList.length)
+	console.log("번호 리스트 >>> ", cList);
+	console.log("purchaseOrderList 입니다===>>",purchaseOrderList[5]);//===> 잘 가져옴
+	
+	
+	var purchaseNo='';//빈값 넣기
+	
+	if(cList.length===0){//체크하지 않고 버튼을 클릭한 경우
+		$(".noPurchaseNoModal").modal('show');
+		console.log("아무것도 선택하지 않음===>>");
+		
+	}else if(cList.length===1 || cList.length<1){//한개 선택된 경우
+		//$(".myPublish").modal('show');//발주서 발행 모달
+		console.log("발주서 발행 시작");
+		
+		//발주서 발행 버튼을 클릭했을때 
+		location.href="/procurement2/purchaseOrder?checkBox="+cList[0];
+		
+	}else if(cList.length>1){
+		console.log("체크박스가 2개 이상 선택됨");
+		//만약 같은 회사, 이미 발주된 것
+		$(".myPublish").modal('show');//조건이 없어서 빈칸으로 뜸
+		//var pCode= getObjTR().querySelector("input[name=purchaseOrderCode]").value;
+		//console.log("발주코드: ",pCode);
+		console.log("cList[0]...: ",cList[0],cList[1]);
+		cList.forEach((i) => console.log("내가 url에 보내고 싶은 값 cList >>> " + i));
+		//for 길이 구하고 
+		var codeList7= new Array();
+		var orderDateList7= new Array();
+		var dtoOrderDate7= new Object();
+		var dtoCode7= new Object();
+		
+		cList.forEach(function(item){
+		dtoCode7= item.code;
+		codeList7.push(dtoCode7);
+		});
+		location.href="/procurement2/purchaseOrder?checkBox="+cList[0]+"&checkBox3"+cList[1];
+		
+		const cc = purchaseOrderList;
+		
+		for(let num6 = 0;num6<cc.length; num6++){
+			var check2 = cc[num6];
+			var ppNo = check2.procurementPlan;
+			if(ppNo==num1){//내가 원하는 조달번호
+				if(check2.purchaseOrderDate==null){
+					console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check2.procurementPlan);
+					//$(".myPublish").modal("show");
+				}else{
+					
+				}
+			
+			}
+		//location.href="/procurement2/purchaseOrder?checkBox="+cList[0]+"";
+		
+	}
+	}
+	
+	//발주서 여러개를 한 번에 발행하는 경우
+	//cList에 담아서 가능할듯
+	
+		
+	});
+	
+var purchaseOrderList = [[${purchaseOrderList}]];
+console.log("purchaseOrderList 입니다===>>",purchaseOrderList);//이거 잘 나옴
+
+var codeList= new Array();
+var orderDateList= new Array();
+var dtoOrderDate= new Object();
+var dtoCode= new Object();
+
+purchaseOrderList.forEach(function(item){
+	dtoCode= item.code;
+	codeList9.push(dtoCode);
+});
+
+//purchaseOrderList.forEach(function(item){
+//	dtoOrderDate= item.purchaseOrderDate;
+//	orderDateList.push(dtoOrderDate);
+//});
+//아래 두줄 잘 나옴
+//console.log("orderDateList가 제대로 오나 >>> ", orderDateList)
+//console.log("orderDateList[0]가 제대로 오나 >>> ", orderDateList[0])
+
+console.log("codeList가 제대로 오나 >>> ", codeList9);//발주 번호만 나옴
+//poDate2= getObjTR().querySelector("input[name=poDate]").value;//이게 날짜 tr갖고오는 부분
+//console.log("발주일: ",poDate2);
+
+var purchaseNo = '';
+function myCheckBox(){
+	const chkChecked = 'input[name="checkBox"]:checked';
+	const selectedEls = document.querySelectorAll(chkChecked);
+	purchaseNo = '';
+	
+	selectedEls.forEach((el) => {
+		purchaseNo += el.value + ' ';
+  });
+		console.log("purchaseNo 조달계획번호 여기>>> ", purchaseNo);
+
+
+};	
+
+function aaa(){
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	purchaseNo = purchaseNo.replaceAll(" ","");
+	console.log("purchaseNo 조달계획번호 >>> ", purchaseNo);
+	//아래 두개 없어도 잘됨
+	//location.href="/procurement2/purchaseOrder?purchaseNo="+purchaseNo;
+	//location.href="/procurement2/purchaseOrderPublish?purchaseNo="+purchaseNo;
+};
+
+////////////////////////////////////////////////////////////////////////////////////
+//이벤트 발생한 요소의 상위의 TD 객체 찾기
+function getObj(){
+  var obj = event.srcElement
+  while (obj.tagName !='TD'){  //TD가 나올때까지의 Object추출
+      obj = obj.parentElement
+  }
+  return obj
+}
+
+	//이벤트 발생한 요소의 상위의 TR 객체 찾기
+function getObjTR(){
+  var obj = event.srcElement
+  while (obj.tagName !='TR'){  //TR가 나올때까지의 Object추출
+      obj = obj.parentElement
+  }
+  return obj
+}
+	
+</script>
+
+	</th:block>
+
+</th:block>
+</html>
