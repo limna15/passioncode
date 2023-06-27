@@ -68,8 +68,18 @@ public interface MaterialService {
 	 */
 	void delete(MaterialDTO materialDTO);	
 	
+	/**
+	 * 테스트를 위한, 품목정보 등록과 함께 해당품목의 MRP 랜덤으로 2개 만들기 
+	 * @param materialCode
+	 */
+	void mrpRegisterWithMaterialRegister(String materialCode);
 	
-	
+	/**
+	 * 테스트를 위한, 품목정보 등록과 함께 해당품목의 MRP 랜덤으로 2개 만들었던거! <br>
+	 * 품목정보 수정과 함께, 만들었던 MRP 2개 지워주기
+	 * @param materialCode
+	 */
+	void mrpDeleteWithMaterialModify(String materialCode);
 	
 
 }

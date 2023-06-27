@@ -1,8 +1,10 @@
 package com.passioncode.procurementsystem.controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -204,8 +206,15 @@ public class PS1Controller {
 		}
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
+		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
+		//--------------------------- 테스트 진행을 위한, 품목 생성하자마자, 그 해당하는 품목의 MRP 2개를 랜덤으로 세팅해서 만들어주기 --------------------------------//
+		for(MaterialDTO materialDTO2:materialDTOList) {
+			materialService.mrpRegisterWithMaterialRegister(materialDTO2.getCode());
+		}
+		
 		return "redirect:/procurement1/materialList";
 	}
+	
 	
 	/**
 	 * 품목 수정 화면 보기
@@ -341,6 +350,16 @@ public class PS1Controller {
 		for(MaterialDTO dto : materialDTOList) {
 			materialService.modify(dto);
 		}
+		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
+		//----------- 테스트 진행을 위한, 품목 생성하자마자, 그 해당하는 품목의 MRP 2개를 랜덤으로 세팅해서 만들어주었던거! 그 해당 MRP 2개 품목코드로 바꿔주기 ------------------//
+		// 이건, 품목 수정 화면에서, 코드생성해서 바꿔주면서, 원래 품목코드를 지워주는 RestController에서!! 같이 만들었던 MRP 2개도 지워주자!!!
+		// 그리고, 받아온 새로 생성된 품목코드는 지금 여기 수정처리 Controller 에서 받아서 DB수정 작업을 하기 때문에!! 
+		// MRP 지우는건 RestController에서 품목코드랑 같이 지우는게 맞고!!
+		// MRP 다시 만들어주는건, 여기 Controller 에서 새로 품목코드를 만들어주고 난 다음에!! 만들어줘야한다!!!!
+		for(MaterialDTO materialDTO2:materialDTOList) {
+			materialService.mrpRegisterWithMaterialRegister(materialDTO2.getCode());
+		}
+		
 		return "redirect:/procurement1/materialList";
 	}
 	
@@ -355,9 +374,13 @@ public class PS1Controller {
 		log.info("품목 정보 삭제 처리.....");
 		log.info("품목 목록(등록)에서 보낸 삭제하기 위한 materialCodeList"+materialCodeList);
 		
+		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
+		// 테스트 진행을 위한, 품목 생성하자마자 만들었던 MRP 2개도 같이 삭제 해주자!!!!!!! 
+		// 주의!! MRP에 외래키로 품목코드가 잡혀있기때문에, MRP를 먼저 삭제해주고, 품목코드를 삭제해야한다!!!!
 		for(String code : materialCodeList) {
 			Material material = materialService.getMaterial(code);
 			MaterialDTO materialDTO = materialService.entityToDTO(material);
+			materialService.mrpDeleteWithMaterialModify(code);
 			materialService.delete(materialDTO);
 		}
 		

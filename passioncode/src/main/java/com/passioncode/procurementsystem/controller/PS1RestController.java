@@ -221,8 +221,14 @@ public class PS1RestController {
 		}
 		log.info("MaterialDTO 리스트로 품목코드 옮긴거 보자! : "+materialDTOList);
 		
-		//받아온 품목코드들은 변경되야하는 기존의 품목코드니까 삭제를 시키기
+		//받아온 품목코드들은 변경되야하는 기존의 품목코드니까 삭제를 시키기 
+		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
+		// -----> 이때 같이!! 생성하면서 만들었던!! MRP 2개도 같이 지워주고 + 밑에서 다시 새로 만든 품목코드 만들었을 때! 다시 MRP 2개 만들어주자!!!
+		// 아니아니!! 이 RestController 작업 바뀐 품목코드 생성까지!!! 그리고 생성코드 화면에 보내서, 거기서 폼으로 생성한 품목코드로 품목 저장하게 Controller로 처리 하니까!!
+		// 여기서 그 바뀐 품목코드로 바로 mrp 2개 못 만들어!! ----> 이건 수정처리 Controller 에서!! 그 해당 mrp 만들어주자!!!!
+		// 주의!!! mrp를 지울때!! mrp에 외래키로 품목코드가 잡혀있으니까!!!! 순서를 mrp를 먼저 지워주고!! 품목을 지워줘야 한다!!
 		for(MaterialDTO materialDTO : materialDTOList) {
+			materialService.mrpDeleteWithMaterialModify(materialDTO.getCode());
 			materialService.delete(materialDTO);
 		}
 		
@@ -270,6 +276,12 @@ public class PS1RestController {
 			finalGenerateMaterialCodeList.add(materialDTO);
 		}
 		log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
+		
+		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
+		//----------- 테스트 진행을 위한, 품목 생성하자마자, 그 해당하는 품목의 MRP 2개를 랜덤으로 세팅해서 만들어주었던거! 그 해당 MRP 2개 품목코드로 바꿔주기 --------------//
+		//------------- 새로 만들어낸 품목코드를 통해 --> 이 해당하는 품목이 MRP 2개를 랜덤으로 세팅해서 만들어 주기!!! ------------------------------------------------------//
+		// 아니아니!! 이 RestController 작업 바뀐 품목코드 생성까지!!! 그리고 생성코드 화면에 보내서, 거기서 폼으로 생성한 품목코드로 품목 저장하게 Controller로 처리 하니까!!
+		// 여기서 그 바뀐 품목코드로 바로 mrp 2개 못 만들어!! ----> 이건 수정처리 Controller 에서!! 그 해당 mrp 만들어주자!!!!
 		
 		return finalGenerateMaterialCodeList;		
 //		return null;
