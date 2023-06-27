@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.passioncode.procurementsystem.dto.DrawingFileDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
-import com.passioncode.procurementsystem.dto.UploadResultDTO;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;

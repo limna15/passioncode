@@ -55,7 +55,7 @@ public class MaterialOut {
 	 * 출고일
 	 */
 	@CreatedDate
-	@Column(columnDefinition = "DATETIME", nullable = false, updatable = false)
+	@Column(columnDefinition = "DATETIME", updatable = false)
 	private LocalDateTime date;
 	
 	/**

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+<th:block th:replace="~{layout/basic::setContent(~{::content})}">
 
 	<th:block th:fragment="content">
 
@@ -96,30 +96,9 @@
 					<p class="card-title" style="font-size:23px;">재고 산출</p> 
 					<br>
 					<div class="row" style="margin-bottom: 5px;">
-						<!-- 목록 내려보기 시작 -->
-						<div class="col-md-6"> 
-							<form>
-								<div style="display:inline-block;">
-									<select class="custom-select mr-sm-2"  style="display:inline-block;">
-										<option selected>검색 조건 선택</option>
-										<option value="1">발주서 번호</option>
-				                        <option value="2">발주코드</option>
-				                        <option value="3">품목코드</option>
-									</select>
-								</div> 
-								&nbsp;	
-								<input type="text" style="width: 150px; height: 40px; display:inline-block;" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
-								&nbsp;
-								<div style="display:inline-block;"> 
-									<button class="btn btn-primary" style="display:inline-block;">검색</button>
-								</div>
-							</form>
-						</div> 
-						<!-- 목록 내려보기 끝 -->
-						
 						<!-- 기간 검색 -->	
 						<div class="col-md-6">
-							<div style="float: right;">
+							<div>
 								<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
 								<input type="date" id="startDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;~&nbsp;&nbsp;
 								<input type="date" id="endDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/layout/basic::setContent(~{::content})}">
+<th:block th:replace="~{layout/basic::setContent(~{::content})}">
 	<th:block th:fragment="content">
 
 <style>
@@ -106,15 +106,15 @@
 						
 						<!-- 등록, 수정, 삭제 버튼 시작 -->
 						<div class="col-md-6" >	
-							<form style="float: right;" th:action = "@{/procurement1/materialDelete}" th:method="post" id="materialDeleteForm">
+							<form style="float: right;" th:action = "@{materialDelete}" th:method="post" id="materialDeleteForm">
 								<input type="hidden" name="materialCodeList" >
 								<button class="btn btn-primary" id="materialDeleteBtn" type="submit">삭제</button>
 							</form>
-							<form style="float: right;" th:action = "@{/procurement1/materialModify}" th:method="get" id="materialModifyForm">
+							<form style="float: right;" th:action = "@{materialModify}" th:method="get" id="materialModifyForm">
 								<input type="hidden" name="materialCodeList" >
 								<button class="btn btn-primary" id="materialModifyBtn" type="submit" style="margin-right:10px">수정</button>
 							</form>
-							<button class="btn btn-primary" style="float:right; margin-right:10px" type="button" onclick="location.href='/procurement1/materialRegister'">
+							<button class="btn btn-primary" style="float:right; margin-right:10px" type="button" th:onclick="|location.href='@{materialRegister}'|">
 								등록
 							</button>
 						</div>
@@ -152,7 +152,7 @@
 									<td>[[${dto.drawingNo}]]</td>
 									<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image==true}">
 										<button th:data-file="${dto.drawingFileDTO.getImageURL()}" class="ImgClick" type="button" style="border:none; background-color:transparent;">
-											<img th:src="|/procurement1/drawing/display?fileName=${dto.drawingFileDTO.getThumbnailURL()}|" > 
+											<img th:src="|drawing/display?fileName=${dto.drawingFileDTO.getThumbnailURL()}|" > 
 										</button>
 									</td>
 									<td th:if="${dto.drawingFileDTO != null && dto.drawingFileDTO.image!=true}">
