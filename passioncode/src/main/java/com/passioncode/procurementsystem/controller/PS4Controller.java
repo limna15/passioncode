@@ -41,15 +41,9 @@ public class PS4Controller {
 		log.info("materialOutDTO >>> " + materialOutDTO);
 		
 		Integer detailPurchaseOrderCodeStr= Integer.parseInt(request.getParameter("dpoCode"));
-//		String materialCode= request.getParameter("materialCode");
-//		String materialName= request.getParameter("materialName");
-//		Integer amount= Integer.parseInt(request.getParameter("amount"));
 		String status= request.getParameter("status");
 		
 		log.info("js로 만들어 보낸 form 데이터 detailPurchaseOrderCode잘 받아오나 >>> " + detailPurchaseOrderCodeStr);
-//		log.info("js로 만들어 보낸 form 데이터 materialCode 잘 받아오나 >>> " + materialCode);
-//		log.info("js로 만들어 보낸 form 데이터 materialName 잘 받아오나 >>> " + materialName);
-//		log.info("js로 만들어 보낸 form 데이터 amount 잘 받아오나 >>> " + amount);
 		log.info("js로 만들어 보낸 form 데이터 status 잘 받아오나 >>> " + status);
 		
 		ProcurementPlan pp= procurementPlanService.getPpByDetailPurchaseOrder(detailPurchaseOrderCodeStr);
