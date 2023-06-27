@@ -177,4 +177,14 @@ public class MaterialOutRepositoryTests {
 		log.info("moDTOList >>> " + moDTOList + ", 사이즈는 >>> " + moDTOList.size());	
 	}
 	
+	@Test
+	public void stockReportTest() {
+		//CG0001 품목 재고산출 해보자 6
+		
+		
+		
+	}
+	
+	
+	
 }
