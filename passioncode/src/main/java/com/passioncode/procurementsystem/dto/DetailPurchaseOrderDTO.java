@@ -2,6 +2,9 @@ package com.passioncode.procurementsystem.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import com.passioncode.procurementsystem.entity.Material;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +21,25 @@ import lombok.NoArgsConstructor;
 @Data
 public class DetailPurchaseOrderDTO {
 	//총 11개 
+	/**
+	 * String 발주서 번호
+	 */
+	private String purchaseOrderNo2;
 	
 	/**
-	 * 조달계회
+	 * 발주서 번호
 	 */
 	private Integer purchaseOrderNo;
+	
+	/**
+	 * String 발주코드
+	 */
+	private String purchaseOrderCode2;
+	
+	/**
+	 * 발주코드
+	 */
+	private Integer purchaseOrderCode;
 	
 	/**
 	 * 협력 회사
@@ -38,11 +55,6 @@ public class DetailPurchaseOrderDTO {
 	 * 납기 예정일
 	 */
 	private Date dueDate;
-	
-	/**
-	 * 발주코드
-	 */
-	private Integer purchaseOrderCode;
 	
 	/**
 	 * 품목코드
