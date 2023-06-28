@@ -23,11 +23,17 @@ public class PS2RestController {
 	private final DetailPurchaseOrderService detailPurchaseOrderService;
 	private final ProgressCheckService progressCheckService;
 	
+	@PostMapping(value ="/detailNo")
+	public void detailNo(@RequestBody Integer num1, HttpServletResponse response) {
+		log.info("num1 >>"+num1);
+		
+		
+	}
+	
 	@PostMapping(value ="/publish")
 	public void publish(@RequestBody Integer[] publishCode, HttpServletResponse response) {
 		log.info("이상하게 찍히는 >>"+publishCode);
-		log.info("첫 번째 값 >>> " + publishCode[0]);
-		log.info("두 번째 값 >>> " + publishCode[1]);
+		//log.info("첫 번째 값 >>> " + publishCode[0]);
 		purchaseOrderService.makePoCode(publishCode);
 		log.info("발주서 발행:  "+publishCode);
 		

@@ -268,7 +268,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">발주서 번호 체크하기</h5>
+                        <h5 class="modal-title">선택된 조달계획 없음</h5>
                     </div>
                     <div class="modal-body" >
 						<span>선택된 발주회사가 없습니다. <br>발주하고 싶은 발주서 번호를 선택해주세요.</span><br>
@@ -472,7 +472,7 @@
 		<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 		<script th:inline="javascript" type="text/javascript">
 		//////
-		var clNo=''; //cList의 값 갖고 보낼 부분
+		var totalCount=1;//발주코드 숫자 더하기 위해서
 		let tList =new Array();
 		tList = [[${purchaseOrderList}]];
 		let pCodeList =new Array();//조달코드 담을 리스트
@@ -486,12 +486,12 @@
 		//const로 선언된 변수는 값을 변경할 수 없다. 변수 선언시에 초기값을 할당하고 이후에 변경할 수 없는 상수,let이나 var와 같은 가변 변수 사용하기
 		var maxCode = maxCode2;
 		var maxNo = maxNo2;
-		maxNo +=1;	//큰 값 +1을 한다. 뒤에서 더하면 문자 뒤에 숫자로 더해진다. 뒤에서 다시 숫자로 변경해서 숫자를 계속 올려주기
-		maxCode +=1;	//큰 값 +1을 한다. 
-		maxCode =  parseInt(maxCode, 10);	//10진수인 숫자로 바꾼다 
+		//maxNo +=1;	//큰 값 +1을 한다. 뒤에서 더하면 문자 뒤에 숫자로 더해진다. 뒤에서 다시 숫자로 변경해서 숫자를 계속 올려주기
+		//maxCode +=1;	//큰 값 +1을 한다. 
 		maxNo =  parseInt(maxNo, 10);	//10진수인 숫자로 바꾼다 
+		maxCode =  parseInt(maxCode, 10);	//10진수인 숫자로 바꾼다 
 		maxNo = maxNo.toString().padStart(8, 0);
-		maxCode = maxCode.toString().padStart(5, 0);
+		//maxCode = maxCode.toString().padStart(5, 0);
 		var todaydate;
 		// 현재 날짜 객체 생성
 		var today = new Date();
@@ -581,13 +581,6 @@
 		//}else{
 		//};
 		
-		$("#publishBtn22").click(function(){//모달창에서 발주서 발행 버튼을 누르면
-			console.log("발주서 진짜 발행을 눌러봐요>>> ");
-			//여기에서 체크번호 받고 그 번호를 전달하기
-			//발주서 발행 버튼을 클릭했을때
-			
-		});
-		
 		$(".mypublish").click(function(){
 			console.log("여기에서 실행해서 정보 전달하는 구나");
 			
@@ -634,16 +627,20 @@
 			var name04 = null;
 			var name05 = null;
 			let mylength = new Array();
+			var countNo01 = 0;	//발주서 번호를 세기 위해
+			var countNo02 = 0;	//발주서 번호를 세기 위해
+			var countNo03 = 0;	//발주서 번호를 세기 위해
+			var countCode01 = 0;	//발주 코드 세기 위해
+			var countCode02 = 0;	//발주 코드 세기 위해
+			var countCode03 = 0;	//발주 코드 세기 위해
 			for(var i =0; i<tList.length; i++){//총 **길이** 만큼 반복 모두 가지고 있는 것: tList
 				var mycheck = tList[i];
 				var ppNo = mycheck.procurementPlan;//조달계획 번호를 출력하는 것
 				var cName3 = mycheck.companyName;//회사 이름
-				//console.log("cName3: ", cName3); 
 					
 				for(var j =0; j<tList.length; j++){//cList를 비교해서 같은 것을 가져오기
 					var checkC = cList[j];
 					if(checkC == ppNo){ //조달번호와 cList의 값이 같은 것 출력
-						clNo = checkC;
 						console.log("cList: 길이 구해줘~~~",  cList.length); 
 						//console.log("cName3 이건 회사 이름: ", cName3); 
 						mylength.push(i);		//***나온 자리의 번호를 저장
@@ -652,6 +649,7 @@
 						//일단 회사이름별로 구분해서 보여줘보기
 						//console.log("선택된 i: ", i);//i는 조달 번호가 아니라 내가 원하는 배열 주소
 						if(name01===null){//첫번째 
+							countNo01+=1;//마지막에 더해줄 숫자 ex) 발주서 1개만 발행이기 때문에 1만 더해줌
 							ppNoList01.push(tList[i].procurementPlan);
 							com01.push(i);
 							name01 = tList[i].companyName;
@@ -662,6 +660,7 @@
 							console.log("com01 ", com01);
 							console.log("첫 번째 회사와 이름이 같다.  ", name01);
 						}else if(name02==null){//두 번째
+							countNo02+=2;
 							ppNoList02.push(tList[i].procurementPlan);
 							com02.push(i);
 							name02 = tList[i].companyName;
@@ -672,6 +671,7 @@
 							console.log("com02 ", com02);
 							console.log("두 번째 회사와 이름이 같다.  ", name02);
 						}else if(name03==null){//세 번째
+							countNo03+=3;
 							ppNoList03.push(tList[i].procurementPlan);
 							com03.push(i);
 							name03 = tList[i].companyName;
@@ -683,25 +683,53 @@
 							console.log("name03 회사와 이름이 같다.  ", name03);
 						}
 						
-						var count = 0;
 						if(com01.length>0 && j === cList.length - 1){//최대 5개 회사만 비교 가능, 한개라도 있으면 비교 시작
 							//**시작~~~~~~~~~~~
 							$(".multiplePublish").modal("show");
+							var dDate3= null;//날짜 비교하기 위해 null
+							var dDate4= null;//새로 등록되는 날짜 저장해서 비교
 							console.log("이제 한 번 잘 실행된다. ");
 							console.log("com01리스트의 길이 잘 나오나 확인", com01.length);
 							for(y=0;y<com01.length;y++){	//0이 나올때까지 돌리기
 									var num01 = com01[y];
 									num01 = Number(num01);//숫자로 
-									//console.log("num01[0]의 값:",num01);	
-									console.log("tList[num01]의 값:",tList[num01]);		
-									//com01.pop(y);
-							var div01 = '<div>'+"발주서 번호: " +maxNo +'</div>';//첫 자리에서만 회사 번호만 가져오기
+									console.log("tList[num01]의 값:",tList[num01]);
+									if(dDate3 == null){
+										dDate3= tList[num01].dueDate;
+										var date2 = new Date(dDate3);
+										var year2 = date2.getFullYear();
+										var month2 = ('0' + (date2.getMonth() + 1)).slice(-2);
+										var day2 = ('0' + date2.getDate()).slice(-2);
+										dDate3 = year2 + '/' + month2 + '/' + day2;
+									}else{//2개 이상의 값이 들어온다면 
+										dDate4= tList[num01].dueDate;
+										var date2 = new Date(dDate4);
+										var year2 = date2.getFullYear();
+										var month2 = ('0' + (date2.getMonth() + 1)).slice(-2);
+										var day2 = ('0' + date2.getDate()).slice(-2);
+										dDate4 = year2 + '/' + month2 + '/' + day2;
+											console.log("dDate3의 값:",dDate3);	
+											console.log("dDate4의 값:",dDate4);	
+										if(dDate3>dDate4){//원래 있던 숫자가 더 나중 날짜임
+											dDate3 = dDate4;
+											console.log("원래 있던 숫자가 더 나중 날짜 dDate3의 값:",dDate3);
+										}else if(dDate3<dDate4){//원래 있던 날짜가 더 빠른 날이라 바꿀 필요가 없음
+											console.log("dDate3의 값:",dDate3);	
+										}else{//같은 날은 마지막 검사하는거 넣기
+											dDate3= tList[num01].dueDate;
+										}
+									}
+							const countNo011 = (parseInt(maxNo) + countNo01).toString().padStart(8, "0");
+							var div01 = '<div>'+"발주서 번호: PO" +countNo011+'</div>';//첫 자리에서만 회사 번호만 가져오기
 							div01 += '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
-							div01 += '<div>'+"납기 예정일: " +tList[num01].dueDate +'</div>';
-						$('#thead0'+1).append(div01);//여기서 축척됨
+							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
+							//totalCount
+							//maxCode.toString().padStart(5, 0);
+							maxCode +=1;
+							var maxCode01 =maxCode.toString().padStart(5, 0);
 							var tableTd01 = '<tr>';
-							tableTd01 += '<td>' + "DPO" +maxCode +'</td>';	//갯수만큼 더해주기
+							tableTd01 += '<td>' + "DPO" +maxCode01 +'</td>';	//갯수만큼 더해주기
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
 							tableTd01 += '<td>' + tList[num01].materialName +'</td>';
 							tableTd01 += '<td>' + tList[num01].orderAmount +'</td>';
@@ -709,25 +737,60 @@
 							tableTd01 += '<td>' + tList[num01].supplyPrice +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody01').append(tableTd01);//여기서 축척됨
+						if(y === com01.length -1){//y가 마지막인 경우만
+							$('#thead0'+1).append(div01);//마지막에 한 번만 실행
 							}
+							}
+							
 						console.log("com01의 값: ,자리의 번호이다.",com01);
 						}if(com02.length>0 && j === cList.length - 1){
 							$(".multiplePublish2").modal("show");
+							var dDate3= null;//날짜 비교하기 위해 null
+							var dDate4= null;//새로 등록되는 날짜 저장해서 비교
 							console.log("com02의 값: ",com02);
 							console.log("com02리스트의 길이 잘 나오나 확인", com02.length);
 							for(y=0;y<com02.length;y++){	//0이 나올때까지 돌리기
 								var num01 = com02[y];
 								num01 = Number(num01);//숫자로 
-							var div01 = '<div>'+"발주서 번호: " +maxNo +'</div>';//첫 자리에서만 회사 번호만 가져오기
+								if(dDate3 == null){
+										dDate3= tList[num01].dueDate;
+										var date2 = new Date(dDate3);
+										var year2 = date2.getFullYear();
+										var month2 = ('0' + (date2.getMonth() + 1)).slice(-2);
+										var day2 = ('0' + date2.getDate()).slice(-2);
+										dDate3 = year2 + '/' + month2 + '/' + day2;
+									}else{//2개 이상의 값이 들어온다면 
+										dDate4= tList[num01].dueDate;
+										var date2 = new Date(dDate4);
+										var year2 = date2.getFullYear();
+										var month2 = ('0' + (date2.getMonth() + 1)).slice(-2);
+										var day2 = ('0' + date2.getDate()).slice(-2);
+										dDate4 = year2 + '/' + month2 + '/' + day2;
+											console.log("dDate3의 값:",dDate3);	
+											console.log("dDate4의 값:",dDate4);	
+										if(dDate3>dDate4){//원래 있던 숫자가 더 나중 날짜임
+											dDate3 = dDate4;
+											console.log("원래 있던 숫자가 더 나중 날짜 dDate3의 값:",dDate3);
+										}else if(dDate3<dDate4){//원래 있던 날짜가 더 빠른 날이라 바꿀 필요가 없음
+											console.log("dDate3의 값:",dDate3);	
+										}else{//같은 날은 마지막 검사하는거 넣기
+											dDate3= tList[num01].dueDate;
+										}
+									}
+							const countNo021 = (parseInt(maxNo) + countNo02).toString().padStart(8, "0");
+							var div01 = '<div>'+"발주서 번호: PO" +countNo021+'</div>';//첫 자리에서만 회사 번호만 가져오기
 							div01 += '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
-							div01 += '<div>'+"납기 예정일: " +tList[num01].dueDate +'</div>';
+							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
 						$('#thead0'+2).append(div01);//여기서 축척됨
 							console.log("num01[0]의 값:",num01);		
 							//com02.pop(y);
 							console.log("com02의 값: ,자리의 번호이다.",com02);		
+							//console.log("maxCode+1 = ",maxCode+1);		
+							maxCode +=1;
+							var maxCode01 =maxCode.toString().padStart(5, 0);
 						var tableTd01 = '<tr>';
-							tableTd01 += '<td>' + "DPO" +maxCode +'</td>';//갯수만큼 더해주기
+							tableTd01 += '<td>' + "DPO" + maxCode01 +'</td>';//갯수만큼 더해주기
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
 							tableTd01 += '<td>' + tList[num01].materialName +'</td>';
 							tableTd01 += '<td>' + tList[num01].orderAmount +'</td>';
@@ -739,22 +802,52 @@
 						
 						}if(com03.length>0 && j === cList.length - 1){
 							$(".multiplePublish3").modal("show");
+							var dDate3= null;//날짜 비교하기 위해 null
+							var dDate4= null;//새로 등록되는 날짜 저장해서 비교
 							console.log("com03의 값: ",com03);
 							console.log("이제 한 번 잘 실행된다. ");
 							console.log("com03리스트의 길이 잘 나오나 확인", com03.length);
 							for(y=0;y<com03.length;y++){	//0이 나올때까지 돌리기
 								var num01 = com03[y];
 								num01 = Number(num01);//숫자로 
-							var div01 = '<div>'+"발주서 번호: " +maxNo +'</div>';//첫 자리에서만 회사 번호만 가져오기
+								if(dDate3 == null){
+										dDate3= tList[num01].dueDate;
+										var date2 = new Date(dDate3);
+										var year2 = date2.getFullYear();
+										var month2 = ('0' + (date2.getMonth() + 1)).slice(-2);
+										var day2 = ('0' + date2.getDate()).slice(-2);
+										dDate3 = year2 + '/' + month2 + '/' + day2;
+									}else{//2개 이상의 값이 들어온다면 
+										dDate4= tList[num01].dueDate;
+										var date2 = new Date(dDate4);
+										var year2 = date2.getFullYear();
+										var month2 = ('0' + (date2.getMonth() + 1)).slice(-2);
+										var day2 = ('0' + date2.getDate()).slice(-2);
+										dDate4 = year2 + '/' + month2 + '/' + day2;
+											console.log("dDate3의 값:",dDate3);	
+											console.log("dDate4의 값:",dDate4);	
+										if(dDate3>dDate4){//원래 있던 숫자가 더 나중 날짜임
+											dDate3 = dDate4;
+											console.log("원래 있던 숫자가 더 나중 날짜 dDate3의 값:",dDate3);
+										}else if(dDate3<dDate4){//원래 있던 날짜가 더 빠른 날이라 바꿀 필요가 없음
+											console.log("dDate3의 값:",dDate3);	
+										}else{//같은 날은 마지막 검사하는거 넣기
+											dDate3= tList[num01].dueDate;
+										}
+									}
+							const countNo031 = (parseInt(maxNo) + countNo03).toString().padStart(8, "0");
+							var div01 = '<div>'+"발주서 번호: PO" +countNo031+'</div>';//첫 자리에서만 회사 번호만 가져오기
 							div01 += '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
-							div01 += '<div>'+"납기 예정일: " +tList[num01].dueDate +'</div>';
+							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
 							$('#thead0'+3).append(div01);//여기서 축척됨	
 							console.log("num01[0]의 값:",num01);		
 							//com03.pop(y);
 							console.log("com03의 값: ,자리의 번호이다.",com03);		
+							maxCode +=1;
+							var maxCode01 =maxCode.toString().padStart(5, 0);
 						var tableTd01 = '<tr>';
-							tableTd01 += '<td>' + "DPO" +maxCode +'</td>';//갯수만큼 더해주기
+							tableTd01 += '<td>' + "DPO" + maxCode01 +'</td>';//갯수만큼 더해주기
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
 							tableTd01 += '<td>' + tList[num01].materialName +'</td>';
 							tableTd01 += '<td>' + tList[num01].orderAmount +'</td>';
@@ -762,8 +855,6 @@
 							tableTd01 += '<td>' + tList[num01].supplyPrice +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody03').append(tableTd01);//여기서 축척됨 어펜드에 나누어서 보내주면 된다. 
-						
-						//console.log("######발주서 발행 되었나..");
 						}
 							
 						}if(com03.length>0){
@@ -795,7 +886,7 @@
 							}
 						})
 						$(".multiplePublish").modal("hide");
-								console.log("잘 발행 되었나? ");
+								console.log("1번 모달창 발행이 잘 되었습니다. ");
 						
 				})
 				
@@ -813,7 +904,7 @@
 							}
 						})
 						$(".multiplePublish2").modal("hide");
-								console.log("잘 발행 되었나? ");
+								console.log("2번 모달창 발행이 잘 되었습니다. ");
 						
 				})
 				
@@ -831,7 +922,7 @@
 							}
 						})
 						$(".multiplePublish3").modal("hide");
-								console.log("잘 발행 되었나? ");
+								console.log("3번 모달창 발행이 잘 되었습니다. ");
 						
 				})
 			
