@@ -60,6 +60,7 @@ public class PS3Controller {
 	
 	@PostMapping(value="materialInRegister")
 	public String materialInRegister(MaterialInDTO materialInDTO, HttpServletRequest request) {
+		log.info("materialInRegister.............");
 		//log.info("잘 보내지나 >>> "+ materialInDTO);
 		
 		String purchaseOrderNoStr= request.getParameter("no");
@@ -107,18 +108,20 @@ public class PS3Controller {
 	//거래명세서 리스트 화면
 	@GetMapping("/transactionList")
 	public void transactionList(Model model, TransactionDetailDTO transactionDetailDTO) {
-		log.info("안보내지는건가 >>> " + transactionDetailService.getTdDTOList());
+		log.info("transactionlist.............");
+		//log.info("안보내지는건가 >>> " + transactionDetailService.getTdDTOList());
 		model.addAttribute("list", transactionDetailService.getTdDTOList());
 	}
 	
 	//거래명세서 발행버튼 or 거래명세서 리스트에서 번호를 눌렀을 때 해당 거래명세서의 내용 보여주는 화면
 	@GetMapping("/transactionDetail")
 	public void transactionDetail(@Param(value= "purchaseNo") String purchaseNo, Model model) {
+		log.info("transactionDetail.............");
 		//log.info("파라미터로 보낸값 읽어지나 >>> " + purchaseNo);
 		
 		PurchaseOrder po= purchaseOrderService.getPurchaseOrder(Integer.parseInt(purchaseNo));
 		List<DetailPurchaseOrder> dpoList= detailPurchaseOrderService.getDetailByPurchaseNo(po);
-		log.info("발주서 번호로 세부발주서리스트 가져오기 >>> " + dpoList);
+		//log.info("발주서 번호로 세부발주서리스트 가져오기 >>> " + dpoList);
 		
 		List<ProcurementPlan> ppList= new ArrayList<>();
 		List<MaterialIn> miList= new ArrayList<>();
@@ -126,8 +129,8 @@ public class PS3Controller {
 			ppList.add(procurementPlanService.getPpByDetailPurchaseOrder(dpoList.get(i).getCode()));
 			miList.add(materialInService.getMeterialInByDetailPurchaseOrder(dpoList.get(i).getCode()));
 		}
-		log.info("ppList는 어떻게 찍히지 >>> " + ppList);
-		log.info("miList는 어떻게 찍히지 >>> " + miList);
+		//log.info("ppList는 어떻게 찍히지 >>> " + ppList);
+		//log.info("miList는 어떻게 찍히지 >>> " + miList);
 		
 		List<TransactionDetailDTO> transactionDetailDTOList= new ArrayList<>();
 		TransactionDetailDTO transactionDetailDTO= null;
@@ -154,8 +157,9 @@ public class PS3Controller {
 	
 	@GetMapping("/purchaseReport")
 	public void purchaseReport(String[] dates, Model model, PurchaseReportDTO purchaseReportDTO) {
+		log.info("purchaseReport.............");
 		//log.info("발주진행 현황관리");		
-		log.info("날짜 배열 읽어오기 >>> " + dates);
+		//log.info("날짜 배열 읽어오기 >>> " + dates);
 		
 		model.addAttribute("list", purchaseReportService.getCountPurchaseReportDTO());
 	}

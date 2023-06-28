@@ -71,7 +71,7 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 		for(int i=0; i<miList.size(); i++) {
 			if(miList.get(i).getStatus() == false){
 				cancleMiList.add(miList.get(i));
-				log.info("입고상태가 취소인 품목들의 세부구매발주서 정보 >>> " + miList.get(i).getDetailPurchaseOrder());
+				//log.info("입고상태가 취소인 품목들의 세부구매발주서 정보 >>> " + miList.get(i).getDetailPurchaseOrder());
 			}
 		}
 		
