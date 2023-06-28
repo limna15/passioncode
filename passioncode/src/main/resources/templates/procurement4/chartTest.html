@@ -36,7 +36,7 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Bar chart</h4>
-                  <canvas id="barChart"></canvas>
+                  <canvas id="lineChart2"></canvas>
                 </div>
               </div>
             </div>
@@ -103,6 +103,79 @@
   <!-- Custom js for this page-->
   <script src="../../js/chart.js"></script>
   <!-- End custom js for this page-->
+  <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+		<script th:inline="javascript" type="text/javascript">
+		//line
+var ctxL = document.getElementById("lineChart").getContext('2d');
+var myLineChart = new Chart(ctxL, {
+  type: 'line',
+  data: {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [{
+      label: "My First dataset",
+      data: [65, 59, 80, 81, 56, 55, 40],
+      backgroundColor: [
+        'rgba(105, 0, 132, .2)',
+      ],
+      borderColor: [
+        'rgba(200, 99, 132, .7)',
+      ],
+      borderWidth: 2
+    },
+    {
+      label: "My Second dataset",
+      data: [28, 48, 40, 19, 86, 27, 90],
+      backgroundColor: [
+        'rgba(0, 137, 132, .2)',
+      ],
+      borderColor: [
+        'rgba(0, 10, 130, .7)',
+      ],
+      borderWidth: 2
+    }
+    ]
+  },
+  options: {
+    responsive: true
+  }
+});
+
+
+var ctxL = document.getElementById("lineChart2").getContext('2d');
+var myLineChart = new Chart(ctxL, {
+  type: 'line',
+  data: {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [{
+      label: "My First dataset",
+      data: [65, 59, 80, 81, 56, 55, 40],
+      backgroundColor: [
+        'rgba(105, 0, 132, .2)',
+      ],
+      borderColor: [
+        'rgba(200, 99, 132, .7)',
+      ],
+      borderWidth: 2
+    },
+    {
+      label: "My Second dataset",
+      data: [28, 48, 40, 19, 86, 27, 90],
+      backgroundColor: [
+        'rgba(0, 137, 132, .2)',
+      ],
+      borderColor: [
+        'rgba(0, 10, 130, .7)',
+      ],
+      borderWidth: 2
+    }
+    ]
+  },
+  options: {
+    responsive: true
+  }
+});
+			
+			</script>
 </body>
 
 </html>

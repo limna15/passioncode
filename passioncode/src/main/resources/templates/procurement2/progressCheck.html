@@ -206,7 +206,26 @@
 			</div>
 		</div>
 		<!-- 일정 등록을 눌렀을때 모달창 끝 -->
-
+		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
+		<div class="wrongCheckDateModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">진척 평가 등록일이 아닙니다.</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>오늘은 진척 평가 등록일이 아닙니다. <br>검수일에 평가를 등록해 주세요.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 끝 -->
+		
 		<!-- 체크박스 시작 -->
 
 
@@ -257,6 +276,15 @@
 		<script th:inline="javascript" type="text/javascript">
 		//일정 등록 버튼을 누르면
 		var codeNo='';
+		var todaydate;
+		// 현재 날짜 객체 생성
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = today.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줌
+		var day = today.getDate();
+		todaydate = (year + '/' + month + '/' + day);//오늘 날짜 예쁘게 찍기
+		//오늘이 아니면 오늘은 검수일이 아닙니다. 등록할 수 없습니다.
+		var nDate = null;
 		$(".addClass").click(function(){
 			$(".addDate").modal('show');
 			console.log("일정 추가 버튼을 누름");
@@ -301,7 +329,7 @@
 			var mName= getObjTR().querySelector("input[name=materialName]").value;
 			var oAmount= getObjTR().querySelector("input[name=orderAmount]").value;
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
-			var nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
+			nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
 			var dPercent= getObjTR().querySelector("input[name=diliveryPercent]").value;
 			var pEtc= getObjTR().querySelector("input[name=etc6]").value;
 			console.log("발주코드: ",pCode);//잘나옴
@@ -342,7 +370,12 @@
 				myAvgList.push(pCode);//발주 코드
 				console.log("발주번호", pCode);
 				console.log("리스트 : ", myAvgList);
-				$.ajax({
+				if(todaydate!=nDate){
+					console.log("날짜가 다름");
+					$(".sendAvg").modal('hide');
+					$(".noPurchaseNoModal").modal('show');
+				}else{
+					$.ajax({
 					type:"post",
 					url:"/procurement2/progressCheck3",
 					data: JSON.stringify(myAvgList),
@@ -354,6 +387,7 @@
 				})
 				console.log("평가 등록~~ ");
 				location.href="/procurement2/progressCheck";
+				}
 			})
 		});
 		
