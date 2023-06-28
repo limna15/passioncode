@@ -96,6 +96,7 @@ public class PS3Controller {
 			materialInDTO.setTransactionStatus("발행 불가");
 			//log.info("입고 상태가 취소일 경우, materialDTO 잘 세팅이 되나 >>> " + materialInDTO);
 			materialInService.register(materialInDTO);
+			materialInService.registerMaterialOut(materialInDTO.getCode());
 		}
 		
 		materialInService.updatePPCompletionDate(materialInDTO.getCode());

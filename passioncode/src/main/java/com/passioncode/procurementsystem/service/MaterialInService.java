@@ -68,4 +68,12 @@ public interface MaterialInService {
 	 * @return
 	 */
 	List<MaterialInDTO> getSortDTOLsit();
+	
+	
+	/**
+	 * 코드번호(materialIn)를 이용해 자재입고가 취소(입고상태가 false)일 때  자재출고 테이블이 생성
+	 * @param code
+	 */
+	@Transactional
+	void registerMaterialOut(Integer code);
 }

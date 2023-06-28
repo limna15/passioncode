@@ -86,6 +86,8 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 		List<MaterialOut> moList= materialOutRepository.findAll();
 		//log.info("moList 한번 보자 >>> " + moList + ", 사이즈는 >>> " + moList.size());
 		
+		MaterialOut materialOut= null;
+		
 		for(int i=0; i<ppList.size(); i++) {
 		//log.info("ppList 완료일 한번 보자 >>> " + ppList.get(i).getCompletionDate());
 			//세부구매발주서 등록 +  완료일(입고일) 등록 -> 출고 리스트(출고 상태 (버튼))
@@ -93,7 +95,7 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 				//출고 엔티티에 존재 O
 				if(materialOutRepository.existsByMrp(ppList.get(i).getMrp())){		
 					if((ppList.get(i).getDetailPurchaseOrder().getCode()== miList.get(i).getDetailPurchaseOrder().getCode()) && miList.get(i).getStatus() == false) {
-						moDTO=null;
+						moDTO= MaterialOutDTO.builder().outStatus("0").mrpCode(ppList.get(i).getMrp().getCode()).build();
 						//log.info("입고 상태가 취소되었어용 >>> " + moDTO);
 						//log.info("입고 상태 취소 + 상태보기 >>> " + i + "번째, " + miList.get(i).getStatus());
 					}else {
