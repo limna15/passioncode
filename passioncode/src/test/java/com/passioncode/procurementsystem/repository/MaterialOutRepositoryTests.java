@@ -144,26 +144,25 @@ public class MaterialOutRepositoryTests {
 		
 		List<ProcurementPlan> ppList= procurementPlanRepository.findAll();
 		
-		//log.info("ppList 한번 보자 >>> " + ppList + ", 사이즈는 >>> " + ppList.size());
+		log.info("ppList 한번 보자 >>> " + ppList + ", 사이즈는 >>> " + ppList.size());
 				
 		List<MaterialOutDTO> moDTOList= new ArrayList<>();
 		List<MaterialOutDTO> notNullMoDTOList= new ArrayList<>();
 		List<MaterialOutDTO> nullMoDTOList= new ArrayList<>();
 		MaterialOutDTO moDTO= null;
 		List<MaterialOut> moList= materialOutRepository.findAll();
-		//log.info("moList 한번 보자 >>> " + moList + ", 사이즈는 >>> " + moList.size());
+		log.info("moList 한번 보자 >>> " + moList + ", 사이즈는 >>> " + moList.size());
 		
 		for(int i=0; i<ppList.size(); i++) {
 		//log.info("ppList 완료일 한번 보자 >>> " + ppList.get(i).getCompletionDate());
 			//세부구매발주서 등록 +  완료일(입고일) 등록 -> 출고 리스트(출고 상태 (버튼))
 			if(ppList.get(i).getDetailPurchaseOrder() != null && ppList.get(i).getCompletionDate() != null) {
 				//출고 엔티티에 존재 O
-				if(materialOutRepository.existsByMrp(ppList.get(i).getMrp())){
-	
+				if(materialOutRepository.existsByMrp(ppList.get(i).getMrp())){		
 					if((ppList.get(i).getDetailPurchaseOrder().getCode()== miList.get(i).getDetailPurchaseOrder().getCode()) && miList.get(i).getStatus() == false) {
 						moDTO=null;
 						log.info("입고 상태가 취소되었어용 >>> " + moDTO);
-						log.info("입고 상태 취소 + 상태보기 >>> " + miList.get(i).getStatus());
+						log.info("입고 상태 취소 + 상태보기 >>> " + i + "번째, " + miList.get(i).getStatus());
 					}else {
 						//추가해야될 내용 -> 입고상태가 완료(1)이면 출고DTO에 넣어주고, 취소(0)이면 리스트에는 안보여주고 DB에 출고상태 0, 출고일 null로 등록만함
 						//입고상태 취소된 세부구매발주서와 자재입고에 등록된 세부구매발주서 번호가 같으면
@@ -173,10 +172,8 @@ public class MaterialOutRepositoryTests {
 								.process(ppList.get(i).getMrp().getProcess()).mrpAmount(ppList.get(i).getMrp().getAmount()).outStatus("1").build();			
 						notNullMoDTOList.add(moDTO);		
 						log.info("입고 상태가 완료 DTO >>> " + moDTO);
-						log.info("입고 상태 완료 + 상태보기 >>> " + miList.get(i).getStatus());
-					}
-						
-					
+						log.info("입고 상태 완료 + 상태보기 >>> " + i + "번째, " + miList.get(i).getStatus());
+					}	
 				//출고 엔티티에 존재 X
 				}else {
 					moDTO= MaterialOutDTO.builder().dpoCode(ppList.get(i).getDetailPurchaseOrder().getCode())
@@ -184,9 +181,9 @@ public class MaterialOutRepositoryTests {
 							.materialName(ppList.get(i).getMrp().getMaterial().getName())
 							.process(ppList.get(i).getMrp().getProcess()).mrpAmount(ppList.get(i).getMrp().getAmount()).outStatus("0").build();			
 					nullMoDTOList.add(moDTO);
-					log.info("입고가 아직 아예 안된 아이 >>> " + moDTO);
+					log.info("입고가 아직 아예 안된 아이 >>> "  + i + "번째, " + moDTO);
 				}
-			}//if문 끝
+			}//if문 끝(세부구매발주서 등록 + 입고일 등록)
 		}//for문 끝
 		
 		//엔티티에 존재 X(null) -> 존재 O(출고 완료된 상태) 순으로 넣기

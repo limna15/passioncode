@@ -7,11 +7,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
+import com.passioncode.procurementsystem.dto.MaterialOutDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.MaterialIn;
+import com.passioncode.procurementsystem.entity.MaterialOut;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.repository.DetailPurchaseOrderRepository;
+import com.passioncode.procurementsystem.repository.MRPRepository;
 import com.passioncode.procurementsystem.repository.MaterialInRepository;
+import com.passioncode.procurementsystem.repository.MaterialOutRepository;
 import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
 import com.passioncode.procurementsystem.repository.TransactionDetailRepository;
 
@@ -27,6 +31,8 @@ public class MaterialInServiceImpl implements MaterialInService {
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	private final ProcurementPlanRepository procurementPlanRepository;
 	private final TransactionDetailRepository transactionDetailRepository;
+	private final MaterialOutRepository materialOutRepository;
+	private final MRPRepository mrpRepository;
 	
 	//발주코드에 문자를 넣어서 보내기
 	public String codeStr(Integer num1) {
@@ -89,6 +95,9 @@ public class MaterialInServiceImpl implements MaterialInService {
 			}
 		}
 		
+		//입고상태가 취소가 되면 출고 테이블에 출고 상태가 0으로 등록되어야함
+		MaterialOutDTO materialOutDTO= null;
+		
 		for(int i=0; i<ppList.size(); i++) {
 			if(!materialInRepository.existsById(i+1)) { //materialIn에 존재 X 때 설정
 				materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
@@ -117,7 +126,7 @@ public class MaterialInServiceImpl implements MaterialInService {
 								materialInDTOList.add(materialInDTO);
 								//log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
 							
-							}else { //입고상태 취소 + 발행상태 "발행 불가"
+							}else { //입고상태 취소 + 발행상태 "발행 불가" -> 출고 테이블에 취소 등록
 								materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
 										.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 										.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
@@ -132,6 +141,10 @@ public class MaterialInServiceImpl implements MaterialInService {
 		return materialInDTOList;
 	}
 
+	public MaterialOut DTOtoEntity(MaterialOutDTO materialOutDTO) {
+		MaterialOut materialOut= MaterialOut.builder().status(1).mrp(mrpRepository.findById(materialOutDTO.getMrpCode()).get()).build();		
+		return materialOut;
+	}
 
 	@Override
 	public Integer register(MaterialInDTO materialInDTO) {
@@ -236,4 +249,17 @@ public class MaterialInServiceImpl implements MaterialInService {
 		return MaterialInDTOList;
 	}
 
+	@Override
+	public void registerMaterialOut(Integer code) {
+		MaterialIn mi= materialInRepository.findById(code).get();
+		
+		if(mi.getStatus() == false) {
+			DetailPurchaseOrder dpo= mi.getDetailPurchaseOrder();
+			ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(dpo);
+			
+			MaterialOut materialOut= MaterialOut.builder().status(0).mrp(pp.getMrp()).build();
+			
+			materialOutRepository.save(materialOut);			
+		}
+	}
 }

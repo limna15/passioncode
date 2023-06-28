@@ -23,6 +23,7 @@ import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MaterialIn;
+import com.passioncode.procurementsystem.entity.MaterialOut;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
 
@@ -53,6 +54,9 @@ public class MaterialInRepositoryTests {
 	
 	@Autowired
 	PurchaseOrderRepository purchaseOrderRepository;
+	
+	@Autowired
+	MaterialOutRepository materialOutRepository;
 	
 	@Test
 	public void getList() {
@@ -345,6 +349,24 @@ public class MaterialInRepositoryTests {
 		
 		
 		log.info("materialInDTOList 보기 >>> " + MaterialInDTOList + ", 몇개 나오지 >>> " + MaterialInDTOList.size());
+	}
+	
+	//입고를 취소 했을 때 출고테이블에 등록이 되어야함
+	@Transactional
+	@Commit
+	@Test
+	public void materialInCancleTest() {
+		//입고 취소된 입고코드
+		MaterialIn mi= materialInRepository.findById(7).get();
+		
+		if(mi.getStatus() == false) {
+			DetailPurchaseOrder dpo= mi.getDetailPurchaseOrder();
+			ProcurementPlan pp= procurementPlanRepository.findByDetailPurchaseOrder(dpo);
+			
+			MaterialOut materialOut= MaterialOut.builder().status(0).mrp(pp.getMrp()).build();
+			
+			materialOutRepository.save(materialOut);			
+		}
 	}
 	
 }
