@@ -203,67 +203,6 @@
 			</div>
 		</div>
 		
-		<!-- 발주서 발행 모달창 시작 -->
-		<div class="myPublish modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">발주서 발행 시작~</h5>
-					</div>
-                    <div class="modal-body" >
-						<!-- 여기서 새로 작성해 보기 -->
-	                    <h5>그냥 적어도 나오나</h5>
-	                    <h5>
-	                    체크박스를 체크하면 그 정보를 보내주기 
-	                    
-	                    </h5>
-                    
-	                    <div class="table-responsive" th:each="dto: ${myPublishDTO}">
-							<h4> 발주서 번호: [[${dto.showPono}]]</h4>
-							<h4> 협력 회사 : [[${dto.cname}]]</h4>
-							<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
-							<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
-							
-							<br>
-	                    	<table id="transactionDetail" border="1">
-								<thead>
-									<tr>
-										<th>발주코드</th>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>발주 수량</th>
-										<th>단가</th>
-										<th>공급<br>가격</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="dto: ${myPublishDTO}">
-									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
-										<td>[[${dto.showPocode}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.ppamount}]]</td>
-										<td>[[${dto.unit_price}]]</td>
-										<td>[[${dto.supply_price}]]</td>
-									</tr>
-								</tbody>
-							</table>
-							<br>
-                    	</div>
-                    </div>
-                    <div class="modal-footer">
-						<button id="publishBtn22" href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-							발행
-						</button>
-						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-                        	닫기
-                       </button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 발주서 발행 모달창 끝 -->
-		
 		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
 		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
@@ -553,9 +492,7 @@
 		console.log("인쇄버튼 누름");
 		location.href="/procurement2/print?no="+dNo+"&ppCode="+pPlan;
 	});
-		
-		
-		
+
 	/////////////////여기까지 체크박스
 
 //			발주서이미 존재하는지 확인 부분				
@@ -898,7 +835,7 @@
 							}
 						})
 						$(".multiplePublish2").modal("hide");
-								console.log("2번 모달창 발행이 잘 되었습니다. ");
+							console.log("2번 모달창 발행이 잘 되었습니다. ");
 						
 				})
 				
@@ -919,7 +856,7 @@
 								console.log("3번 모달창 발행이 잘 되었습니다. ");
 						
 				})
-			
+			//location.href="/procurement2/purchaseOrder";
 		
 			
 			var purchaseNo='';//빈값 넣기, 필요 없어보이는데 위에서 쓰이고 있음
