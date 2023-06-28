@@ -16,6 +16,7 @@ import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.MaterialOutService;
 import com.passioncode.procurementsystem.service.ProcurementPlanService;
+import com.passioncode.procurementsystem.service.StockResultService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class PS4Controller {
 	
 	private final MaterialOutService materialOutService;
 	private final ProcurementPlanService procurementPlanService;
+	private final StockResultService stockResultService;
 	
 	@GetMapping("materialOut")
 	public void materialOut(Model model, MaterialOutDTO materialOutDTO) {
@@ -59,7 +61,11 @@ public class PS4Controller {
 	}
 	
 	@GetMapping("stockResult")
-	public void stockResult() {
+	public void stockResult(Model model) {
+		List<StockResultDTO> stockResultDTOList = stockResultService.getStockResultDTOList();
+		
+		model.addAttribute("DTOList", stockResultDTOList);
+		
 		
 	}
 	
