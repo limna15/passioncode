@@ -103,7 +103,7 @@ public class PS1Controller {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
 		//대분류코드, 중분류코드
 		log.info("품목정보 등록 처리.....");
-		log.info("품목 정보 등록 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
+		//log.info("품목 정보 등록 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
 		/*
 		 * MaterialDTO(code=BS0003,CN0004, name=어디 수정 테스트2,도면 넣는 수정 테스트2, shareStatus=공용,공용, size=,, quality=,, spec=,, 
 		 * drawingNo=,CN0004D01, drawingFile=,/PassionCode/upload/drawing/2023/06/25/df918a86-6b73-4dee-aa45-e80bf03d079b_나사 도면 샘플1.pdf, 
@@ -196,7 +196,7 @@ public class PS1Controller {
 			}			
 			materialDTOList.add(materialDTO2);
 		}
-		log.info("품목 등록처리에서 만든 저장(등록)할 materialDTOList 보자 : "+materialDTOList);
+		//log.info("품목 등록처리에서 만든 저장(등록)할 materialDTOList 보자 : "+materialDTOList);
 		
 		//등록된 품목코드 리스트
 		List<String> registerList = new ArrayList<>();
@@ -224,7 +224,7 @@ public class PS1Controller {
 	@GetMapping("materialModify")
 	public void materialModify(String[] materialCodeList, Model model) {
 		log.info("품목 수정 화면 보기.....");
-		log.info("품목 등록(목록) 화면에서 받아온 품목코드 리스트 보자 : "+materialCodeList);
+		//log.info("품목 등록(목록) 화면에서 받아온 품목코드 리스트 보자 : "+materialCodeList);
 		
 		//클릭한 품목코드 리스트를 통해서, 수정화면에 보낼, MaterialDTO 리스트 만들기		
 		List<MaterialDTO> materialDTOList = new ArrayList<>();
@@ -233,7 +233,7 @@ public class PS1Controller {
 			MaterialDTO materialDTO = materialService.entityToDTO(materialService.getMaterial(materialCodeList[i]));
 			materialDTOList.add(materialDTO);
 		}
-		log.info("수정화면에 보내는 materialDTOList 봐보자 : "+materialDTOList);
+		//log.info("수정화면에 보내는 materialDTOList 봐보자 : "+materialDTOList);
 		
 		model.addAttribute("materialDTOList", materialDTOList);
 		
@@ -257,7 +257,7 @@ public class PS1Controller {
 		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부 <br>
 		//대분류코드, 중분류코드
 		log.info("품목정보 수정 처리.....");
-		log.info("품목 수정 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
+		//log.info("품목 수정 화면에서 보낸 MaterialDTO 가져오나 보자 : "+materialDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
 		List<MaterialDTO> materialDTOList = new ArrayList<>();
@@ -344,7 +344,7 @@ public class PS1Controller {
 			}			
 			materialDTOList.add(materialDTO2);
 		}
-		log.info("품목 수정처리에서 만든 수정할 materialDTOList 보자 : "+materialDTOList);
+		//log.info("품목 수정처리에서 만든 수정할 materialDTOList 보자 : "+materialDTOList);
 		
 		//받아온 DTO리스트 각각 DB에 수정하기
 		for(MaterialDTO dto : materialDTOList) {
@@ -372,7 +372,7 @@ public class PS1Controller {
 	@PostMapping("materialDelete")
 	public String materialDelete(String[] materialCodeList,RedirectAttributes redirectAttributes) {
 		log.info("품목 정보 삭제 처리.....");
-		log.info("품목 목록(등록)에서 보낸 삭제하기 위한 materialCodeList"+materialCodeList);
+		//log.info("품목 목록(등록)에서 보낸 삭제하기 위한 materialCodeList"+materialCodeList);
 		
 		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
 		// 테스트 진행을 위한, 품목 생성하자마자 만들었던 MRP 2개도 같이 삭제 해주자!!!!!!! 
@@ -440,7 +440,7 @@ public class PS1Controller {
 //		}
 		// => 결론!!! 안보낼때 null 로 보내지는게 아니야!!!! 빈값으로 보내짐!
 		log.info("계약 등록 처리.....");
-		log.info("계약 등록 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
+		//log.info("계약 등록 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
 		List<ContractDTO> contractDTOList = new ArrayList<>();
@@ -497,7 +497,7 @@ public class PS1Controller {
 			}
 			contractDTOList.add(contractDTO2);
 		}
-		log.info("계약 등록 처리에서 만든 등록할 contractDTOList 보자 : "+contractDTOList);
+		//log.info("계약 등록 처리에서 만든 등록할 contractDTOList 보자 : "+contractDTOList);
 	
 		//등록된 계약서 번호 리스트
 		List<Integer> registerList = new ArrayList<>();
@@ -519,7 +519,7 @@ public class PS1Controller {
 	@GetMapping("contractModify")
 	public void contractModify(String[] contractNoList,Model model) {
 		log.info("계약 수정 화면 보기.....");
-		log.info("계약 등록(목록) 화면에서 받아온 계약서번호 리스트 보자 : "+contractNoList);
+		//log.info("계약 등록(목록) 화면에서 받아온 계약서번호 리스트 보자 : "+contractNoList);
 		
 		//받아온 계약서번호 리스트를 통해서, 수정화면에 보낼, ContractDTO 리스트 만들기
 		List<ContractDTO> contractDTOList = new ArrayList<>();
@@ -528,7 +528,7 @@ public class PS1Controller {
 			ContractDTO contractDTO = contractService.contractEntityToDTO(contract);
 			contractDTOList.add(contractDTO);
 		}
-		log.info("계약 수정화면에 보내는 contractDTOList 봐보자 : "+contractDTOList);
+		//log.info("계약 수정화면에 보내는 contractDTOList 봐보자 : "+contractDTOList);
 		
 		model.addAttribute("contractDTOList", contractDTOList);
 	}
@@ -544,7 +544,7 @@ public class PS1Controller {
 		//계약서번호, 품목코드, 품목명, 협력회사, 담당자, 담당자연락처, 품목공급LT, 단가, 거래조건, 계약서, 계약상태 <br>
 		//사업자등록번호
 		log.info("계약 수정 처리.....");
-		log.info("계약 수정 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
+		//log.info("계약 수정 화면에서 보낸 ContractDTO 가져오나 보자 : "+contractDTO);
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		
 		List<ContractDTO> contractDTOList = new ArrayList<>();
@@ -599,7 +599,7 @@ public class PS1Controller {
 			}
 			contractDTOList.add(contractDTO2);
 		}
-		log.info("계약 수정 처리에서 만든 수정할 contractDTOList 보자 : "+contractDTOList);
+		//log.info("계약 수정 처리에서 만든 수정할 contractDTOList 보자 : "+contractDTOList);
 		
 		//받아온 DTO리스트 각각 DB에 수정하기
 		for(ContractDTO dto : contractDTOList) {
@@ -617,7 +617,7 @@ public class PS1Controller {
 	@PostMapping("contractDelete")
 	public String contractDelete(String[] contractNoList,RedirectAttributes redirectAttributes) {
 		log.info("계약서 삭제 처리.....");
-		log.info("계약 목록(등록)에서 보낸 삭제하기 위한 contractNoList"+contractNoList);
+		//log.info("계약 목록(등록)에서 보낸 삭제하기 위한 contractNoList"+contractNoList);
 		
 		for(String contractNo : contractNoList) {
 			Contract contract = contractService.getContract(Integer.parseInt(contractNo));
@@ -667,7 +667,7 @@ public class PS1Controller {
 																				.contractStatus("완료").build();
 			procurementPlanDTOList.add(procurementPlanDTO);
 		}
-		log.info("(조달계획 목록에서 받은 mrpCodeList를 통해) 조달계획 등록화면에 보낼 procurementPlanDTOList 리스트 보자 : "+procurementPlanDTOList);
+		//log.info("(조달계획 목록에서 받은 mrpCodeList를 통해) 조달계획 등록화면에 보낼 procurementPlanDTOList 리스트 보자 : "+procurementPlanDTOList);
 		
 		model.addAttribute("procurementPlanDTOList", procurementPlanDTOList);		
 	}
@@ -686,7 +686,7 @@ public class PS1Controller {
 				
 		log.info("조달계획 등록 처리.....");
 		
-		log.info("조달계획 등록 화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
+		//log.info("조달계획 등록 화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		//받아온 date(소요일, 조달납기예정일, 최소발주일) String으로 왔기 때문에 Date 형식으로 변환해줘야함
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -715,7 +715,7 @@ public class PS1Controller {
 			} catch (ParseException e) {
 				log.info("소요일 date 변환시 오류 발생함!!");
 			}
-			log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpDateList);
+			//log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpDateList);
 		}	
 		//소요량 배열 -> Integer로 변경
 		String[] mrpAmount = request.getParameterValues("mrpAmount");	
@@ -732,7 +732,7 @@ public class PS1Controller {
 			} catch (ParseException e) {
 				log.info("조달납기예정일 date 변환시 오류 발생함!!");
 			}
-			log.info("변경되서 넣어진 조달납기예정일 날짜 리스트 봐보자 : "+dueDateList);
+			//log.info("변경되서 넣어진 조달납기예정일 날짜 리스트 봐보자 : "+dueDateList);
 		}
 		//최소발주일 배열 -> Date 형식으로 변환
 		String[] minimumOrderDateStr = request.getParameterValues("minimumOrderDate");		
@@ -743,7 +743,7 @@ public class PS1Controller {
 			} catch (ParseException e) {
 				log.info("최소발주일일 date 변환시 오류 발생함!!");
 			}
-			log.info("변경되서 넣어진 최소발주일 날짜 리스트 봐보자 : "+minimumOrderDateList);
+			//log.info("변경되서 넣어진 최소발주일 날짜 리스트 봐보자 : "+minimumOrderDateList);
 		}
 		//필요수량 배열 -> Integer로 변경
 		String[] ppAmount = request.getParameterValues("ppAmount");	
@@ -783,14 +783,14 @@ public class PS1Controller {
 			//받아온 데이터에 null값으로 오는 항목이 없음! 그대로 리스트에 넣어주기			
 			procurementPlanDTOList.add(procurementPlanDTO2);
 		}
-		log.info("조달계획 등록 처리에서 만든 등록할 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
+		//log.info("조달계획 등록 처리에서 만든 등록할 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
 	
 		//등록된 조달계획코드 리스트
 		List<Integer> registerList = new ArrayList<>();
 		//받아온 DTO리스트 각각 DB에 저장하기
 		for(ProcurementPlanDTO dto : procurementPlanDTOList) {
 			registerList.add(procurementPlanService.register(dto));
-			log.info("각각 엔티티 변환 보자 : "+procurementPlanService.dtoToEntity(dto));
+			//log.info("각각 엔티티 변환 보자 : "+procurementPlanService.dtoToEntity(dto));
 		}
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
@@ -805,7 +805,7 @@ public class PS1Controller {
 	@GetMapping("procurementPlanModify")
 	public void procurementPlanModify(String[] ppCodeList,Model model) {
 		log.info("조달계획 수정 화면 보기.....");
-		log.info("조달계획 등록(목록) 화면에서 받아온 조달계획코드 리스트 보자 : "+ppCodeList);
+		//log.info("조달계획 등록(목록) 화면에서 받아온 조달계획코드 리스트 보자 : "+ppCodeList);
 		
 		//받아온 조달계획코드 리스트를 통해서, 수정화면에 보낼, ProcurementPlanDTO 리스트 만들기
 		List<ProcurementPlanDTO> procurementPlanDTOList = new ArrayList<>();
@@ -814,7 +814,7 @@ public class PS1Controller {
 			ProcurementPlanDTO procurementPlanDTO = procurementPlanService.ppEntityToDTO(procurementPlan);
 			procurementPlanDTOList.add(procurementPlanDTO);
 		}
-		log.info("조달계획 수정화면에 보내는 procurementPlanDTOList 봐보자 : "+procurementPlanDTOList);
+		//log.info("조달계획 수정화면에 보내는 procurementPlanDTOList 봐보자 : "+procurementPlanDTOList);
 		
 		model.addAttribute("procurementPlanDTOList", procurementPlanDTOList);
 	}
@@ -833,7 +833,7 @@ public class PS1Controller {
 				
 		log.info("조달계획 수정 처리.....");
 		
-		log.info("조달계획 수정 화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
+		//log.info("조달계획 수정 화면에서 보낸 ProcurementPlanDTO 가져오나 보자 : "+procurementPlanDTO);		
 		//같은 이름으로 input 오는거 배열로 넘어옴 -> 각각을 배열로 받아서 하나씩 원하는대로 세팅해줘야함
 		//받아온 date(소요일, 조달납기예정일, 최소발주일) String으로 왔기 때문에 Date 형식으로 변환해줘야함
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -862,7 +862,7 @@ public class PS1Controller {
 			} catch (ParseException e) {
 				log.info("소요일 date 변환시 오류 발생함!!");
 			}
-			log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpDateList);
+			//log.info("변경되서 넣어진 소요일 날짜 리스트 봐보자 : "+mrpDateList);
 		}	
 		//소요량 배열 -> Integer로 변경
 		String[] mrpAmount = request.getParameterValues("mrpAmount");	
@@ -880,7 +880,7 @@ public class PS1Controller {
 				e.printStackTrace();
 				log.info("조달납기예정일 date 변환시 오류 발생함!!");
 			}
-			log.info("변경되서 넣어진 조달납기예정일 날짜 리스트 봐보자 : "+dueDateList);
+			//log.info("변경되서 넣어진 조달납기예정일 날짜 리스트 봐보자 : "+dueDateList);
 		}
 		//최소발주일 배열 -> Date 형식으로 변환
 		String[] minimumOrderDateStr = request.getParameterValues("minimumOrderDate");		
@@ -892,7 +892,7 @@ public class PS1Controller {
 				e.printStackTrace();
 				log.info("최소발주일일 date 변환시 오류 발생함!!");
 			}
-			log.info("변경되서 넣어진 최소발주일 날짜 리스트 봐보자 : "+minimumOrderDateList);
+			//log.info("변경되서 넣어진 최소발주일 날짜 리스트 봐보자 : "+minimumOrderDateList);
 		}
 		//필요수량 배열 -> Integer로 변경
 		String[] ppAmount = request.getParameterValues("ppAmount");	
@@ -933,7 +933,7 @@ public class PS1Controller {
 			//받아온 데이터에 null값으로 오는 항목이 없음! 그대로 리스트에 넣어주기			
 			procurementPlanDTOList.add(procurementPlanDTO2);
 		}
-		log.info("조달계획 수정 처리에서 만든 수정할 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
+		//log.info("조달계획 수정 처리에서 만든 수정할 procurementPlanDTOList 보자 : "+procurementPlanDTOList);
 	
 		//받아온 DTO리스트 각각 DB에 수정하기
 		for(ProcurementPlanDTO dto : procurementPlanDTOList) {
@@ -952,7 +952,7 @@ public class PS1Controller {
 	@PostMapping("procurementPlanDelete")
 	public String procurementPlanDelete(String[] ppCodeList,RedirectAttributes redirectAttributes) {
 		log.info("조달계획 삭제 처리.....");
-		log.info("조달계획 목록(등록)에서 보낸 삭제하기 위한 ppCodeList"+ppCodeList);
+		//log.info("조달계획 목록(등록)에서 보낸 삭제하기 위한 ppCodeList"+ppCodeList);
 		
 		for(String ppCode : ppCodeList) {
 			ProcurementPlan procurementPlan = procurementPlanService.getProcurementPlan(Integer.parseInt(ppCode));

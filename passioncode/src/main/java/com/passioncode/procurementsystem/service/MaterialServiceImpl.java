@@ -178,7 +178,7 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	@Override
 	public void delete(MaterialDTO materialDTO) {
-		//log.info("삭제된 품목(material)정보 : "+dtoToEntity(materialDTO));
+		log.info("삭제된 품목(material)정보 : "+dtoToEntity(materialDTO));
 		materialRepository.deleteById(materialDTO.getCode());		
 	}
 
@@ -192,15 +192,15 @@ public class MaterialServiceImpl implements MaterialService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		Date todayDate=cal.getTime();
-		log.info("캘린더 셋팅된 오늘날짜 : "+simpleDateFormat.format(todayDate));
+		//log.info("캘린더 셋팅된 오늘날짜 : "+simpleDateFormat.format(todayDate));
 		
 		//오늘날짜 + (20~40) => 랜덤 소요일 만들기
 		int mrpDateRandomVar = (int)(Math.random()*(40-20+1)+20);
-		log.info("소요일을 위한 랜덤변수 값 : "+mrpDateRandomVar);
+		//log.info("소요일을 위한 랜덤변수 값 : "+mrpDateRandomVar);
 		cal.add(Calendar.DATE, +mrpDateRandomVar);
 		
 		Date randomMrpDate=cal.getTime();
-		log.info("소요일 랜덤변수를 더해 만든 랜덤소요일 : "+simpleDateFormat.format(randomMrpDate));
+		//log.info("소요일 랜덤변수를 더해 만든 랜덤소요일 : "+simpleDateFormat.format(randomMrpDate));
 		
 		return randomMrpDate;
 	}
@@ -213,18 +213,18 @@ public class MaterialServiceImpl implements MaterialService {
 		for(int i=0;i<2;i++) {
 			//(int)(Math.random()*(최대값-최소값+1)+최소값)
 			int processRandomVar = (int)(Math.random()*(9-0+1)+0);
-			log.info("소요공정을 위한 랜덤변수 값 : "+processRandomVar);
+			//log.info("소요공정을 위한 랜덤변수 값 : "+processRandomVar);
 			String randomProcess = inputProcess[processRandomVar];
-			log.info("소요공정 랜덤변수 값을 이용한 소요공정 테스트 : "+randomProcess);
+			//log.info("소요공정 랜덤변수 값을 이용한 소요공정 테스트 : "+randomProcess);
 			//소요량 -> 100*랜덤(1~15) 계산해서 랜덤으로 세팅
 			int mrpAmountRandomVar = (int)(Math.random()*(15-1+1)+1);
-			log.info("소요량을 위한 랜덤변수 값 : "+mrpAmountRandomVar);
+			//log.info("소요량을 위한 랜덤변수 값 : "+mrpAmountRandomVar);
 			Integer randomMrpAmount = 100*mrpAmountRandomVar;
-			log.info("소요량 랜덤변수 값을 이용한 소요량 테스트 : "+randomMrpAmount);
+			//log.info("소요량 랜덤변수 값을 이용한 소요량 테스트 : "+randomMrpAmount);
 			//소요일 -> 오늘(입력하는)날짜 + (20~40) 계산해서 랜덤으로 세팅
-			log.info("날짜 오늘꺼 테스트 : "+new Date());
+			//log.info("날짜 오늘꺼 테스트 : "+new Date());
 			Date randomMrpDate = makeRandomMrpDate();
-			log.info("랜덤으로 만든 소요일 테스트 : "+randomMrpDate);
+			//log.info("랜덤으로 만든 소요일 테스트 : "+randomMrpDate);
 			
 			MRP mrp=MRP.builder().process(randomProcess).amount(randomMrpAmount).date(randomMrpDate).material(materialRepository.findById(materialCode).get()).build();
 			mrpRepository.save(mrp);
@@ -236,7 +236,7 @@ public class MaterialServiceImpl implements MaterialService {
 	public void mrpDeleteWithMaterialModify(String materialCode) {
 		//품목코드를 이용해서 mrp들 찾아와서 그 해당 mrp 지워주기
 		List<MRP> mrpList = mrpRepository.findBymaterialCode(materialCode);
-		log.info("찾은 mrp 리스트 보자 : "+mrpList);
+		//log.info("찾은 mrp 리스트 보자 : "+mrpList);
 		
 		for(MRP mrp : mrpList) {
 			mrpRepository.delete(mrp);

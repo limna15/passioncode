@@ -48,18 +48,18 @@ public class PS1RestController {
 	 */
 	@PostMapping(value="companySearch",produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<ContractDTO> searchCompany(@RequestBody String companyName){	//post메핑이라서 파라미터로 못 읽기 때문에, @RequestBody 바디에 실어서 보내기
-		log.info("값은 가져오나 보자 : "+companyName);
+		//log.info("값은 가져오나 보자 : "+companyName);
 		
 		List<ContractDTO> searchContractDTOs = new ArrayList<>();
 		List<Company> companyList = contractService.searchCompanyWithDeal(companyName);
-		log.info("가져온걸로 잘 검색했나~~"+companyList);
+		//log.info("가져온걸로 잘 검색했나~~"+companyList);
 		
 		for(Company company:companyList) {
 			ContractDTO contractDTO = ContractDTO.builder().companyNo(company.getNo()).companyName(company.getName())
 															.manager(company.getManager()).managerTel(company.getManagerTel()).build();
 			searchContractDTOs.add(contractDTO);
 		}
-		log.info("만들어진 회사리스트 보자 : "+searchContractDTOs);
+		//log.info("만들어진 회사리스트 보자 : "+searchContractDTOs);
 		
 		return searchContractDTOs;
 	}
@@ -76,12 +76,12 @@ public class PS1RestController {
 		//사업자등록번호
 		
 		//받아온 품목코드 읽어보자
-		log.info("화면에서 보낸 품목코드 : "+materialCode); 
+		//log.info("화면에서 보낸 품목코드 : "+materialCode); 
 				
 		List<ContractDTO> searchContractDTOs = new ArrayList<>();
 		
 		List<Contract> contractList = contractService.searchContractByMaterialCode(materialCode);
-		log.info("잘 검색해서 왔나 계약서 보자 : "+contractList);
+		//log.info("잘 검색해서 왔나 계약서 보자 : "+contractList);
 		
 		//거래조건은 null일경우 null 이라고 화면에 그대로 찍히기 때문에, 거래조건이 null일때 "" 빈값으로 셋팅 바꿔주자
 		for(Contract contract:contractList) {
@@ -91,7 +91,7 @@ public class PS1RestController {
 			}
 			searchContractDTOs.add(contractDTO);
 		}		
-		log.info("만들어진 계약서 리스트 보자 : "+searchContractDTOs);
+		//log.info("만들어진 계약서 리스트 보자 : "+searchContractDTOs);
 		
 		return searchContractDTOs;		
 	}
@@ -109,10 +109,10 @@ public class PS1RestController {
 		//소요일 -> 등록화면 셋팅된 값에서 얻기
 		//기본여유기간, 품목공급LT -> 계약서 찾기 모달창에서 얻기		
 		//위의 값으로 조달납기예정일, 최소발주일 값 계산해주기
-		log.info("소요일, 기본여유기간, 품목공급LT 객체로 보낸 json 타입 보자 : "+procurementPlanDTO); 		
+		//log.info("소요일, 기본여유기간, 품목공급LT 객체로 보낸 json 타입 보자 : "+procurementPlanDTO); 		
 		
 		ProcurementPlanDTO result = procurementPlanService.getProcurementPlanCalculate(procurementPlanDTO);
-		log.info("계산된 값 확인해 보자 : "+result);
+		//log.info("계산된 값 확인해 보자 : "+result);
 		
 		return result;
 	}
@@ -131,7 +131,7 @@ public class PS1RestController {
 		for(MiddleCategory middleCategory:middleCategoryList) {
 			middleCategoryDTOList.add(middleCategoryService.entityToDTO(middleCategory));
 		}
-		log.info("만들어진 중분류 DTO리스트 보자 : "+middleCategoryDTOList);
+		//log.info("만들어진 중분류 DTO리스트 보자 : "+middleCategoryDTOList);
 		
 		return	middleCategoryDTOList;
 	}
@@ -146,7 +146,7 @@ public class PS1RestController {
 	public List<MaterialDTO> generateMaterialCode(@RequestBody List<MiddleCategoryDTO> middleCategoryDTOList){
 		//화면에서 대분류코드, 중분류코드를 받아서, 품목코드를 만들어서 보내주기
 		//코드생성 버튼 누를때마다, 모든 대분류코드, 중분류코드 받아서, 각각 품목코드 만들어주기
-		log.info("일단 제대로 받아오나 함 보자 : "+middleCategoryDTOList);
+		//log.info("일단 제대로 받아오나 함 보자 : "+middleCategoryDTOList);
 		
 		//받은 대분류코드, 중분류코드 문자만 추출해서 만들고, 만든거 리스트에 넣어주기 
 		// -> 생성된 품목코드의 문자부분의 리스트
@@ -156,7 +156,7 @@ public class PS1RestController {
 			String getMC = middleCategoryDTO.getMiddleCode().substring(0,1);
 			getLCWithMCList.add(getLC + getMC);
 		}
-		log.info("대분류,중분류 코드 문자부분만 합쳐서 만든 문자 코드 리스트 보자 : ",getLCWithMCList);
+		//log.info("대분류,중분류 코드 문자부분만 합쳐서 만든 문자 코드 리스트 보자 : ",getLCWithMCList);
 		
 		//생성된 품목코드의 숫자부분 리스트로 만들기
 		List<String> maxOnlyNumByStringList = new ArrayList<>();
@@ -193,7 +193,7 @@ public class PS1RestController {
 				maxOnlyNumByStringList.add(startNumByString);	
 			}
 		}
-		log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
+		//log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
 		
 		List<MaterialDTO> finalGenerateMaterialCodeList = new ArrayList<>();
 		
@@ -202,7 +202,7 @@ public class PS1RestController {
 			materialDTO.setCode(getLCWithMCList.get(i)+maxOnlyNumByStringList.get(i));
 			finalGenerateMaterialCodeList.add(materialDTO);
 		}
-		log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
+		//log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
 		
 		return finalGenerateMaterialCodeList;		
 	}
@@ -222,7 +222,7 @@ public class PS1RestController {
 		//같은 String이니까! 담아서 보낼 수 있을 듯! 하지만 middleCategory -> materialCode 가 되는거니까 헷갈릴테니 주의하자!
 		
 		//코드생성 버튼 누를때마다, 모든 대분류코드, 중분류코드 받아서, 각각 품목코드 만들어주기
-		log.info("일단 제대로 받아오나 함 보자 middleCategoryDTOList : "+middleCategoryDTOList);
+		//log.info("일단 제대로 받아오나 함 보자 middleCategoryDTOList : "+middleCategoryDTOList);
 		
 		//middleCategory에 받은 품목코드 materialDTO에 담기!
 		List<MaterialDTO> materialDTOList = new ArrayList<>();
@@ -231,7 +231,7 @@ public class PS1RestController {
 			MaterialDTO materialDTO = MaterialDTO.builder().code(middleCategoryDTO.getMiddleCategory()).build();
 			materialDTOList.add(materialDTO);			
 		}
-		log.info("MaterialDTO 리스트로 품목코드 옮긴거 보자! : "+materialDTOList);
+		//log.info("MaterialDTO 리스트로 품목코드 옮긴거 보자! : "+materialDTOList);
 		
 		//받아온 품목코드들은 변경되야하는 기존의 품목코드니까 삭제를 시키기 
 		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
@@ -253,7 +253,7 @@ public class PS1RestController {
 			String getMC = middleCategoryDTO.getMiddleCode().substring(0,1);
 			getLCWithMCList.add(getLC + getMC);
 		}
-		log.info("대분류,중분류 코드 문자부분만 합쳐서 만든 문자 코드 리스트 보자 : ",getLCWithMCList);
+		//log.info("대분류,중분류 코드 문자부분만 합쳐서 만든 문자 코드 리스트 보자 : ",getLCWithMCList);
 		
 		//생성된 품목코드의 숫자부분 리스트로 만들기
 		List<String> maxOnlyNumByStringList = new ArrayList<>();
@@ -278,7 +278,7 @@ public class PS1RestController {
 			//만든 숫자리스트 -> 위에서 선언한, 생성된 품목코드의 숫자부분 리스트에 넣기
 	        maxOnlyNumByStringList.add(maxOnlyNumByString);			
 		}
-		log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
+		//log.info("생성된 품목코드의 숫자부분 리스트 만든거 확인하기 : "+maxOnlyNumByStringList);
 		
 		List<MaterialDTO> finalGenerateMaterialCodeList = new ArrayList<>();
 		
@@ -287,7 +287,7 @@ public class PS1RestController {
 			materialDTO.setCode(getLCWithMCList.get(i)+maxOnlyNumByStringList.get(i));
 			finalGenerateMaterialCodeList.add(materialDTO);
 		}
-		log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
+		//log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
 		
 		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
 		//----------- 테스트 진행을 위한, 품목 생성하자마자, 그 해당하는 품목의 MRP 2개를 랜덤으로 세팅해서 만들어주었던거! 그 해당 MRP 2개 품목코드로 바꿔주기 --------------//
@@ -312,7 +312,7 @@ public class PS1RestController {
 		//품목코드로 계약서 조회하는데 
 		// 1. 조회가 안된다 => 계약 미완료 -> 수정 가능
 		// 2. 조회가 된다 => 계약 완료 -> 수정 불가능
-		log.info("받아온 품목코드 리스트 봐보자 : "+materialCodeList);
+		//log.info("받아온 품목코드 리스트 봐보자 : "+materialCodeList);
 		
 		boolean contractStatusCheck = false;
 		
@@ -326,7 +326,7 @@ public class PS1RestController {
 				contractStatusCheck = true;
 			}
 		}
-		log.info("그래서 contractStatusCheck 최종 참, 거짓 확인해 보자 : "+contractStatusCheck);
+		//log.info("그래서 contractStatusCheck 최종 참, 거짓 확인해 보자 : "+contractStatusCheck);
 		
 		return contractStatusCheck+"";
 	}
@@ -392,7 +392,7 @@ public class PS1RestController {
 		//계약서번호로 조달계획 조회하는데
 		// 1. 조회가 안된다 => 아직 조달계획에 등록이 안된거라서, 계약서 수정 가능
 		// 2. 조회가 된다 => 조달계획에 등록이 된거라서, 계약서 수정 불가능
-		log.info("계약서 목록화면에서 받아온 계약서 리스트 봐보자 : "+contractNoList);
+		//log.info("계약서 목록화면에서 받아온 계약서 리스트 봐보자 : "+contractNoList);
 		
 		boolean contractInPPCheck = false;
 		
@@ -407,7 +407,7 @@ public class PS1RestController {
 			}
 		}
 		
-		log.info("그래서 contractInPPCheck 최종 참, 거짓 확인해 보자 : "+contractInPPCheck);
+		//log.info("그래서 contractInPPCheck 최종 참, 거짓 확인해 보자 : "+contractInPPCheck);
 		
 		return contractInPPCheck+"";
 	}

@@ -63,7 +63,7 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		//조달계획코드 1 -> PP00001 로 바꿔주기
 		String ppCodeStr = String.format("%05d",ppCode);
 		ppCodeStr = "PP" + ppCodeStr;
-		log.info("바꾼 조달계획코드 좀 보자 : ",ppCodeStr);
+		//log.info("바꾼 조달계획코드 좀 보자 : ",ppCodeStr);
 		return ppCodeStr;
 	}
 	
@@ -374,13 +374,13 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(duedate);
 		duedate=cal.getTime();
-		log.info("캘린더 셋팅된 조달납기예정일 : "+simpleDateFormat.format(duedate));
+		//log.info("캘린더 셋팅된 조달납기예정일 : "+simpleDateFormat.format(duedate));
 		
 		//조달납기예정일 - 품목공급LT => 최소발주일 만들기
 		cal.add(Calendar.DATE,-supplyLt);
 		
 		Date minimumOrderDate=cal.getTime();
-		log.info("제대로 뺀, 최소발주일 : "+simpleDateFormat.format(minimumOrderDate));
+		//log.info("제대로 뺀, 최소발주일 : "+simpleDateFormat.format(minimumOrderDate));
 		
 		return minimumOrderDate;
 	}
@@ -397,13 +397,13 @@ public class ProcurementPlanServiceImpl implements ProcurementPlanService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(mrpDate);
 		mrpDate=cal.getTime();
-		log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpDate));
+		//log.info("캘린더 셋팅된 mrp 소요일 : "+simpleDateFormat.format(mrpDate));
 		
 		//소요일 - 기본 여유기간 => 납기예정일 만들기
 		cal.add(Calendar.DATE,-freePeriod);
 		
 		Date duedate=cal.getTime();
-		log.info("제대로 뺀, 납기예정일 : "+simpleDateFormat.format(duedate));
+		//log.info("제대로 뺀, 납기예정일 : "+simpleDateFormat.format(duedate));
 		
 		return duedate;
 	}
