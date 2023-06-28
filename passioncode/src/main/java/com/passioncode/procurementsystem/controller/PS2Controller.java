@@ -35,9 +35,8 @@ public class PS2Controller {
 	@GetMapping("/purchaseOrder")	//발주서 발행
 	public void PS2Test(Integer[] lengthList, Model model ,PurchaseOrderDTO purchaseOrderDTO, DetailPurchaseOrderDTO detailDTO, Integer checkBox, Integer checkBox3) {
 		if(lengthList!=null) { //lengthList가 존재하는 경우에만 
-		//log.info("발주서 번호들이 잘 가나..>>"+lengthList[0]);//리스트로 잘 간다. 번호? 자리수로 해줘야 함, for문 이용하기 
 			for(int i=0;i<lengthList.length;i++) {
-				log.info("발주서 번호들이 잘 가나..>>"+lengthList[i]);//잘 나온다
+				//log.info("발주서 번호들이 잘 가나..>>"+lengthList[i]);//잘 나온다
 			}
 		}
 		
@@ -69,8 +68,8 @@ public class PS2Controller {
 	
 	@GetMapping("/progressCheck")
 	public void PS2Test2(Model model ,PurchaseOrderDTO purchaseOrderDTO, Integer checkBox) {
-		log.info("progressCheck>>>>>>>"+purchaseOrderDTO);
-		log.info("progressCheck일정등록 위해>>==="+checkBox);
+		//log.info("progressCheck>>>>>>>"+purchaseOrderDTO);
+		//log.info("progressCheck일정등록 위해>>==="+checkBox);
 		
 		model.addAttribute("pCheckList", progressCheckService.getProgressCheckDTOList());
 		//model.addAttribute("miniList", progressCheckService.getProgressCheckDTOList());
