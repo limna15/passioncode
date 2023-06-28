@@ -1,5 +1,11 @@
 package com.passioncode.procurementsystem.dto;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -57,10 +63,10 @@ public class StockResultDTO {
 	private Integer stockPrice;
 	
 	/**
-	 * 품목 단가
+	 * 품목 단가 (계약서)
 	 */
 	private Integer unitPrice;
-	
+		
 	/**
 	 * 대분류 코드 (대분류)
 	 */
@@ -85,4 +91,7 @@ public class StockResultDTO {
 	 * 조달계획 코드 (조달계획)
 	 */
 	private Integer ppCode;	
+	
+	
+	
 }

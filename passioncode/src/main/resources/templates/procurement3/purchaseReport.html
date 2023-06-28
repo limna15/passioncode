@@ -170,6 +170,8 @@
       	//시작일과 종료일 사이 날짜 배열로 가져오기
 		var start= new Date(document.querySelector("#startDate").value);
 		var end= new Date(document.querySelector("#endDate").value);
+		console.log("오잉? start 보자 : ",start);
+		console.log("오잉? end 보자 : ",end);
 		
 		var result= [];
 		
@@ -179,7 +181,7 @@
 		}
 		console.log("시작날짜 찍히나 >>> ", start)		
 		console.log("끝날짜 찍히나 >>> ", end)
-		//console.log("result 찍히나 >>> ", result)
+		console.log("result 찍히나 >>> ", result)
 		//console.log("result Json형식으로 찍히나 >>> ", JSON.stringify(result))
 		
 		//검색누른 후에는 input값 초기화

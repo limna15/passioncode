@@ -1,5 +1,6 @@
 package com.passioncode.procurementsystem.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -7,8 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
+import com.passioncode.procurementsystem.dto.StockResultDTO;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.MaterialOutService;
@@ -59,6 +62,7 @@ public class PS4Controller {
 	public void stockResult() {
 		
 	}
+	
 	
 	@GetMapping("stockReport")
 	public void stockReport() {

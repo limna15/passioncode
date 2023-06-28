@@ -7,7 +7,9 @@ import org.hibernate.query.results.complete.ModelPartReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
@@ -199,7 +201,11 @@ public class MaterialOutRepositoryTests {
 	
 	@Test
 	public void stockReportTest() {
-		//CG0001 품목 재고산출 해보자 6
+		//CG0001 품목 재고산출 해보자 6/1 ~ 6/20일 까지로 해보자!
+		//일단 BS0001 6/3일 꺼 해보자
+		
+		
+		
 		
 		
 		
