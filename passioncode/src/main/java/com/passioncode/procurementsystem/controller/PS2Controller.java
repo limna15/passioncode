@@ -102,8 +102,8 @@ public class PS2Controller {
 	
 	//구매발주서 인쇄화면
 	@GetMapping("/print")
-	public void PS2TestPrint(@Param(value= "purchaseNo") String purchaseNo, Model model) {
-		
+	public void PS2TestPrint(@Param(value= "purchaseNo") Integer ppCode, Integer no, Model model) {
+		model.addAttribute("printDTO",detailPurchaseOrderService.print(ppCode, no));
 		log.info("인쇄합니다>>>>>>>");
 	}
 	
@@ -113,16 +113,10 @@ public class PS2Controller {
 		log.info("내가 원하는 발주서 번호>>33333>>"+checkBox2);
 		model.addAttribute("myPublishData",detailPurchaseOrderService.dtoToEntity(detailDTO));
 		
-		
 		detailPurchaseOrderService.updataePp(checkBox2);
 		log.info("발행 합니다~~>>>>>>>"+checkBox2);
 		
-		//여기에 반복문을 넣어서 하기 
-		//만약 더이상 발주할 것이 없다면
-		String replay = "redirect:/procurement2/purchaseOrder";//마지막 발주 
-		String replay2 = "redirect:/procurement2/purchaseNo?checkBox="+1;//이런 식으로 뒤에 더 붙이기
-		
-		return replay;
+		return "redirect:/procurement2/purchaseOrder";
 		
 		
 	}

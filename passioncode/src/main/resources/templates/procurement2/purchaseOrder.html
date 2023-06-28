@@ -64,6 +64,19 @@
     margin-top: 6px;
     font-size: 95%;
 }    
+
+@media print {
+    html, body { -webkit-print-color-adjust:exact; width: 210mm; height: 297mm; }
+    table { page-break-inside:auto; }
+    tr    { page-break-inside:avoid; page-break-after:auto; }
+    thead { display:table-header-group; }
+    tfoot { display:table-footer-group; }
+    
+    #no-print, #no-print * {
+        display: none !important;
+    }
+    @page { margin: 0; }/* for 크롬 Headers and footers 없애기 */
+}
 </style>
 
 		<div class="col-md-12 stretch-card">
@@ -95,7 +108,7 @@
 						<!-- 목록 내려보기 끝 -->
 						<!-- 발주서 발행 버튼 시작 -->
 						<div class="col-md-6" >	
-							<button style="float: right;" class="btn btn-primary" onclick="print();">
+							<button style="float: right;" class="btn btn-primary myprint" id="idmyprint">
 								인쇄
 							</button>
 							
@@ -492,6 +505,10 @@
 		let ppNoList03 =new Array();
 		let ppNoList04 =new Array();
 		let ppNoList05 =new Array();
+		
+		var pPlan=null;
+		var dNo=null;
+
 		$(".showInfo").click(function(){
 			//console.log("내가 발주하고싶은 정보를 담고있는 체크박스를 누름");
 			
@@ -515,10 +532,10 @@
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
 			var sPrice= getObjTR().querySelector("input[name=supplyPrice]").value;
 			var poStatus= getObjTR().querySelector("input[name=purchaseOrderStatus]").value;
-			var pPlan= getObjTR().querySelector("input[name=procurementPlan]").value;
+			pPlan= getObjTR().querySelector("input[name=procurementPlan]").value;
 			var pPrice = uPrice*oAmount;//payPrice 단가 * 발주수량
 			var dCode= getObjTR().querySelector("input[name=detailCode]").value;//발주코드
-			var dNo= getObjTR().querySelector("input[name=detailNo]").value;//발주서 번호
+			dNo= getObjTR().querySelector("input[name=detailNo]").value;//발주서 번호
 			//내가 필요한 것만 찍어내기 
 			//만들어 보여줄 내용: 발주서 번호, 발주 코드, 오늘날짜 
 			//가져올 수 있는 것 총 7개 : 1. 협력회사, 2.품목명 3. 납기 예정일 4. 품목코드 5. 발주수량 6. 단가 7. 공급가격
@@ -541,6 +558,12 @@
 			
 			//console.log("큰 발주 코드",maxCode,"가장 마지막 발주서 번호: ",maxNo); 
 	});		
+	
+	$("#idmyprint").click(function(){
+		console.log("인쇄버튼 누름");
+		location.href="/procurement2/print?no="+dNo+"&ppCode="+pPlan;
+	});
+				
 	/////////////////여기까지 체크박스
 
 //			발주서이미 존재하는지 확인 부분				
@@ -569,6 +592,7 @@
 		//}else{
 		//};
 		
+		
 		$(".mypublish").click(function(){
 			console.log("여기에서 실행해서 정보 전달하는 구나");
 			
@@ -585,22 +609,9 @@
 				no = Number(no);//숫자로 담아진다. 그냥 두면 문자로 담아줌
 				cList.push(no);	//리스트에 담는다	
 			})
+			
+		
 			console.log("번호 리스트 >>> ", cList);	//잘 나옴
-			//cList길이만큼 반복 해보기
-			for (let q = 0; q < cList.length; q++) {	//두 번씩 실행되서 나옴
-    			//console.log("반복문 실험",q);
-				//여기에서 담아서 걸러주기
-				//$(".myPublish").modal("show");	//여기가 보여주기 시작 반복해서 보여주기
-				if(cList.length!=null){
-					//$(".multiplePublish").modal("show");	//여기가 보여주기 시작 반복해서 보여주기
-					//console.log("1번 모달창 실행");
-					//console.log("cList의 길이가 변하나",cList.length);
-					//console.log("cList의 pop하기 전",cList);
-					//cList.pop([0]);//나중에 들어간 것 부터 나온다			
-					//console.log("cList의 pop하고 후",cList);
-				}
-			//cList가 0일 때까지 반복하기, 너무 빨라서 안보이는거라 함
-			}
 			
 			//동적인 테이블 시작
 			//배열 5개 만들어두고 5개의 회사만 구분할 수 있도록 하기
@@ -840,6 +851,7 @@
 						
 					}
 				}
+				
 				$("#cancle01").click(function(){
 					console.log("1번 모달창 취소 버튼을 누름");
 					
@@ -855,8 +867,7 @@
 					console.log("countNo02: ",countNo02);
 					
 				});
-				
-				
+			
 				$("#publishBtn01").click(function(){
 					console.log("1번 조달계획 발행 버튼을 누름");
 					//조달 계획 번호 가져오기
@@ -911,6 +922,7 @@
 						
 				})
 			
+		
 			
 			var purchaseNo='';//빈값 넣기, 필요 없어보이는데 위에서 쓰이고 있음
 			

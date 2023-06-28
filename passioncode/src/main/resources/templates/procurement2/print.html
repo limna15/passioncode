@@ -62,14 +62,18 @@ th, td {
 	<br>
 	<br>
 	<div>
-		<b style="font-size: 20px; line-height : 35px;">발주서 번호: </b> <br>
-		<b style="font-size: 20px; line-height : 35px;">협력 회사: </b> <br>
-		<b style="font-size: 20px; line-height : 35px;">발주 일자: </b> <br>
-		<b style="font-size: 20px; line-height : 35px;">납기 예정일: </b> <br>
+		<b style="font-size: 20px; line-height : 35px;">발주서 번호: </b> <span>[[${printDTO[0].purchaseOrderNo2}]]</span> <br>
+		<b style="font-size: 20px; line-height : 35px;">협력 회사: </b> <span>[[${printDTO[0].companyName}]]</span><br>
+		<b style="font-size: 20px; line-height : 35px;">발주 일자: </b> <span>[[${#temporals.format(printDTO[0].purchaseOrderDate, 'yyyy/MM/dd')}]]</span><br>
+		<b style="font-size: 20px; line-height : 35px;">납기 예정일: </b> <span>[[${#dates.format(printDTO[0].dueDate, 'yyyy/MM/dd')}]]</span><br>
 	</div>
 	<br>
 
-	<!--거래명세서 품목 정보-->
+	<!--거래명세서 품목 정보
+	[DetailPurchaseOrderDTO(purchaseOrderNo=1, purchaseOrderCode=1, companyName=(주)경도전자, purchaseOrderDate=2023-05-25T17:50:08,
+	 dueDate=2023-06-05 00:00:00.0, materialCode=BS0001, 
+	materialName=null, purchaseOrderAmount=200, unitPrice=100, suppluPrice=20000, procurementPlan=null)]
+	-->
 	<div class="table-responsive">
 		<table id="transactionDetail">
 			<thead>
@@ -82,15 +86,14 @@ th, td {
 					<th>공급가격</th>
 				</tr>
 			</thead>
-			<tbody id="detail">
-				<!-- 동적 테이블 생성해서 들어가는 위치-->		
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+			<tbody id="detail">	
+				<tr th:each="dto: ${printDTO}">
+					<td>[[${dto.purchaseOrderCode2}]]</td>
+					<td>[[${dto.materialCode}]]</td>
+					<td>[[${dto.materialName}]]</td>
+					<td>[[${dto.purchaseOrderAmount}]]</td>
+					<td>[[${dto.unitPrice}]]</td>
+					<td>[[${dto.purchaseOrderAmount}*${dto.unitPrice}]]</td>
 				</tr>
 			</tbody>
 		</table>

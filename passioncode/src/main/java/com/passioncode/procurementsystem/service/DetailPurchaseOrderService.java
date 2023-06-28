@@ -63,4 +63,12 @@ public interface DetailPurchaseOrderService {
 	
 
 	void updataePp(Integer num1);
+	
+	/**
+	 * 조달코드, 발주서 번호를 통한 발주서 가져오기
+	 * @param ppCode
+	 * @param no
+	 * @return
+	 */
+	List<DetailPurchaseOrderDTO> print(Integer ppCode, Integer no);
 }

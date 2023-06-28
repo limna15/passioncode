@@ -30,7 +30,36 @@ public class DetailPurchaseOrderServiceImpl implements DetailPurchaseOrderServic
 	private final DetailPurchaseOrderRepository detailPurchaseOrderRepository;
 	private final ProcurementPlanRepository procurementPlanRepository;
 
-	// 발주서 번호 생성하면서 조달 계획 등록
+	@Override
+	public List<DetailPurchaseOrderDTO> print(Integer ppCode, Integer no) {//조달코드, 발주서 번호
+		//프린트하기 위해 발주서 번호를 받아서 리스트를 받아와야 한다.
+		//프린트하기 위해 발주서 번호를 받아서 리스트를 받아와야 한다.
+				PurchaseOrder poNo = purchaseOrderRepository.findById(no).get();//발주서 번호 보내기
+				List<DetailPurchaseOrder> dCode = detailPurchaseOrderRepository.findByPurchaseOrder(poNo);	
+				List<DetailPurchaseOrderDTO> dList = new ArrayList<>();
+				List<ProcurementPlan> ppList= new ArrayList<>();
+				DetailPurchaseOrderDTO dto = null;
+				//조달 번호도 보내주자~~
+				ProcurementPlan pp = procurementPlanRepository.findById(ppCode).get();	//조달 번호 보내기
+				//필요한 것: 발주서 번호, 협력회사, 발주일자, 납기예정일, 발주코드, 품목코드, 품목, 발주수량, 단가, 공급가격
+				for(int i =0;i<dCode.size();i++) {
+					ppList.add(procurementPlanRepository.findByDetailPurchaseOrder(dCode.get(i)));
+					dto = DetailPurchaseOrderDTO.builder()
+							.purchaseOrderNo2(addBlank2(poNo.getNo()))
+							.purchaseOrderNo(poNo.getNo())
+							.materialName(ppList.get(i).getMrp().getMaterial().getName())
+							.companyName(ppList.get(i).getContract().getCompany().getName())
+							.purchaseOrderDate(ppList.get(i).getDetailPurchaseOrder().getDate()).dueDate(ppList.get(i).getDueDate())
+							.purchaseOrderCode(ppList.get(i).getDetailPurchaseOrder().getCode())
+							.purchaseOrderCode2(addBlank(ppList.get(i).getDetailPurchaseOrder().getCode()))
+							.materialCode(ppList.get(i).getMrp().getMaterial().getCode()).purchaseOrderAmount(ppList.get(i).getAmount())
+							.unitPrice(ppList.get(i).getContract().getUnitPrice()).suppluPrice((ppList.get(i).getAmount())*(ppList.get(i).getContract().getUnitPrice()))
+							.build();
+					dList.add(dto);
+					log.info(dList);
+		}
+		return dList;
+	}
 	
 	@Override
 	public List<DetailPublishDTO> detailToDTO(Integer no) {
