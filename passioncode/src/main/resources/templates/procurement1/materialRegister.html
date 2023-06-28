@@ -10,7 +10,7 @@
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">품목 정보 등록</p> 
 					<br>
-					<form th:action = "@{/procurement1/materialRegister}" th:method="post" id="materialregisterForm">
+					<form th:action = "@{materialRegister}" th:method="post" id="materialregisterForm">
 						<div class="table-responsive" style="margin-bottom: 10px;">
 							<!-- 테이블 시작 -->
 								<table class="table table-bordered" id="materialRegisterTable" style="text-align: center;">
@@ -689,7 +689,7 @@
 	 				var formData = new FormData();
 	 	            var inputFile = $(this);
 	 	            //console.log("인풋 체인지 함수에서!! inputFile : ",inputFile);
-					//var files = inputFile[0].files;
+					var files = inputFile[0].files;
 	 	            /*
 					var files = e.target.files;
 	 				//console.log("인풋 체인지 함수에서!! files : ",files);
