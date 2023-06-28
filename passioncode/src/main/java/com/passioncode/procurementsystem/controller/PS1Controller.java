@@ -212,7 +212,7 @@ public class PS1Controller {
 			materialService.mrpRegisterWithMaterialRegister(materialDTO2.getCode());
 		}
 		
-		return "redirect:procurement1/materialList";
+		return "redirect:/procurement1/materialList";
 	}
 	
 	
@@ -360,7 +360,7 @@ public class PS1Controller {
 			materialService.mrpRegisterWithMaterialRegister(materialDTO2.getCode());
 		}
 		
-		return "redirect:procurement1/materialList";
+		return "redirect:/procurement1/materialList";
 	}
 	
 	/**
@@ -387,7 +387,7 @@ public class PS1Controller {
 		//삭제된 품목코드 리스트
 		redirectAttributes.addFlashAttribute("materialCodeList",materialCodeList);
 		
-		return "redirect:procurement1/materialList";
+		return "redirect:/procurement1/materialList";
 	}
 	
 	/**
@@ -508,7 +508,7 @@ public class PS1Controller {
 		}
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
-		return "redirect:procurement1/contractList";
+		return "redirect:/procurement1/contractList";
 	}
 	
 	/**
@@ -605,7 +605,7 @@ public class PS1Controller {
 		for(ContractDTO dto : contractDTOList) {
 			contractService.modify(dto);
 		}
-		return "redirect:procurement1/contractList";
+		return "redirect:/procurement1/contractList";
 	}
 	
 	/**
@@ -628,7 +628,7 @@ public class PS1Controller {
 		//삭제된 계약서번호 리스트
 		redirectAttributes.addFlashAttribute("contractNoList",contractNoList);
 		
-		return "redirect:procurement1/contractList";
+		return "redirect:/procurement1/contractList";
 	}
 	
 	/**
@@ -794,7 +794,7 @@ public class PS1Controller {
 		}
 		redirectAttributes.addFlashAttribute("registerList",registerList);
 		
-		return "redirect:procurement1/procurementPlanList";
+		return "redirect:/procurement1/procurementPlanList";
 	}
 	
 	/**
@@ -939,7 +939,7 @@ public class PS1Controller {
 		for(ProcurementPlanDTO dto : procurementPlanDTOList) {
 			procurementPlanService.modify(dto);
 		}
-		return "redirect:procurement1/procurementPlanList";
+		return "redirect:/procurement1/procurementPlanList";
 	}
 	
 	
@@ -963,7 +963,7 @@ public class PS1Controller {
 		//삭제된 조달계획코드 리스트
 		redirectAttributes.addFlashAttribute("ppCodeList",ppCodeList);
 		
-		return "redirect:procurement1/procurementPlanList";
+		return "redirect:/procurement1/procurementPlanList";
 	}
 	
 	

@@ -414,43 +414,6 @@ public class MaterialOutRepositoryTests {
 		log.info("어디 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
 				
 		
-		//3. 화면에 뿌려줄 재고산출DTO에 존재하는 품목코드 값 세팅해주기
-//		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
-//		List<Material> materialList = materialRepository.findAll(Sort.by(Sort.Direction.ASC, "code"));
-//		List<MaterialDTO> materialDTOList = new ArrayList<>();
-//		for(Material material:materialList) {
-//			MaterialDTO materialDTO = materialEntityToDTO(material);
-//			materialDTOList.add(materialDTO);		
-//		}
-//		//log.info("일단 전체 품목DTO 리스트 보자 : "+materialDTOList);		
-//		
-//		for(int i=0; i<materialList.size(); i++) {
-//			StockResultDTO stockResultDTO = StockResultDTO.builder().materialCode(materialDTOList.get(i).getCode()).largeCategoryCode(materialDTOList.get(i).getLargeCategoryCode())
-//																	.largeCategoryName(materialDTOList.get(i).getLargeCategoryName()).middleCategoryCode(materialDTOList.get(i).getMiddleCategoryCode())
-//																	.middleCategoryName(materialDTOList.get(i).getMiddleCategoryName())
-//																	.materialName(materialDTOList.get(i).getName()).build();
-//			stockResultDTOList.add(stockResultDTO);
-//		}
-		//log.info("일단 현재까지 만든 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
-		
-		//4. 이제 만든 재고산출DTO에 품목별로, 계산한 원하는기간 마다의 입고수량(단가,입고금액), 출고수량(단가,출고금액), 재고수량, 재고단가, (재고금액) 계산해서 넣어주기
-		
-		//위에서 만든 화면에 뿌려줄 재고산출DTO 리스트에! 해당 품목BS0001 의 기간들 합친 값 넣어주기!
-//		for(int i=0; i<stockResultDTOList.size(); i++) {
-//			if(stockResultDTOList.get(i).getMaterialCode().equals("BS0001")) {
-//				StockResultDTO inputstockResultDTO = stockResultDTOList.get(i).toBuilder().inAmount(calculInAmount).inPrice(calaculInPrice).build();
-//				stockResultDTOList.add(i,inputstockResultDTO);
-//			}
-//						
-//		}
-		
-//		for(StockResultDTO stockResultDTO : stockResultDTOList) {
-//			int i = 0;
-//			if(stockResultDTO.getMaterialCode().equals("BS0001")) {
-//				StockResultDTO inputstockResultDTO = stockResultDTO.toBuilder().inAmount(calculOutAmount).inPrice(calaculOutPrice).build();
-//			}
-//		};
-		
 //		List<Object[]> test= materialOutRepository.getDPOAmountByMaterialCodeAndMIDate("BS0001", "2023-06-03");
 //		List<Object> test= materialOutRepository.getDPOAmountByMaterialCodeAndMIDate("CG0001", "2023-06-28");
 		
@@ -509,6 +472,7 @@ public class MaterialOutRepositoryTests {
 		for(MaterialDTO materialDTO:materialDTOList) {
 			//품목별 계산을 위해, 재고산출DTO를 이용해서 리스트 이용한다.
 			//품목별 기간별 각각의 입고수량,단가 가져와서 세팅한다.
+			log.info("현재 하는 품목코드!! : "+materialDTO.getCode());
 			
 			//4-1. 일단 BS0001에 대한 입고 6/1~6/5일 거 계산해보자
 			//BS0001에 대해, 입고수량,단가,입고금액 -> 6/1~/6/5 계산을 위해서 재고산출DTO 리스트를 새로 만들어서 이용하쟈
@@ -548,7 +512,7 @@ public class MaterialOutRepositoryTests {
 			log.info("일단 기간 전체 합친 입고금액 : "+calaculInPrice);
 			
 			
-			//4. 일단 BS0001에 대한 출고 6/1~6/5일 거 계산해보자
+			//4-2. 일단 BS0001에 대한 출고 6/1~6/5일 거 계산해보자
 			//BS0001에 대해, 출고수량,단가,출고금액 -> 6/1~/6/5 계산을 위해서 재고산출DTO 리스트를 새로 만들어서 이용하쟈
 			//현재는 BS0001의 날짜별로 출고수량,단가,출고금액 구하기
 			List<StockResultDTO> byMaterialList2 = new ArrayList<>();
@@ -613,47 +577,11 @@ public class MaterialOutRepositoryTests {
 																	.inAmount(calculInAmount).inPrice(calaculInPrice).outAmount(calculOutAmount).outPrice(calaculOutPrice)
 																	.stockAmount(stockAmount).stockUnitPrice(stockUnitPrice)
 																	.stockTotalPrice(stockTotalPrice).build();
+			log.info("현재 "+materialDTO.getCode()+"로 만든 재고산출 DTO 보자 : "+stockResultDTO);
 			stockResultDTOList.add(stockResultDTO);		
 		}
 		log.info("최종 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
 		
-		
-		//3. 화면에 뿌려줄 재고산출DTO에 존재하는 품목코드 값 세팅해주기
-//		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
-//		List<Material> materialList = materialRepository.findAll(Sort.by(Sort.Direction.ASC, "code"));
-//		List<MaterialDTO> materialDTOList = new ArrayList<>();
-//		for(Material material:materialList) {
-//			MaterialDTO materialDTO = materialEntityToDTO(material);
-//			materialDTOList.add(materialDTO);		
-//		}
-//		//log.info("일단 전체 품목DTO 리스트 보자 : "+materialDTOList);		
-//		
-//		for(int i=0; i<materialList.size(); i++) {
-//			StockResultDTO stockResultDTO = StockResultDTO.builder().materialCode(materialDTOList.get(i).getCode()).largeCategoryCode(materialDTOList.get(i).getLargeCategoryCode())
-//																	.largeCategoryName(materialDTOList.get(i).getLargeCategoryName()).middleCategoryCode(materialDTOList.get(i).getMiddleCategoryCode())
-//																	.middleCategoryName(materialDTOList.get(i).getMiddleCategoryName())
-//																	.materialName(materialDTOList.get(i).getName()).build();
-//			stockResultDTOList.add(stockResultDTO);
-//		}
-		//log.info("일단 현재까지 만든 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
-		
-		//4. 이제 만든 재고산출DTO에 품목별로, 계산한 원하는기간 마다의 입고수량(단가,입고금액), 출고수량(단가,출고금액), 재고수량, 재고단가, (재고금액) 계산해서 넣어주기
-		
-		//위에서 만든 화면에 뿌려줄 재고산출DTO 리스트에! 해당 품목BS0001 의 기간들 합친 값 넣어주기!
-//		for(int i=0; i<stockResultDTOList.size(); i++) {
-//			if(stockResultDTOList.get(i).getMaterialCode().equals("BS0001")) {
-//				StockResultDTO inputstockResultDTO = stockResultDTOList.get(i).toBuilder().inAmount(calculInAmount).inPrice(calaculInPrice).build();
-//				stockResultDTOList.add(i,inputstockResultDTO);
-//			}
-//						
-//		}
-		
-//		for(StockResultDTO stockResultDTO : stockResultDTOList) {
-//			int i = 0;
-//			if(stockResultDTO.getMaterialCode().equals("BS0001")) {
-//				StockResultDTO inputstockResultDTO = stockResultDTO.toBuilder().inAmount(calculOutAmount).inPrice(calaculOutPrice).build();
-//			}
-//		};
 		
 //		List<Object[]> test= materialOutRepository.getDPOAmountByMaterialCodeAndMIDate("BS0001", "2023-06-03");
 //		List<Object> test= materialOutRepository.getDPOAmountByMaterialCodeAndMIDate("CG0001", "2023-06-28");
