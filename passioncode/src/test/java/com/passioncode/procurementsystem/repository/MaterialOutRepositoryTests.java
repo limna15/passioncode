@@ -199,7 +199,7 @@ public class MaterialOutRepositoryTests {
 	@Test
 	public void stockReportTest() {
 		//CG0001 품목 재고산출 해보자 6/1 ~ 6/20일 까지로 해보자!
-		//일단 BS0001 6/3일 꺼 해보자
+		//일단 BS0001 6/3일 꺼 해보자~
 		
 		
 		
