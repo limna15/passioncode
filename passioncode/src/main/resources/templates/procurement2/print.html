@@ -1,139 +1,106 @@
+<html>
+<head>
+<title>구매발주서</title>
+</head>
 <style>
 html,body {
-	margin:0px;
-	padding:0px;
+	margin:5px;
+	padding:5px;
 }
-body, h1, h2, h3, h5, h6, li, p { 
-	font-family: sans-serif, '맑은고딕', 'MalgunGothic' !important;
+
+table {
+  width: 100%;
+  border: 1px solid #444444;
+  border-collapse : collapse;
+  font-size: 13px;
+
 }
-ul,li {
-	margin:0px;
-	padding:0px;
-	list-style:none;
+
+th, td {
+  border: 1px solid #444444;
+  padding: 10px;
+  text-align: center;
 }
-#wrap {
-	margin:0 auto;
-	text-align:center;
+
+.btn {
+	font-size: 0.875rem;
+    line-height: 1;
+    font-weight: 400;
+    
+    color: #fff;
+    background-color: #4d83ff;
+    border-color: #4d83ff;
+    
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    
+    box-shadow: 0 2px 2px 0 rgba(77, 131, 255, 0.14), 0 3px 1px -2px rgba(77, 131, 255, 0.2), 0 1px 5px 0 rgba(77, 131, 255, 0.12);
+	border-radius: 0.1875rem;
+	
+    margin: 0;
+    font-family: inherit;
+    
+    border: 1px solid transparent;
+    padding: 0.75rem 1.5rem;
 }
-.container {
-	overflow:hidden;
-	margin:0 auto;
-	width:220px;
-	text-align:left;
-	font-size:11px;
-}
-.order {
-	padding-top:20px;
-	font-weight:900;
-	font-size:13px
-}
-.adress {
-	letter-spacing:2.8px;
-}
-.info {
-	margin-bottom:2px;
-}
-.info2 {
-	line-height:2;
-}
-.info2:last-child {
-	font-size:13px;
-	font-weight:700
-}
-.pay {
-	margin-bottom:-7px
-}
-.price {
-	display:inline-block;
-	float:right;
-	padding-right:4px;
-}
-.title > li{
-	display:inline-block;
-	padding-right:25px;
-}
-.orders > li {
-	display:inline-block;
-	padding-right:23px;
-}
-.title > li:last-child, .orders > li:last-child {
-	float:right;
-	padding-right:4px;
-}
-.vat {
-	display:inline-block;
-	margin:3px 0px;
-	line-height:1.5;
-}
-.vat:first-child {
-	padding-left:30px;
-}
-.vat:last-child {
-	float:right;
-	padding-right:4px;
-	text-align:right;
-}
-#noprint {
-	margin-top:20px;
-	padding:12px 20px;
-	border:0px;
-	background-color:#44a8ff;
-	color:#fff;
-	font-size:20px;
-	font-weight:bold
-}
+
 @media print {
   #noprint { 
 	display:none;
 	}
-}
-</style>
-<div id="wrap">
-	</div>
+}	
+</style>			
+<body>
+				<!-- margin으로 테이블이 화면 가운데에 오게 설정-->
+<div class="card-body" style="width: 210mm; height:297mm; margin : auto;">
+																			<!-- 취소버튼 누르면 뒤로가기 + 새로고침이 됨 -->
+	<button type="submit" class="btn"  id="noprint" style="float: right;" onclick="location.href = document.referrer;">취소</button>
+	<button type="submit" class="btn" id="noprint" onclick="print();"  style="float: right; margin: 0 5px;">인쇄</button>
+	<br>
+	<p class="card-title"><b style="font-size: 25px;">구매발주서</b></p>
+	<br>
+	<br>
 	<div>
-	<div class="card-body">
-						<p class="card-title"><b>구매 발주서</b></p>
-						
-						<!--거래명세서 회사 정보-->
-					<!--거래명세서 품목 정보-->
-						<div class="table-responsive" th:each="dto: ${myPublishDTO}">
-						<h4> 발주서 번호: [[${dto.pono}]]</h4>
-						<h4> 협력 회사 : [[${dto.cname}]]</h4>
-						<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
-						<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
-						<br>
-							<table id="transactionDetail">
-								<thead>
-									<tr>
-										<th>발주코드</th>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>발주 수량</th>
-										<th>단가</th>
-										<th>공급<br>가격</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="dto: ${myPublishDTO}">
-										<td>[[${dto.pocode}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.ppamount}]]</td>
-										<td>[[${dto.unit_price}]]</td>
-										<td>[[${dto.supply_price}]]</td>
-									</tr>
-									
-								</tbody>
-							</table>
-							<br>
-
-					</div>
+		<b style="font-size: 20px; line-height : 35px;">발주서 번호: </b> <br>
+		<b style="font-size: 20px; line-height : 35px;">협력 회사: </b> <br>
+		<b style="font-size: 20px; line-height : 35px;">발주 일자: </b> <br>
+		<b style="font-size: 20px; line-height : 35px;">납기 예정일: </b> <br>
 	</div>
-	<button id="noprint" onclick="pops();">인쇄하기</button>
-<script>
-function pops(){
-	window.print();
-	aaa();
-	return false;
-}
+	<br>
+
+	<!--거래명세서 품목 정보-->
+	<div class="table-responsive">
+		<table id="transactionDetail">
+			<thead>
+				<tr>
+					<th>발주코드</th>
+					<th>품목코드</th>
+					<th>품목</th>
+					<th>발주수량</th>
+					<th>단가</th>
+					<th>공급가격</th>
+				</tr>
+			</thead>
+			<tbody id="detail">
+				<!-- 동적 테이블 생성해서 들어가는 위치-->		
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script th:inline="javascript" type="text/javascript">
+
 </script>
+
+	</body>
+</html>

@@ -3,6 +3,7 @@ package com.passioncode.procurementsystem.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -99,11 +100,11 @@ public class PS2Controller {
 		
 	}
 	
+	//구매발주서 인쇄화면
 	@GetMapping("/print")
-	public void PS2TestPrint(DetailPurchaseOrderDTO detailDTO, Model model,PurchaseOrderDTO purchaseOrderDTO, Integer checkBox) {
-		model.addAttribute("myPublishDTO",detailPurchaseOrderService.detailToDTO(checkBox));
-		log.info("인쇄합니다>>>>>>>");
+	public void PS2TestPrint(@Param(value= "purchaseNo") String purchaseNo, Model model) {
 		
+		log.info("인쇄합니다>>>>>>>");
 	}
 	
 	
