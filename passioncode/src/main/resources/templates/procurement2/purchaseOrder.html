@@ -65,18 +65,6 @@
     font-size: 95%;
 }    
 
-@media print {
-    html, body { -webkit-print-color-adjust:exact; width: 210mm; height: 297mm; }
-    table { page-break-inside:auto; }
-    tr    { page-break-inside:avoid; page-break-after:auto; }
-    thead { display:table-header-group; }
-    tfoot { display:table-footer-group; }
-    
-    #no-print, #no-print * {
-        display: none !important;
-    }
-    @page { margin: 0; }/* for 크롬 Headers and footers 없애기 */
-}
 </style>
 
 		<div class="col-md-12 stretch-card">
@@ -143,9 +131,9 @@
 									</th>
 									<th>발주서<br>발행 상태
 									</th>
-									<th>조달계획코드</th>
-									<th>발주코드</th>
-									<th>발주서 번호</th>
+									<th style="display:none;">조달계획코드</th>
+									<th style="display:none;">발주코드</th>
+									<th style="display:none;">발주서 번호</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -169,9 +157,9 @@
 									<td><input type="hidden" name="unitPrice" th:value="${dto.unitPrice}">[[${dto.unitPrice}]]</td>
 									<td><input type="hidden" name="supplyPrice" th:value="${dto.supplyPrice}">[[${dto.supplyPrice}]]</td>
 									<td><input type="hidden" name="purchaseOrderStatus" th:value="${dto.purchaseOrderStatus}">[[${dto.purchaseOrderStatus}]]</td>
-									<td><input type="hidden" name="procurementPlan" th:value="${dto.procurementPlan}">[[${dto.procurementPlan}]]</td>
-									<td><input type="hidden" name="detailCode" th:value="${dto.detailCode}">[[${dto.detailCode}]]</td>
-									<td><input type="hidden" name="detailNo" th:value="${dto.detailNo}">[[${dto.detailNo}]]</td>
+									<td style="display:none;"><input type="hidden" name="procurementPlan" th:value="${dto.procurementPlan}">[[${dto.procurementPlan}]]</td>
+									<td style="display:none;"><input type="hidden" name="detailCode" th:value="${dto.detailCode}">[[${dto.detailCode}]]</td>
+									<td style="display:none;"><input type="hidden" name="detailNo" th:value="${dto.detailNo}">[[${dto.detailNo}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -214,67 +202,6 @@
 				</div>
 			</div>
 		</div>
-		
-		<!-- 발주서 발행 모달창 시작 -->
-		<div class="myPublish modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">발주서 발행 시작~</h5>
-					</div>
-                    <div class="modal-body" >
-						<!-- 여기서 새로 작성해 보기 -->
-	                    <h5>그냥 적어도 나오나</h5>
-	                    <h5>
-	                    체크박스를 체크하면 그 정보를 보내주기 
-	                    
-	                    </h5>
-                    
-	                    <div class="table-responsive" th:each="dto: ${myPublishDTO}">
-							<h4> 발주서 번호: [[${dto.showPono}]]</h4>
-							<h4> 협력 회사 : [[${dto.cname}]]</h4>
-							<h4> 발주 일자: [[${#temporals.format(dto.purchaseOrderDate, 'yyyy/MM/dd')}]]</h4>
-							<h4> 납기 예정일: [[${#dates.format(dto.due_date, 'yyyy/MM/dd')}]]</h4>
-							
-							<br>
-	                    	<table id="transactionDetail" border="1">
-								<thead>
-									<tr>
-										<th>발주코드</th>
-										<th>품목코드</th>
-										<th>품목명</th>
-										<th>발주 수량</th>
-										<th>단가</th>
-										<th>공급<br>가격</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="dto: ${myPublishDTO}">
-									<!-- <tr th:each="dto: ${myPublishDTO}"> -->
-										<td>[[${dto.showPocode}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.mname}]]</td>
-										<td>[[${dto.ppamount}]]</td>
-										<td>[[${dto.unit_price}]]</td>
-										<td>[[${dto.supply_price}]]</td>
-									</tr>
-								</tbody>
-							</table>
-							<br>
-                    	</div>
-                    </div>
-                    <div class="modal-footer">
-						<button id="publishBtn22" href="/procurement2/purchaseOrder?purchaseNo" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-							발행
-						</button>
-						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
-                        	닫기
-                       </button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 발주서 발행 모달창 끝 -->
 		
 		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
 		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
@@ -508,6 +435,7 @@
 		
 		var pPlan=null;
 		var dNo=null;
+		var dCode=null;
 
 		$(".showInfo").click(function(){
 			//console.log("내가 발주하고싶은 정보를 담고있는 체크박스를 누름");
@@ -534,13 +462,14 @@
 			var poStatus= getObjTR().querySelector("input[name=purchaseOrderStatus]").value;
 			pPlan= getObjTR().querySelector("input[name=procurementPlan]").value;
 			var pPrice = uPrice*oAmount;//payPrice 단가 * 발주수량
-			var dCode= getObjTR().querySelector("input[name=detailCode]").value;//발주코드
+			dCode= getObjTR().querySelector("input[name=detailCode]").value;//발주코드
 			dNo= getObjTR().querySelector("input[name=detailNo]").value;//발주서 번호
 			//내가 필요한 것만 찍어내기 
 			//만들어 보여줄 내용: 발주서 번호, 발주 코드, 오늘날짜 
 			//가져올 수 있는 것 총 7개 : 1. 협력회사, 2.품목명 3. 납기 예정일 4. 품목코드 5. 발주수량 6. 단가 7. 공급가격
 			//추가로 필요한 정보 : 발행할 발주서의 갯수
 			console.log("companyName: ", cName,  "procurementPlan조달계획번호", pPlan);
+			console.log("발주코드: ", dCode);
 			//발주서 번호 8자리 만들기
 			//maxNo = maxNo.toString().padStart(8, '0');
 			//console.log("발주서 번호",dNo,"발주코드detailCode: ", dCode);//발주서 번호가 0이라면 발주서 발행 금지
@@ -563,7 +492,7 @@
 		console.log("인쇄버튼 누름");
 		location.href="/procurement2/print?no="+dNo+"&ppCode="+pPlan;
 	});
-				
+
 	/////////////////여기까지 체크박스
 
 //			발주서이미 존재하는지 확인 부분				
@@ -595,6 +524,11 @@
 		
 		$(".mypublish").click(function(){
 			console.log("여기에서 실행해서 정보 전달하는 구나");
+			//if(dCode=!0){
+			//	console.log("이미 존재하는 발주서");
+			//$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
+			//}	
+			
 			
 			//발주서 발행 버튼을 누르면, 클래스로 가져와야 tr, td정보 불러오기 가능
 			let cList =new Array();//체크한 번호를 담을 리스트
@@ -632,6 +566,7 @@
 			var countCode01 = 0;	//발주 코드 세기 위해
 			var countCode02 = 0;	//발주 코드 세기 위해
 			var countCode03 = 0;	//발주 코드 세기 위해
+			
 			for(var i =0; i<tList.length; i++){//총 **길이** 만큼 반복 모두 가지고 있는 것: tList
 				var mycheck = tList[i];
 				var ppNo = mycheck.procurementPlan;//조달계획 번호를 출력하는 것
@@ -900,7 +835,7 @@
 							}
 						})
 						$(".multiplePublish2").modal("hide");
-								console.log("2번 모달창 발행이 잘 되었습니다. ");
+							console.log("2번 모달창 발행이 잘 되었습니다. ");
 						
 				})
 				
@@ -921,7 +856,7 @@
 								console.log("3번 모달창 발행이 잘 되었습니다. ");
 						
 				})
-			
+			//location.href="/procurement2/purchaseOrder";
 		
 			
 			var purchaseNo='';//빈값 넣기, 필요 없어보이는데 위에서 쓰이고 있음
