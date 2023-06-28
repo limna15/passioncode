@@ -789,7 +789,7 @@
 				
 				$("#cancle01").click(function(){
 					console.log("1번 모달창 취소 버튼을 누름");
-					
+					location.href="/procurement2/purchaseOrder";
 				});
 				$("#cancle02").click(function(){
 					console.log("2번 모달창 취소 버튼을 누름");
@@ -818,7 +818,7 @@
 						})
 						$(".multiplePublish").modal("hide");
 								console.log("1번 모달창 발행이 잘 되었습니다. ");
-						
+								location.href="/procurement2/purchaseOrder";//1번은 항상 마지막에 나와서 무조건 리다이렉트 가능
 				})
 				
 				$("#publishBtn02").click(function(){
