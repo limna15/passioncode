@@ -335,6 +335,26 @@
         </div>
 		<!-- 입고가 완료됐을 때 뜨는 모달창 끝 -->
 		
+		<!-- 입고가 취소됐을 때 뜨는 모달창 시작 -->
+		<div class="materialInCancleModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">입고확인</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>입고가 취소되었습니다.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="inCancleBtn" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 입고가 취소됐을 때 뜨는 모달창 끝 -->
+		
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 
@@ -522,8 +542,12 @@
 		//append form (to body) 
 		inForm.appendTo('body');
 
-		//submit form
-		inForm.submit();
+		$(".materialInCancleModal").modal('show');
+		
+		$(document).on("click", "#inCancleBtn", function(e){
+			// submit form
+			inForm.submit();
+		});
 	});
   	
 	////////////////////////////////////////////////////////////////////////////////////

@@ -167,7 +167,7 @@ public class MaterialInServiceImpl implements MaterialInService {
 		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		MaterialIn materialIn= materialInRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		
-		log.info("materialIn 어떻게 읽히나 >>>  " + materialIn);
+		//log.info("materialIn 어떻게 읽히나 >>>  " + materialIn);
 
 		procurementPlan= ProcurementPlan.builder().code(procurementPlan.getCode())
 				.mrp(procurementPlan.getMrp()).contract(procurementPlan.getContract()).amount(procurementPlan.getAmount())
@@ -233,10 +233,10 @@ public class MaterialInServiceImpl implements MaterialInService {
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 						.status(null).transactionStatus(null).inDate(null).build();
 				nullMaterialInDTOList.add(materialInDTO);
-				log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
+				//log.info(i + "번 materialIn에 존재 X miDTO 보기 >>> " + materialInDTO);
 				}
 		}
-		log.info("nullMaterialInDTOList 보기 >>> " + nullMaterialInDTOList);
+		//log.info("nullMaterialInDTOList 보기 >>> " + nullMaterialInDTOList);
 		
 		//입고상태 null값 -> 정렬된 List 순으로 넣기
 		for(MaterialInDTO dto : nullMaterialInDTOList) {
