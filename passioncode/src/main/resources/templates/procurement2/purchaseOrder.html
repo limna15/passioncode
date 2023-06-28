@@ -327,7 +327,6 @@
 						<table id="poInfo" border="1">
 							<thead>
 								<tr>
-									<th>발주코드</th>
 									<th>품목코드</th>
 									<th>품목</th>
 									<th>발주수량</th>
@@ -350,7 +349,7 @@
 						<button id="publishBtn01" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
 						</button>
-						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+						<button id="cancle01" type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							취소
 						</button>
 					</div>
@@ -382,7 +381,6 @@
 						<table id="poInfo" border="1">
 							<thead>
 								<tr>
-									<th>발주코드</th>
 									<th>품목코드</th>
 									<th>품목</th>
 									<th>발주수량</th>
@@ -405,7 +403,7 @@
 						<button id="publishBtn02" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
 						</button>
-						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+						<button id="cancle02" type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							취소
 						</button>
 					</div>
@@ -436,7 +434,6 @@
 						<table id="poInfo" border="1">
 							<thead>
 								<tr>
-									<th>발주코드</th>
 									<th>품목코드</th>
 									<th>품목</th>
 									<th>발주수량</th>
@@ -459,7 +456,7 @@
 						<button id="publishBtn03" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
 						</button>
-						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+						<button id="cancle03" type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							취소
 						</button>
 					</div>
@@ -483,15 +480,6 @@
 		}
 		const maxNo2 = Math.max(...pNoList);	//발주서 번호 max값 구하는 것
 		const maxCode2 = Math.max(...pCodeList);	//발주 코드 max값 구하는 것
-		//const로 선언된 변수는 값을 변경할 수 없다. 변수 선언시에 초기값을 할당하고 이후에 변경할 수 없는 상수,let이나 var와 같은 가변 변수 사용하기
-		var maxCode = maxCode2;
-		var maxNo = maxNo2;
-		//maxNo +=1;	//큰 값 +1을 한다. 뒤에서 더하면 문자 뒤에 숫자로 더해진다. 뒤에서 다시 숫자로 변경해서 숫자를 계속 올려주기
-		//maxCode +=1;	//큰 값 +1을 한다. 
-		maxNo =  parseInt(maxNo, 10);	//10진수인 숫자로 바꾼다 
-		maxCode =  parseInt(maxCode, 10);	//10진수인 숫자로 바꾼다 
-		maxNo = maxNo.toString().padStart(8, 0);
-		//maxCode = maxCode.toString().padStart(5, 0);
 		var todaydate;
 		// 현재 날짜 객체 생성
 		var today = new Date();
@@ -719,17 +707,10 @@
 											dDate3= tList[num01].dueDate;
 										}
 									}
-							const countNo011 = (parseInt(maxNo) + countNo01).toString().padStart(8, "0");
-							var div01 = '<div>'+"발주서 번호: PO" +countNo011+'</div>';//첫 자리에서만 회사 번호만 가져오기
-							div01 += '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
+							var div01 = '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
-							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
-							//totalCount
-							//maxCode.toString().padStart(5, 0);
-							maxCode +=1;
-							var maxCode01 =maxCode.toString().padStart(5, 0);
+							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>'
 							var tableTd01 = '<tr>';
-							tableTd01 += '<td>' + "DPO" +maxCode01 +'</td>';	//갯수만큼 더해주기
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
 							tableTd01 += '<td>' + tList[num01].materialName +'</td>';
 							tableTd01 += '<td>' + tList[num01].orderAmount +'</td>';
@@ -777,20 +758,14 @@
 											dDate3= tList[num01].dueDate;
 										}
 									}
-							const countNo021 = (parseInt(maxNo) + countNo02).toString().padStart(8, "0");
-							var div01 = '<div>'+"발주서 번호: PO" +countNo021+'</div>';//첫 자리에서만 회사 번호만 가져오기
-							div01 += '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
+							var div01 = '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
 							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
 						$('#thead0'+2).append(div01);//여기서 축척됨
 							console.log("num01[0]의 값:",num01);		
 							//com02.pop(y);
 							console.log("com02의 값: ,자리의 번호이다.",com02);		
-							//console.log("maxCode+1 = ",maxCode+1);		
-							maxCode +=1;
-							var maxCode01 =maxCode.toString().padStart(5, 0);
 						var tableTd01 = '<tr>';
-							tableTd01 += '<td>' + "DPO" + maxCode01 +'</td>';//갯수만큼 더해주기
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
 							tableTd01 += '<td>' + tList[num01].materialName +'</td>';
 							tableTd01 += '<td>' + tList[num01].orderAmount +'</td>';
@@ -835,19 +810,13 @@
 											dDate3= tList[num01].dueDate;
 										}
 									}
-							const countNo031 = (parseInt(maxNo) + countNo03).toString().padStart(8, "0");
-							var div01 = '<div>'+"발주서 번호: PO" +countNo031+'</div>';//첫 자리에서만 회사 번호만 가져오기
-							div01 += '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
+							var div01 = '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
 							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
 							$('#thead0'+3).append(div01);//여기서 축척됨	
-							console.log("num01[0]의 값:",num01);		
-							//com03.pop(y);
-							console.log("com03의 값: ,자리의 번호이다.",com03);		
-							maxCode +=1;
-							var maxCode01 =maxCode.toString().padStart(5, 0);
+							console.log("num01[0]의 값:",num01);	
+							console.log("com03의 값: ,자리의 번호이다.",com03);	
 						var tableTd01 = '<tr>';
-							tableTd01 += '<td>' + "DPO" + maxCode01 +'</td>';//갯수만큼 더해주기
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
 							tableTd01 += '<td>' + tList[num01].materialName +'</td>';
 							tableTd01 += '<td>' + tList[num01].orderAmount +'</td>';
@@ -871,6 +840,22 @@
 						
 					}
 				}
+				$("#cancle01").click(function(){
+					console.log("1번 모달창 취소 버튼을 누름");
+					
+				});
+				$("#cancle02").click(function(){
+					console.log("2번 모달창 취소 버튼을 누름");
+					
+				});
+				$("#cancle03").click(function(){
+					console.log("3번 모달창 취소 버튼을 누름");
+					//연습: 2번의 발주서 번호에 -1해주기
+					countNo02 =countNo02-1;
+					console.log("countNo02: ",countNo02);
+					
+				});
+				
 				
 				$("#publishBtn01").click(function(){
 					console.log("1번 조달계획 발행 버튼을 누름");
