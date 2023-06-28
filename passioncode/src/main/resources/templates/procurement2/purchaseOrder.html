@@ -560,12 +560,6 @@
 			var name04 = null;
 			var name05 = null;
 			let mylength = new Array();
-			var countNo01 = 0;	//발주서 번호를 세기 위해
-			var countNo02 = 0;	//발주서 번호를 세기 위해
-			var countNo03 = 0;	//발주서 번호를 세기 위해
-			var countCode01 = 0;	//발주 코드 세기 위해
-			var countCode02 = 0;	//발주 코드 세기 위해
-			var countCode03 = 0;	//발주 코드 세기 위해
 			
 			for(var i =0; i<tList.length; i++){//총 **길이** 만큼 반복 모두 가지고 있는 것: tList
 				var mycheck = tList[i];
@@ -583,7 +577,6 @@
 						//일단 회사이름별로 구분해서 보여줘보기
 						//console.log("선택된 i: ", i);//i는 조달 번호가 아니라 내가 원하는 배열 주소
 						if(name01===null){//첫번째 
-							countNo01+=1;//마지막에 더해줄 숫자 ex) 발주서 1개만 발행이기 때문에 1만 더해줌
 							ppNoList01.push(tList[i].procurementPlan);
 							com01.push(i);
 							name01 = tList[i].companyName;
@@ -594,7 +587,6 @@
 							console.log("com01 ", com01);
 							console.log("첫 번째 회사와 이름이 같다.  ", name01);
 						}else if(name02==null){//두 번째
-							countNo02+=2;
 							ppNoList02.push(tList[i].procurementPlan);
 							com02.push(i);
 							name02 = tList[i].companyName;
@@ -605,16 +597,35 @@
 							console.log("com02 ", com02);
 							console.log("두 번째 회사와 이름이 같다.  ", name02);
 						}else if(name03==null){//세 번째
-							countNo03+=3;
 							ppNoList03.push(tList[i].procurementPlan);
 							com03.push(i);
 							name03 = tList[i].companyName;
 							console.log("name03 번째 회사 이름 ", name03);
-						}else if(name03==tList[i].companyName){//첫 번째 회사와 이름이 같은 경우
+						}else if(name03==tList[i].companyName){
 							ppNoList03.push(tList[i].procurementPlan);
 							com03.push(i);
 							console.log("com03 ", com03);
 							console.log("name03 회사와 이름이 같다.  ", name03);
+						}else if(name04==null){//네 번째
+							ppNoList04.push(tList[i].procurementPlan);
+							com04.push(i);
+							name04 = tList[i].companyName;
+							console.log("name04 번째 회사 이름 ", name04);
+						}else if(name04==tList[i].companyName){
+							ppNoList04.push(tList[i].procurementPlan);
+							com04.push(i);
+							console.log("com04 ", com04);
+							console.log("name04 회사와 이름이 같다.  ", name04);
+						}else if(name05==null){//다섯 번째
+							ppNoList05.push(tList[i].procurementPlan);
+							com05.push(i);
+							name05 = tList[i].companyName;
+							console.log("name05 번째 회사 이름 ", name05);
+						}else if(name05==tList[i].companyName){
+							ppNoList05.push(tList[i].procurementPlan);
+							com05.push(i);
+							console.log("com05 ", com05);
+							console.log("name05 회사와 이름이 같다.  ", name05);
 						}
 						
 						if(com01.length>0 && j === cList.length - 1){//최대 5개 회사만 비교 가능, 한개라도 있으면 비교 시작
