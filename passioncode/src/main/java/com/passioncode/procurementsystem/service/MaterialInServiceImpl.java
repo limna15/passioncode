@@ -262,4 +262,9 @@ public class MaterialInServiceImpl implements MaterialInService {
 			materialOutRepository.save(materialOut);			
 		}
 	}
+
+	@Override
+	public Integer getLastCode() {
+		return materialInRepository.getLastCode();
+	}
 }

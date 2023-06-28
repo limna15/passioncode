@@ -369,4 +369,11 @@ public class MaterialInRepositoryTests {
 		}
 	}
 	
+	@Transactional
+	@Test
+	public void getLastTest() {
+		//마지막행 가져오기
+		log.info("마지막행 가져오기 >>> " + materialInRepository.getLastCode());
+	}
+	
 }

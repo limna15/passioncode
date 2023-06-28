@@ -35,4 +35,7 @@ public interface MaterialInRepository extends JpaRepository<MaterialIn, Integer>
 			+ "FROM material_in mi JOIN detail_purchase_order dpo ON mi.detail_purchase_order_code=dpo.code "
 			+ "ORDER BY STATUS DESC, transaction_status", nativeQuery = true)
 	public List<MaterialIn> getJoinDpo();
+	
+	@Query(value="SELECT * FROM material_in ORDER BY code DESC LIMIT 1", nativeQuery = true)
+	public Integer getLastCode();
 }

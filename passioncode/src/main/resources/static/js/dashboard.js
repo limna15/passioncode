@@ -2,8 +2,8 @@
   'use strict';
   $(function() {
 
-    if ($('#cash-deposits-chart').length) {
-      var cashDepositsCanvas = $("#cash-deposits-chart").get(0).getContext("2d");
+    if ($('#chart').length) {
+      var cashDepositsCanvas = $("#chart").get(0).getContext("2d");
       var data = {
         labels: ["2023-06-09", "2023-06-10", "2023-06-11", "2023-06-12", "2023-06-13", "2023-06-14"],
         datasets: [

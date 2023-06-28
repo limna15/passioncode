@@ -76,4 +76,10 @@ public interface MaterialInService {
 	 */
 	@Transactional
 	void registerMaterialOut(Integer code);
+	
+	/**
+	 * MaterialIn 마지막행의 코드 가져오기
+	 * @return
+	 */
+	Integer getLastCode();
 }

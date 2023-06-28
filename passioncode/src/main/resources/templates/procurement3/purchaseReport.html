@@ -139,6 +139,7 @@
 <script src="../../js/chart.js"></script>
 
 <script  th:inline="javascript">
+	//오늘 날짜 기준 각 항목의 개수를 담은 list(조달계획 총 개수, 발주예정, 조달진행중, 조달완료)
 	var list= [[${list}]];
 	console.log("list 값 읽기 >>> ", list);
 	

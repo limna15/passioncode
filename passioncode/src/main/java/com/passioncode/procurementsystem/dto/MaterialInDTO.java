@@ -83,4 +83,9 @@ public class MaterialInDTO {
 	 * 입고 완료 + 거래명세서 발행: 발행 완료
 	 */
 	private String transactionStatus;
+	
+	/**
+	 * 입고코드
+	 */
+	private Integer inCode;
 }

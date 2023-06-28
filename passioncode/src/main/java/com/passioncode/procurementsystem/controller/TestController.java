@@ -25,4 +25,8 @@ public class TestController {
 		return "layout/procurementSystem2";
 	}
 
+	@GetMapping("procurement4/chartTest")
+	public void ChartTest() {
+		
+	}
 }

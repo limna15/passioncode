@@ -169,7 +169,7 @@
 										<span th:if="${list.status} == true">완료</span>
 										<span th:if="${list.status} == false">취소</span>
 									</td>
-									<td>[[${list.transactionStatus}]]</td>
+									<td><input type="hidden" name="transactionStatus" th:value="${list.transactionStatus}">[[${list.transactionStatus}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -314,7 +314,27 @@
             </div>
         </div>
 		<!-- 발주서 번호가 다를 때 뜨는 모달창 끝 -->
-
+		
+		<!-- 입고가 완료됐을 때 뜨는 모달창 시작 -->
+		<div class="materialInDoneModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">입고확인</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>입고가 완료되었습니다.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="inDoneBtn" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 입고가 완료됐을 때 뜨는 모달창 끝 -->
+		
 <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 <script th:inline="javascript" type="text/javascript">
 
@@ -432,6 +452,7 @@
 		var materialCode= getObjTR().querySelector("input[name=materialCode]").value;
 		var materialName= getObjTR().querySelector("input[name=materialName]").value;
 		var amount= getObjTR().querySelector("input[name=amount]").value;
+		var transactionStatus= getObjTR().querySelector("input[name=transactionStatus]").value;
 		
  		no= no.substring(2);
  		code= code.substring(3);
@@ -460,9 +481,13 @@
 
 		// append form (to body) 
 		inForm.appendTo('body');
-
-		// submit form
-		inForm.submit();
+		
+		$(".materialInDoneModal").modal('show');
+		
+		$(document).on("click", "#inDoneBtn", function(e){
+			// submit form
+			inForm.submit();
+		});
 	});
   	
   	//입고 상태 "취소"버튼 눌렀을 경우 -> DB등록 + 화면 입고 상태 '취소' 표시 + 발행 상태 '발행 불가' 표시
