@@ -238,10 +238,7 @@
                     </div>
                     <div class="modal-body" >
 						<span id="companyName3">(여기에 회사 이름이 들어감)</span>  제작 진척도를 입력합니다.
-						<br>
 						<p class="card-title"><b></b></p>
-						
-						<br>
 						
 						<!--거래명세서 품목 정보-->
 						<div class="table-responsive">
@@ -370,11 +367,7 @@
 				myAvgList.push(pCode);//발주 코드
 				console.log("발주번호", pCode);
 				console.log("리스트 : ", myAvgList);
-				if(todaydate!=nDate){
-					console.log("날짜가 다름");
-					$(".sendAvg").modal('hide');
-					$(".noPurchaseNoModal").modal('show');
-				}else{
+				
 					$.ajax({
 					type:"post",
 					url:"/procurement2/progressCheck3",
@@ -387,7 +380,7 @@
 				})
 				console.log("평가 등록~~ ");
 				location.href="/procurement2/progressCheck";
-				}
+				//}
 			})
 		});
 		

@@ -528,7 +528,7 @@ public class ProgressCheckRepositoryTests {
 	public void nextCheckDate() {// 발주코드를 통해 계획 만들기 잘됨**
 		// 세부구매발주서 번호를 통해 갖고오는 진척 검수일정
 		// 구매발주서 번호 2번의 진척검수일을 갖고 온다
-		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(4).get();
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(12).get();
 		// ProgressCheck pg =
 		// progressCheckRepository.findByDetailPurchaseOrder(detailPO);
 		// log.info("등록된 진척검수 일정: "+pg.getDate());
@@ -536,21 +536,44 @@ public class ProgressCheckRepositoryTests {
 		log.info("내가 등록할 발주 코드: " + detailPO.getCode());
 		LocalDateTime addDate = LocalDateTime.of(2023, 07, 01, 0, 0);
 		ProgressCheck pc = ProgressCheck.builder().date(addDate).detailPurchaseOrder(detailPO).build();
-		log.info("저장할 일정: " + pc);
-		progressCheckRepository.save(pc);
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date today5 = new Date();// 오늘 날짜 보는 방법
+		Date today=null;
+		String today6 = targetFormat.format(today5);
+		try {
+			today = targetFormat.parse(today6);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Integer pctoday = progressCheckRepository.findByDetailPurchaseOrder(detailPO).getCode();//이게 진척검수코드
+		log.info("저장할 일정: " + pc + today6+pctoday);
+		
+		//progressCheckRepository.save(pc);
 	}
 
 	@Test
 	public void addAvg() {// ******평가를 등록함
 		// 3번의 조달계획을 가져옴
 		// 발주코드가 존재하는 것만 가져옴
-		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(3).get();
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date today5 = new Date();// 오늘 날짜 보는 방법
+		Date today=null;
+		String today6 = targetFormat.format(today5);//이게 진짜 오늘 날짜
+		try {
+			today = targetFormat.parse(today6);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
 		ProgressCheck pc = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
 		log.info("업데이트 할 평가: " + pc);
 		// 업데이트 해야 할 것 코드, 날짜, 비율, 기타, 외래키(발주코드) 총 5개
 		ProgressCheck pc2 = ProgressCheck.builder().code(pc.getCode()).date(pc.getDate())
 				.detailPurchaseOrder(pc.getDetailPurchaseOrder()).etc("많이 느림").rate(30).build();
 		log.info("업데이트된 내용: " + pc2);// 저장을 다시 해줘야함
+		//log.info("오늘날짜: " + today);// 저장을 다시 해줘야함
 		// 만약에 한개의 발주코드에 여러개의 일정이 있는 경우는?
 		// 다른 곳에서 그 날짜의 조건을 불러오는 것을 해 보자
 		// progressCheckRepository.save(pc2);

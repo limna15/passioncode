@@ -182,7 +182,18 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 	
 	@Override
 	public void addAvg(Integer num1, String etc, Integer num2) {
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date today5 = new Date();// 오늘 날짜 보는 방법
+		Date today=null;
+		String today6 = targetFormat.format(today5);//이게 진짜 오늘 날짜
+		try {
+			today = targetFormat.parse(today6);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num2).get();
+		Integer pctoday = progressCheckRepository.findByDetailPurchaseOrder(detailPO).getCode();//이게 진척검수코드
 		ProgressCheck pc = progressCheckRepository.findByDetailPurchaseOrder(detailPO);
 		log.info("업데이트 할 평가: " + pc);
 		ProgressCheck pc2 = ProgressCheck.builder().code(pc.getCode()).date(pc.getDate())

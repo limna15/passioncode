@@ -260,9 +260,7 @@
 							<!-- 동적이게 만들기
 							발주서 번호, 협력회사, 발주일자, 납기 예정일 총4개
 							-->
-							
 						</table>
-						*************1번 모달창**************** <br>
 						<br>
 						<table id="poInfo" border="1">
 							<thead>
@@ -279,12 +277,11 @@
 								<!-- 동적 테이블 부분-->
 								
 							</tbody>
+							
 						</table>
-                    
-		               <!-- 
-		                총 7개 cName2, dDate2,mCode2, mName2,oAmount2, uPrice2,pPrice2
-		                -->
                     </div>
+						<table id="footer01">
+						</table>
                     <div class="modal-footer">
 						<button id="publishBtn01" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
@@ -316,7 +313,7 @@
 							-->
 							
 						</table>
-						*************2번 모달창**************** <br>
+						<br>
 						<br>
 						<table id="poInfo" border="1">
 							<thead>
@@ -339,6 +336,8 @@
 		                총 7개 cName2, dDate2,mCode2, mName2,oAmount2, uPrice2,pPrice2
 		                -->
                     </div>
+						<table id="footer02">
+						</table>
                     <div class="modal-footer">
 						<button id="publishBtn02" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
@@ -369,8 +368,7 @@
 							발주서 번호, 협력회사, 발주일자, 납기 예정일 총4개
 							-->
 						</table>
-						*************3번 모달창**************** <br>
-						<br>
+							<br>
 						<table id="poInfo" border="1">
 							<thead>
 								<tr>
@@ -383,15 +381,13 @@
 							</thead>
 								<!-- 동적 테이블 부분 <tbody id="detail">-->
 								<tbody id="tbody03">
-								<!-- 동적 테이블 부분-->
-								
 							</tbody>
 						</table>
-                    
-		               <!-- 
-		                총 7개 cName2, dDate2,mCode2, mName2,oAmount2, uPrice2,pPrice2
-		                -->
-                    </div>
+						<br>
+						<br>
+					</div>
+						<table id="footer03">
+						</table>
                     <div class="modal-footer">
 						<button id="publishBtn03" class="btn btn-primary" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
 							발행
@@ -409,7 +405,10 @@
 		<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 		<script th:inline="javascript" type="text/javascript">
 		//////
-		var totalCount=1;//발주코드 숫자 더하기 위해서
+		var totalCount=0;//3분의 1의 3 부분, 페이지 번호 위해서 
+		var miniCount01=1;//3분의 1의 1부분
+		var miniCount02=2;//3분의 1의 1부분
+		var miniCount03=3;//3분의 1의 1부분
 		let tList =new Array();
 		tList = [[${purchaseOrderList}]];
 		let pCodeList =new Array();//조달코드 담을 리스트
@@ -436,6 +435,10 @@
 		var pPlan=null;
 		var dNo=null;
 		var dCode=null;
+		var dCode01=null;
+		var dCode02=null;
+		var dCode03=null;
+		var dCodeList = new Array();;//발주 코드를 담을 리스트
 
 		$(".showInfo").click(function(){
 			//console.log("내가 발주하고싶은 정보를 담고있는 체크박스를 누름");
@@ -463,6 +466,7 @@
 			pPlan= getObjTR().querySelector("input[name=procurementPlan]").value;
 			var pPrice = uPrice*oAmount;//payPrice 단가 * 발주수량
 			dCode= getObjTR().querySelector("input[name=detailCode]").value;//발주코드
+			dCode=Number(dCode);//안하면 발주번호가 문자로 들어감
 			dNo= getObjTR().querySelector("input[name=detailNo]").value;//발주서 번호
 			//내가 필요한 것만 찍어내기 
 			//만들어 보여줄 내용: 발주서 번호, 발주 코드, 오늘날짜 
@@ -470,8 +474,15 @@
 			//추가로 필요한 정보 : 발행할 발주서의 갯수
 			console.log("companyName: ", cName,  "procurementPlan조달계획번호", pPlan);
 			console.log("발주코드: ", dCode);
-			//발주서 번호 8자리 만들기
-			//maxNo = maxNo.toString().padStart(8, '0');
+			//근데 여기서 보내면 프린트를 못 함으로 발주서 인쇄를 눌렀을 때 동작
+			dCodeList.push(dCode);
+			console.log("dCodeList: ", dCodeList);
+			
+			if(dCode!=0){
+				console.log("이미 발주서가 있는 것 클릭");
+				$(".existPurchaseOrderModal").modal("show");	
+			}
+			
 			//console.log("발주서 번호",dNo,"발주코드detailCode: ", dCode);//발주서 번호가 0이라면 발주서 발행 금지
 			
 			
@@ -524,11 +535,6 @@
 		
 		$(".mypublish").click(function(){
 			console.log("여기에서 실행해서 정보 전달하는 구나");
-			//if(dCode=!0){
-			//	console.log("이미 존재하는 발주서");
-			//$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
-			//}	
-			
 			
 			//발주서 발행 버튼을 누르면, 클래스로 가져와야 tr, td정보 불러오기 가능
 			let cList =new Array();//체크한 번호를 담을 리스트
@@ -546,6 +552,10 @@
 			
 		
 			console.log("번호 리스트 >>> ", cList);	//잘 나옴
+			
+			
+			
+			
 			
 			//동적인 테이블 시작
 			//배열 5개 만들어두고 5개의 회사만 구분할 수 있도록 하기
@@ -577,6 +587,7 @@
 						//일단 회사이름별로 구분해서 보여줘보기
 						//console.log("선택된 i: ", i);//i는 조달 번호가 아니라 내가 원하는 배열 주소
 						if(name01===null){//첫번째 
+							totalCount=totalCount+1;//페이지 전체 수 세기 위해서
 							ppNoList01.push(tList[i].procurementPlan);
 							com01.push(i);
 							name01 = tList[i].companyName;
@@ -587,6 +598,7 @@
 							console.log("com01 ", com01);
 							console.log("첫 번째 회사와 이름이 같다.  ", name01);
 						}else if(name02==null){//두 번째
+							totalCount=totalCount+1;//페이지 전체 수 세기 위해서
 							ppNoList02.push(tList[i].procurementPlan);
 							com02.push(i);
 							name02 = tList[i].companyName;
@@ -597,10 +609,11 @@
 							console.log("com02 ", com02);
 							console.log("두 번째 회사와 이름이 같다.  ", name02);
 						}else if(name03==null){//세 번째
+							totalCount=totalCount+1;//페이지 전체 수 세기 위해서
 							ppNoList03.push(tList[i].procurementPlan);
 							com03.push(i);
 							name03 = tList[i].companyName;
-							console.log("name03 번째 회사 이름 ", name03);
+							console.log("name03 번째 회사 이름 ", name03, "전체페이지 수",totalCount);
 						}else if(name03==tList[i].companyName){
 							ppNoList03.push(tList[i].procurementPlan);
 							com03.push(i);
@@ -634,7 +647,7 @@
 							var dDate3= null;//날짜 비교하기 위해 null
 							var dDate4= null;//새로 등록되는 날짜 저장해서 비교
 							console.log("이제 한 번 잘 실행된다. ");
-							console.log("com01리스트의 길이 잘 나오나 확인", com01.length);
+							//console.log("com01리스트의 길이 잘 나오나 확인", com01.length);
 							for(y=0;y<com01.length;y++){	//0이 나올때까지 돌리기
 									var num01 = com01[y];
 									num01 = Number(num01);//숫자로 
@@ -667,6 +680,7 @@
 							var div01 = '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
 							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>'
+							var div02 = '<h3  style="text-align: right;padding-right: 50px;">'+miniCount01+"/" +totalCount+'</h3>';
 							var tableTd01 = '<tr>';
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
 							tableTd01 += '<td>' + tList[num01].materialName +'</td>';
@@ -677,6 +691,7 @@
 						$('#tbody01').append(tableTd01);//여기서 축척됨
 						if(y === com01.length -1){//y가 마지막인 경우만
 							$('#thead0'+1).append(div01);//마지막에 한 번만 실행
+							$('#footer0'+1).append(div02);
 							}
 							}
 							
@@ -718,9 +733,8 @@
 							var div01 = '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
 							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
-						$('#thead0'+2).append(div01);//여기서 축척됨
+							var div02 = '<h3  style="text-align: right;padding-right: 50px;">'+miniCount02+"/" +totalCount+'</h3>';
 							console.log("num01[0]의 값:",num01);		
-							//com02.pop(y);
 							console.log("com02의 값: ,자리의 번호이다.",com02);		
 						var tableTd01 = '<tr>';
 							tableTd01 += '<td>' + tList[num01].materialCode +'</td>';
@@ -730,6 +744,10 @@
 							tableTd01 += '<td>' + tList[num01].supplyPrice +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody02').append(tableTd01);//여기서 축척됨 어펜드에 나누어서 보내주면 된다. 
+						if(y === com02.length -1){//y가 마지막인 경우만
+							$('#thead0'+2).append(div01);//마지막에 한 번만 실행
+							$('#footer0'+2).append(div02);
+							}
 						}
 						
 						}if(com03.length>0 && j === cList.length - 1){
@@ -770,7 +788,7 @@
 							var div01 = '<div>'+"협력 회사: " +tList[num01].companyName +'</div>';
 							div01 += '<div>'+"발주 일자: " + todaydate +'</div>';
 							div01 += '<div>'+"납기 예정일: " +dDate3 +'</div>';
-							$('#thead0'+3).append(div01);//여기서 축척됨	
+							var div02 = '<h3  style="text-align: right;padding-right: 50px;">'+miniCount03+"/" +totalCount+'</h3>';
 							console.log("num01[0]의 값:",num01);	
 							console.log("com03의 값: ,자리의 번호이다.",com03);	
 						var tableTd01 = '<tr>';
@@ -781,6 +799,10 @@
 							tableTd01 += '<td>' + tList[num01].supplyPrice +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody03').append(tableTd01);//여기서 축척됨 어펜드에 나누어서 보내주면 된다. 
+						if(y === com03.length -1){//y가 마지막인 경우만
+							$('#thead0'+3).append(div01);//마지막에 한 번만 실행
+							$('#footer0'+3).append(div02);
+							}
 						}
 							
 						}if(com03.length>0){
@@ -799,11 +821,13 @@
 				}
 				
 				$("#cancle01").click(function(){
-					console.log("1번 모달창 취소 버튼을 누름");
+					var pn = dCode;
+					console.log("1번 모달창 취소 버튼을 누름",dCode01);//발주번호가 마지막 값만 유지됨, 한개씩 저장해서 보내주기
 					location.href="/procurement2/purchaseOrder";
 				});
 				$("#cancle02").click(function(){
-					console.log("2번 모달창 취소 버튼을 누름");
+					var pn02 = dCode;
+					console.log("2번 모달창 취소 버튼을 누름",dCode02);
 					
 				});
 				$("#cancle03").click(function(){
@@ -815,6 +839,7 @@
 				});
 			
 				$("#publishBtn01").click(function(){
+					//var pn = dCode;
 					console.log("1번 조달계획 발행 버튼을 누름");
 					//조달 계획 번호 가져오기
 					$.ajax({
