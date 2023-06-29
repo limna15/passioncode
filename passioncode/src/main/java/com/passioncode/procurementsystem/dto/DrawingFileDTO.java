@@ -45,7 +45,7 @@ public class DrawingFileDTO {
     /**
      * 이미지 여부
      */
-    private boolean image;
+    private Boolean image;
     
     public String getImageURL(){
         try {
@@ -78,7 +78,7 @@ public class DrawingFileDTO {
      * @param file
      * @return
      */
-  	private boolean checkImageType(File file) {
+  	private Boolean checkImageType(File file) {
   		try {
   			String contentType=Files.probeContentType(file.toPath());  //확장자 명으로 종류파악(그래서 현재는 임의로 확장자 바꾸면 jpg 도 읽어옴)
   			//log.info("파일 종류는 : "+contentType);
@@ -94,29 +94,39 @@ public class DrawingFileDTO {
 	    
 	public DrawingFileDTO(String drawingFile) {
 		super();
-		//String drawingFile = "\\PassionCode\\upload\\drawing\\2023\\06\\21\\65334b3a-f3c2-4d06-92b4-7850e2ede958_HappyLunch~.jpg";
-		String drawingUploadPath = drawingFile.substring(0,28);
-		//log.info("어디어디 보자~~~~~~~ : "+uploadPath);
-		// \PassionCode\ upload\drawing\
-		String folderPath = drawingFile.substring(28,39);
-		//log.info("어디어디 보자2~~~~~~~ : "+folderPath);
-		// 2023\06\21\		
-		String uuid = drawingFile.substring(39, 75);
-		//log.info("uuid 보자!! : "+ uuid);
-		// 65334b3a-f3c2-4d06-92b4-7850e2ede958
-		// 언더바 _ 제외하고 fileName 보자!!
-		String fileName = drawingFile.substring(76);
-		//log.info("어디 이제 오리지날 파일이름 보자!!! : "+fileName);
-		// HappyLunch~.jpg	
-		
-		File originFile = new File(drawingFile);
-		boolean isImage = checkImageType(originFile);
-		
-		this.drawingUploadPath = drawingUploadPath;
-		this.folderPath = folderPath;
-		this.uuid = uuid;
-		this.fileName = fileName;
-		this.image = isImage;
+		if(drawingFile!=null) {
+			//String drawingFile = "\\PassionCode\\upload\\drawing\\2023\\06\\21\\65334b3a-f3c2-4d06-92b4-7850e2ede958_HappyLunch~.jpg";
+			String drawingUploadPath = drawingFile.substring(0,28);
+			//log.info("어디어디 보자~~~~~~~ : "+uploadPath);
+			// \PassionCode\ upload\drawing\
+			String folderPath = drawingFile.substring(28,39);
+			//log.info("어디어디 보자2~~~~~~~ : "+folderPath);
+			// 2023\06\21\		
+			String uuid = drawingFile.substring(39, 75);
+			//log.info("uuid 보자!! : "+ uuid);
+			// 65334b3a-f3c2-4d06-92b4-7850e2ede958
+			// 언더바 _ 제외하고 fileName 보자!!
+			String fileName = drawingFile.substring(76);
+			//log.info("어디 이제 오리지날 파일이름 보자!!! : "+fileName);
+			// HappyLunch~.jpg	
+			
+			File originFile = new File(drawingFile);
+			boolean isImage = checkImageType(originFile);
+			
+			this.drawingUploadPath = drawingUploadPath;
+			this.folderPath = folderPath;
+			this.uuid = uuid;
+			this.fileName = fileName;
+			this.image = isImage;
+		}else {
+			Boolean isImage = null;
+			
+			this.drawingUploadPath = "/PassionCode/upload/drawing/";
+			this.folderPath = null;
+			this.uuid = null;
+			this.fileName = null;
+			this.image = isImage;
+		}
 	}
 		
 	public boolean isImage() {
