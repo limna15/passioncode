@@ -287,7 +287,7 @@ public class PS1RestController {
 			materialDTO.setCode(getLCWithMCList.get(i)+maxOnlyNumByStringList.get(i));
 			finalGenerateMaterialCodeList.add(materialDTO);
 		}
-		//log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
+		log.info("!!!!!!!!!!!!만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
 		
 		//----------------------------------------------------------- MRP 관련----------------------------------------------------------------------------------------------//
 		//----------- 테스트 진행을 위한, 품목 생성하자마자, 그 해당하는 품목의 MRP 2개를 랜덤으로 세팅해서 만들어주었던거! 그 해당 MRP 2개 품목코드로 바꿔주기 --------------//

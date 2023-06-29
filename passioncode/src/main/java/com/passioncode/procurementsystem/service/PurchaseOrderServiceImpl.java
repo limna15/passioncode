@@ -35,7 +35,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public void makePoCode(Integer[] num1) {
 		//여기서 반복해서 만들기
 		PurchaseOrder poNo = makePONo();//발주서 번호
-		log.info("발주서 번호: "+poNo);
+		//log.info("발주서 번호: "+poNo);
 		DetailPurchaseOrder detailPurchaseOrder;
 		//Integer[] num2 = new Integer[2];
 		//num2[0] = 17;
@@ -61,7 +61,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 						.mrp(pp.getMrp())
 						.registerDate(pp.getRegisterDate()).build();
 				procurementPlanRepository.save(pp2);
-				log.info("저장하는 조달계획번호  ~~~>>" + pp2);
+				//log.info("저장하는 조달계획번호  ~~~>>" + pp2);
 			}
 			
 		}
@@ -158,7 +158,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}else {
 			mycode = procurementPlan.getDetailPurchaseOrder().getCode();
 		}
-		log.info(mycode+"<<코드번호");
+		//log.info(mycode+"<<코드번호");
 		
 		return mycode;
 	}
@@ -172,7 +172,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}else {
 			myno = procurementPlan.getDetailPurchaseOrder().getPurchaseOrder().getNo();
 		}
-		log.info(myno+"<<발주서 번호");
+		//log.info(myno+"<<발주서 번호");
 		return myno;
 	}
 		
