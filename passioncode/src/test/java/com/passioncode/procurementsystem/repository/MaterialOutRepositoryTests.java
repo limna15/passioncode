@@ -683,44 +683,6 @@ public class MaterialOutRepositoryTests {
 		log.info("계산 된건가?? : "+DateList);
 		log.info("계산 된건가?? : "+DateStrLisg);
 		
-
-//		Calendar cal = Calendar.getInstance();
-//		cal.setTime(today);
-//		today=cal.getTime();
-//		log.info("캘린더 셋팅된 오늘날짜 : "+simpleDateFormat.format(today));
-//		
-//		//조달납기예정일 - 품목공급LT => 최소발주일 만들기
-//		cal.add(Calendar.DATE,+1);
-//		
-//		Date caldate=cal.getTime();
-//		String caldateStr = simpleDateFormat.format(caldate);
-//		log.info("더한 날짜 : "+caldateStr);
-		
-//		Date test = today;
-//		try {
-//			test = simpleDateFormat.parse("2023-01-05");
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-//		String finaltoday = "";
-//		while(finaltoday.equals("2023-01-05")) {
-//			Calendar cal = Calendar.getInstance();
-//			cal.setTime(yearFirstdate);
-//			yearFirstdate=cal.getTime();
-//			log.info("캘린더 셋팅된 오늘날짜 : "+simpleDateFormat.format(today));
-//			int num = 1;
-//			//조달납기예정일 - 품목공급LT => 최소발주일 만들기
-//			cal.add(Calendar.DATE,+num);
-//			
-//			Date caldate=cal.getTime();
-//			finaltoday = simpleDateFormat.format(caldate);
-//			log.info(num+"번째 더한 날짜 : "+finaltoday);
-//			DateStrLisg.add(finaltoday);
-//			num = num+1;
-//		}
-//		log.info("계산 된건가?? : "+DateStrLisg);		
 	}
 	
 	@Transactional
@@ -890,4 +852,78 @@ public class MaterialOutRepositoryTests {
 	
 	
 	
+	
+	
+	
+	
+	@Test
+	public void getInAmountForLC() {
+		
+		List<Date> DateList = new ArrayList<>();
+		List<String> DateStrLisg = new ArrayList<>();
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date today = new Date();
+		
+		Date startDate = today;
+		try {
+			startDate = simpleDateFormat.parse("2023-06-01");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Date endDate = today;
+		try {
+			endDate = simpleDateFormat.parse("2023-06-28");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(endDate);
+		// 기준일로 설정. month의 경우 해당월수-1을 해줍니다.
+//		cal1.set(2023,0,5);
+//		cal1.setTime(test);
+		
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(startDate);
+		
+		while(!cal2.after(cal1)) {
+			Date caldate=cal2.getTime();
+			cal2.add(Calendar.DATE, 1);
+			DateList.add(caldate);
+			DateStrLisg.add(simpleDateFormat.format(caldate));	
+		}
+		log.info("계산 된건가?? : "+DateList);
+		log.info("계산 된건가?? : "+DateStrLisg);
+		
+		String mylabels="[";
+		for(String labels:DateStrLisg) {
+			mylabels += "\""+labels+"\",";
+		}
+		mylabels=mylabels.substring(0, mylabels.length()-1)+"]";
+		log.info("잘 만들어 졌나? : "+mylabels);
+	
+		
+		List<Object[]> testList = materialOutRepository.getCalculStockTotalPriceForLC("2023-06-01", "2023-06-28", "BB0001");
+		List<StockResultDTO> stockResultDTOs = new ArrayList<>();
+		
+		for(Object[] test : testList) {
+			log.info("재고금액 보자 : "+test[0]+"  "+test[1]);	
+			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate((String)test[0]).stockTotalPrice(Integer.parseInt(String.valueOf(test[1]))).largeCategoryCode("BB0001").build();
+			stockResultDTOs.add(stockResultDTO);
+		}
+		
+		
+		for(int i=0;i<DateStrLisg.size(); i++) {
+			
+		}
+		
+		
+		
+		
+		
+	}
 }

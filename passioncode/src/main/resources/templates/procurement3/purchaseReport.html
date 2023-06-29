@@ -131,105 +131,106 @@
 			</div>
 		</div>
 	
-<script src="../../vendors/base/vendor.bundle.base.js"></script>
-<script src="../../vendors/chart.js/Chart.min.js"></script>
-<script src="../../js/off-canvas.js"></script>
-<script src="../../js/hoverable-collapse.js"></script>
-<script src="../../js/template.js"></script>
-<script src="../../js/chart.js"></script>
 
-<script  th:inline="javascript">
-	//오늘 날짜 기준 각 항목의 개수를 담은 list(조달계획 총 개수, 발주예정, 조달진행중, 조달완료)
-	var list= [[${list}]];
-	console.log("list 값 읽기 >>> ", list);
-	
-	//종료날짜가 더 작은 경우 알럿창
-	$("#dateSearch").on("click",function(){
-		$("#count").empty(); //다시 버튼 눌렀을 때 테이블 비우고 다시 세팅하기
-		
-        var startDate = $('#startDate').val();
-        var endDate = $('#endDate').val();
-        
-        //-을 구분자로 연,월,일로 잘라내어 배열로 반환
-        var startArray = startDate.split('-');
-        var endArray = endDate.split('-');   
-        
-        //배열에 담겨있는 연,월,일을 사용해서 Date 객체 생성
-        var start_date = new Date(startArray[0], startArray[1], startArray[2]);
-        var end_date = new Date(endArray[0], endArray[1], endArray[2]);
-        
-        //날짜를 숫자형태의 날짜 정보로 변환하여 비교한다.
-        if(!start_date.getTime() || !end_date.getTime()){
-        	alert("기간을 선택해주세요.");
-        	location.reload();
-        }
-        if(start_date.getTime() > end_date.getTime()) {
-            alert("종료일보다 시작일이 빨라야합니다.");
-            location.reload();
-        }
-        
-      	//시작일과 종료일 사이 날짜 배열로 가져오기
-		var start= new Date(document.querySelector("#startDate").value);
-		var end= new Date(document.querySelector("#endDate").value);
-		console.log("오잉? start 보자 : ",start);
-		console.log("오잉? end 보자 : ",end);
-		
-		var result= [];
-		
-		while (start <= end) {
-			result.push(start.toISOString().split('T')[0]);
-			start.setDate(start.getDate() +1);
-		}
-		console.log("시작날짜 찍히나 >>> ", start)		
-		console.log("끝날짜 찍히나 >>> ", end)
-		console.log("result 찍히나 >>> ", result)
-		//console.log("result Json형식으로 찍히나 >>> ", JSON.stringify(result))
-		
-		//검색누른 후에는 input값 초기화
-		var startInput = document.querySelector("#startDate");
-		//console.log("인풋 초기화하고 싶은데 >>> ", startInput)	
-		startInput.value= null;
-		var endInput = document.querySelector("#endDate");
-		endInput.value= null;
-		
-		$.ajax({
-			type: "post",
-			url: "/procurement3/reportDate",
-			data: JSON.stringify(result),
-			contentType :"application/json; charset=UTF-8",
-			dataType: "json",
-			success: function(data){
-				console.log("받아온 데이터 : ",data);
+		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+		<script  th:inline="javascript">
+			//오늘 날짜 기준 각 항목의 개수를 담은 list(조달계획 총 개수, 발주예정, 조달진행중, 조달완료)
+			var list= [[${list}]];
+			console.log("list 값 읽기 >>> ", list);
+			
+			//종료날짜가 더 작은 경우 알럿창
+			$("#dateSearch").on("click",function(){
+				$("#count").empty(); //다시 버튼 눌렀을 때 테이블 비우고 다시 세팅하기
 				
-				//설정한 기간 테이블마다 행으로 세팅
-		        for(var i= 0; i<data.length; i++) {
-		            var tableTd = '<tr>';
-		            tableTd += '<td>' + data[i].date + '</td>';
-		            tableTd += '<td>' + data[i].beforePurchase + '</td>';
-		            tableTd += '<td>' + data[i].ingProcurement + '</td>';
-		            tableTd += '<td>' + data[i].doneProcurement +'</td>';
-		            tableTd += '</tr>';
-
-		            $('#count').append(tableTd);
+		        var startDate = $('#startDate').val();
+		        var endDate = $('#endDate').val();
+		        
+		        //-을 구분자로 연,월,일로 잘라내어 배열로 반환
+		        var startArray = startDate.split('-');
+		        var endArray = endDate.split('-');   
+		        
+		        //배열에 담겨있는 연,월,일을 사용해서 Date 객체 생성
+		        var start_date = new Date(startArray[0], startArray[1], startArray[2]);
+		        var end_date = new Date(endArray[0], endArray[1], endArray[2]);
+		        
+		        //날짜를 숫자형태의 날짜 정보로 변환하여 비교한다.
+		        if(!start_date.getTime() || !end_date.getTime()){
+		        	alert("기간을 선택해주세요.");
+		        	location.reload();
 		        }
-			},	
-			error : function(jqXHR,textStatus,errorThrown){
-				//console.log(jqXHR);  //응답 메시지
-				//console.log(textStatus); //"error"로 고정인듯함
-				//console.log(errorThrown);
-			}
-		});//ajax 끝
-    });
-    
-    var getToday= document.getElementById("date");
-    let today = new Date();   
-
-	let year = today.getFullYear(); // 년도
-	let month = today.getMonth() + 1;  // 월
-	let date = today.getDate();  // 날짜
-	
-	getToday.innerText= '오늘 날짜 기준 : ' + year + '년 ' + month + '월 ' + date + '일';
-</script>
+		        if(start_date.getTime() > end_date.getTime()) {
+		            alert("종료일보다 시작일이 빨라야합니다.");
+		            location.reload();
+		        }
+		        
+		      	//시작일과 종료일 사이 날짜 배열로 가져오기
+				var start= new Date(document.querySelector("#startDate").value);
+				var end= new Date(document.querySelector("#endDate").value);
+				console.log("오잉? start 보자 : ",start);
+				console.log("오잉? end 보자 : ",end);
+				
+				var result= [];
+				
+				while (start <= end) {
+					result.push(start.toISOString().split('T')[0]);
+					start.setDate(start.getDate() +1);
+				}
+				console.log("시작날짜 찍히나 >>> ", start)		
+				console.log("끝날짜 찍히나 >>> ", end)
+				console.log("result 찍히나 >>> ", result)
+				//console.log("result Json형식으로 찍히나 >>> ", JSON.stringify(result))
+				
+				//검색누른 후에는 input값 초기화
+				var startInput = document.querySelector("#startDate");
+				//console.log("인풋 초기화하고 싶은데 >>> ", startInput)	
+				startInput.value= null;
+				var endInput = document.querySelector("#endDate");
+				endInput.value= null;
+				
+				$.ajax({
+					type: "post",
+					url: "/procurement3/reportDate",
+					data: JSON.stringify(result),
+					contentType :"application/json; charset=UTF-8",
+					dataType: "json",
+					success: function(data){
+						console.log("받아온 데이터 : ",data);
+						
+						//설정한 기간 테이블마다 행으로 세팅
+				        for(var i= 0; i<data.length; i++) {
+				            var tableTd = '<tr>';
+				            tableTd += '<td>' + data[i].date + '</td>';
+				            tableTd += '<td>' + data[i].beforePurchase + '</td>';
+				            tableTd += '<td>' + data[i].ingProcurement + '</td>';
+				            tableTd += '<td>' + data[i].doneProcurement +'</td>';
+				            tableTd += '</tr>';
+		
+				            $('#count').append(tableTd);
+				        }
+					},	
+					error : function(jqXHR,textStatus,errorThrown){
+						//console.log(jqXHR);  //응답 메시지
+						//console.log(textStatus); //"error"로 고정인듯함
+						//console.log(errorThrown);
+					}
+				});//ajax 끝
+		    });
+		    
+		    var getToday= document.getElementById("date");
+		    let today = new Date();   
+		
+			let year = today.getFullYear(); // 년도
+			let month = today.getMonth() + 1;  // 월
+			let date = today.getDate();  // 날짜
+			
+			getToday.innerText= '오늘 날짜 기준 : ' + year + '년 ' + month + '월 ' + date + '일';
+		</script>
+		<script src="../../vendors/base/vendor.bundle.base.js"></script>
+		<script src="../../vendors/chart.js/Chart.min.js"></script>
+		<script src="../../js/off-canvas.js"></script>
+		<script src="../../js/hoverable-collapse.js"></script>
+		<script src="../../js/template.js"></script>
+		<script src="../../js/chart.js"></script>
 	</th:block>
 </th:block>
 </html>

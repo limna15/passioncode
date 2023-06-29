@@ -564,18 +564,20 @@
 				});	//$.ajax				
 			});	//코드생성 버튼 누를때, -> 코드생성 안내 모달창 보여주기 끝
 			
+			//-------------------------------------- 대분류 코드 변경마다 중분류 바꾸기! --------------------------------------------------------------//
+			
 			//대분류코드 변경될때마다 처리되는 함수
 			//대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수
 			$(document).on("change",".largeCategoryCode",function(){
 				let selectedLCCode = $(this).val();
-				//console.log("선택된 대분류 코드 : ",selectedLCCode); 
+				console.log("선택된 대분류 코드 : ",selectedLCCode); 
 				
 				//console.log("text 값 테스트1 : ",$(this).text()); 
 				//-> 그해당 셀렉트의 모든 값을 가져온다.
 				
 				//지금 변하는 것의 td의 다음 td에서 중분류 클래스 찾기 -> 여기에 넣을 option 만들어서 넣기
 				var middleCategoryCodeOptions = getObj().nextElementSibling.querySelector('.middleCategoryCode');
-				//console.log("중분류 select",middleCategoryCodeOptions);
+				console.log("중분류 select",middleCategoryCodeOptions);
 				
 				/*
 				//선택된 대분류코드
