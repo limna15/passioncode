@@ -101,7 +101,7 @@ public class StockResultServiceImpl implements StockResultService {
 		String todayStr = simpleDateFormat.format(today);
 		//log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
 		String todayYearStr = todayStr.substring(0,7);
-		log.info("오늘 날짜의 년도 스트링으로 보자 : "+todayYearStr);
+		//log.info("오늘 날짜의 년도 스트링으로 보자 : "+todayYearStr);
 		
 		Date yearFirstdate = today;
 		try {
@@ -141,7 +141,7 @@ public class StockResultServiceImpl implements StockResultService {
 		for(MaterialDTO materialDTO:materialDTOList) {
 			//품목별 계산을 위해, 재고산출DTO를 이용해서 리스트 이용한다.
 			//품목별 기간별 각각의 입고수량,단가 가져와서 세팅한다.
-			log.info("현재 하는 품목코드!! : "+materialDTO.getCode());
+			//log.info("현재 하는 품목코드!! : "+materialDTO.getCode());
 			
 			//3-1. 일단 BS0001에 대한 입고 6/1~6/5일 거 계산해보자
 			//BS0001에 대해, 입고수량,단가,입고금액 -> 6/1~/6/5 계산을 위해서 재고산출DTO 리스트를 새로 만들어서 이용하쟈
@@ -249,10 +249,10 @@ public class StockResultServiceImpl implements StockResultService {
 																	.inAmount(calculInAmount).inPrice(calaculInPrice).outAmount(calculOutAmount).outPrice(calaculOutPrice)
 																	.stockAmount(stockAmount).stockUnitPrice(stockUnitPrice)
 																	.stockTotalPrice(stockTotalPrice).build();
-			log.info("현재 "+materialDTO.getCode()+"로 만든 재고산출 DTO 보자 : "+stockResultDTO);
+			//log.info("현재 "+materialDTO.getCode()+"로 만든 재고산출 DTO 보자 : "+stockResultDTO);
 			stockResultDTOList.add(stockResultDTO);		
 		}
-		log.info("최종 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
+		//log.info("최종 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
 		
 		return stockResultDTOList;
 	}
@@ -265,7 +265,7 @@ public class StockResultServiceImpl implements StockResultService {
 		for(Date date:dateList) {
 			dateStrList.add(simpleDateFormat.format(date));
 		}
-		log.info("날짜 문자로 바뀐거 어디 보자 : "+dateStrList);
+		//log.info("날짜 문자로 바뀐거 어디 보자 : "+dateStrList);
 		
 		//2. 화면에 뿌릴 재고산출DTO 리스트 만들고, 전체 품목읽어와서, 전체품목DTO 리스트 만들기
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
@@ -280,7 +280,7 @@ public class StockResultServiceImpl implements StockResultService {
 		for(MaterialDTO materialDTO:materialDTOList) {
 			//품목별 계산을 위해, 재고산출DTO를 이용해서 리스트 이용한다.
 			//품목별 기간별 각각의 입고수량,단가 가져와서 세팅한다.
-			log.info("현재 하는 품목코드!! : "+materialDTO.getCode());
+			//log.info("현재 하는 품목코드!! : "+materialDTO.getCode());
 			
 			//3-1. 일단 BS0001에 대한 입고 6/1~6/5일 거 계산해보자
 			//BS0001에 대해, 입고수량,단가,입고금액 -> 6/1~/6/5 계산을 위해서 재고산출DTO 리스트를 새로 만들어서 이용하쟈
@@ -388,10 +388,10 @@ public class StockResultServiceImpl implements StockResultService {
 																	.inAmount(calculInAmount).inPrice(calaculInPrice).outAmount(calculOutAmount).outPrice(calaculOutPrice)
 																	.stockAmount(stockAmount).stockUnitPrice(stockUnitPrice)
 																	.stockTotalPrice(stockTotalPrice).build();
-			log.info("현재 "+materialDTO.getCode()+"로 만든 재고산출 DTO 보자 : "+stockResultDTO);
+			//log.info("현재 "+materialDTO.getCode()+"로 만든 재고산출 DTO 보자 : "+stockResultDTO);
 			stockResultDTOList.add(stockResultDTO);		
 		}
-		log.info("최종 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
+		//log.info("최종 재고산출DTO 리스트 보자 : "+stockResultDTOList);		
 		
 		return stockResultDTOList;
 	}

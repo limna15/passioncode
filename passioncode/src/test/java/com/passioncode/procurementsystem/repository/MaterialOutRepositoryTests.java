@@ -204,6 +204,9 @@ public class MaterialOutRepositoryTests {
 					log.info("입고가 아직 아예 안된 아이 >>> "  + i + "번째, " + moDTO);
 				}
 			}//if문 끝(세부구매발주서 등록 + 입고일 등록)
+			else {
+				break;
+			}
 		}//for문 끝
 		
 		//엔티티에 존재 X(null) -> 존재 O(출고 완료된 상태) 순으로 넣기

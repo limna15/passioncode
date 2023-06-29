@@ -306,7 +306,7 @@
 						<span>선택한 발주서 번호를 확인해주세요.</span><br>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        <button type="button" id="noCkeckBtn" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        	</button>
                     </div>
@@ -450,6 +450,11 @@
 				if(purchaseNo.length != 1){
 					$(".purchaseNoCheckModal").modal('show');
 					$(".transactionDetailModal").modal('hide');
+					
+					$(document).on("click", "#noCkeckBtn", function(e){
+						location.reload();
+					});
+					
 				}else{			
 					location.href="/procurement3/transactionDetail?purchaseNo="+purchaseNo
 				}
