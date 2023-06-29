@@ -162,11 +162,19 @@ public class PS4Controller {
 			mylabels += "\""+labels+"\",";
 		}
 		mylabels=mylabels.substring(0, mylabels.length()-1)+"]";
-		log.info("잘 만들어 졌나? : "+mylabels);
-		
+		log.info("잘 만들어 졌나? mylabels : "+mylabels);
 		
 		model.addAttribute("mylabels",mylabels);
+
 		
+		String pricedata="[";
+		for(StockResultDTO dto :stockResultDTOs) {
+			pricedata += dto.getStockTotalPrice()+",";
+		}
+		pricedata=pricedata.substring(0, pricedata.length()-1)+"]";
+		log.info("잘 만들어 졌나? pricedata : "+pricedata);
+		
+		model.addAttribute("pricedata",pricedata);
 		
 	}
 

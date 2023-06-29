@@ -130,7 +130,34 @@
 				</div>
 			</div>
 		</div>
-	
+		
+		<!-- 
+			 검색버튼 누를때, 오류시 보여줄 모달창 시작
+			- 내용 : 1. <span>기간을 선택해주세요.</span>
+					 2. <span>종료일보다 시작일이 빨라야합니다.</span>
+		-->
+		<div class="purchaseReportModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >기간 검색 확인</h5>
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="purchaseReportModalContent">   
+						<!-- 오류시 보여줄 내용 -->	
+							
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary " data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 검색버튼 누를때, 오류시 보여줄 모달창 끝 -->
 
 		<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 		<script  th:inline="javascript">
@@ -155,12 +182,18 @@
 		        
 		        //날짜를 숫자형태의 날짜 정보로 변환하여 비교한다.
 		        if(!start_date.getTime() || !end_date.getTime()){
-		        	alert("기간을 선택해주세요.");
-		        	location.reload();
+		        	sentence = `<span>기간을 선택해주세요.</span>`;
+		        	document.querySelector("#purchaseReportModalContent").innerHTML = sentence;
+					$(".purchaseReportModal").modal('show');
+		        	//alert("기간을 선택해주세요.");
+		        	//location.reload();
 		        }
 		        if(start_date.getTime() > end_date.getTime()) {
-		            alert("종료일보다 시작일이 빨라야합니다.");
-		            location.reload();
+		        	sentence = `<span>종료일보다 시작일이 빨라야합니다.</span>`;
+		        	document.querySelector("#purchaseReportModalContent").innerHTML = sentence;
+					$(".purchaseReportModal").modal('show');
+		            //alert("종료일보다 시작일이 빨라야합니다.");
+		            //location.reload();
 		        }
 		        
 		      	//시작일과 종료일 사이 날짜 배열로 가져오기

@@ -1,4 +1,21 @@
-function mychart2(){
+function mychart2(sentence5){
+		console.log("여기선 읽나~ sentence3 : ",sentence3);
+		console.log("여기선 읽나~ sentence5 : ",sentence5);
+	var aaaa=[	{ x: '2017-07-24 00:00:00', y: 100 },
+				{ x: '2017-07-25 00:00:00', y: 0 },
+				{ x: '2017-07-26 00:00:00', y: 29 },
+				{ x: '2017-07-27 00:00:00', y: 0 },
+				{ x: '2017-07-28 00:00:00', y: 0 },
+				{ x: '2017-07-29 00:00:00', y: 0 },
+				{ x: '2017-07-30 00:00:00', y: -0 }];
+	console.log("1호기"+sentence);
+	console.log("2호기"+sentence2);
+	var bbb=sentence;
+	
+	bbb.forEach(function(item){
+		console.log("반복"+item.x+"  "+item.y);
+	});
+	console.log("찍을데이터"+aaaa);
 	var chart = new CanvasJS.Chart("chartContainer", {
 		animationEnabled: true,
 		title:{
@@ -10,7 +27,7 @@ function mychart2(){
 		axisY: {
 			title: "재고금액",
 			suffix: " 원",
-			minimum: -10,
+			minimum: -100,
 		},
 		legend:{
 			cursor: "pointer",
@@ -25,15 +42,7 @@ function mychart2(){
 			type: "spline",
 			yValueFormatString: "###,###,### 원",
 			showInLegend: true,
-			dataPoints: [
-				{ x: new Date(2017,6,24), y: 5000 },
-				{ x: new Date(2017,6,25), y: 0 },
-				{ x: new Date(2017,6,26), y: 29 },
-				{ x: new Date(2017,6,27), y: 0 },
-				{ x: new Date(2017,6,28), y: 0 },
-				{ x: new Date(2017,6,29), y: 0 },
-				{ x: new Date(2017,6,30), y: -0 }
-			]
+			dataPoints: aaaa
 		},
 		{
 			name: "Martha Vineyard",
@@ -41,13 +50,13 @@ function mychart2(){
 			yValueFormatString: "#0.## °C",
 			showInLegend: true,
 			dataPoints: [
-				{ x: new Date(2017,6,24), y: 20 },
-				{ x: new Date(2017,6,25), y: 0 },
-				{ x: new Date(2017,6,26), y: 0 },
-				{ x: new Date(2017,6,27), y: 25 },
-				{ x: new Date(2017,6,28), y: 0 },
-				{ x: new Date(2017,6,29), y: 25 },
-				{ x: new Date(2017,6,30), y: 0 }
+				{ x: new Date('2017-07-24 00:00:00'), y: 90 },
+				{ x: new Date('2017-07-25 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-26 00:00:00'), y: 21 },
+				{ x: new Date('2017-07-27 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-28 00:00:00'), y: 17 },
+				{ x: new Date('2017-07-29 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-30 00:00:00'), y: 20 }
 			]
 		},
 		{
@@ -56,13 +65,13 @@ function mychart2(){
 			yValueFormatString: "#0.## °C",
 			showInLegend: true,
 			dataPoints: [
-				{ x: new Date(2017,6,24), y: 22 },
-				{ x: new Date(2017,6,25), y: 19 },
-				{ x: new Date(2017,6,26), y: 23 },
-				{ x: new Date(2017,6,27), y: 24 },
-				{ x: new Date(2017,6,28), y: 24 },
-				{ x: new Date(2017,6,29), y: 23 },
-				{ x: new Date(2017,6,30), y: 23 }
+				{ x: new Date('2017-07-24 00:00:00'), y: 10 },
+				{ x: new Date('2017-07-25 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-26 00:00:00'), y: 20 },
+				{ x: new Date('2017-07-27 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-28 00:00:00'), y: 15 },
+				{ x: new Date('2017-07-29 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-30 00:00:00'), y: 10 }
 			]
 		},
 		{
@@ -71,17 +80,19 @@ function mychart2(){
 			yValueFormatString: "#0.## °C",
 			showInLegend: true,
 			dataPoints: [
-				{ x: new Date(2017,6,24), y: 20 },
-				{ x: new Date(2017,6,25), y: 55 },
-				{ x: new Date(2017,6,26), y: 51 },
-				{ x: new Date(2017,6,27), y: 28 },
-				{ x: new Date(2017,6,28), y: 22 },
-				{ x: new Date(2017,6,29), y: 13 },
-				{ x: new Date(2017,6,30), y: 19 }
+				{ x: new Date('2017-07-24 00:00:00'), y: 100 },
+				{ x: new Date('2017-07-25 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-26 00:00:00'), y: 20 },
+				{ x: new Date('2017-07-27 00:00:00'), y: 10 },
+				{ x: new Date('2017-07-28 00:00:00'), y: 0 },
+				{ x: new Date('2017-07-29 00:00:00'), y: 150 },
+				{ x: new Date('2017-07-30 00:00:00'), y: 20 }
 			]
 		}
 		]
 	});
+	console.log("바보다");
+	console.log(chart);
 	chart.render();
 	
 	function toggleDataSeries(e){
