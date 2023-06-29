@@ -203,6 +203,26 @@
 			</div>
 		</div>
 		
+		<!-- 체크박스 선택을 아예 안하고 프린트 경우 뜨는 모달창 시작 -->
+		<div class="noPrintModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">선택된 발주서 없음</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span>선택된 발주서가 없습니다. <br>프린트하고싶은 발주서를 선택해주세요.</span><br>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                        	닫기
+                       </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 끝 -->
+		
 		<!-- 체크박스 선택을 아예 안했을 경우 뜨는 모달창 시작 -->
 		<div class="noPurchaseNoModal modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -501,7 +521,18 @@
 	
 	$("#idmyprint").click(function(){
 		console.log("인쇄버튼 누름");
-		location.href="/procurement2/print?no="+dNo+"&ppCode="+pPlan;
+		console.log("발주코드: ", dCode);
+		if(dCode==0){
+			console.log("인쇄할 수 없음");
+			$(".noPrintModal").modal("show");
+				//location.href="/procurement2/purchaseOrder";
+		}else if(dCode==null){
+			console.log("인쇄할 수 없음");
+			$(".noPrintModal").modal("show");
+		}else{
+			location.href="/procurement2/print?no="+dNo+"&ppCode="+pPlan;
+		}
+		
 	});
 
 	/////////////////여기까지 체크박스
