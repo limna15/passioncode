@@ -77,6 +77,109 @@ public class ProgressCheckRepositoryTests {
 
 	@Transactional
 	@Test
+	public void progressCheckDoneTest2() {// 검수 완료
+		// 1. 검수일이 한개 이상
+		// 검수일짜만 지나면 검수 완료
+		//오늘날짜 형식 바꾸기 String으로 비교 해 보기
+		//today가 비교 안됨
+		String checkDone = null;// 반환해 줄 값: 완료 or 미완료
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		// Date futureDate=null;//더 미래인 날을 여기에 저장하기
+		Date date1 = null;
+		Date date2 = null;
+		String date3 = null;	//date1의 스트링
+		String date4 = null;	//date2의 스트링
+		Date today = new Date();// 오늘 날짜 보는 방법
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String today2 =  targetFormat.format(today);//오늘 날짜 변환
+		Date today3 = new Date();
+		try {
+            // 문자열을 Date 객체로 변환
+            today3 = targetFormat.parse(today2);
+
+            // 변환된 Date 객체 출력
+            System.out.println("today3: " + today3);
+            System.out.println("변환된 날짜: " + today2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+		
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+
+			if (date1 != null) {// 비교하기 위한 값이 있다면
+				date2 = ((Date) arr[1]);// 다음에 들어온 날을 넣어준다.
+				log.info("두 번째 수" + date2);
+				date4 =  targetFormat.format(date2);
+				int comparison = date2.compareTo(today);// 날짜 비교
+				if (comparison > 0) {
+					// 오늘보다 뒤에 있으면 무조건 미완료
+					checkDone = "미완료";
+					System.out.println("date1이 today보다 뒤에 있습니다." + checkDone);
+				} else if (comparison < 0) {// 오늘보다 앞에 있으면 null로 보내기
+					checkDone = "완료";
+					System.out.println("date1이 today보다 앞에 있습니다." + checkDone);
+				}else {//검수일이 오늘 이라면
+					if(((Integer) arr[3])!=null) {
+						//평가가 존재 한다면
+						checkDone = "완료";
+					}else {//검수기록이 없다면
+						checkDone = "미완료";
+					}
+		            System.out.println("두 날짜는 같습니다.");
+		        }
+			} else {// 처음에 date1이 null인 경우
+					// 하나만 있는 경우도 추가하기
+				if (((Date) arr[1]) == null) {
+					// 아예 진척검수일정이 하나도 없다는 뜻
+					checkDone = "미완료";
+				} else {
+					date1 = ((Date) arr[1]);// 비교하기 위해 무조건 담는다
+					date3 =  targetFormat.format(date1);
+					// 한개만 있는 경우 오늘보다 빠른지 보기
+					int comparison = date1.compareTo(today);// 날짜 비교
+					if (comparison > 0) {
+						// 오늘보다 뒤에 있으면 무조건 미완료
+						checkDone = "미완료";
+						System.out.println("date1이 today보다 뒤에 있습니다." + checkDone);
+					} else if (comparison < 0) {// 오늘보다 앞에 있으면 null로 보내기
+						checkDone = "완료";
+						System.out.println("date1이 today보다 앞에 있습니다." + checkDone+ "오늘날짜"+today2+"date1: "+date1);
+						//여기에 조건 하나 더 쓰기 
+						if(date3.equals(date4)) {//검수일이 같다면
+							if(((Integer) arr[3])!=null) {
+								System.out.println("날이 같다. ");
+								//평가가 존재 한다면
+								checkDone = "완료";
+							}else {//검수기록이 없다면
+								checkDone = "미완료";
+							}
+						}
+					}else {//검수일이 오늘 이라면
+						if(((Integer) arr[3])!=null) {
+							//평가가 존재 한다면
+							checkDone = "완료";
+						}else {//검수기록이 없다면
+							checkDone = "미완료";
+						}
+			            System.out.println("두 날짜는 같습니다.");
+			        }
+				}
+				log.info("처음에만 있는 수" + date1 + checkDone);
+			}
+
+			list.add(pdDTO);
+		}
+		log.info("쿼리 발주번호를 통한 진척검수: " + list);
+	}
+
+	@Transactional
+	@Test
 	public void progressCheckDoneTest() {// 검수 완료
 		// 1. 검수일이 한개 이상
 		// 검수일짜만 지나면 검수 완료
@@ -158,10 +261,11 @@ public class ProgressCheckRepositoryTests {
 		log.info("쿼리 발주번호를 통한 진척검수: " + list);
 	}
 
+	
 	@Transactional
 	@Test
 	public void checkPercentTest() { // 납기 진도율, 오늘과 가까운 과거기록 가져오기
-		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(7).get();
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
 		List<DetailProgressCheckListDTO> list = new ArrayList<>();
 		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
 
