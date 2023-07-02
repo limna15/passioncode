@@ -316,6 +316,18 @@ public class MaterialRepositoryTests {
 	}
 	
 	
+	@Test
+	public void numTest() {
+		
+		//시작하는 숫자 
+		Integer startNum = 1;
+		
+		//시작하는 숫자, 4자릿수 맞춰서 문자로 만들기 (ex> 1 -> 0001)
+		String startNumByString = String.format("%04d",startNum);
+		log.info("일단 문자 보자 : "+ startNumByString);
+		log.info("문자 숫자로 바꾼거 보자 : "+ Integer.parseInt(startNumByString));
+		
+	}
 	
 	
 	

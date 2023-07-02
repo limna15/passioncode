@@ -165,6 +165,9 @@ public class PS1RestController {
 		for(int i=0; i<getLCWithMCList.size(); i++) {
 			//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
 			List<Material> materialList=materialService.getMaterialListByCodeContaining(getLCWithMCList.get(i));
+
+			//만약에 같은 문자부분이 있다면, 받아온숫자에서 +1 해주기(즉 처음 나온애는 맥스값+1, 나중 나온애는 앞에값(맥스값+1)+1 해주기
+			//같ㅇ
 			
 			//검색해서 찾아온 값이 존재하면 ->거기서 +1 , 없다면! 신규!!! -> 0001 로!!
 			if(materialList.size()>0) {
@@ -184,7 +187,7 @@ public class PS1RestController {
 				maxOnlyNumByStringList.add(maxOnlyNumByString);			
 			}else { 	//검색해서 찾아온 품목이 없어!! 이건 완전 신규 품목이야!!! 
 				//시작하는 숫자 
-				Integer startNum = i+1;
+				Integer startNum = 1;
 				
 				//시작하는 숫자, 4자릿수 맞춰서 문자로 만들기 (ex> 1 -> 0001)
 				String startNumByString = String.format("%04d",startNum);
@@ -202,6 +205,14 @@ public class PS1RestController {
 			materialDTO.setCode(getLCWithMCList.get(i)+maxOnlyNumByStringList.get(i));
 			finalGenerateMaterialCodeList.add(materialDTO);
 		}
+		
+		//다 만든 리스트에서, 같은 코드가 나왔을경우, 다시 한번 숫자 세팅해주기
+		//(즉 같은 문자부분이 2개이상이면, 같은 맥스번호를 받아오기때문에, 다시한번 숫자부분 값 설정해주기) 
+		for(int i=0; i<finalGenerateMaterialCodeList.size();i++) {
+			
+		}
+		
+		
 		//log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
 		
 		return finalGenerateMaterialCodeList;		
@@ -282,7 +293,7 @@ public class PS1RestController {
 				maxOnlyNumByStringList.add(maxOnlyNumByString);			
 			}else { 	//검색해서 찾아온 품목이 없어!! 이건 완전 신규 품목이야!!! 
 				//시작하는 숫자 
-				Integer startNum = i+1;
+				Integer startNum = 1;
 				
 				//시작하는 숫자, 4자릿수 맞춰서 문자로 만들기 (ex> 1 -> 0001)
 				String startNumByString = String.format("%04d",startNum);
