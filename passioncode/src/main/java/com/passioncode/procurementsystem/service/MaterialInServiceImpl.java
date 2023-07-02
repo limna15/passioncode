@@ -100,7 +100,11 @@ public class MaterialInServiceImpl implements MaterialInService {
 		
 		for(int i=0; i<ppList.size(); i++) {
 			if(!materialInRepository.existsById(i+1)) { //materialIn에 존재 X 때 설정
-				materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
+				
+		//////////여기서 세부구매발주서 코드 체크해서 넣어줘야함 순서대로만 비교해서 순서대로 안넣으면 오류가 남/////////////////////////////////////////////////수정하기//////////
+				
+				materialInDTO=  MaterialInDTO.builder().noStr(noStr(ppList.get(i).getDetailPurchaseOrder().getPurchaseOrder().getNo()))
+						.codeStr(codeStr(ppList.get(i).getDetailPurchaseOrder().getCode()))
 						.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 						.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 						.status(null).transactionStatus(null).inDate(null).build();
@@ -109,7 +113,8 @@ public class MaterialInServiceImpl implements MaterialInService {
 				}else { //materialIn에 존재할 때 설정
 					if(materialInRepository.existsByDetailPurchaseOrder(dpoList.get(i))){ //입고상태가 null이 아닐 때
 						if(transactionDetailRepository.existsByPurchaseOrder(dpoList.get(i).getPurchaseOrder())) { //입고상태 완료 + 발행상태 완료
-							materialInDTO= MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
+							materialInDTO= MaterialInDTO.builder().noStr(noStr(ppList.get(i).getDetailPurchaseOrder().getPurchaseOrder().getNo()))
+									.codeStr(codeStr(ppList.get(i).getDetailPurchaseOrder().getCode()))
 									.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 									.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 									.status(miList.get(i).getStatus()).transactionStatus("발행 완료")
@@ -118,7 +123,8 @@ public class MaterialInServiceImpl implements MaterialInService {
 							//log.info(i + "번 입고상태+발행상태 완료 miDTO 보기 >>> " + materialInDTO);
 						}else { //발행상태 미완료
 							if(miList.get(i).getStatus()) { //입고상태 완료 + 발행상태 미완료
-								materialInDTO= MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
+								materialInDTO= MaterialInDTO.builder().noStr(noStr(ppList.get(i).getDetailPurchaseOrder().getPurchaseOrder().getNo()))
+										.codeStr(codeStr(ppList.get(i).getDetailPurchaseOrder().getCode()))
 										.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 										.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 										.status(miList.get(i).getStatus()).transactionStatus("발행 예정")
@@ -127,7 +133,8 @@ public class MaterialInServiceImpl implements MaterialInService {
 								//log.info(i + "번 입고 완료 + 발행 미완료 miDTO 보기 >>> " + materialInDTO);
 							
 							}else { //입고상태 취소 + 발행상태 "발행 불가" -> 출고 테이블에 취소 등록
-								materialInDTO=  MaterialInDTO.builder().noStr(noStr(dpoList.get(i).getPurchaseOrder().getNo())).codeStr(codeStr(dpoList.get(i).getCode()))
+								materialInDTO=  MaterialInDTO.builder().noStr(noStr(ppList.get(i).getDetailPurchaseOrder().getPurchaseOrder().getNo()))
+										.codeStr(codeStr(ppList.get(i).getDetailPurchaseOrder().getCode()))
 										.dueDate(ppList.get(i).getDueDate()).materialCode(ppList.get(i).getMrp().getMaterial().getCode())
 										.materialName(ppList.get(i).getMrp().getMaterial().getName()).amount(ppList.get(i).getDetailPurchaseOrder().getAmount())
 										.status(miList.get(i).getStatus()).transactionStatus("발행 불가").inDate(null).build();

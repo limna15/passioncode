@@ -88,7 +88,7 @@ public class MaterialOutServiceImpl implements MaterialOutService {
 		
 		MaterialOut materialOut= null;
 		
-		for(int i=0; i<=ppList.size(); i++) {
+		for(int i=0; i<ppList.size(); i++) {
 		//log.info("ppList 완료일 한번 보자 >>> " + ppList.get(i).getCompletionDate());
 			//세부구매발주서 등록 +  완료일(입고일) 등록 -> 출고 리스트(출고 상태 (버튼))
 			if(ppList.get(i).getDetailPurchaseOrder() != null && ppList.get(i).getCompletionDate() != null) {
