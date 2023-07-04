@@ -204,6 +204,36 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		 progressCheckRepository.save(pc2);
 	}
 	
+	@Override
+	public void addAvg2(Integer num1, String etc, Integer num2) {// ******고유키를 통한 평가 등록
+		// 3번의 조달계획을 가져옴
+		// 발주코드가 존재하는 것만 가져옴
+		SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date today5 = new Date();// 오늘 날짜 보는 방법
+		Date today=null;
+		String today6 = targetFormat.format(today5);//이게 진짜 오늘 날짜
+		try {
+			today = targetFormat.parse(today6);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num2).get();
+		Integer pc = progressCheckRepository.findByDetailPurchaseOrder(detailPO).getCode();
+		LocalDateTime pcDate = progressCheckRepository.findByDetailPurchaseOrder(detailPO).getDate();
+		log.info("업데이트 할 평가: " + pc);
+		// 업데이트 해야 할 것 코드, 날짜, 비율, 기타, 외래키(발주코드) 총 5개
+		ProgressCheck pc2 = ProgressCheck.builder().code(pc)
+				.date(pcDate)
+				.detailPurchaseOrder(detailPO)
+				.etc(etc).rate(num1).build();
+		log.info("업데이트된 내용: " + pc2);// 저장을 다시 해줘야함
+		//log.info("오늘날짜: " + today);// 저장을 다시 해줘야함
+		// 만약에 한개의 발주코드에 여러개의 일정이 있는 경우는?
+		// 다른 곳에서 그 날짜의 조건을 불러오는 것을 해 보자
+		progressCheckRepository.save(pc2);
+	}
+	
 	//발주코드에 문자를 넣어서 보내기
 	public String addBlank(Integer num1) {
 		String pNum = String.format("%05d", num1);

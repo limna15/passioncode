@@ -65,7 +65,7 @@ public class PS2RestController {
 			String myetc = percentAndEct[1]+"";
 			Integer mycode = Integer.parseInt(percentAndEct[2]);
 			//여기서 서비스 해서 저장하기
-			progressCheckService.addAvg(mypercent, myetc, mycode);
+			progressCheckService.addAvg2(mypercent, myetc, mycode);
 		
 	}
 
