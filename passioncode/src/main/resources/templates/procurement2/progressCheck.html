@@ -247,6 +247,11 @@
 										지난 검사의 납기 진도율은 <span id="diliveryPercent3">납기 진도율</span> 입니다.
 										
 								</div>
+								
+								<div id="diliveryEtc3">
+										여기에 기타 사항<span id="diliveryEtc3"> </span> 입니다.
+										
+								</div>
 									<!-- 동적 테이블 부분-->
 									
 							<br><!--여기에 조건을 걸어서 다른 날이면 안 보여줌 -->
@@ -298,7 +303,7 @@
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
 			var nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
 			var dPercent= getObjTR().querySelector("input[name=diliveryPercent]").value;
-			//var pEtc= getObjTR().querySelector("input[name=etc6]").value;
+			var pEtc= getObjTR().querySelector("input[name=etc6]").value;
 			console.log("발주코드: ",pCode);//잘나옴
 			console.log("회사이름: ",cName);
 			console.log("납기일: ",dDate);
@@ -307,7 +312,7 @@
 			console.log("단가: ",uPrice);
 			console.log("다음 진척검수일: ",nDate);
 			console.log("납기 진도율: ",dPercent);
-			//console.log("기타사항: ",pEtc);
+			console.log("기타사항: ",pEtc);
 			codeNo=getObjTR().querySelector("input[name=purchaseOrderCode]").value;//여기에서 값 넣어서 날짜등록으로 보내보기
 			console.log("등록할때 필요한 발주번호: ",codeNo);//잘나옴
 			document.querySelector("#companyName2").innerHTML = cName;
@@ -342,8 +347,10 @@
 			document.querySelector("#companyName3").innerHTML = cName;
 			if(dPercent=="미등록"){
 				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사 기록이 존재하지 않습니다`;
+				document.querySelector("#diliveryEtc3").innerHTML = ` `;	//이렇게 안하면 아래의 내용이 뜸
 			}else{
 				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사의 납기진도율은 `+dPercent+` 입니다. `;				
+				document.querySelector("#diliveryEtc3").innerHTML = `지난 검사에서 기록한 기타사항은 " `+pEtc+`" 입니다. `;				
 			}
 			
 			//document.querySelector("#etc3").innerHTML = pEtc;
