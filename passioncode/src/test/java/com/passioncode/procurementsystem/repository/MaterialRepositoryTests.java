@@ -330,6 +330,49 @@ public class MaterialRepositoryTests {
 	}
 	
 	
+	@Test
+	public void codeGenerateTest() {
+		List<String> codeList = new ArrayList<>();
+		
+		codeList.add("AB0012");
+		codeList.add("BC0002");
+		codeList.add("CD0002");
+		codeList.add("CD0002");
+		codeList.add("BC0002");
+		codeList.add("CD0002");
+		codeList.add("BC0002");
+		codeList.add("BC0002");
+		log.info("어디 만들어진 처음 코드 리스트 봐보자!!!! : "+codeList);
+//		codeList.remove(2);
+//		codeList.add(2, "테스트");
+		
+		for(int i=0;i<codeList.size();i++) {
+			String compare = codeList.get(i);
+			log.info("현재 "+i+"번째 비교 중! 그 문자 : "+compare);
+			for(int j=0;j<codeList.size();j++) {
+				if(i!=j) {
+					if(compare.equals(codeList.get(j))){
+						String presentStr = codeList.get(j).substring(0,2);
+						String presentNum = codeList.get(j).substring(2);
+						Integer plusNum = Integer.parseInt(presentNum)+1;
+						String plusNumStr = String.format("%04d",plusNum);
+						String plusCodeGenerate = presentStr+plusNumStr;
+						log.info("코드 +1해서 만들어진거 문자 보자 : "+plusCodeGenerate);
+						codeList.remove(j);
+						codeList.add(j, plusCodeGenerate);
+						log.info("제대로 리스트에 그 해당 인덱스에 넣어진건가?? : "+codeList.get(j));
+					}
+				}
+			}
+		}
+		
+		log.info("어디 만들어진 코드 리스트 봐보자!!!! : "+codeList);
+		
+		
+		
+	}
+	
+	
 	
 	
 	

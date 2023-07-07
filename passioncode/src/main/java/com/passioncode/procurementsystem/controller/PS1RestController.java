@@ -166,9 +166,6 @@ public class PS1RestController {
 			//대분류, 중분류 첫글자씩 합쳐온 글자를 검색해서 해당되는 모든 품목 찾아오기
 			List<Material> materialList=materialService.getMaterialListByCodeContaining(getLCWithMCList.get(i));
 
-			//만약에 같은 문자부분이 있다면, 받아온숫자에서 +1 해주기(즉 처음 나온애는 맥스값+1, 나중 나온애는 앞에값(맥스값+1)+1 해주기
-			//같ㅇ
-			
 			//검색해서 찾아온 값이 존재하면 ->거기서 +1 , 없다면! 신규!!! -> 0001 로!!
 			if(materialList.size()>0) {
 				//찾아온 품목코드에서 앞에 두글자 빼고 숫자만 리스트로 담기
@@ -206,13 +203,30 @@ public class PS1RestController {
 			finalGenerateMaterialCodeList.add(materialDTO);
 		}
 		
+		//중복되서 만들어진 품목코드!!!! 중복안되게!!! 다시 배정해주기!! (최종 위에서 만든 코드를 이용해서!!!)
 		//다 만든 리스트에서, 같은 코드가 나왔을경우, 다시 한번 숫자 세팅해주기
 		//(즉 같은 문자부분이 2개이상이면, 같은 맥스번호를 받아오기때문에, 다시한번 숫자부분 값 설정해주기) 
-		for(int i=0; i<finalGenerateMaterialCodeList.size();i++) {
-			
+		for(int i=0;i<finalGenerateMaterialCodeList.size();i++) {
+			//비교할 문자 뽑아내기
+			String compare = finalGenerateMaterialCodeList.get(i).getCode();
+//			log.info("현재 "+i+"번째 비교 중! 그 문자 : "+compare);
+			for(int j=0;j<finalGenerateMaterialCodeList.size();j++) {
+				if(i!=j) {	//같은 순서는 같을 수 밖에 없으니 같은 인덱스순서 제외하고, 같은문자일시에 +1해서 셋팅해서 코드넣어주기
+					if(compare.equals(finalGenerateMaterialCodeList.get(j).getCode())){
+						String presentStr = finalGenerateMaterialCodeList.get(j).getCode().substring(0,2);
+						String presentNum = finalGenerateMaterialCodeList.get(j).getCode().substring(2);
+						Integer plusNum = Integer.parseInt(presentNum)+1;
+						String plusNumStr = String.format("%04d",plusNum);
+						String plusCodeGenerate = presentStr+plusNumStr;
+//						log.info("코드 +1해서 만들어진거 문자 보자 : "+plusCodeGenerate);
+						//리스트는 제거를 해주고 넣어줘야! 값이 대체가 된다, 안그러면 그 해당인덱스에 add로 추가된다.
+						finalGenerateMaterialCodeList.remove(j);
+						finalGenerateMaterialCodeList.add(j, MaterialDTO.builder().code(plusCodeGenerate).build());
+//						log.info("제대로 리스트에 그 해당 인덱스에 넣어진건가?? : "+finalGenerateMaterialCodeList.get(j));
+					}
+				}
+			}
 		}
-		
-		
 		//log.info("만들어진 최종 품목코드 리스트(즉 MaterialDTO 리스트) 보기 : "+finalGenerateMaterialCodeList);
 		
 		return finalGenerateMaterialCodeList;		
@@ -255,6 +269,7 @@ public class PS1RestController {
 			materialService.mrpDeleteWithMaterialModify(materialDTO.getCode());
 			materialService.delete(materialDTO);
 		}
+		//----------------------------------------------------------- MRP 관련 끝----------------------------------------------------------------------------------------------//
 		
 		//이제 중복되거나 할일 없으니까, 받아온 대분류, 중분류 를 통해 품목코드 만들기
 		//받은 대분류코드, 중분류코드 문자만 추출해서 만들고, 만든거 리스트에 넣어주기 
@@ -318,6 +333,32 @@ public class PS1RestController {
 		//------------- 새로 만들어낸 품목코드를 통해 --> 이 해당하는 품목이 MRP 2개를 랜덤으로 세팅해서 만들어 주기!!! ------------------------------------------------------//
 		// 아니아니!! 이 RestController 작업 바뀐 품목코드 생성까지!!! 그리고 생성코드 화면에 보내서, 거기서 폼으로 생성한 품목코드로 품목 저장하게 Controller로 처리 하니까!!
 		// 여기서 그 바뀐 품목코드로 바로 mrp 2개 못 만들어!! ----> 이건 수정처리 Controller 에서!! 그 해당 mrp 만들어주자!!!!
+		//----------------------------------------------------------- MRP 관련 끝----------------------------------------------------------------------------------------------//
+		
+		//중복되서 만들어진 품목코드!!!! 중복안되게!!! 다시 배정해주기!! (최종 위에서 만든 코드를 이용해서!!!)
+		//다 만든 리스트에서, 같은 코드가 나왔을경우, 다시 한번 숫자 세팅해주기
+		//(즉 같은 문자부분이 2개이상이면, 같은 맥스번호를 받아오기때문에, 다시한번 숫자부분 값 설정해주기) 
+		for(int i=0;i<finalGenerateMaterialCodeList.size();i++) {
+			//비교할 문자 뽑아내기
+			String compare = finalGenerateMaterialCodeList.get(i).getCode();
+//					log.info("현재 "+i+"번째 비교 중! 그 문자 : "+compare);
+			for(int j=0;j<finalGenerateMaterialCodeList.size();j++) {
+				if(i!=j) {	//같은 순서는 같을 수 밖에 없으니 같은 인덱스순서 제외하고, 같은문자일시에 +1해서 셋팅해서 코드넣어주기
+					if(compare.equals(finalGenerateMaterialCodeList.get(j).getCode())){
+						String presentStr = finalGenerateMaterialCodeList.get(j).getCode().substring(0,2);
+						String presentNum = finalGenerateMaterialCodeList.get(j).getCode().substring(2);
+						Integer plusNum = Integer.parseInt(presentNum)+1;
+						String plusNumStr = String.format("%04d",plusNum);
+						String plusCodeGenerate = presentStr+plusNumStr;
+//								log.info("코드 +1해서 만들어진거 문자 보자 : "+plusCodeGenerate);
+						//리스트는 제거를 해주고 넣어줘야! 값이 대체가 된다, 안그러면 그 해당인덱스에 add로 추가된다.
+						finalGenerateMaterialCodeList.remove(j);
+						finalGenerateMaterialCodeList.add(j, MaterialDTO.builder().code(plusCodeGenerate).build());
+//								log.info("제대로 리스트에 그 해당 인덱스에 넣어진건가?? : "+finalGenerateMaterialCodeList.get(j));
+					}
+				}
+			}
+		}
 		
 		return finalGenerateMaterialCodeList;		
 //		return null;
