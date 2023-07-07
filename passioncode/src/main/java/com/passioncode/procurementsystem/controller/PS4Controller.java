@@ -99,12 +99,12 @@ public class PS4Controller {
 		List<Date> DateList = new ArrayList<>();
 		List<String> DateStrList = new ArrayList<>();
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date today = new Date();
 		
 		Date startDate = today;
 		try {
-			startDate = simpleDateFormat.parse("2023-07-01");
+			startDate = simpleDateFormat.parse("2023-06-01 00:00:00");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -112,7 +112,7 @@ public class PS4Controller {
 		
 		Date endDate = today;
 		try {
-			endDate = simpleDateFormat.parse("2023-07-07");
+			endDate = simpleDateFormat.parse("2023-06-15 00:00:00");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -136,11 +136,27 @@ public class PS4Controller {
 		log.info("계산 된건가?? : "+DateList);
 		log.info("계산 된건가?? : "+DateStrList);
 		model.addAttribute("DateList",DateList);
-		model.addAttribute("DateStrLisg",DateStrList);
+		model.addAttribute("DateStrList",DateStrList);
 		
+		//전체로 받아온 대분류 전체 리스트를 대분류 각각의 리스트에 담아서 각각 이름의 리스트로 보내기
+//		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCList();
+		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCListByPeriod("2023-06-01","2023-06-15");
+//		List<LargeCategoryDTO> LCTotalList = largeCategoryService.getDTOList();
+////		log.info("대분류 전체리스트 제대로 가져오나 보자 : "+LCTotalList);
+//		for(int i=0;i<LCTotalList.size();i++) {
+//			for(int j=0;j<stockResultDTOList.size();j++) {
+//				List<StockResultDTO> stockResultDTOByLC = new  ArrayList<>();
+//				if(LCTotalList.get(i).getCode().equals(stockResultDTOList.get(j).getLargeCategoryCode())) {
+//					stockResultDTOByLC.add(stockResultDTOList.get(j));
+//				}
+//				String sendLCName = 
+//				model.addAttribute(, stockResultDTOByLC)
+//			}
+//		}
 		
-		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCList();
 		model.addAttribute("stockResultDTOList",stockResultDTOList);
+		log.info("만들어진 재고금액리스트 보자 : "+stockResultDTOList);
+		log.info("만들어진 재고금액리스트 사이즈 길이 보자 : "+stockResultDTOList.size());
 		
 		
 		String mylabels="[";

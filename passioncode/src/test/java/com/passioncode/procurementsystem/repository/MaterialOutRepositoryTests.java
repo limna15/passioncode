@@ -494,10 +494,12 @@ public class MaterialOutRepositoryTests {
 	@Test
 	public void reportListTest() {
 		//1. 오늘 날짜 기준으로, 그 해당년도와 해달 월의 1일 과 오늘날짜 구하기
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		Date today = new Date();
-		String todayStr = simpleDateFormat.format(today);
+		String todayStr = simpleDateFormat2.format(today);
 		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
+		log.info("오늘 날짜 스트링으로 보자 : "+todayStr+" 00:00:00");
 		String todayYearMonthStr = todayStr.substring(0,7);
 		log.info("오늘 날짜의 년도 스트링으로 보자 : "+todayYearMonthStr);
 		
@@ -513,13 +515,13 @@ public class MaterialOutRepositoryTests {
 		log.info("올해 1월1일 문자 잘 만들어졌나 : "+yearFirstdateStr);
 		
 		//2. 재고금액목록 받아온거 재고산출DTO 리스트에 넣어주기
-		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForLC(yearFirstdateStr, todayStr);
+		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForLC(yearFirstdateStr, todayStr+" 00:00:00");
 		log.info("이건 잘 가져오는건가 : "+calculStockReport);
 		
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
 		
 		for(Object[] result:calculStockReport) {
-			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0]))
+			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0])+" 00:00:00")
 																	.largeCategoryCode(String.valueOf(result[1])).largeCategoryName(String.valueOf(result[2]))
 																	.stockTotalPrice(Integer.parseInt(String.valueOf(result[3]))).build();
 			stockResultDTOList.add(stockResultDTO);

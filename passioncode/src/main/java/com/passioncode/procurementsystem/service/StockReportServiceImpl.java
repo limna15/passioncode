@@ -26,16 +26,16 @@ public class StockReportServiceImpl implements StockReportService {
 		//오늘 날짜 기준으로, 그 해당 년도와 해당월 1일 날짜부터 오늘까지의 날짜까지 재고금액 계산해서 재고산출DTO리스트 만들기
 		
 		//1. 오늘 날짜 기준으로, 그 해당년도와 해달 월의 1일 과 오늘날짜 구하기
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date today = new Date();
 		String todayStr = simpleDateFormat.format(today);
-//		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
+		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
 		String todayYearMonthStr = todayStr.substring(0,7);
 		//log.info("오늘 날짜의 년도 스트링으로 보자 : "+todayYearStr);
 		
 		Date yearFirstdate = today;
 		try {
-			yearFirstdate = simpleDateFormat.parse(todayYearMonthStr+"-01");
+			yearFirstdate = simpleDateFormat.parse(todayYearMonthStr+"-01 00:00:00");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class StockReportServiceImpl implements StockReportService {
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
 		
 		for(Object[] result:calculStockReport) {
-			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0]))
+			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0])+" 00:00:00")
 																	.largeCategoryCode(String.valueOf(result[1])).largeCategoryName(String.valueOf(result[2]))
 																	.stockTotalPrice(Integer.parseInt(String.valueOf(result[3]))).build();
 			stockResultDTOList.add(stockResultDTO);
@@ -68,7 +68,7 @@ public class StockReportServiceImpl implements StockReportService {
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
 		
 		for(Object[] result:calculStockReport) {
-			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0]))
+			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0])+" 00:00:00")
 																	.largeCategoryCode(String.valueOf(result[1])).largeCategoryName(String.valueOf(result[2]))
 																	.stockTotalPrice(Integer.parseInt(String.valueOf(result[3]))).build();
 			stockResultDTOList.add(stockResultDTO);
