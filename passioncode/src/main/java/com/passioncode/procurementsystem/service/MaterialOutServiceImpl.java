@@ -1,11 +1,8 @@
 package com.passioncode.procurementsystem.service;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MaterialIn;
@@ -15,7 +12,6 @@ import com.passioncode.procurementsystem.repository.MRPRepository;
 import com.passioncode.procurementsystem.repository.MaterialInRepository;
 import com.passioncode.procurementsystem.repository.MaterialOutRepository;
 import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

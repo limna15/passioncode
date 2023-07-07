@@ -15,11 +15,11 @@ public interface StockResultService {
 	List<StockResultDTO> getStockResultDTOList();
 	
 	/**
-	 * 화면에서 받은 기간으로, 재고산출계산한 재고산출DTO 리스트
+	 * 화면에서 받은 첫날짜, 끝날짜로, 재고산출계산한 재고산출DTO 리스트
 	 * @param dateStrList
 	 * @return
 	 */
-	List<StockResultDTO> getStockResultDTOListByPeriod(Date[] dateList);
+	List<StockResultDTO> getStockResultDTOListByPeriod(String startDate,String endDate);
 	
 
 }

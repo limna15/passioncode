@@ -919,14 +919,22 @@ public class MaterialOutRepositoryTests {
 			stockResultDTOs.add(stockResultDTO);
 		}
 		
-		
 		for(int i=0;i<DateStrLisg.size(); i++) {
 			
 		}
 		
-		
-		
-		
-		
 	}
+	
+	
+	@Test
+	public void dateCalculeate() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date today = new Date();
+		String todayStr = simpleDateFormat.format(today);
+		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
+		String todayYearStr = todayStr.substring(0,5);
+		log.info("오늘 날짜의 년도 스트링으로 보자 : "+todayYearStr);
+	}
+	
+	
 }
