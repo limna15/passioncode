@@ -2,22 +2,12 @@ package com.passioncode.procurementsystem.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import com.passioncode.procurementsystem.dto.DrawingFileDTO;
-import com.passioncode.procurementsystem.dto.MaterialDTO;
-import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
-import com.passioncode.procurementsystem.entity.Material;
-import com.passioncode.procurementsystem.entity.MiddleCategory;
-import com.passioncode.procurementsystem.repository.LargeCategoryRepository;
 import com.passioncode.procurementsystem.repository.MaterialOutRepository;
-import com.passioncode.procurementsystem.repository.MaterialRepository;
-import com.passioncode.procurementsystem.repository.MiddleCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -27,64 +17,7 @@ import lombok.extern.log4j.Log4j2;
 public class StockResultServiceImpl implements StockResultService {
 	
 	@Autowired
-	MaterialRepository materialRepository;
-	
-	@Autowired
 	MaterialOutRepository materialOutRepository;
-	
-	@Autowired
-	LargeCategoryRepository largeCategoryRepository;
-	
-	@Autowired
-	MiddleCategoryRepository middleCategoryRepository;
-	
-	public String shareStatusChangeToString(Integer shareStatus) {
-		// 0 : 공용, 1 : 전용
-		return shareStatus==0 ? "공용" : "전용";
-	}
-	
-	public MiddleCategoryDTO MCentityToMCDTO(MiddleCategory middleCategory) {
-		MiddleCategoryDTO middleCategoryDTO = MiddleCategoryDTO.builder().middleCode(middleCategory.getCode()).middleCategory(middleCategory.getCategory())
-																		.largeCode(middleCategory.getLargeCategory().getCode())
-																		.largeCategory(middleCategory.getLargeCategory().getCategory()).build();
-		return middleCategoryDTO;
-	}
-	
-	public MaterialDTO materialEntityToDTO(Material material) {
-		//품목코드, 품목명, 대, 중, 규격, 재질, 제작사양, 도면번호, 도면Image, 공용여부
-		//도면파일 업로드가 되어있는것, 안되어있는것 나누어서 DTO 변환 해주자!!
-		MaterialDTO materialDTO = new MaterialDTO();
-		
-		if(material.getDrawingFile() !=null) {	//도면파일이 존재 O -> drawingFileDTO 값을 세팅해주기
-			materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
-												.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
-												.drawingFileDTO(new DrawingFileDTO(material.getDrawingFile()))
-												.shareStatus(shareStatusChangeToString(material.getShareStatus()))
-												.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
-												.middleCategoryName(material.getMiddleCategory().getCategory())
-												.largeCategoryCode(material.getMiddleCategory().getLargeCategory().getCode())
-												.middleCategoryCode(material.getMiddleCategory().getCode()).build();
-		}else {									//도면파일이 존재 X -> drawingFileDTO null로 세팅해주기
-			materialDTO =  MaterialDTO.builder().code(material.getCode()).name(material.getName()).size(material.getSize()).quality(material.getQuality())
-												.spec(material.getSpec()).drawingNo(material.getDrawingNo()).drawingFile(material.getDrawingFile())
-												.drawingFileDTO(null)
-												.shareStatus(shareStatusChangeToString(material.getShareStatus()))
-												.largeCategoryName(material.getMiddleCategory().getLargeCategory().getCategory())
-												.middleCategoryName(material.getMiddleCategory().getCategory())
-												.largeCategoryCode(material.getMiddleCategory().getLargeCategory().getCode())
-												.middleCategoryCode(material.getMiddleCategory().getCode()).build();
-		}
-		//만든 materialDTO 에 List<MiddleCategory> middleCategoryList 추가하기
-		List<MiddleCategory> middleCategoryList = middleCategoryRepository.findByLargeCategory(largeCategoryRepository.findById(materialDTO.getLargeCategoryCode()).get());
-		List<MiddleCategoryDTO> middleCategoryDTOList = new ArrayList<>();
-		for(MiddleCategory middleCategory:middleCategoryList) {
-			middleCategoryDTOList.add(MCentityToMCDTO(middleCategory));
-		}	
-		materialDTO = materialDTO.toBuilder().middleCategoryDTOList(middleCategoryDTOList).build();
-		
-		return materialDTO;
-	}
-	
 	
 	@Override
 	public List<StockResultDTO> getStockResultDTOList() {

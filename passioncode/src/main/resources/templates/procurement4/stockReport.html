@@ -142,21 +142,21 @@
 	   	console.log("mylabels1 이거 잙읽나??",mylabels1);
 	   	
 	   	var DateList=[[${DateList}]];
-	   	var DateStrLisg=[[${DateStrLisg}]];
-	   	var stockResultDTOs=[[${stockResultDTOs}]];
+	   	var DateStrList=[[${DateStrList}]];
+	   	var stockResultDTOs=[[${stockResultDTOList}]];
 	   	
 	   	let sentence = ``;
-	   	for(var i=0; i<DateStrLisg.length-1;i++){
-	   		sentence=sentence+makeSentence("'"+DateStrLisg[i]+" 00:00:00'",stockResultDTOs[i].stockTotalPrice);
+	   	for(var i=0; i<DateStrList.length-1;i++){
+	   		sentence=sentence+makeSentence("'"+DateStrList[i]+" 00:00:00'",stockResultDTOs[i].stockTotalPrice);
 	   	}
-	   	sentence=sentence+makeLastSentence("'"+DateStrLisg[DateStrLisg.length-1]+" 00:00:00'",stockResultDTOs[DateStrLisg.length-1].stockTotalPrice);
+	   	sentence=sentence+makeLastSentence("'"+DateStrList[DateStrList.length-1]+" 00:00:00'",stockResultDTOs[DateStrList.length-1].stockTotalPrice);
 	   	//console.log("만든 문장 보자 : ",sentence);
 		
 	   	let sentence2 = ``;
 	   	for(var i=0; i<DateList.length-1;i++){
 	   		sentence2=sentence2+makeSentence2(DateList[i],stockResultDTOs[i].stockTotalPrice);
 	   	}
-	   	sentence2=sentence2+makeLastSentence2(DateList[DateList.length-1],stockResultDTOs[DateStrLisg.length-1].stockTotalPrice);
+	   	sentence2=sentence2+makeLastSentence2(DateList[DateList.length-1],stockResultDTOs[DateStrList.length-1].stockTotalPrice);
 	   	//console.log("만든 문장 보자2 : ",sentence2);
 	   	
 	   	
@@ -182,7 +182,7 @@
 		}
 		
 		
-	  	let sentence3 =  makeLastSentence2("'"+DateStrLisg[3]+" 00:00:00'",stockResultDTOs[3].stockTotalPrice);
+	  	let sentence3 =  makeLastSentence2("'"+DateStrList[3]+" 00:00:00'",stockResultDTOs[3].stockTotalPrice);
 	   
 	  	
 	  	

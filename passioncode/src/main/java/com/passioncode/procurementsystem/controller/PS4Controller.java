@@ -1,25 +1,20 @@
 package com.passioncode.procurementsystem.controller;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.passioncode.procurementsystem.dto.LargeCategoryDTO;
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
 import com.passioncode.procurementsystem.entity.LargeCategory;
-import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.repository.MaterialOutRepository;
@@ -27,8 +22,8 @@ import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialOutService;
 import com.passioncode.procurementsystem.service.MiddleCategoryService;
 import com.passioncode.procurementsystem.service.ProcurementPlanService;
+import com.passioncode.procurementsystem.service.StockReportService;
 import com.passioncode.procurementsystem.service.StockResultService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,8 +39,7 @@ public class PS4Controller {
 	private final StockResultService stockResultService;
 	private final LargeCategoryService largeCategoryService;
 	private final MiddleCategoryService middleCategoryService;
-	
-	private final MaterialOutRepository materialOutRepository;
+	private final StockReportService stockReportService;
 	
 	@GetMapping("materialOut")
 	public void materialOut(Model model, MaterialOutDTO materialOutDTO) {
@@ -80,8 +74,6 @@ public class PS4Controller {
 		List<StockResultDTO> stockResultDTOList = stockResultService.getStockResultDTOList();
 		
 		model.addAttribute("DTOList", stockResultDTOList);
-		
-		
 	}
 	
 	
@@ -105,14 +97,14 @@ public class PS4Controller {
 		
 		
 		List<Date> DateList = new ArrayList<>();
-		List<String> DateStrLisg = new ArrayList<>();
+		List<String> DateStrList = new ArrayList<>();
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date today = new Date();
 		
 		Date startDate = today;
 		try {
-			startDate = simpleDateFormat.parse("2023-06-01");
+			startDate = simpleDateFormat.parse("2023-07-01");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,7 +112,7 @@ public class PS4Controller {
 		
 		Date endDate = today;
 		try {
-			endDate = simpleDateFormat.parse("2023-06-28");
+			endDate = simpleDateFormat.parse("2023-07-07");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -139,26 +131,20 @@ public class PS4Controller {
 			Date caldate=cal2.getTime();
 			cal2.add(Calendar.DATE, 1);
 			DateList.add(caldate);
-			DateStrLisg.add(simpleDateFormat.format(caldate));	
+			DateStrList.add(simpleDateFormat.format(caldate));	
 		}
 		log.info("계산 된건가?? : "+DateList);
-		log.info("계산 된건가?? : "+DateStrLisg);
+		log.info("계산 된건가?? : "+DateStrList);
 		model.addAttribute("DateList",DateList);
-		model.addAttribute("DateStrLisg",DateStrLisg);
+		model.addAttribute("DateStrLisg",DateStrList);
 		
-		List<Object[]> testList = materialOutRepository.getCalculStockTotalPriceForLC("2023-06-01", "2023-06-28", "BB0001");
-		List<StockResultDTO> stockResultDTOs = new ArrayList<>();
 		
-		for(Object[] test : testList) {
-			log.info("재고금액 보자 : "+test[0]+"  "+test[1]);	
-			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate((String)test[0]).stockTotalPrice(Integer.parseInt(String.valueOf(test[1]))).largeCategoryCode("BB0001").build();
-			stockResultDTOs.add(stockResultDTO);
-		}
-		model.addAttribute("stockResultDTOs",stockResultDTOs);
+		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCList();
+		model.addAttribute("stockResultDTOList",stockResultDTOList);
 		
 		
 		String mylabels="[";
-		for(String labels:DateStrLisg) {
+		for(String labels:DateStrList) {
 			mylabels += "\""+labels+"\",";
 		}
 		mylabels=mylabels.substring(0, mylabels.length()-1)+"]";
@@ -167,14 +153,14 @@ public class PS4Controller {
 		model.addAttribute("mylabels",mylabels);
 
 		
-		String pricedata="[";
-		for(StockResultDTO dto :stockResultDTOs) {
-			pricedata += dto.getStockTotalPrice()+",";
-		}
-		pricedata=pricedata.substring(0, pricedata.length()-1)+"]";
-		log.info("잘 만들어 졌나? pricedata : "+pricedata);
-		
-		model.addAttribute("pricedata",pricedata);
+//		String pricedata="[";
+//		for(StockResultDTO dto :stockResultDTOs) {
+//			pricedata += dto.getStockTotalPrice()+",";
+//		}
+//		pricedata=pricedata.substring(0, pricedata.length()-1)+"]";
+//		log.info("잘 만들어 졌나? pricedata : "+pricedata);
+//		
+//		model.addAttribute("pricedata",pricedata);
 		
 	}
 
