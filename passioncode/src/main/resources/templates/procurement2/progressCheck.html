@@ -242,18 +242,19 @@
 						
 						<!--거래명세서 품목 정보-->
 						<div class="table-responsive">
-						
+								<table id="poInfo" border="1">
+									<tbody id="tbody01" >
+									</tbody>
+								</table>
 								<div id="diliveryPercent3">
 										지난 검사의 납기 진도율은 <span id="diliveryPercent3">납기 진도율</span> 입니다.
 										
 								</div>
-								
 								<div id="diliveryEtc3">
 										여기에 기타 사항<span id="diliveryEtc3"> </span> 입니다.
 										
 								</div>
 									<!-- 동적 테이블 부분-->
-									
 							<br><!--여기에 조건을 걸어서 다른 날이면 안 보여줌 -->
 								<div>납기 진도율: <input id="idpercent" type="number"></div>
 								<br> <div>기타 사항: <input id="idetc" type="text"></div>
@@ -349,6 +350,13 @@
 				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사 기록이 존재하지 않습니다`;
 				document.querySelector("#diliveryEtc3").innerHTML = ` `;	//이렇게 안하면 아래의 내용이 뜸
 			}else{
+				var tableTd01 = '<tr>';
+							tableTd01 += '<td>' + '회차' +'</td>';
+							tableTd01 += '<td>' + '검수일' +'</td>';
+							tableTd01 += '<td>' + '납기 진도율' +'</td>';
+							tableTd01 += '<td>' + '기타 사항' +'</td>';
+							tableTd01 += '</tr>';
+						$('#tbody01').append(tableTd01);//여기서 축척됨
 				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사의 납기진도율은 `+dPercent+` 입니다. `;				
 				document.querySelector("#diliveryEtc3").innerHTML = `지난 검사에서 기록한 기타사항은 " `+pEtc+`" 입니다. `;				
 			}
