@@ -4,7 +4,6 @@
 
 	<th:block th:fragment="content">
 
-
 <style>
   table {
     width: 100%;
@@ -94,80 +93,153 @@
 				<div class="card-body">
 					<p class="card-title" style="font-size:23px;">재고금액 현황관리</p> 
 					<br>
-					<form>
-						<div class="row" style="margin-bottom: 5px;">
-							<!-- 기간 검색 시작 -->
-							<div>
-								<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
-								<input type="date" id="startDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;~&nbsp;&nbsp;
-								<input type="date" id="endDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;
-								&nbsp;
-								<div style="display:inline-block;" > 
-									<button type="submit" class="btn btn-primary" style='margin-bottom:5px';>검색</button>
-								</div>
-		                    </div>
-						</div>	
-					</form>
+					<div class="row" style="margin-bottom: 5px;">
+						<!-- 기간 검색 시작 -->
+						<div>
+							<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
+							<input type="date" id="startDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;~&nbsp;&nbsp;
+							<input type="date" id="endDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;
+							<input type="submit" id="dateSearch" value="검색" class="btn btn-primary" style="margin-bottom:5px;">
+	                    </div>
+	                    <!-- 기간 검색 끝-->
+					</div>	
 					<br>
 					<!-- 차트 들어가는 자리 -->						
-					<div id="chartContainer" style="height: 370px; width: 100%;">
+					<div id="chartContainer1" style="height: 370px; width: 100%;">
+					
+					</div>
+					<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+					<br><br>
+					<div id="chartContainer2" style="height: 370px; width: 100%;">
 					
 					</div>
 					<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 					<canvas id="cash-deposits-chart"></canvas>
-	
 					<!-- 차트 들어가는 자리 끝 -->
 				</div>
 			</div>
 		</div>	
 		
+		<!-- 
+			 검색버튼 누를때, 오류시 보여줄 모달창 시작
+			- 내용 : 1. <span>기간을 선택해주세요.</span>
+					 2. <span>종료일보다 시작일이 빨라야합니다.</span>
+		-->
+		<div class="stockResultModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >기간 검색 확인</h5>
+                        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="stockResultModalContent">   
+						<!-- 오류시 보여줄 내용 -->	
+							
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" style="padding-left:15px; padding-right:15px; width:60px;">
+                        	확인
+                       	</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- 검색버튼 누를때, 오류시 보여줄 모달창 끝 -->
 		
 		<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+		<!-- 차트를 실행시키기 위해, 차트 안에 함수를 선언했기때문에, 스크립트 쓰기전에 먼저 선언해준다. -->
+		<script src="../../js/dashboard2.js"></script>
 		<script th:inline="javascript" type="text/javascript">
-		
-	 	$(document).ready(function(e) {
-	  		
-			
-		
-	 	});
-	   	
+		//-------------------------------------- 처음에 보여주는 초기 대분류, 중분류 차트 세팅하기 시작 --------------------------------------------------------------//
+		//오늘날짜를 기준으로, 해당 년과 월의 1일부터~ 오늘까지의 날짜 리스트	   	
 	   	var DateList = [[${DateList}]];
 	   	var DateStrList = [[${DateStrList}]];
-	   	var stockResultDTOList = [[${stockResultDTOList}]];
 	   	//console.log("어디 데이트 한번 보자 : ",DateList);
 	   	//console.log("어디 데이트문자 한번 보자 : ",DateStrList);
 	   	//console.log("어디 이렇게 읽는건 맞나 보자 : ",DateList[0]);
+	   	//오늘날짜 기준으로, 해당 년,월의 1일부터, 오늘까지의 대분류와 중분류 재고금액 리스트
+	   	var stockResultDTOLCList = [[${stockResultDTOLCList}]];
+	   	var stockResultDTOMCList = [[${stockResultDTOMCList}]];
 	   	
+	   	//대분류 전체와, 중분류 전체 리스트
 	   	var LargeCategoryDTOList = [[${LargeCategoryDTOList}]];
+	   	var middleCategoryDTOList = [[${middleCategoryDTOList}]];
 	   	//console.log("어디 대분류 리스트 보자 : ",LargeCategoryDTOList);
-	   	var maxStockTotalPrice = [[${maxStockTotalPrice}]];
-	   	console.log("받아온 재고금액 최대값 보자 : ",maxStockTotalPrice);
 	   	
-	   	function makeDateData(date,price){
+	   	//오늘날짜 기준으로, 받아온 재고금액의 대분류 최대값과 중분류 최대값
+	   	var maxStockTotalPriceLC = [[${maxStockTotalPriceLC}]];
+	   	var maxStockTotalPriceMC = [[${maxStockTotalPriceMC}]];
+	   	//console.log("받아온 재고금액 최대값 보자 (대분류) : ",maxStockTotalPriceLC);
+	   	//console.log("받아온 재고금액 최대값 보자 (중분류) : ",maxStockTotalPriceMC);
+	   	
+	   	/* 차트 안에 넣는 샘플 데이터 모양
+	   	data: [{
+			name: "보드",
+			type: "spline",
+			yValueFormatString: "###,###,### 원",
+			showInLegend: true,
+			dataPoints: [
+				{ x: new Date('2017-06-01 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-02 00:00:00'), y: 10000 },
+				{ x: new Date('2017-06-03 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-04 00:00:00'), y: 20000 },
+				{ x: new Date('2017-06-05 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-06 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-07 00:00:00'), y: 40000 },
+				{ x: new Date('2017-06-08 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-09 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-10 00:00:00'), y: 0 }
+			]
+		},
+		{
+			name: "철",
+			type: "spline",
+			yValueFormatString: "###,###,### 원",
+			showInLegend: true,
+			dataPoints: [
+				{ x: new Date('2017-06-01 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-02 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-03 00:00:00'), y: 100000 },
+				{ x: new Date('2017-06-04 00:00:00'), y: 25000 },
+				{ x: new Date('2017-06-05 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-06 00:00:00'), y: 30000 },
+				{ x: new Date('2017-06-07 00:00:00'), y: 20000 },
+				{ x: new Date('2017-06-08 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-09 00:00:00'), y: 0 },
+				{ x: new Date('2017-06-10 00:00:00'), y: 0 }
+			]
+		}]
+	   	*/
+	   	
+	   	//차트 안의 data중에서 x,y를 객체로 받는 날짜와 금액 값들 만들어주는 함수
+	   	function makeDateStrData(dateStr,price){
 	   		let xyObject = new Object();
-	   		xyObject.x = new Date(date);
+	   		xyObject.x = new Date(dateStr);
 	   		xyObject.y = price;
 			return xyObject;	   		
 	   	}
 	   	
-	   	function makeFinalData(item){
-	   		let eachDataList = new Array();
+	   	//대분류 차트를 만들기 위한 안에 넣는 최종Data 만드는 함수
+	   	function makeFinalLCData(stockResultDTOLCList,DateStrList){
+	   		let eachDataLCList = new Array();
 	   		for(var i=0;i<LargeCategoryDTOList.length;i++){
-		   		let eachData = new Object();
+		   		let eachDataLC = new Object();
 	   			let eachDataLCCode = LargeCategoryDTOList[i].code;
 	   			let xyObjectSameList = new Array();
 	   			let xyObjectNoSameList = new Array();
 	   			let sameCheck = false;
 	   			
-	   			eachData.name = LargeCategoryDTOList[i].category;
-	   			eachData.type = "spline";
-	   			eachData.yValueFormatString =  "###,###,##0 원";
-	   			eachData.showInLegend = true;
+	   			eachDataLC.name = LargeCategoryDTOList[i].category;
+	   			eachDataLC.type = "spline";
+	   			eachDataLC.yValueFormatString =  "###,###,##0 원";
+	   			eachDataLC.showInLegend = true;
 	   			
-	   			for(var j=0;j<stockResultDTOList.length;j++){
-					if(eachDataLCCode==stockResultDTOList[j].largeCategoryCode){
+	   			for(var j=0;j<stockResultDTOLCList.length;j++){
+					if(eachDataLCCode==stockResultDTOLCList[j].largeCategoryCode){
 						let xyObject = new Object();
-						xyObject=makeDateData(stockResultDTOList[j].dateForCalculate,stockResultDTOList[j].stockTotalPrice);
+						xyObject=makeDateStrData(stockResultDTOLCList[j].dateForCalculate,stockResultDTOLCList[j].stockTotalPrice);
 						xyObjectSameList.push(xyObject);
 						sameCheck = true;
 					}
@@ -176,89 +248,240 @@
 	   			
 	   			if(sameCheck){
 	   				//console.log("현재 sameCheck  참인 상태 맞지? : ",sameCheck);
-	   				eachData.dataPoints = xyObjectSameList;
+	   				eachDataLC.dataPoints = xyObjectSameList;
 	   			}else{
 	   				//console.log("현재 sameCheck  거짓인 상태 맞지? : ",sameCheck);
 	   				for(var k=0;k<DateStrList.length;k++){
 	   					let xyObject = new Object();
-						xyObject=makeDateData(DateStrList[k],0);
+						xyObject=makeDateStrData(DateStrList[k],0);
 						xyObjectNoSameList.push(xyObject);
 	   				}
 		   			//console.log("어디 안에서 만든 xyObjectNoSameList 보자 : ",xyObjectNoSameList);
-	   				eachData.dataPoints = xyObjectNoSameList;
+	   				eachDataLC.dataPoints = xyObjectNoSameList;
 	   			}
-	   			//console.log("리스트 안에서 넣기전에 : ",eachDataList);
-	   			eachDataList.push(eachData);
-	   			//console.log("리스트 안에서 넣었을때 : ",eachDataList);
+	   			//console.log("리스트 안에서 넣기전에 : ",eachDataLCList);
+	   			eachDataLCList.push(eachDataLC);
+	   			//console.log("리스트 안에서 넣었을때 : ",eachDataLCList);
 	   		}
-	   		//console.log("리스트 밖에서 최종 확인 : ",eachDataList);
-	   		return eachDataList;
+	   		//console.log("리스트 밖에서 최종 확인 : ",eachDataLCList);
+	   		return eachDataLCList;
 	   	}
 	   	
-	   	let eachDataList = new Array();
-	   	eachDataList = makeFinalData(stockResultDTOList);
-	   	console.log("잘 만들어졋나? 최종 data 보자!! : ",eachDataList);
+	   	//처음에 보여주는 대분류 차트 데이터 값 만들기
+	   	let eachDataLCList = new Array();
+	   	eachDataLCList = makeFinalLCData(stockResultDTOLCList,DateStrList);
+	   	//console.log("처음에 만든 최종 data 보자!! (대분류) : ",eachDataLCList);
 	   	
-	   	let maxinum = 0;
-	   	if(maxStockTotalPrice==0){
-			maxinum = 150000
+	   	//처음에 보여주는 대분류 차트의 재고금액 최대값에 따른 y축 세팅
+	   	let maxinumLC = 0;
+	   	if(maxStockTotalPriceLC==0){
+			maxinumLC = 150000
 	  	}else{
-			maxinum = maxStockTotalPrice + 50000;
+			maxinumLC = maxStockTotalPriceLC + 50000;
 		}
-	  	
-	   	function mychart(){
-	   		var chart = new CanvasJS.Chart("chartContainer", {
-	   			animationEnabled: true,
-	   			title:{
-	   				text: "대분류별 재고금액"
-	   			},
-	   			axisX: {
-	   				valueFormatString: "YYYY-MM-DD"
-	   			},
-	   			axisY: {
-	   				title: "재고금액",
-	   				suffix: " 원",
-	   				minimum: -50000,
-	   				maximum: maxinum,
-	   			},
-	   			legend:{
-	   				cursor: "pointer",
-	   				fontSize: 16,
-	   				itemclick: toggleDataSeries
-	   			},
-	   			toolTip:{
-	   				shared: true
-	   			},
-	   			data: eachDataList
-	   		});
-	   		chart.render();
-	   		
-	   		function toggleDataSeries(e){
-	   			if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-	   				e.dataSeries.visible = false;
-	   			}
-	   			else{
-	   				e.dataSeries.visible = true;
-	   			}
-	   			chart.render();
-	   		}
-	   	}
-	
-		</script>	
-		<script src="../../vendors/base/vendor.bundle.base.js"></script>
-		<script src="../../vendors/chart.js/Chart.min.js"></script>
-		<script src="../../js/off-canvas.js"></script>
-		<script src="../../js/hoverable-collapse.js"></script>
-		<script src="../../js/template.js"></script>
-		<script src="../../js/chart.js"></script>
-		<script src="../../js/dashboard.js"></script>
-		<script src="../../js/dashboard2.js"></script>
-		<script src="../../js/dashboard5.js"></script>
 		
-		<script>
+		//중분류 차트를 만들기 위한 안에 넣는 최종Data 만드는 함수
+		function makeFinalMCData(stockResultDTOMCList,DateStrList){
+	   		let eachDataMCList = new Array();
+	   		for(var i=0;i<middleCategoryDTOList.length;i++){
+		   		let eachDataMC = new Object();
+	   			let eachDataMCCode = middleCategoryDTOList[i].middleCode;
+	   			let xyObjectSameList = new Array();
+	   			let xyObjectNoSameList = new Array();
+	   			let sameCheck = false;
+	   			
+	   			eachDataMC.name = middleCategoryDTOList[i].middleCategory;
+	   			eachDataMC.type = "spline";
+	   			eachDataMC.yValueFormatString =  "###,###,##0 원";
+	   			eachDataMC.showInLegend = true;
+	   			
+	   			for(var j=0;j<stockResultDTOMCList.length;j++){
+					if(eachDataMCCode==stockResultDTOMCList[j].middleCategoryCode){
+						let xyObject = new Object();
+						xyObject=makeDateStrData(stockResultDTOMCList[j].dateForCalculate,stockResultDTOMCList[j].stockTotalPrice);
+						xyObjectSameList.push(xyObject);
+						sameCheck = true;
+					}
+	   			}
+	   			//console.log("어디 안에서 만든 xyObjectSameList 보자 : ",xyObjectSameList);
+	   			
+	   			if(sameCheck){
+	   				//console.log("현재 sameCheck  참인 상태 맞지? : ",sameCheck);
+	   				eachDataMC.dataPoints = xyObjectSameList;
+	   			}else{
+	   				//console.log("현재 sameCheck  거짓인 상태 맞지? : ",sameCheck);
+	   				for(var k=0;k<DateStrList.length;k++){
+	   					let xyObject = new Object();
+						xyObject=makeDateStrData(DateStrList[k],0);
+						xyObjectNoSameList.push(xyObject);
+	   				}
+		   			//console.log("어디 안에서 만든 xyObjectNoSameList 보자 : ",xyObjectNoSameList);
+	   				eachDataMC.dataPoints = xyObjectNoSameList;
+	   			}
+	   			//console.log("리스트 안에서 넣기전에 : ",eachDataMCList);
+	   			eachDataMCList.push(eachDataMC);
+	   			//console.log("리스트 안에서 넣었을때 : ",eachDataMCList);
+	   		}
+	   		//console.log("리스트 밖에서 최종 확인 : ",eachDataMCList);
+	   		return eachDataMCList;
+	   	}
+	   	
+	   	//처음에 보여주는 중분류 차트 데이터 값 만들기
+	   	let eachDataMCList = new Array();
+	   	eachDataMCList = makeFinalMCData(stockResultDTOMCList,DateStrList);
+	   	//console.log("처음에 만든 최종 data 보자!! (중분류) : ",eachDataMCList);
+	   	
+		//처음에 보여주는 중분류 차트의 재고금액 최대값에 따른 y축 세팅
+	   	let maxinumMC = 0;
+	   	if(maxStockTotalPriceMC==0){
+			maxinumMC = 150000
+	  	}else{
+			maxinumMC = maxStockTotalPriceMC + 50000;
+		}
+		
+		//대분류 차트 1번, 중분류 차트 2번 실행시켜서, 차트 보여주기
 		mychart();
-		//mychart2();
-		//mychart5();
+		mychart2();
+		//-------------------------------------- 처음에 보여주는 초기 대분류, 중분류 차트 세팅하기 끝 --------------------------------------------------------------//
+		
+		//-------------------------------------- 기간검색에 따른, 대분류, 중분류 차트 세팅하기 시작 --------------------------------------------------------------//
+		//기간 검색 버튼을 눌렀을때, ajax로 받아와서 대분류, 중분류 차트 셋팅하기
+		$("#dateSearch").on("click",function(e){
+	        var startDate = $('#startDate').val();
+	        var endDate = $('#endDate').val();
+			console.log("시작일 input 값 보자 : ",startDate);
+			console.log("종료일 input 값 보자 : ",endDate);
+	        
+	        //-을 구분자로 연,월,일로 잘라내어 배열로 반환
+	        var startArray = startDate.split('-');
+	        var endArray = endDate.split('-');   
+	        
+	        //배열에 담겨있는 연,월,일을 사용해서 Date 객체 생성
+	        var start_date = new Date(startArray[0], startArray[1], startArray[2]);
+	        var end_date = new Date(endArray[0], endArray[1], endArray[2]);
+	        
+	        let sentence = ``;
+	        //날짜를 숫자형태의 날짜 정보로 변환하여 비교한다.
+	        if(!start_date.getTime() || !end_date.getTime()){
+	        	sentence = `<span>기간을 선택해주세요.</span>`;
+	        	document.querySelector("#stockResultModalContent").innerHTML = sentence;
+				$(".stockResultModal").modal('show'); 
+	        	//alert("기간을 선택해주세요.");
+	        	//location.reload();
+	        }
+	        if(start_date.getTime() > end_date.getTime()) {
+	        	sentence = `<span>종료일보다 시작일이 빨라야합니다.</span>`;
+	        	document.querySelector("#stockResultModalContent").innerHTML = sentence;
+				$(".stockResultModal").modal('show'); 
+	            //alert("종료일보다 시작일이 빨라야합니다.");
+	            //location.reload();
+	        }
+	        
+	      	//시작일과 종료일 사이 날짜 배열로 가져오기
+			var start= new Date(document.querySelector("#startDate").value);
+			var end= new Date(document.querySelector("#endDate").value);
+			//console.log("오잉? start 보자 : ",start);
+			//console.log("오잉? end 보자 : ",end);
+			
+			var result= [];
+			
+			while (start <= end) {
+				result.push(start.toISOString().split('T')[0]);
+				start.setDate(start.getDate() +1);
+			}
+			//console.log("시작날짜 찍히나 >>> ", start)		
+			//console.log("끝날짜 찍히나 >>> ", end)
+			//console.log("result 찍히나 >>> ", result)	//현재 tostring로 한거라서 Date가 아니라 string이다!
+			//console.log("result Json형식으로 찍히나 >>> ", JSON.stringify(result))
+
+			//result = 2023-06-01 문자 형식이고, 2023-06-01 00:00:00 문자형식으로 바꿔주기
+			let resultChange = new Array();
+			result.forEach(function(item){
+				resultChange.push(item+" 00:00:00");
+			});
+			//console.log("변형한 날짜 리스트 결과 값 보자! : ",resultChange);
+			
+			//검색누른 후에는 input값 초기화
+			var startInput = document.querySelector("#startDate");
+			//console.log("인풋 초기화하고 싶은데 >>> ", startInput)	
+			startInput.value= null;
+			var endInput = document.querySelector("#endDate");
+			endInput.value= null;
+			
+			//검색한 해당기간의 대분류 재고금액 값들 ajax로 받아오기 -> 대분류 차트로 보여주기
+			$.ajax({
+				type: "post",
+				url: "/procurement4/stockReportForLC",
+				data: JSON.stringify(result),
+				contentType :"application/json; charset=UTF-8",
+				dataType: "json",
+				success: function(data){
+					//console.log("받아온 대분류 데이터 : ",data);
+					eachDataLCList = makeFinalLCData(data,resultChange);
+	   				//console.log("ajax로 받아서 처리된 대분류 최종 data 보자!! (대분류) : ",eachDataLCList);
+	   				
+	   				//받아온 재고금액 에서 최대값 구하기! (대분류)
+	   				let stockTotalPriceLCList = new Array();
+	   				data.forEach(function(item){
+	   					stockTotalPriceLCList.push(item.stockTotalPrice);
+	   				});
+	   				//console.log("대분류 재고금액 담은 리스트 보자 : ",stockTotalPriceLCList);
+	   				
+	   				maxStockTotalPriceLC = Math.max(...stockTotalPriceLCList);
+	   				//console.log("최대값 대분류 재고금액 잘 가져오나? : ",maxStockTotalPriceLC);
+	   				if(maxStockTotalPriceLC==0){
+						maxinumLC = 150000
+				  	}else{
+						maxinumLC = maxStockTotalPriceLC + 50000;
+					}
+					
+	   				mychart();
+				},	
+				error : function(jqXHR,textStatus,errorThrown){
+					//console.log(jqXHR);  //응답 메시지
+					//console.log(textStatus); //"error"로 고정인듯함
+					//console.log(errorThrown);
+				}
+			});//ajax 끝
+			
+			//검색한 해당기간의 중분류 재고금액 값들 ajax로 받아오기 -> 중분류 차트로 보여주기
+			$.ajax({
+				type: "post",
+				url: "/procurement4/stockReportForMC",
+				data: JSON.stringify(result),
+				contentType :"application/json; charset=UTF-8",
+				dataType: "json",
+				success: function(data){
+					//console.log("받아온 대분류 데이터 : ",data);
+					eachDataMCList = makeFinalMCData(data,resultChange);
+	   				//console.log("ajax로 받아서 처리된 중분류 최종 data 보자!! (중분류) : ",eachDataMCList);
+	   				
+	   				//받아온 재고금액 에서 최대값 구하기! (중분류)
+	   				let stockTotalPriceMCList = new Array();
+	   				data.forEach(function(item){
+	   					stockTotalPriceMCList.push(item.stockTotalPrice);
+	   				});
+	   				//console.log("중분류 재고금액 담은 리스트 보자 : ",stockTotalPriceMCList);
+	   				
+	   				maxStockTotalPriceMC = Math.max(...stockTotalPriceMCList);
+	   				//console.log("최대값 중분류 재고금액 잘 가져오나? : ",maxStockTotalPriceMC);
+	   				if(maxStockTotalPriceMC==0){
+						maxinumMC = 150000
+				  	}else{
+						maxinumMC = maxStockTotalPriceMC + 50000;
+					}
+					
+	   				mychart2();
+				},	
+				error : function(jqXHR,textStatus,errorThrown){
+					//console.log(jqXHR);  //응답 메시지
+					//console.log(textStatus); //"error"로 고정인듯함
+					//console.log(errorThrown);
+				}
+			});//ajax 끝
+		}); //기간 검색 클릭 함수 끝
+		//-------------------------------------- 기간검색에 따른, 대분류, 중분류 차트 세팅하기 끝 --------------------------------------------------------------//
+		
 		</script>
 		
 	</th:block>

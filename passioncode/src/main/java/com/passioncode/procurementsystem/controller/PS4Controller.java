@@ -86,20 +86,24 @@ public class PS4Controller {
 		
 		//중분류 셀렉트 정보는 대분류 리스트에서 처음보여주게 되는거에 해당되는 중분류만 보여주기
 		//나머지 중분류는 화면에서 바뀔때마다 불러오기 때문에!
-		LargeCategory largeCategory = middleCategoryService.getLargeCategory(LargeCategoryDTOList.get(0).getCode());
-		List<MiddleCategory> MiddleCategoryListByLC1 = middleCategoryService.getMiddleCategoryByLargeCategory(largeCategory);
+//		LargeCategory largeCategory = middleCategoryService.getLargeCategory(LargeCategoryDTOList.get(0).getCode());
+//		List<MiddleCategory> MiddleCategoryListByLC1 = middleCategoryService.getMiddleCategoryByLargeCategory(largeCategory);
+//		
+//		List<MiddleCategoryDTO> MiddleCategoryDTOListByLC1 = new ArrayList<>();
+//		for(MiddleCategory middleCategory:MiddleCategoryListByLC1) {
+//			MiddleCategoryDTOListByLC1.add(middleCategoryService.entityToDTO(middleCategory));
+//		}		
+//		model.addAttribute("MiddleCategoryDTOList", MiddleCategoryDTOListByLC1);
 		
-		List<MiddleCategoryDTO> MiddleCategoryDTOListByLC1 = new ArrayList<>();
-		for(MiddleCategory middleCategory:MiddleCategoryListByLC1) {
-			MiddleCategoryDTOListByLC1.add(middleCategoryService.entityToDTO(middleCategory));
-		}		
-		model.addAttribute("MiddleCategoryDTOList", MiddleCategoryDTOListByLC1);
+		List<MiddleCategoryDTO> middleCategoryDTOList = middleCategoryService.getDTOList();
+		model.addAttribute("middleCategoryDTOList",middleCategoryDTOList);
+		
 		
 		//오늘 날짜 기준으로, 그 해당년도와 해달 월의 1일 과 오늘날짜 구하기
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date today = new Date();
 		String todayStr = simpleDateFormat.format(today);
-		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
+//		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
 		String todayYearMonthStr = todayStr.substring(0,7);
 		//log.info("오늘 날짜의 년도+월 스트링으로 보자 : "+todayYearMonthStr);
 		
@@ -124,21 +128,39 @@ public class PS4Controller {
 		
 		//전체로 받아온 대분류 전체 리스트를 대분류 각각의 리스트에 담아서 각각 이름의 리스트로 보내기
 //		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCListByPeriod("2023-06-01","2023-06-15");
-		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCList();
+		List<StockResultDTO> stockResultDTOLCList = stockReportService.getStockReportForLCList();
 		
-		model.addAttribute("stockResultDTOList",stockResultDTOList);
-		log.info("만들어진 재고금액리스트 보자 : "+stockResultDTOList);
-		log.info("만들어진 재고금액리스트 사이즈 길이 보자 : "+stockResultDTOList.size());
+		model.addAttribute("stockResultDTOLCList",stockResultDTOLCList);
+//		log.info("만들어진 재고금액리스트 보자 (대분류) : "+stockResultDTOLCList);
+//		log.info("만들어진 재고금액리스트 사이즈 길이 보자 (대분류) : "+stockResultDTOLCList.size());
 		
-		//재고금액의 최대값 구하기
+		//재고금액의 최대값 구하기 (대분류)
 		//재고금액을 List<Integer>로 만들어서 받아서, 여기서 최대값을 뽑기
-		List<Integer> stockTotalPriceList = new ArrayList<>();
-		for(StockResultDTO stockResultDTO:stockResultDTOList) {
-			stockTotalPriceList.add(stockResultDTO.getStockTotalPrice());
+		List<Integer> stockTotalPriceLCList = new ArrayList<>();
+		for(StockResultDTO stockResultDTO:stockResultDTOLCList) {
+			stockTotalPriceLCList.add(stockResultDTO.getStockTotalPrice());
 		}
-		Integer maxStockTotalPrice = Collections.max(stockTotalPriceList);
-		log.info("재고금액 최대값 확인해보자 : "+maxStockTotalPrice);;
-		model.addAttribute("maxStockTotalPrice",maxStockTotalPrice);
+		Integer maxStockTotalPriceLC = Collections.max(stockTotalPriceLCList);
+//		log.info("재고금액 최대값 확인해보자 : "+maxStockTotalPriceLC);;
+		model.addAttribute("maxStockTotalPriceLC",maxStockTotalPriceLC);
+		
+		//중분류 버전!!!!
+		List<StockResultDTO> stockResultDTOMCList = stockReportService.getStockReportForMCList();
+		model.addAttribute("stockResultDTOMCList",stockResultDTOMCList);
+		log.info("만들어진 재고금액리스트 보자 (중분류) : "+stockResultDTOMCList);
+		log.info("만들어진 재고금액리스트 사이즈 길이 보자 (중분류) : "+stockResultDTOMCList.size());
+		
+		//재고금액의 최대값 구하기 (중분류)
+		//재고금액을 List<Integer>로 만들어서 받아서, 여기서 최대값을 뽑기
+		List<Integer> stockTotalPriceMCList = new ArrayList<>();
+		for(StockResultDTO stockResultDTO:stockResultDTOMCList) {
+			stockTotalPriceMCList.add(stockResultDTO.getStockTotalPrice());
+		}
+		Integer maxStockTotalPriceMC = Collections.max(stockTotalPriceMCList);
+		log.info("재고금액 최대값 확인해보자 : "+maxStockTotalPriceMC);
+		model.addAttribute("maxStockTotalPriceMC",maxStockTotalPriceMC);
+		
+		
 	}
 
 }

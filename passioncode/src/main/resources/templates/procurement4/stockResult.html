@@ -97,13 +97,11 @@
 					<br>
 					<div class="row" style="margin-bottom: 5px;">
 						<!-- 기간 검색 -->	
-						<div class="col-md-6" >
-							<div style="display:inline-block;">
-								<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
-								<input type="date" id="startDate" name="startDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;~&nbsp;&nbsp;
-								<input type="date" id="endDate" name="endDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;
-								<input type="submit" id="dateSearch" value="검색" class="btn btn-primary" style="margin-bottom:5px;">
-							</div>
+						<div>
+							<span style="font-size:20px;">기간</span>&nbsp;&nbsp;
+							<input type="date" id="startDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;~&nbsp;&nbsp;
+							<input type="date" id="endDate" style="width:140px; height:40px; border-radius:5px; border:1px solid #dcdcdc; padding-left:12px;padding-right:12px;">&nbsp;&nbsp;
+							<input type="submit" id="dateSearch" value="검색" class="btn btn-primary" style="margin-bottom:5px;">
 						</div>
 						<!-- 기간 검색 끝-->
 					</div>	
@@ -298,9 +296,7 @@
 						//console.log(errorThrown);
 					}
 				});//ajax 끝
-				
-				
-			});
+			}); //기간 검색 클릭 함수 끝
 			
 			
 		});	//$(document).ready(function() 끝

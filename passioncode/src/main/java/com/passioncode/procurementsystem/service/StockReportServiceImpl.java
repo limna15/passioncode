@@ -23,6 +23,7 @@ public class StockReportServiceImpl implements StockReportService {
 
 	@Override
 	public List<StockResultDTO> getStockReportForLCList() {
+		//대분류별 현황
 		//재고금액 리포트 들어가자마자 보이는 재고산출DTO 리스트!  
 		//오늘 날짜 기준으로, 그 해당 년도와 해당월 1일 날짜부터 오늘까지의 날짜까지 재고금액 계산해서 재고산출DTO리스트 만들기
 		
@@ -30,7 +31,7 @@ public class StockReportServiceImpl implements StockReportService {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date today = new Date();
 		String todayStr = simpleDateFormat.format(today);
-		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
+//		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
 		String todayYearMonthStr = todayStr.substring(0,7);
 		//log.info("오늘 날짜의 년도+월 스트링으로 보자 : "+todayYearMonthStr);
 		
@@ -47,7 +48,7 @@ public class StockReportServiceImpl implements StockReportService {
 		
 		//2. 재고금액목록 받아온거 재고산출DTO 리스트에 넣어주기
 		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForLC(yearMonthFirstdateStr, todayStr);
-		log.info("이건 잘 가져오는건가 : "+calculStockReport);
+//		log.info("이건 잘 가져오는건가 : "+calculStockReport);
 		
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
 		
@@ -62,6 +63,7 @@ public class StockReportServiceImpl implements StockReportService {
 
 	@Override
 	public List<StockResultDTO> getStockReportForLCListByPeriod(String startDate, String endDate) {
+		//대분류별 현황
 		//화면에서 받아온 시작날짜, 끝날짜 받아서, 재고산출DTO 로 만들어주기
 		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForLC(startDate, endDate);
 //		log.info("이건 잘 가져오는건가 : "+calculStockReport);
@@ -163,6 +165,63 @@ public class StockReportServiceImpl implements StockReportService {
 		//log.info("계산 된건가?? : "+DateList);
 		//log.info("계산 된건가?? : "+DateStrList);
 		return DateList;
+	}
+
+	@Override
+	public List<StockResultDTO> getStockReportForMCList() {
+		//중분류별 현황
+		//재고금액 리포트 들어가자마자 보이는 재고산출DTO 리스트!  
+		//오늘 날짜 기준으로, 그 해당 년도와 해당월 1일 날짜부터 오늘까지의 날짜까지 재고금액 계산해서 재고산출DTO리스트 만들기
+		
+		//1. 오늘 날짜 기준으로, 그 해당년도와 해달 월의 1일 과 오늘날짜 구하기
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date today = new Date();
+		String todayStr = simpleDateFormat.format(today);
+//		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
+		String todayYearMonthStr = todayStr.substring(0,7);
+		//log.info("오늘 날짜의 년도+월 스트링으로 보자 : "+todayYearMonthStr);
+		
+		Date yearMonthFirstdate = today;
+		try {
+			yearMonthFirstdate = simpleDateFormat.parse(todayYearMonthStr+"-01 00:00:00");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//log.info("바꾼 올해+해당월 1일 보자 : "+yearMonthFirstdate);
+		String yearMonthFirstdateStr = simpleDateFormat.format(yearMonthFirstdate);
+//		log.info("올해+해당월 1일 문자 잘 만들어졌나 : "+yearMonthFirstdateStr);
+		
+		//2. 재고금액목록 받아온거 재고산출DTO 리스트에 넣어주기
+		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForMC(yearMonthFirstdateStr, todayStr);
+//		log.info("이건 잘 가져오는 건가 : "+calculStockReport);
+		
+		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
+		
+		for(Object[] result:calculStockReport) {
+			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0])+" 00:00:00")
+																	.middleCategoryCode(String.valueOf(result[1])).middleCategoryName(String.valueOf(result[2]))
+																	.stockTotalPrice(Integer.parseInt(String.valueOf(result[3]))).build();
+			stockResultDTOList.add(stockResultDTO);
+		}
+		return stockResultDTOList;
+	}
+
+	@Override
+	public List<StockResultDTO> getStockReportForMCListByPeriod(String startDate, String endDate) {
+		//대분류별 현황
+		//화면에서 받아온 시작날짜, 끝날짜 받아서, 재고산출DTO 로 만들어주기
+		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForMC(startDate, endDate);
+		
+		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
+		
+		for(Object[] result:calculStockReport) {
+			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0])+" 00:00:00")
+																	.middleCategoryCode(String.valueOf(result[1])).middleCategoryName(String.valueOf(result[2]))
+																	.stockTotalPrice(Integer.parseInt(String.valueOf(result[3]))).build();
+			stockResultDTOList.add(stockResultDTO);
+		}
+		return stockResultDTOList;
 	}
 
 }

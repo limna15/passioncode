@@ -16,6 +16,7 @@ import com.passioncode.procurementsystem.service.MaterialOutService;
 import com.passioncode.procurementsystem.service.MaterialService;
 import com.passioncode.procurementsystem.service.MiddleCategoryService;
 import com.passioncode.procurementsystem.service.ProcurementPlanService;
+import com.passioncode.procurementsystem.service.StockReportService;
 import com.passioncode.procurementsystem.service.StockResultService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -34,9 +35,15 @@ public class PS4RestController {
 	private final MaterialInService materialInService;
 	private final MaterialOutService materialOutService;
 	private final StockResultService stockResultService;
+	private final StockReportService stockReportService;
 	
+	/**
+	 * 재고산출 화면에서, 기간검색에서 받은 기간리스트를 이용해서, 재고산출해주기
+	 * @param dateList
+	 * @return
+	 */
 	@PostMapping(value="stockResult", produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<StockResultDTO> stockResult2(@RequestBody Date[] dateList) {
+	public List<StockResultDTO> stockResult(@RequestBody Date[] dateList) {
 		//보낸 날짜 리스트 기간에서! 첫날짜와 끝날짜만 만든 메소드에 넣어주자
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String startDateStr = simpleDateFormat.format(dateList[0]);
@@ -46,4 +53,45 @@ public class PS4RestController {
 		
 		return stockResultDTOList;
 	}
+	
+	/**
+	 * 재고금액 화면에서, 기간검색에서 받은 기간리스트를 이용해서 대분류 재고금액 계산해주기
+	 * @param dateList
+	 * @return
+	 */
+	@PostMapping(value="stockReportForLC", produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<StockResultDTO> stockReportForLC(@RequestBody Date[] dateList) {
+		//보낸 날짜 리스트 기간에서! 첫날짜와 끝날짜만 만든 메소드에 넣어주자
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String startDateStr = simpleDateFormat.format(dateList[0]);
+		String endDateStr = simpleDateFormat.format(dateList[dateList.length-1]);
+		log.info("대분류 시작 날짜 : "+startDateStr);
+		log.info("대분류 끝 날짜 : "+endDateStr);
+		
+		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCListByPeriod(startDateStr, endDateStr);
+		
+		return stockResultDTOList;
+	}
+	
+	
+	/**
+	 * 재고금액 화면에서, 기간검색에서 받은 기간리스트를 이용해서 중분류 재고금액 계산해주기
+	 * @param dateList
+	 * @return
+	 */
+	@PostMapping(value="stockReportForMC", produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<StockResultDTO> stockReportForMC(@RequestBody Date[] dateList) {
+		//보낸 날짜 리스트 기간에서! 첫날짜와 끝날짜만 만든 메소드에 넣어주자
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String startDateStr = simpleDateFormat.format(dateList[0]);
+		String endDateStr = simpleDateFormat.format(dateList[dateList.length-1]);
+		log.info("중분류 시작 날짜 : "+startDateStr);
+		log.info("중분류 끝 날짜 : "+endDateStr);
+		
+		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForMCListByPeriod(startDateStr, endDateStr);
+		
+		return stockResultDTOList;
+	}
+	
+	
 }
