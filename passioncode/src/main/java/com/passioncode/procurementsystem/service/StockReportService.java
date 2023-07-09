@@ -1,4 +1,5 @@
 package com.passioncode.procurementsystem.service;
+import java.util.Date;
 import java.util.List;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
 
@@ -18,5 +19,19 @@ public interface StockReportService {
 	 */
 	List<StockResultDTO> getStockReportForLCListByPeriod(String startDate,String endDate);
 	
-
+	/**
+	 * 날짜문자 버전을 시작날짜,끝날짜를 이용해서 문자리스트로 만들기
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	List<String> getDateStrList(String startDateStr,String endDateStr);
+	
+	/**
+	 * 날짜를 시작날짜,끝날짜를 이용해서 날짜리스트로 만들기
+	 * @param startDateStr
+	 * @param endDateStr
+	 * @return
+	 */
+	List<Date> getDateList(String startDateStr,String endDateStr);
 }

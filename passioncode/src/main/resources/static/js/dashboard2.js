@@ -1,21 +1,4 @@
-function mychart2(sentence5){
-		console.log("여기선 읽나~ sentence3 : ",sentence3);
-		console.log("여기선 읽나~ sentence5 : ",sentence5);
-	var aaaa=[	{ x: '2017-07-24 00:00:00', y: 100 },
-				{ x: '2017-07-25 00:00:00', y: 0 },
-				{ x: '2017-07-26 00:00:00', y: 29 },
-				{ x: '2017-07-27 00:00:00', y: 0 },
-				{ x: '2017-07-28 00:00:00', y: 0 },
-				{ x: '2017-07-29 00:00:00', y: 0 },
-				{ x: '2017-07-30 00:00:00', y: -0 }];
-	console.log("1호기"+sentence);
-	console.log("2호기"+sentence2);
-	var bbb=sentence;
-	
-	bbb.forEach(function(item){
-		console.log("반복"+item.x+"  "+item.y);
-	});
-	console.log("찍을데이터"+aaaa);
+function mychart2(){
 	var chart = new CanvasJS.Chart("chartContainer", {
 		animationEnabled: true,
 		title:{
@@ -42,7 +25,15 @@ function mychart2(sentence5){
 			type: "spline",
 			yValueFormatString: "###,###,### 원",
 			showInLegend: true,
-			dataPoints: aaaa
+			dataPoints: [
+				{ x: new Date('2017-07-24 00:00:00'), y: 80 },
+				{ x: new Date('2017-07-25 00:00:00'), y: 10 },
+				{ x: new Date('2017-07-26 00:00:00'), y: 11 },
+				{ x: new Date('2017-07-27 00:00:00'), y: 5 },
+				{ x: new Date('2017-07-28 00:00:00'), y: 15 },
+				{ x: new Date('2017-07-29 00:00:00'), y: 10 },
+				{ x: new Date('2017-07-30 00:00:00'), y: 28 }
+			]
 		},
 		{
 			name: "Martha Vineyard",

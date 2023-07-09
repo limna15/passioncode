@@ -1,4 +1,6 @@
 package com.passioncode.procurementsystem.dto;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -90,6 +92,7 @@ public class StockResultDTO {
 	 * 계산할때 쓰기위한 각각의 날짜
 	 */
 	private String dateForCalculate;
+	
 	
 	
 }

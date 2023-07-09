@@ -17,11 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.passioncode.procurementsystem.dto.DrawingFileDTO;
+import com.passioncode.procurementsystem.dto.LargeCategoryDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
+import com.passioncode.procurementsystem.dto.TestEachData;
+import com.passioncode.procurementsystem.dto.TestXYObject;
+import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MaterialIn;
@@ -497,25 +501,27 @@ public class MaterialOutRepositoryTests {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		Date today = new Date();
-		String todayStr = simpleDateFormat2.format(today);
-		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
-		log.info("오늘 날짜 스트링으로 보자 : "+todayStr+" 00:00:00");
+//		String todayStr = simpleDateFormat2.format(today)+" 00:00:00";
+		String todayStr = simpleDateFormat.format(today);
+		log.info("오늘 날짜 스트링으로 보자1 : "+todayStr);
+//		log.info("오늘 날짜 스트링으로 보자2 : "+todayStr+" 00:00:00");
 		String todayYearMonthStr = todayStr.substring(0,7);
-		log.info("오늘 날짜의 년도 스트링으로 보자 : "+todayYearMonthStr);
+		log.info("오늘 날짜의 년도+월 스트링으로 보자 : "+todayYearMonthStr);
 		
-		Date yearFirstdate = today;
+		Date yearMonthFirstdate = today;
 		try {
-			yearFirstdate = simpleDateFormat.parse(todayYearMonthStr+"-01");
+			yearMonthFirstdate = simpleDateFormat.parse(todayYearMonthStr+"-01 00:00:00");
+			log.info("오늘 날짜 년도와 월 날짜 변환 됐나 보자 : "+yearMonthFirstdate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 //		log.info("바꾼 올해 해당월 1일 보자 : "+yearFirstdate);
-		String yearFirstdateStr = simpleDateFormat.format(yearFirstdate);
-		log.info("올해 1월1일 문자 잘 만들어졌나 : "+yearFirstdateStr);
+		String yearMonthFirstdateStr = simpleDateFormat.format(yearMonthFirstdate);
+		log.info("올해 1월1일 문자 잘 만들어졌나 : "+yearMonthFirstdateStr);
 		
 		//2. 재고금액목록 받아온거 재고산출DTO 리스트에 넣어주기
-		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForLC(yearFirstdateStr, todayStr+" 00:00:00");
+		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForLC(yearMonthFirstdateStr, todayStr);
 		log.info("이건 잘 가져오는건가 : "+calculStockReport);
 		
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
@@ -527,9 +533,162 @@ public class MaterialOutRepositoryTests {
 			stockResultDTOList.add(stockResultDTO);
 		}
 		log.info("만든 DTO리스트 보자 : "+stockResultDTOList);
-				
-				
 	}
+	
+	public TestXYObject makeDateData(String dateStr,Integer price){
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date testDate = new Date();
+		try {
+			testDate = simpleDateFormat.parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+   		TestXYObject xyObject = TestXYObject.builder().x(testDate).y(price).build();
+//   		xyObject.x = new Date(date);
+//   		xyObject.y = price;
+		return xyObject;	   		
+   	}
+	public LargeCategoryDTO entityToDTO(LargeCategory largeCategory) {
+		LargeCategoryDTO largeCategoryDTO = LargeCategoryDTO.builder().code(largeCategory.getCode()).category(largeCategory.getCategory()).build();		
+		return largeCategoryDTO;
+	}
+	
+	public List<LargeCategoryDTO> getDTOList() {
+		List<LargeCategory> largeCategoryList = largeCategoryRepository.findAll();
+		List<LargeCategoryDTO> largeCategoryDTOList = new ArrayList<>();
+		for(int i=0;i<largeCategoryList.size();i++) {
+			largeCategoryDTOList.add(entityToDTO(largeCategoryList.get(i)));
+		}		
+		return largeCategoryDTOList;
+	}
+	
+	public List<StockResultDTO> getStockReportForLCListByPeriod(String startDate, String endDate) {
+		//화면에서 받아온 시작날짜, 끝날짜 받아서, 재고산출DTO 로 만들어주기
+		List<Object[]> calculStockReport = materialOutRepository.getCalculStockReportForLC(startDate, endDate);
+//		log.info("이건 잘 가져오는건가 : "+calculStockReport);
+		
+		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
+		
+		for(Object[] result:calculStockReport) {
+			StockResultDTO stockResultDTO = StockResultDTO.builder().dateForCalculate(String.valueOf(result[0])+" 00:00:00")
+																	.largeCategoryCode(String.valueOf(result[1])).largeCategoryName(String.valueOf(result[2]))
+																	.stockTotalPrice(Integer.parseInt(String.valueOf(result[3]))).build();
+			stockResultDTOList.add(stockResultDTO);
+		}
+		return stockResultDTOList;
+	}
+	
+	@Test
+	public void dategraphTest() {
+		
+		List<Date> DateList = new ArrayList<>();
+		List<String> DateStrList = new ArrayList<>();
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date today = new Date();
+		
+		Date startDate = today;
+		try {
+			startDate = simpleDateFormat.parse("2023-06-01 00:00:00");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Date endDate = today;
+		try {
+			endDate = simpleDateFormat.parse("2023-06-15 00:00:00");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(endDate);
+		// 기준일로 설정. month의 경우 해당월수-1을 해줍니다.
+//		cal1.set(2023,0,5);
+//		cal1.setTime(test);
+		
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(startDate);
+		
+		while(!cal2.after(cal1)) {
+			Date caldate=cal2.getTime();
+			cal2.add(Calendar.DATE, 1);
+			DateList.add(caldate);
+			DateStrList.add(simpleDateFormat.format(caldate));	
+		}
+//		log.info("날짜 보자?? : "+DateList);
+//		log.info("날짜 문자 버전 보자?? : "+DateStrList);
+
+		
+		List<LargeCategoryDTO> LargeCategoryDTOList = getDTOList();
+		log.info("대분류 리스트 보자 : "+LargeCategoryDTOList);
+		
+		List<TestEachData> eachDataList = new ArrayList<>();
+		
+   		for(int i=0;i<LargeCategoryDTOList.size();i++){
+   			
+   			TestEachData eachData = new TestEachData();
+   			log.info("현재 i번째 순서!! : "+i+"번째! 시작");
+   			String eachDataLCCode = LargeCategoryDTOList.get(i).getCode();
+   			List<TestXYObject> xyObjectSameList = new ArrayList<>();
+   			List<TestXYObject> xyObjectNoSameList = new ArrayList<>();
+   			Boolean sameCheck = false;
+   			log.info("현재 대분류 종류 보자 : "+LargeCategoryDTOList.get(i).getCategory());
+//   		eachData.name = LargeCategoryDTOList[i].category;
+//   		eachData.type = "spline";
+//   		eachData.yValueFormatString =  "###,###,##0 원";
+//   		eachData.showInLegend = true;
+   			eachData.setName(LargeCategoryDTOList.get(i).getCategory());
+   			eachData.setType("spline");
+   			eachData.setYValueFormatString("###,###,##0 원");
+   			eachData.setShowInLegend(true);
+   			
+   			List<StockResultDTO> stockResultDTOList = getStockReportForLCListByPeriod("2023-06-01","2023-06-15");
+   			
+   			for(int j=0;j<stockResultDTOList.size();j++){
+				if(eachDataLCCode.equals(stockResultDTOList.get(j).getLargeCategoryCode())){
+					TestXYObject xyObject = makeDateData(stockResultDTOList.get(j).getDateForCalculate(),stockResultDTOList.get(j).getStockTotalPrice());
+					xyObjectSameList.add(xyObject);
+					sameCheck = true;
+				}
+   			}
+   			log.info("어디 안에서 만든 xyObjectSameList 보자 : "+xyObjectSameList);
+   			
+   			if(sameCheck){
+   				log.info("현재 sameCheck  참인 상태 맞지? : "+sameCheck);
+   				eachData.setDataPoints(xyObjectSameList);
+   			}else{
+   				log.info("현재 sameCheck  거짓인 상태 맞지? : "+sameCheck);
+   				for(int k=0;k<DateStrList.size();k++){
+   					TestXYObject xyObject = makeDateData(DateStrList.get(k),0);
+					xyObjectNoSameList.add(xyObject);
+   				}
+	   			log.info("어디 안에서 만든 xyObjectNoSameList 보자 : "+xyObjectNoSameList);
+   				eachData.setDataPoints(xyObjectNoSameList);
+   			}
+   			log.info("리스트 안에서 eachData 보자 : "+eachData);
+   			log.info("리스트 안에서 eachData.name 보자 : "+eachData.getName());
+   			log.info("리스트 안에서 eachData.type 보자 : "+eachData.getType());
+   			log.info("리스트 안에서 eachData.yValueFormatString 보자 : "+eachData.getYValueFormatString());
+   			log.info("리스트 안에서 eachData.showInLegend 보자 : "+eachData.getShowInLegend());
+   			log.info("리스트 안에서 eachData.dataPoints 보자 : "+eachData.getDataPoints());
+   			log.info("리스트 안에서 넣기전에 : "+eachDataList);
+   			eachDataList.add(eachData);
+   			log.info("리스트 안에서 넣었을때 : "+eachDataList);
+   			log.info("현재 i번째 순서!! : "+i+"번째! 끝");
+   		}
+//		log.info("리스트 밖에서 eachData 보자 : "+eachData);
+   		log.info("리스트 밖에서 최종 확인 : "+eachDataList);
+		
+	}
+	
+	
+	
+	
+	
 	
 	
 	

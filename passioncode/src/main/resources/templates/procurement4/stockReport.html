@@ -122,7 +122,6 @@
 		</div>	
 		
 		
-		
 		<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 		<script th:inline="javascript" type="text/javascript">
 		
@@ -131,41 +130,18 @@
 			
 		
 	 	});
-	    	
-      	//code와 category 값을 넣어서 option 만들기
-	   	function makeOption(code,category){
-	   		return `<option value=${code}>${category}</option>`;
-	   	};    
-		
-	   	var mylabels1=[[${mylabels}]];
-	   	var pricedata=[[${pricedata}]];
-	   	//console.log("mylabels1 이거 잙읽나??",mylabels1);
 	   	
-	   	var DateList=[[${DateList}]];
-	   	var DateStrList=[[${DateStrList}]];
-	   	var stockResultDTOList=[[${stockResultDTOList}]];
+	   	var DateList = [[${DateList}]];
+	   	var DateStrList = [[${DateStrList}]];
+	   	var stockResultDTOList = [[${stockResultDTOList}]];
 	   	//console.log("어디 데이트 한번 보자 : ",DateList);
 	   	//console.log("어디 데이트문자 한번 보자 : ",DateStrList);
 	   	//console.log("어디 이렇게 읽는건 맞나 보자 : ",DateList[0]);
 	   	
-	   	var LargeCategoryDTOList=[[${LargeCategoryDTOList}]];
-	   	console.log("어디 대분류 리스트 보자 : ",LargeCategoryDTOList);
-	   	
-	   	/*
-	   	let sentence = ``;
-	   	for(var i=0; i<DateStrList.length-1;i++){
-	   		sentence=sentence+makeSentence("'"+DateStrList[i]+" 00:00:00'",stockResultDTOs[i].stockTotalPrice);
-	   	}
-	   	sentence=sentence+makeLastSentence("'"+DateStrList[DateStrList.length-1]+" 00:00:00'",stockResultDTOs[DateStrList.length-1].stockTotalPrice);
-	   	//console.log("만든 문장 보자 : ",sentence);
-		
-	   	let sentence2 = ``;
-	   	for(var i=0; i<DateList.length-1;i++){
-	   		sentence2=sentence2+makeSentence2(DateList[i],stockResultDTOs[i].stockTotalPrice);
-	   	}
-	   	sentence2=sentence2+makeLastSentence2(DateList[DateList.length-1],stockResultDTOs[DateStrList.length-1].stockTotalPrice);
-	   	//console.log("만든 문장 보자2 : ",sentence2);
-	   	*/
+	   	var LargeCategoryDTOList = [[${LargeCategoryDTOList}]];
+	   	//console.log("어디 대분류 리스트 보자 : ",LargeCategoryDTOList);
+	   	var maxStockTotalPrice = [[${maxStockTotalPrice}]];
+	   	console.log("받아온 재고금액 최대값 보자 : ",maxStockTotalPrice);
 	   	
 	   	function makeDateData(date,price){
 	   		let xyObject = new Object();
@@ -174,130 +150,61 @@
 			return xyObject;	   		
 	   	}
 	   	
-	   	let xyObjectList = new Array();
-	   	let xyObject = new Object();
-	   	/*
-	   	stockResultDTOList.forEach(function(item){
-	   		xyObject=makeDateData(item.dateForCalculate,item.stockTotalPrice);
-	   		console.log("이거 함수 제대로 넣은건가? : ",xyObject);
-	   		xyObjectList.push(xyObject);
-		});
-	   	*/
-	   	
-	   	for(var i=0;i<8;i++){
-	   		xyObject=makeDateData(stockResultDTOList[i].dateForCalculate,stockResultDTOList[i].stockTotalPrice);
-	   		//console.log("이거 함수 제대로 넣은건가? : ",xyObject);
-	   		xyObjectList.push(xyObject);
-	   	}
-	   	//console.log("어디 리스트 넣은것 좀 보자 : ",xyObjectList);
-	   	
-	   	
 	   	function makeFinalData(item){
 	   		let eachDataList = new Array();
-	   		let eachData = new Object();
 	   		for(var i=0;i<LargeCategoryDTOList.length;i++){
+		   		let eachData = new Object();
 	   			let eachDataLCCode = LargeCategoryDTOList[i].code;
-	   			let xyObjectList = new Array();
+	   			let xyObjectSameList = new Array();
+	   			let xyObjectNoSameList = new Array();
+	   			let sameCheck = false;
 	   			
 	   			eachData.name = LargeCategoryDTOList[i].category;
 	   			eachData.type = "spline";
 	   			eachData.yValueFormatString =  "###,###,##0 원";
 	   			eachData.showInLegend = true;
 	   			
-	   			for(var j=0;j<item.length;j++){
-   					if(eachDataLCCode==item[j].largeCategoryCode){
-   						let xyObject = new Object();
-   						xyObject=makeDateData(item[j].dateForCalculate,item[j].stockTotalPrice);
-   						xyObjectList.push(xyObject);
-   					}
+	   			for(var j=0;j<stockResultDTOList.length;j++){
+					if(eachDataLCCode==stockResultDTOList[j].largeCategoryCode){
+						let xyObject = new Object();
+						xyObject=makeDateData(stockResultDTOList[j].dateForCalculate,stockResultDTOList[j].stockTotalPrice);
+						xyObjectSameList.push(xyObject);
+						sameCheck = true;
+					}
 	   			}
-	   			console.log("어디 안에서 만든 xyObjectList 보자 : ",xyObjectList);
+	   			//console.log("어디 안에서 만든 xyObjectSameList 보자 : ",xyObjectSameList);
 	   			
-	   			eachData.dataPoints = xyObjectList;
+	   			if(sameCheck){
+	   				//console.log("현재 sameCheck  참인 상태 맞지? : ",sameCheck);
+	   				eachData.dataPoints = xyObjectSameList;
+	   			}else{
+	   				//console.log("현재 sameCheck  거짓인 상태 맞지? : ",sameCheck);
+	   				for(var k=0;k<DateStrList.length;k++){
+	   					let xyObject = new Object();
+						xyObject=makeDateData(DateStrList[k],0);
+						xyObjectNoSameList.push(xyObject);
+	   				}
+		   			//console.log("어디 안에서 만든 xyObjectNoSameList 보자 : ",xyObjectNoSameList);
+	   				eachData.dataPoints = xyObjectNoSameList;
+	   			}
+	   			//console.log("리스트 안에서 넣기전에 : ",eachDataList);
 	   			eachDataList.push(eachData);
-	   			console.log("리스트 안에서 eachData 보자 : ",eachData);
-	   			console.log("리스트 안에서 넣었을때 : ",eachDataList);
+	   			//console.log("리스트 안에서 넣었을때 : ",eachDataList);
 	   		}
-   			console.log("리스트 밖에서 eachData 보자 : ",eachData);
-	   		console.log("리스트 밖에서 최종 확인 : ",eachDataList);
+	   		//console.log("리스트 밖에서 최종 확인 : ",eachDataList);
 	   		return eachDataList;
 	   	}
-	   	/*
+	   	
 	   	let eachDataList = new Array();
 	   	eachDataList = makeFinalData(stockResultDTOList);
 	   	console.log("잘 만들어졋나? 최종 data 보자!! : ",eachDataList);
-	   	*/
 	   	
-	   	let eachDataList = new Array();
-   		let eachData = new Object();
-   		for(var i=0;i<LargeCategoryDTOList.length;i++){
-   			console.log("현재 i번째 순서!! : ",i,"번째! 시작");
-   			let eachDataLCCode = LargeCategoryDTOList[i].code;
-   			let xyObjectSameList = new Array();
-   			let xyObjectNoSameList = new Array();
-   			let sameCheck = false;
-   			
-   			eachData.name = LargeCategoryDTOList[i].category;
-   			eachData.type = "spline";
-   			eachData.yValueFormatString =  "###,###,##0 원";
-   			eachData.showInLegend = true;
-   			
-   			for(var j=0;j<stockResultDTOList.length;j++){
-				if(eachDataLCCode==stockResultDTOList[j].largeCategoryCode){
-					let xyObject = new Object();
-					xyObject=makeDateData(stockResultDTOList[j].dateForCalculate,stockResultDTOList[j].stockTotalPrice);
-					xyObjectSameList.push(xyObject);
-					sameCheck = true;
-				}
-   			}
-   			console.log("어디 안에서 만든 xyObjectSameList 보자 : ",xyObjectSameList);
-   			
-   			if(sameCheck){
-   				console.log("현재 sameCheck  참인 상태 맞지? : ",sameCheck);
-   				//eachData.dataPoints = xyObjectSameList;
-   			}else{
-   				console.log("현재 sameCheck  거짓인 상태 맞지? : ",sameCheck);
-   				for(var k=0;k<DateStrList.length;k++){
-   					let xyObject = new Object();
-					xyObject=makeDateData(DateStrList[k],0);
-					xyObjectNoSameList.push(xyObject);
-   				}
-	   			console.log("어디 안에서 만든 xyObjectNoSameList 보자 : ",xyObjectNoSameList);
-   				//eachData.dataPoints = xyObjectNoSameList;
-   			}
-   			console.log("리스트 안에서 eachData 보자 : ",eachData);
-   			console.log("리스트 안에서 넣기전에 : ",eachDataList);
-   			eachDataList.push(eachData);
-   			console.log("리스트 안에서 넣었을때 : ",eachDataList);
-   			console.log("현재 i번째 순서!! : ",i,"번째! 끝");
-   		}
-		console.log("리스트 밖에서 eachData 보자 : ",eachData);
-   		console.log("리스트 밖에서 최종 확인 : ",eachDataList);
-	   	
-		function makeSentence(date,price){
-			let sentence =`{ x: new Date(${date}), y: ${price} },`;
-			return sentence;    				
+	   	let maxinum = 0;
+	   	if(maxStockTotalPrice==0){
+			maxinum = 150000
+	  	}else{
+			maxinum = maxStockTotalPrice + 50000;
 		}
-		
-		function makeLastSentence(date,price){
-			let sentence =`{ x: new Date(${date}), y: ${price} }`;
-			return sentence;    				
-		}
-		
-		function makeSentence2(date,price){
-			let sentence =`{ x: ${date}, y: ${price} },`;
-			return sentence;    				
-		}
-		
-		function makeLastSentence2(date,price){
-			let sentence =`{ x: ${date}, y: ${price} }`;
-			return sentence;    				
-		}
-		
-		
-	  	let sentence3 =  makeLastSentence2("'"+DateStrList[3]+" 00:00:00'",stockResultDTOs[3].stockTotalPrice);
-	   
-	  	
 	  	
 	   	function mychart(){
 	   		var chart = new CanvasJS.Chart("chartContainer", {
@@ -312,7 +219,7 @@
 	   				title: "재고금액",
 	   				suffix: " 원",
 	   				minimum: -50000,
-	   				maximum: 350000,
+	   				maximum: maxinum,
 	   			},
 	   			legend:{
 	   				cursor: "pointer",
@@ -346,15 +253,11 @@
 		<script src="../../js/chart.js"></script>
 		<script src="../../js/dashboard.js"></script>
 		<script src="../../js/dashboard2.js"></script>
-		<script src="../../js/dashboard4.js"></script>
 		<script src="../../js/dashboard5.js"></script>
-		<script src="../../js/chart-bar-demo.js"></script>
 		
 		<script>
-		//console.log("여기 아직 sentence 살아있지?",sentence);
 		mychart();
-		//mychart2(sentence3);
-		//mychart4();
+		//mychart2();
 		//mychart5();
 		</script>
 		

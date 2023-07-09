@@ -3,6 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,6 @@ import com.passioncode.procurementsystem.dto.StockResultDTO;
 import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
-import com.passioncode.procurementsystem.repository.MaterialOutRepository;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialOutService;
 import com.passioncode.procurementsystem.service.MiddleCategoryService;
@@ -95,89 +95,50 @@ public class PS4Controller {
 		}		
 		model.addAttribute("MiddleCategoryDTOList", MiddleCategoryDTOListByLC1);
 		
-		
-		List<Date> DateList = new ArrayList<>();
-		List<String> DateStrList = new ArrayList<>();
-		
+		//오늘 날짜 기준으로, 그 해당년도와 해달 월의 1일 과 오늘날짜 구하기
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date today = new Date();
+		String todayStr = simpleDateFormat.format(today);
+		log.info("오늘 날짜 스트링으로 보자 : "+todayStr);
+		String todayYearMonthStr = todayStr.substring(0,7);
+		//log.info("오늘 날짜의 년도+월 스트링으로 보자 : "+todayYearMonthStr);
 		
-		Date startDate = today;
+		Date yearMonthFirstdate = today;
 		try {
-			startDate = simpleDateFormat.parse("2023-06-01 00:00:00");
+			yearMonthFirstdate = simpleDateFormat.parse(todayYearMonthStr+"-01 00:00:00");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//log.info("바꾼 올해+해당월 1일 보자 : "+yearMonthFirstdate);
+		String yearMonthFirstdateStr = simpleDateFormat.format(yearMonthFirstdate);
+//		log.info("올해+해당월 1일 문자 잘 만들어졌나 : "+yearMonthFirstdateStr);
 		
-		Date endDate = today;
-		try {
-			endDate = simpleDateFormat.parse("2023-06-15 00:00:00");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		List<Date> DateList = stockReportService.getDateList("2023-06-01","2023-06-15");
+//		List<String> DateStrList = stockReportService.getDateStrList("2023-06-01","2023-06-15");
+		List<Date> DateList = stockReportService.getDateList(yearMonthFirstdateStr,todayStr);
+		List<String> DateStrList = stockReportService.getDateStrList(yearMonthFirstdateStr,todayStr);
 		
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(endDate);
-		// 기준일로 설정. month의 경우 해당월수-1을 해줍니다.
-//		cal1.set(2023,0,5);
-//		cal1.setTime(test);
-		
-		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(startDate);
-		
-		while(!cal2.after(cal1)) {
-			Date caldate=cal2.getTime();
-			cal2.add(Calendar.DATE, 1);
-			DateList.add(caldate);
-			DateStrList.add(simpleDateFormat.format(caldate));	
-		}
-		log.info("계산 된건가?? : "+DateList);
-		log.info("계산 된건가?? : "+DateStrList);
 		model.addAttribute("DateList",DateList);
 		model.addAttribute("DateStrList",DateStrList);
 		
 		//전체로 받아온 대분류 전체 리스트를 대분류 각각의 리스트에 담아서 각각 이름의 리스트로 보내기
-//		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCList();
-		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCListByPeriod("2023-06-01","2023-06-15");
-//		List<LargeCategoryDTO> LCTotalList = largeCategoryService.getDTOList();
-////		log.info("대분류 전체리스트 제대로 가져오나 보자 : "+LCTotalList);
-//		for(int i=0;i<LCTotalList.size();i++) {
-//			for(int j=0;j<stockResultDTOList.size();j++) {
-//				List<StockResultDTO> stockResultDTOByLC = new  ArrayList<>();
-//				if(LCTotalList.get(i).getCode().equals(stockResultDTOList.get(j).getLargeCategoryCode())) {
-//					stockResultDTOByLC.add(stockResultDTOList.get(j));
-//				}
-//				String sendLCName = 
-//				model.addAttribute(, stockResultDTOByLC)
-//			}
-//		}
+//		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCListByPeriod("2023-06-01","2023-06-15");
+		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCList();
 		
 		model.addAttribute("stockResultDTOList",stockResultDTOList);
 		log.info("만들어진 재고금액리스트 보자 : "+stockResultDTOList);
 		log.info("만들어진 재고금액리스트 사이즈 길이 보자 : "+stockResultDTOList.size());
 		
-		
-		String mylabels="[";
-		for(String labels:DateStrList) {
-			mylabels += "\""+labels+"\",";
+		//재고금액의 최대값 구하기
+		//재고금액을 List<Integer>로 만들어서 받아서, 여기서 최대값을 뽑기
+		List<Integer> stockTotalPriceList = new ArrayList<>();
+		for(StockResultDTO stockResultDTO:stockResultDTOList) {
+			stockTotalPriceList.add(stockResultDTO.getStockTotalPrice());
 		}
-		mylabels=mylabels.substring(0, mylabels.length()-1)+"]";
-		log.info("잘 만들어 졌나? mylabels : "+mylabels);
-		
-		model.addAttribute("mylabels",mylabels);
-
-		
-//		String pricedata="[";
-//		for(StockResultDTO dto :stockResultDTOs) {
-//			pricedata += dto.getStockTotalPrice()+",";
-//		}
-//		pricedata=pricedata.substring(0, pricedata.length()-1)+"]";
-//		log.info("잘 만들어 졌나? pricedata : "+pricedata);
-//		
-//		model.addAttribute("pricedata",pricedata);
-		
+		Integer maxStockTotalPrice = Collections.max(stockTotalPriceList);
+		log.info("재고금액 최대값 확인해보자 : "+maxStockTotalPrice);;
+		model.addAttribute("maxStockTotalPrice",maxStockTotalPrice);
 	}
 
 }
