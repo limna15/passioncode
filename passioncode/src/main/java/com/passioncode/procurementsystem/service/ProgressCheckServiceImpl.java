@@ -6,9 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import com.passioncode.procurementsystem.dto.DetailProgressCheckListDTO;
 import com.passioncode.procurementsystem.dto.ProgressCheckDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
@@ -19,7 +17,6 @@ import com.passioncode.procurementsystem.repository.DetailPurchaseOrderRepositor
 import com.passioncode.procurementsystem.repository.MaterialInRepository;
 import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
 import com.passioncode.procurementsystem.repository.ProgressCheckRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

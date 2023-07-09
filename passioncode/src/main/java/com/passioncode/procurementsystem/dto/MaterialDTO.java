@@ -1,11 +1,7 @@
 package com.passioncode.procurementsystem.dto;
 
 import java.util.List;
-
-import com.passioncode.procurementsystem.entity.MiddleCategory;
-
 import lombok.AllArgsConstructor;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

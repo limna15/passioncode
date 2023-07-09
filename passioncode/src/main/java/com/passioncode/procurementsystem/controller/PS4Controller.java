@@ -1,8 +1,8 @@
 package com.passioncode.procurementsystem.controller;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -15,8 +15,6 @@ import com.passioncode.procurementsystem.dto.LargeCategoryDTO;
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
-import com.passioncode.procurementsystem.entity.LargeCategory;
-import com.passioncode.procurementsystem.entity.MiddleCategory;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialOutService;

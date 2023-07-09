@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 /**
  * 중분류 테이블을 위한 엔티티 클래스 (3개) <br>
  * 중분류코드, 종류, 대분류코드(외래키)(대분류)

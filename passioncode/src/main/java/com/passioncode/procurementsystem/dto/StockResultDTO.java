@@ -1,5 +1,4 @@
 package com.passioncode.procurementsystem.dto;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 자재산출 화면을 위한 자재산출DTO 클래스  <br>
+ * 자재산출 화면을 위한 자재산출DTO 클래스 + 재고금액화면에도 같이 이용  <br>
  * 대분류, 중분류, 품목코드, 품목명, 입고 수량(= 발주 수량), 품목 단가, 입고 금액, 출고 수량(=필요 수량), 출고 금액, 재고 수량, 재고 단가, 재고 금액  <br>
  * 대분류코드, 중분류코드 
  * 

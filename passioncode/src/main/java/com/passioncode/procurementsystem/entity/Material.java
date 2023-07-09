@@ -1,7 +1,6 @@
 package com.passioncode.procurementsystem.entity;
 
 import org.hibernate.annotations.ColumnDefault;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 /**
  * 품목 테이블을 위한 엔티티 클래스 (10개) <br>
  * 품목코드, 품목명, 공용여부, 기존재고수량, 규격, 재질, 제작사양, 도면번호, 도면, 중분류코드(외래키) (중분류)

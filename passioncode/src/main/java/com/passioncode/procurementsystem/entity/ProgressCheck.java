@@ -1,9 +1,7 @@
 package com.passioncode.procurementsystem.entity;
 
 import java.time.LocalDateTime;
-
 import org.hibernate.annotations.ColumnDefault;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 /**
  * 진척검수 테이블을 위한 엔티티 클래스 (5개) <br>
  * 진척검수코드, 진척검수일정, 납기 진도율, 기타사항, 발주코드(외래키)(세부구매발주서)

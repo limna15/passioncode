@@ -1,11 +1,7 @@
 package com.passioncode.procurementsystem.repository;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.passioncode.procurementsystem.entity.LargeCategory;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
 

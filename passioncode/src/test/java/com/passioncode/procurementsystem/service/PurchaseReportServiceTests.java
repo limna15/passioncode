@@ -1,28 +1,18 @@
 package com.passioncode.procurementsystem.service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.dto.PurchaseReportDTO;
-import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
-import com.passioncode.procurementsystem.entity.PurchaseOrder;
 import com.passioncode.procurementsystem.repository.ProcurementPlanRepository;
 import com.passioncode.procurementsystem.repository.PurchaseReportRepository;
-
 import lombok.extern.log4j.Log4j2;
 
 @SpringBootTest

@@ -2,12 +2,6 @@ package com.passioncode.procurementsystem.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-
-import com.passioncode.procurementsystem.entity.Contract;
-import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
-import com.passioncode.procurementsystem.entity.MRP;
-import com.passioncode.procurementsystem.entity.ProcurementPlan;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

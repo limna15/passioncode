@@ -1,13 +1,9 @@
 package com.passioncode.procurementsystem.entity;
 
-
 import java.time.LocalDateTime;
-import java.util.Date;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -22,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 /**
  * 자재입고 테이블을 위한 엔티티 클래스 (5개) <br>
  * 입고코드, 입고상태, 입고일, 발행상태, 발주코드(외래키)(세부구매발주서)

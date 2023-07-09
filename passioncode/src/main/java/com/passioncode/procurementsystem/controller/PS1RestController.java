@@ -3,14 +3,11 @@ package com.passioncode.procurementsystem.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.MaterialDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
@@ -19,13 +16,10 @@ import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MiddleCategory;
-import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.ContractService;
-import com.passioncode.procurementsystem.service.LargeCategoryService;
 import com.passioncode.procurementsystem.service.MaterialService;
 import com.passioncode.procurementsystem.service.MiddleCategoryService;
 import com.passioncode.procurementsystem.service.ProcurementPlanService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -36,7 +30,6 @@ import lombok.extern.log4j.Log4j2;
 public class PS1RestController {
 	
 	private final MaterialService materialService;
-	private final LargeCategoryService largeCategoryService;
 	private final MiddleCategoryService middleCategoryService;
 	private final ContractService contractService;
 	private final ProcurementPlanService procurementPlanService; 

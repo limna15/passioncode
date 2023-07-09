@@ -1,33 +1,21 @@
 package com.passioncode.procurementsystem.repository;
 
-import static org.assertj.core.api.Assertions.assertThatObject;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import org.checkerframework.checker.units.qual.min;
-import org.hibernate.mapping.Array;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.MaterialInDTO;
-import com.passioncode.procurementsystem.dto.ProcurementPlanDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
-import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.MaterialIn;
 import com.passioncode.procurementsystem.entity.MaterialOut;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
-
-import jakarta.persistence.EntityManager;
 import lombok.extern.log4j.Log4j2;
 
 @SpringBootTest

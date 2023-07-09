@@ -4,20 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.ContractFileDTO;
 import com.passioncode.procurementsystem.entity.Company;
 import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.Material;
-import com.passioncode.procurementsystem.entity.ProcurementPlan;
-
 import lombok.extern.log4j.Log4j2;
 
 @SpringBootTest

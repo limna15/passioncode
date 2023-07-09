@@ -2,7 +2,6 @@ package com.passioncode.procurementsystem.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import com.passioncode.procurementsystem.dto.DetailProgressCheckListDTO;
 import com.passioncode.procurementsystem.dto.ProgressCheckDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;

@@ -2,21 +2,16 @@ package com.passioncode.procurementsystem.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.passioncode.procurementsystem.dto.DetailPurchaseOrderDTO;
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
-import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
-import com.passioncode.procurementsystem.repository.DetailPurchaseOrderRepository;
 import com.passioncode.procurementsystem.service.DetailPurchaseOrderService;
 import com.passioncode.procurementsystem.service.ProgressCheckService;
 import com.passioncode.procurementsystem.service.PurchaseOrderService;
-
 import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

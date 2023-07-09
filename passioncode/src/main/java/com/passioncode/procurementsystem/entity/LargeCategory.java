@@ -1,6 +1,5 @@
 package com.passioncode.procurementsystem.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -9,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 /**
  * 대분류 테이블을 위한 엔티티 클래스 (2개) <br>
  * 대분류코드, 종류

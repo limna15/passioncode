@@ -2,11 +2,9 @@ package com.passioncode.procurementsystem.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.ContractDTO;
 import com.passioncode.procurementsystem.dto.ContractFileDTO;
 import com.passioncode.procurementsystem.entity.Company;
@@ -15,8 +13,6 @@ import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.repository.CompanyRepository;
 import com.passioncode.procurementsystem.repository.ContractRepository;
 import com.passioncode.procurementsystem.repository.MaterialRepository;
-
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

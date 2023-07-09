@@ -1,22 +1,17 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.passioncode.procurementsystem.dto.PurchaseOrderDTO;
 import com.passioncode.procurementsystem.entity.DetailPurchaseOrder;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.entity.ProgressCheck;
 import com.passioncode.procurementsystem.entity.PurchaseOrder;
-
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2

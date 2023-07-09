@@ -1,11 +1,9 @@
 package com.passioncode.procurementsystem.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.MaterialOut;
 
@@ -255,9 +253,6 @@ public interface MaterialOutRepository extends JpaRepository<MaterialOut, Intege
 			+ "JOIN large_category lc ON lc.code=mc.large_category_code "
 			+ "GROUP BY mc.large_category_code, t1.날짜", nativeQuery = true)
 	public List<Object[]> getCalculStockReportForLC(@Param("startDate") String startDate,@Param("endDate") String endDate);	
-	
-	
-	
 	
 	/**
 	 * 재고금액 리포트(중분류) <br>

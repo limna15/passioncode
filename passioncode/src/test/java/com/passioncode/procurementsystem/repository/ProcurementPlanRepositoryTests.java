@@ -20,7 +20,6 @@ import com.passioncode.procurementsystem.entity.Contract;
 import com.passioncode.procurementsystem.entity.MRP;
 import com.passioncode.procurementsystem.entity.Material;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
-
 import lombok.extern.log4j.Log4j2;
 
 @SpringBootTest
