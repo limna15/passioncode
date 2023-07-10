@@ -241,7 +241,7 @@
 						<p class="card-title"><b></b></p>
 						
 						<!--거래명세서 품목 정보-->
-						<div class="table-responsive">
+						<div class="table-responsive checkhistory">
 								<table id="poInfo" border="1">
 									<tbody id="tbody01" >
 									</tbody>
@@ -346,17 +346,24 @@
 			console.log("기타사항: ",pEtc);
 			
 			document.querySelector("#companyName3").innerHTML = cName;
+			var tableTd01 = ``;
 			if(dPercent=="미등록"){
+			console.log(">> 미등록인 부분 누름");
+				tableTd01 = ``;
+						$('#tbody01').hide(tableTd01);
 				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사 기록이 존재하지 않습니다`;
 				document.querySelector("#diliveryEtc3").innerHTML = ` `;	//이렇게 안하면 아래의 내용이 뜸
+				
 			}else{
-				var tableTd01 = '<tr>';
+			console.log(">> 이미 기록되어 있는 부분 누름");//리무브하면 아예 없어져서 안 보이는 것
+				tableTd01 = '<tr>';
 							tableTd01 += '<td>' + '회차' +'</td>';
 							tableTd01 += '<td>' + '검수일' +'</td>';
 							tableTd01 += '<td>' + '납기 진도율' +'</td>';
 							tableTd01 += '<td>' + '기타 사항' +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody01').append(tableTd01);//여기서 축척됨
+						$('#tbody01').show(tableTd01);
 				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사의 납기진도율은 `+dPercent+` 입니다. `;				
 				document.querySelector("#diliveryEtc3").innerHTML = `지난 검사에서 기록한 기타사항은 " `+pEtc+`" 입니다. `;				
 			}
