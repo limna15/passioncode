@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.passioncode.procurementsystem.dto.StockReportDTO;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
 import com.passioncode.procurementsystem.service.StockReportService;
 import com.passioncode.procurementsystem.service.StockResultService;
@@ -46,7 +47,7 @@ public class PS4RestController {
 	 * @return
 	 */
 	@PostMapping(value="stockReportForLC", produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<StockResultDTO> stockReportForLC(@RequestBody Date[] dateList) {
+	public List<StockReportDTO> stockReportForLC(@RequestBody Date[] dateList) {
 		//보낸 날짜 리스트 기간에서! 첫날짜와 끝날짜만 만든 메소드에 넣어주자
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String startDateStr = simpleDateFormat.format(dateList[0]);
@@ -54,11 +55,10 @@ public class PS4RestController {
 		log.info("대분류 시작 날짜 : "+startDateStr);
 		log.info("대분류 끝 날짜 : "+endDateStr);
 		
-		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCListByPeriod(startDateStr, endDateStr);
+		List<StockReportDTO> stockReportDTOList = stockReportService.getStockReportForLCListByPeriod(startDateStr, endDateStr);
 		
-		return stockResultDTOList;
+		return stockReportDTOList;
 	}
-	
 	
 	/**
 	 * 재고금액 화면에서, 기간검색에서 받은 기간리스트를 이용해서 중분류 재고금액 계산해주기
@@ -66,7 +66,7 @@ public class PS4RestController {
 	 * @return
 	 */
 	@PostMapping(value="stockReportForMC", produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<StockResultDTO> stockReportForMC(@RequestBody Date[] dateList) {
+	public List<StockReportDTO> stockReportForMC(@RequestBody Date[] dateList) {
 		//보낸 날짜 리스트 기간에서! 첫날짜와 끝날짜만 만든 메소드에 넣어주자
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String startDateStr = simpleDateFormat.format(dateList[0]);
@@ -74,9 +74,9 @@ public class PS4RestController {
 		log.info("중분류 시작 날짜 : "+startDateStr);
 		log.info("중분류 끝 날짜 : "+endDateStr);
 		
-		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForMCListByPeriod(startDateStr, endDateStr);
+		List<StockReportDTO> stockReportDTOList = stockReportService.getStockReportForMCListByPeriod(startDateStr, endDateStr);
 		
-		return stockResultDTOList;
+		return stockReportDTOList;
 	}
 	
 	

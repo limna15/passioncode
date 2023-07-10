@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.passioncode.procurementsystem.dto.LargeCategoryDTO;
 import com.passioncode.procurementsystem.dto.MaterialOutDTO;
 import com.passioncode.procurementsystem.dto.MiddleCategoryDTO;
+import com.passioncode.procurementsystem.dto.StockReportDTO;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
 import com.passioncode.procurementsystem.entity.ProcurementPlan;
 import com.passioncode.procurementsystem.service.LargeCategoryService;
@@ -125,34 +126,34 @@ public class PS4Controller {
 		model.addAttribute("DateStrList",DateStrList);
 		
 		//전체로 받아온 대분류 전체 리스트를 대분류 각각의 리스트에 담아서 각각 이름의 리스트로 보내기
-//		List<StockResultDTO> stockResultDTOList = stockReportService.getStockReportForLCListByPeriod("2023-06-01","2023-06-15");
-		List<StockResultDTO> stockResultDTOLCList = stockReportService.getStockReportForLCList();
+//		List<StockReportDTO> stockReportDTOList = stockReportService.getStockReportForLCListByPeriod("2023-06-01","2023-06-15");
+		List<StockReportDTO> stockReportDTOLCList = stockReportService.getStockReportForLCList();
 		
-		model.addAttribute("stockResultDTOLCList",stockResultDTOLCList);
-//		log.info("만들어진 재고금액리스트 보자 (대분류) : "+stockResultDTOLCList);
-//		log.info("만들어진 재고금액리스트 사이즈 길이 보자 (대분류) : "+stockResultDTOLCList.size());
+		model.addAttribute("stockReportDTOLCList",stockReportDTOLCList);
+//		log.info("만들어진 재고금액리스트 보자 (대분류) : "+stockReportDTOLCList);
+//		log.info("만들어진 재고금액리스트 사이즈 길이 보자 (대분류) : "+stockReportDTOLCList.size());
 		
 		//재고금액의 최대값 구하기 (대분류)
 		//재고금액을 List<Integer>로 만들어서 받아서, 여기서 최대값을 뽑기
 		List<Integer> stockTotalPriceLCList = new ArrayList<>();
-		for(StockResultDTO stockResultDTO:stockResultDTOLCList) {
-			stockTotalPriceLCList.add(stockResultDTO.getStockTotalPrice());
+		for(StockReportDTO stockReportDTO:stockReportDTOLCList) {
+			stockTotalPriceLCList.add(stockReportDTO.getStockTotalPrice());
 		}
 		Integer maxStockTotalPriceLC = Collections.max(stockTotalPriceLCList);
 //		log.info("재고금액 최대값 확인해보자 : "+maxStockTotalPriceLC);;
 		model.addAttribute("maxStockTotalPriceLC",maxStockTotalPriceLC);
 		
 		//중분류 버전!!!!
-		List<StockResultDTO> stockResultDTOMCList = stockReportService.getStockReportForMCList();
-		model.addAttribute("stockResultDTOMCList",stockResultDTOMCList);
-		log.info("만들어진 재고금액리스트 보자 (중분류) : "+stockResultDTOMCList);
-		log.info("만들어진 재고금액리스트 사이즈 길이 보자 (중분류) : "+stockResultDTOMCList.size());
+		List<StockReportDTO> stockReportDTOMCList = stockReportService.getStockReportForMCList();
+		model.addAttribute("stockReportDTOMCList",stockReportDTOMCList);
+		log.info("만들어진 재고금액리스트 보자 (중분류) : "+stockReportDTOMCList);
+		log.info("만들어진 재고금액리스트 사이즈 길이 보자 (중분류) : "+stockReportDTOMCList.size());
 		
 		//재고금액의 최대값 구하기 (중분류)
 		//재고금액을 List<Integer>로 만들어서 받아서, 여기서 최대값을 뽑기
 		List<Integer> stockTotalPriceMCList = new ArrayList<>();
-		for(StockResultDTO stockResultDTO:stockResultDTOMCList) {
-			stockTotalPriceMCList.add(stockResultDTO.getStockTotalPrice());
+		for(StockReportDTO stockReportDTO:stockReportDTOMCList) {
+			stockTotalPriceMCList.add(stockReportDTO.getStockTotalPrice());
 		}
 		Integer maxStockTotalPriceMC = Collections.max(stockTotalPriceMCList);
 		log.info("재고금액 최대값 확인해보자 : "+maxStockTotalPriceMC);

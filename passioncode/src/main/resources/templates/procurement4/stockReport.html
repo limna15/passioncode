@@ -159,9 +159,12 @@
 	   	//console.log("어디 데이트 한번 보자 : ",DateList);
 	   	//console.log("어디 데이트문자 한번 보자 : ",DateStrList);
 	   	//console.log("어디 이렇게 읽는건 맞나 보자 : ",DateList[0]);
+	   	
 	   	//오늘날짜 기준으로, 해당 년,월의 1일부터, 오늘까지의 대분류와 중분류 재고금액 리스트
-	   	var stockResultDTOLCList = [[${stockResultDTOLCList}]];
-	   	var stockResultDTOMCList = [[${stockResultDTOMCList}]];
+	   	var stockReportDTOLCList = [[${stockReportDTOLCList}]];
+	   	var stockReportDTOMCList = [[${stockReportDTOMCList}]];
+	   	console.log("대분류 리스트 가져온거 보자 : ",stockReportDTOLCList);
+	   	console.log("중분류 리스트 가져온거 보자 : ",stockReportDTOMCList);
 	   	
 	   	//대분류 전체와, 중분류 전체 리스트
 	   	var LargeCategoryDTOList = [[${LargeCategoryDTOList}]];
@@ -222,7 +225,7 @@
 	   	}
 	   	
 	   	//대분류 차트를 만들기 위한 안에 넣는 최종Data 만드는 함수
-	   	function makeFinalLCData(stockResultDTOLCList,DateStrList){
+	   	function makeFinalLCData(stockReportDTOLCList,DateStrList){
 	   		let eachDataLCList = new Array();
 	   		for(var i=0;i<LargeCategoryDTOList.length;i++){
 		   		let eachDataLC = new Object();
@@ -236,10 +239,10 @@
 	   			eachDataLC.yValueFormatString =  "###,###,##0 원";
 	   			eachDataLC.showInLegend = true;
 	   			
-	   			for(var j=0;j<stockResultDTOLCList.length;j++){
-					if(eachDataLCCode==stockResultDTOLCList[j].largeCategoryCode){
+	   			for(var j=0;j<stockReportDTOLCList.length;j++){
+					if(eachDataLCCode==stockReportDTOLCList[j].largeCategoryCode){
 						let xyObject = new Object();
-						xyObject=makeDateStrData(stockResultDTOLCList[j].dateForCalculate,stockResultDTOLCList[j].stockTotalPrice);
+						xyObject=makeDateStrData(stockReportDTOLCList[j].eachDateStr,stockReportDTOLCList[j].stockTotalPrice);
 						xyObjectSameList.push(xyObject);
 						sameCheck = true;
 					}
@@ -269,7 +272,7 @@
 	   	
 	   	//처음에 보여주는 대분류 차트 데이터 값 만들기
 	   	let eachDataLCList = new Array();
-	   	eachDataLCList = makeFinalLCData(stockResultDTOLCList,DateStrList);
+	   	eachDataLCList = makeFinalLCData(stockReportDTOLCList,DateStrList);
 	   	//console.log("처음에 만든 최종 data 보자!! (대분류) : ",eachDataLCList);
 	   	
 	   	//처음에 보여주는 대분류 차트의 재고금액 최대값에 따른 y축 세팅
@@ -281,7 +284,7 @@
 		}
 		
 		//중분류 차트를 만들기 위한 안에 넣는 최종Data 만드는 함수
-		function makeFinalMCData(stockResultDTOMCList,DateStrList){
+		function makeFinalMCData(stockReportDTOMCList,DateStrList){
 	   		let eachDataMCList = new Array();
 	   		for(var i=0;i<middleCategoryDTOList.length;i++){
 		   		let eachDataMC = new Object();
@@ -295,10 +298,10 @@
 	   			eachDataMC.yValueFormatString =  "###,###,##0 원";
 	   			eachDataMC.showInLegend = true;
 	   			
-	   			for(var j=0;j<stockResultDTOMCList.length;j++){
-					if(eachDataMCCode==stockResultDTOMCList[j].middleCategoryCode){
+	   			for(var j=0;j<stockReportDTOMCList.length;j++){
+					if(eachDataMCCode==stockReportDTOMCList[j].middleCategoryCode){
 						let xyObject = new Object();
-						xyObject=makeDateStrData(stockResultDTOMCList[j].dateForCalculate,stockResultDTOMCList[j].stockTotalPrice);
+						xyObject=makeDateStrData(stockReportDTOMCList[j].eachDateStr,stockReportDTOMCList[j].stockTotalPrice);
 						xyObjectSameList.push(xyObject);
 						sameCheck = true;
 					}
@@ -328,7 +331,7 @@
 	   	
 	   	//처음에 보여주는 중분류 차트 데이터 값 만들기
 	   	let eachDataMCList = new Array();
-	   	eachDataMCList = makeFinalMCData(stockResultDTOMCList,DateStrList);
+	   	eachDataMCList = makeFinalMCData(stockReportDTOMCList,DateStrList);
 	   	//console.log("처음에 만든 최종 data 보자!! (중분류) : ",eachDataMCList);
 	   	
 		//처음에 보여주는 중분류 차트의 재고금액 최대값에 따른 y축 세팅

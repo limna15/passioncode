@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.passioncode.procurementsystem.dto.StockResultDTO;
-import com.passioncode.procurementsystem.repository.MaterialOutRepository;
+import com.passioncode.procurementsystem.repository.StockResultRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j2;
 public class StockResultServiceImpl implements StockResultService {
 	
 	@Autowired
-	MaterialOutRepository materialOutRepository;
+	StockResultRepository stockResultRepository;
 	
 	@Override
 	public List<StockResultDTO> getStockResultDTOList() {
@@ -45,7 +45,7 @@ public class StockResultServiceImpl implements StockResultService {
 //		log.info("올해 1월1일 문자 잘 만들어졌나 : "+yearFirstdateStr);
 		
 		//2. 재고산출목록 받아온거 재고산출DTO 리스트에 넣어주기
-		List<Object[]> calculStockResult = materialOutRepository.getCalculStockResult(yearFirstdateStr, todayStr);
+		List<Object[]> calculStockResult = stockResultRepository.getCalculStockResult(yearFirstdateStr, todayStr);
 //		log.info("이건 잘 가져오는건가 : "+calculStockResult);
 		
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
@@ -69,7 +69,7 @@ public class StockResultServiceImpl implements StockResultService {
 	@Override
 	public List<StockResultDTO> getStockResultDTOListByPeriod(String startDate,String endDate) {
 		//화면에서 받아온 시작날짜, 끝날짜 받아서, 재고산출DTO 로 만들어주기
-		List<Object[]> calculStockResult = materialOutRepository.getCalculStockResult(startDate, endDate);
+		List<Object[]> calculStockResult = stockResultRepository.getCalculStockResult(startDate, endDate);
 		
 		List<StockResultDTO> stockResultDTOList = new ArrayList<>();
 		
