@@ -239,10 +239,10 @@
 			//등록되어 있는 값이 있는지 체크하기 위해, 전역변수 체크값 선언해주기
 			//품목코드 전역변수 체크하기
 			var materialCodeRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
-			console.log("등록체크 전역변수 품목코드 확인하기1 : ",materialCodeRegisterValueCheck);
+			//console.log("등록체크 전역변수 품목코드 확인하기1 : ",materialCodeRegisterValueCheck);
 			//품목명 전역변수 체크하기
 			var materialNameRegisterValueCheck = true;		//-> 하나라도 비웠을 경우에 false로 바꿔주기 
-			console.log("등록체크 전역변수 품목명 확인하기1 : ",materialNameRegisterValueCheck);
+			//console.log("등록체크 전역변수 품목명 확인하기1 : ",materialNameRegisterValueCheck);
 			
 			//등록확인 버튼 누를때 -> 등록확인 모달창 보여주기
 			$(document).on("click","#materialRegisterBtn",function(e){
@@ -253,22 +253,22 @@
     			//2. 입력창으로 값을 받기
     			
     			//2-1. 등록확인 모달창에 띄울 값 받기(품목코드, 품목명)
-    			console.log("등록체크 전역변수 품목코드 확인하기(체크하기 전) : ",materialCodeRegisterValueCheck);
-    			console.log("등록체크 전역변수 품목명 확인하기(체크하기 전) : ",materialNameRegisterValueCheck);
+    			//console.log("등록체크 전역변수 품목코드 확인하기(체크하기 전) : ",materialCodeRegisterValueCheck);
+    			//console.log("등록체크 전역변수 품목명 확인하기(체크하기 전) : ",materialNameRegisterValueCheck);
 				    			
     			//입력받은 품목코드 -> 품목코드 리스트에 담기
     			let codeList = new Array();
     			$('.materialCode').each(function(){
     				let code = $(this).val();
-    				console.log("이거 잘 code 읽어온건가!!",code);
+    				//console.log("이거 잘 code 읽어온건가!!",code);
     				if(code != ""){				//빈값이 아닐때, 값이 존재하면
     					codeList.push(code);
     				}else{						//빈값 상태, materialCodeRegisterValueCheck 전역변수 -> false 바꾸기
     					materialCodeRegisterValueCheck = false;
     				}
     			});
-    			console.log("등록체크 전역변수 품목코드 확인하기(품목코드 체크 후) : ",materialCodeRegisterValueCheck);
-    			console.log("등록체크 전역변수 품목명 확인하기(품목코드 체크 후) : ",materialNameRegisterValueCheck);
+    			//console.log("등록체크 전역변수 품목코드 확인하기(품목코드 체크 후) : ",materialCodeRegisterValueCheck);
+    			//console.log("등록체크 전역변수 품목명 확인하기(품목코드 체크 후) : ",materialNameRegisterValueCheck);
     			
     			//입력받은 품목명 -> 품목명 리스트에 담기
     			let nameList = new Array();
@@ -281,8 +281,8 @@
     					materialNameRegisterValueCheck = false;
     				}    	
     			});    			
-    			console.log("등록체크 전역변수 품목코드 확인하기(품목명 체크 후) : ",materialCodeRegisterValueCheck);
-    			console.log("등록체크 전역변수 품목명 확인하기(품목명 체크 후) : ",materialNameRegisterValueCheck);
+    			//console.log("등록체크 전역변수 품목코드 확인하기(품목명 체크 후) : ",materialCodeRegisterValueCheck);
+    			//console.log("등록체크 전역변수 품목명 확인하기(품목명 체크 후) : ",materialNameRegisterValueCheck);
     			
     			//각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
     			let codenameList = new Array();
@@ -358,34 +358,40 @@
 					materialCodeRegisterValueCheck = true;
 					materialNameRegisterValueCheck = true;
     			}
-				console.log("등록체크 전역변수 품목코드 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",materialCodeRegisterValueCheck);
-				console.log("등록체크 전역변수 품목명 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",materialNameRegisterValueCheck);
+				//console.log("등록체크 전역변수 품목코드 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",materialCodeRegisterValueCheck);
+				//console.log("등록체크 전역변수 품목명 확인하기(등록확인 버튼 누르고, 마지막 확인) : ",materialNameRegisterValueCheck);
 								
 			});	//등록확인 버튼 누를때 끝
 			
-			console.log("등록체크 전역변수 품목코드 확인하기(중간에 확인) : ",materialCodeRegisterValueCheck);
-			console.log("등록체크 전역변수 품목명 확인하기(중간에 확인) : ",materialNameRegisterValueCheck);
+			//console.log("등록체크 전역변수 품목코드 확인하기(중간에 확인) : ",materialCodeRegisterValueCheck);
+			//console.log("등록체크 전역변수 품목명 확인하기(중간에 확인) : ",materialNameRegisterValueCheck);
 						
 			//등록확인 모달창의 확인 버튼 누를때 --> 실제로 DB에 등록 되는 부분
 			$(document).on("click",".materialRegisterConfirmBtn",function(e){
 				e.preventDefault();	
 				//도면파일 인풋에 값이 실려서! 존재한다면, 도면번호에 품목코드+D01을 넣어주자!
 				//모든 도면파일의 인풋값 리스트로 만들기
+	        	//input의 도면파일 입력된거 다 찾아오기
+	        	var findDrawingFile = document.querySelectorAll("input[name=drawingFile]");
+				//console.log("파일 테스트 이렇게 읽어야 할거 같은데?? : ",findDrawingFile);
+				
+				//찾은 도면파일 리스트로 만들기
 				let drawingFileList = new Array();
-				$('.drawingFile').each(function(){
-    				let drawingFile = $(this).val();
-    				//console.log("이거 잘 drawingFile 읽어온건가!!",drawingFile);
-    				//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
-   					drawingFileList.push(drawingFile);
-    			}); 
-	        	console.log("만든 drawingFileList 보자! : ",drawingFileList);
-
+				findDrawingFile.forEach(function(item){
+   					//console.log("이제 잘 읽겠지?? : ",item);
+   					//있는그대로 리스트에 담아야하기때문에 빈값이 있더라도 그대로 리스트에 담아주기
+   					drawingFileList.push(item.value);
+   				});
+   				//console.log("만든 도면 파일 리스트 : ",drawingFileList);
+				
 	        	//도면파일이 존재하게 된다면, 도면번호의 품목코드+D01 넣어주기
 				drawingFileList.forEach(function(item, i){
 					if(item != ""){
 						var materialCode = document.querySelector(`#materialRegisterTable tr:nth-child(${i+1}) input[name=code]`).value;
-						console.log("어디 품목코드 읽히나 보자 : ",materialCode);
-						document.querySelector(`#materialRegisterTable tr:nth-child(${i+1}) input[name=drawingNo]`).value = materialCode+"D01";
+						//console.log("어디 품목코드 읽히나 보자 : ",materialCode);
+						var drawingNo = materialCode+"D01";
+						//console.log("도면번호 등록확인 누를때 도면호 어디 보자 : ",drawingNo);
+						document.querySelector(`#materialRegisterTable tr:nth-child(${i+1}) input[name=drawingNo]`).value = drawingNo;
 					}
 				});
 				
@@ -493,14 +499,14 @@
 						let nameList = new Array();
 						$('.materialName').each(function(){
 							let name = $(this).val();
-							console.log("품목명~~~~~~~~~~~~이거 잘 name 읽어온건가!!",name);
+							//console.log("품목명~~~~~~~~~~~~이거 잘 name 읽어온건가!!",name);
 							if(name != ""){ 			//빈값이 아닐때, 값이 존재하면
 							nameList.push(name);
 							}else{						//빈값 상태, materialNameRegisterValueCheck 전역변수 -> false 바꾸기
 		    					materialNameRegisterValueCheck = false;
 		    				}    	
 						});
-						console.log("일단 품목명 리스트 만들어진거 보자~~~~~~: ",nameList);
+						//console.log("일단 품목명 리스트 만들어진거 보자~~~~~~: ",nameList);
 						
 						//3. 각각의 품목코드,품목명 리스트 -> 객체(품목코드,품목명) 리스트에 담기
 		    			let codenameList = new Array();
@@ -570,14 +576,14 @@
 			//대분류코드 변경됨에 따라 중분류코드 바꿔주기 위한 함수
 			$(document).on("change",".largeCategoryCode",function(){
 				let selectedLCCode = $(this).val();
-				console.log("선택된 대분류 코드 : ",selectedLCCode); 
+				//console.log("선택된 대분류 코드 : ",selectedLCCode); 
 				
 				//console.log("text 값 테스트1 : ",$(this).text()); 
 				//-> 그해당 셀렉트의 모든 값을 가져온다.
 				
 				//지금 변하는 것의 td의 다음 td에서 중분류 클래스 찾기 -> 여기에 넣을 option 만들어서 넣기
 				var middleCategoryCodeOptions = getObj().nextElementSibling.querySelector('.middleCategoryCode');
-				console.log("중분류 select",middleCategoryCodeOptions);
+				//console.log("중분류 select",middleCategoryCodeOptions);
 				
 				/*
 				//선택된 대분류코드
@@ -672,16 +678,16 @@
 	        //input file이 변할때, 파일확장 체크해서 업로드 하기
 	        $(".custom-file-input").on("change", function(e) {
 	        	console.log("인풋 체인지 함수 시작");
-	        	console.log("이 인풋의 값을 봐보자!! : ", $(".custom-file-input").val());
-	        	console.log("이 인풋 밑에 라벨의 값도 봐보자!! : ", $(".custom-file-label").val());
-	        	console.log("e.target.files 보자 : ",e.target.files);
+	        	//console.log("이 인풋의 값을 봐보자!! : ", $(".custom-file-input").val());
+	        	//console.log("이 인풋 밑에 라벨의 값도 봐보자!! : ", $(".custom-file-label").val());
+	        	//console.log("e.target.files 보자 : ",e.target.files);
  				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);		//이건 값을 못읽어 에러 뜸
 	        	
 	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
 	        	if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
-	 				console.log("인풋 체인지 함수에서!! li 길이가 0개~~~~~~~~~");
-	        		console.log("$(this).val() 이게 도대체 모야? 체인지 함수 클릭할때 값 읽어보자 : ",$(this).val()); 	// C:\fakepath\테이블정의서ver4.xlsx
-	        		console.log("그리고 인풋 체인지 함수에서 그자체 읽어보자 $(this) : ",$(this));
+	 				//console.log("인풋 체인지 함수에서!! li 길이가 0개~~~~~~~~~");
+	        		//console.log("$(this).val() 이게 도대체 모야? 체인지 함수 클릭할때 값 읽어보자 : ",$(this).val()); 	// C:\fakepath\테이블정의서ver4.xlsx
+	        		//console.log("그리고 인풋 체인지 함수에서 그자체 읽어보자 $(this) : ",$(this));
 	        		
 	 				var fileName = $(this).val().split("\\").pop();
 					//console.log("인풋 체인지 함수의 fileName : ",fileName);
@@ -738,14 +744,14 @@
 	 	                    //console.log("파일이름 잘 읽어오나 보자 : ",drawingFile);
 	 	                    //console.log("테이블의 input값 제대로 넣기 전 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 							attachDrawingFileTR.querySelector("input[name=drawingFile]").value = drawingFile;
-							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+							console.log("인풋 체인지 함수 테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 	 	                },
 	 	                error: function(jqXHR, textStatus, errorThrown){
 	 	                    console.log("인풋 체인지 함수의 ajax 에러",textStatus);
 	 	                }
 	 	            }); //$.ajax
 	 			}else{													//현재 개수 1개 이상으로, 이미 업로드한게 있음!
-	 				console.log("현재 인풋 체인지 함수에서 li 길이가 1개 이상!!~~~~~~~~~");
+	 				//console.log("현재 인풋 체인지 함수에서 li 길이가 1개 이상!!~~~~~~~~~");
 	 				e.preventDefault();
 	 				document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
 					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
@@ -880,7 +886,7 @@
 	        	//썸네일 넣은 li의 개수를 이용하여, 1개만 파일 업로드 하게 만들기
 	        	var isExist = document.getElementsByClassName('liUpload');        		//썸네일 넣은 li,
 	 			if(isExist.length==0){													//현재 개수 0개!, 업로드 가능
-	 				console.log("드래그엔 드롭에서!! li 길이가 0개~~~~~~~~~");
+	 				//console.log("드래그엔 드롭에서!! li 길이가 0개~~~~~~~~~");
 	 				var files = e.target.files || e.dataTransfer.files; 
 	 				//console.log("e.target.files 보자 : ",e.target.files);
 	 				//console.log("e.dataTransfer.files 보자 : ",e.dataTransfer.files);
@@ -928,14 +934,14 @@
 		                    //console.log("파일이름 잘 읽어오나 보자 : ",drawingFile);
 		                    //console.log("테이블의 input값 제대로 넣기 전 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 							attachDrawingFileTR.querySelector("input[name=drawingFile]").value = drawingFile;
-							//console.log("테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
+							console.log("드래그엔 드랍 테이블의 input값 제대로 넣고 난 후 : ",attachDrawingFileTR.querySelector("input[name=drawingFile]").value);
 		                },
 		                error: function(jqXHR, textStatus, errorThrown){
 		                    console.log("드래그 앤 드롭에서 파일 업로드 ajax 에러발생",textStatus);
 		                }
 		            }); //$.ajax 
 	 			}else{																	//현재 개수 1개 이상으로, 이미 업로드한게 있음!
-	 				console.log("드래그엔 드롭에서!! li 길이가 1개 이상!!~~~~~~~~~");
+	 				//console.log("드래그엔 드롭에서!! li 길이가 1개 이상!!~~~~~~~~~");
 	 				e.preventDefault();
 	 				document.querySelector("#materialInfoAndErrorModalTitle").innerHTML = `도면 Image 첨부 확인`;
 					sentence = `<span>파일 1개만 첨부할 수 있습니다.</span>`;
@@ -991,7 +997,7 @@
 				//값이 만들어 진게 있을때에만 ajax처리 가능하게 하자! 
 				var lengthCheck = $(".uploadResult li").length;
 				if(lengthCheck>0){
-					console.log("현재 길이 1개 이상이야 만든거 있어~ 갯수는 : ",lengthCheck);
+					//console.log("현재 길이 1개 이상이야 만든거 있어~ 갯수는 : ",lengthCheck);
 					$.ajax({
 		                url: '/procurement1/drawing/removeFile',
 		                data: {fileName: targetFile},
