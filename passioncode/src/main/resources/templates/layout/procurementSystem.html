@@ -9,18 +9,123 @@
 		<div class="col-md-12 stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<p class="card-title" style="font-size:23px;">조달 구매 시스템</p>
+					<p class="card-title" style="font-size:23px;">조달구매 시스템</p>
 					<br>
-					<div class="row" style="margin-bottom: 5px;">
-						<button class="btn btn-primary btn-lg " style="margin-right:10px" onclick="location.href='/procurement1/materialList'">
-							<h2>발주 계획</h2>
-						</button>
-						<button class="btn btn-primary btn-lg " style="margin-left:10px; margin-right:10px;" onclick="location.href='/procurement2/purchaseOrder'"><h2>구매 발주</h2></button>
-						<button class="btn btn-primary btn-lg " style="margin-left:10px; margin-right:10px;" onclick="location.href='/procurement3/materialIn'"><h2>자재 입고</h2></button>
-						<button class="btn btn-primary btn-lg " style="margin-left:10px; margin-right:10px;" onclick="location.href='/procurement4/materialOut'"><h2>자재 출고</h2></button>
+					<div style="margin-bottom:5px;">
+						<ul class="nav">
+							<li class="nav-item">
+								<a class="nav-link btn btn-primary btn-lg " data-toggle="collapse" href="#MainProcurementPlan" aria-expanded="false" aria-controls="MainProcurementPlan"
+										style="width:220px; height:70px; padding-top: 20px; margin-right:10px;"> 							
+									<span class="menu-title" style="font-size:30px;">발주 계획</span>
+									<i class="mdi mdi-arrow-down-drop-circle-outline" style="float:right; margin-top:5px;"></i>						
+								</a>
+								<div class="collapse" id="MainProcurementPlan">
+									<ul class="nav flex-column sub-menu">
+										<li class="nav-item">
+											<a class="nav-link" href="/procurement1/materialList">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">품목 정보 등록</span>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement1/contractList">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">계약 등록</span>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement1/procurementPlanList">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">조달 계획 등록</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link btn btn-primary btn-lg " data-toggle="collapse" href="#MainPurchaseOrder" aria-expanded="false" aria-controls="MainPurchaseOrder"
+										style="width:220px; height:70px; padding-top: 20px; margin-left:10px; margin-right:10px;"> 							
+									<span class="menu-title" style="font-size:30px;">구매 발주</span>
+									<i class="mdi mdi-arrow-down-drop-circle-outline" style="float:right; margin-top:5px;"></i>						
+								</a>
+								<div class="collapse" id="MainPurchaseOrder">
+									<ul class="nav flex-column sub-menu">
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement2/purchaseOrder"> 
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">발주서 발행</span>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement2/progressCheck">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">진척 검수</span>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement3/purchaseReport">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">발주현황 리포트</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link btn btn-primary btn-lg " data-toggle="collapse" href="#MainMaterialIn" aria-expanded="false" aria-controls="MainMaterialIn"
+										style="width:220px; height:70px; padding-top: 20px; margin-left:10px; margin-right:10px;"> 							
+									<span class="menu-title" style="font-size:30px;">자재 입고</span>
+									<i class="mdi mdi-arrow-down-drop-circle-outline" style="float:right; margin-top:5px;"></i>						
+								</a>
+								<div class="collapse" id="MainMaterialIn">
+									<ul class="nav flex-column sub-menu">
+										<li class="nav-item">
+											<a class="nav-link" href="/procurement3/materialIn">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">자재 입고</span>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement3/transactionList">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">거래명세서</span>
+											</a>
+										</li>
+										
+									</ul>
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link btn btn-primary btn-lg " data-toggle="collapse" href="#MainMaterialOut" aria-expanded="false" aria-controls="MainMaterialOut"
+										style="width:220px; height:70px; padding-top: 20px; margin-left:10px; "> 							
+									<span class="menu-title" style="font-size:30px;">자재 출고</span>
+									<i class="mdi mdi-arrow-down-drop-circle-outline" style="float:right; margin-top:5px;"></i>						
+								</a>
+								<div class="collapse" id="MainMaterialOut">
+									<ul class="nav flex-column sub-menu">
+										<li class="nav-item">
+											<a class="nav-link" href="/procurement4/materialOut">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">자재 출고</span>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement4/stockResult">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">재고 산출</span>
+											</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link"	href="/procurement4/stockReport">
+												<i class="mdi mdi-checkbox-blank-circle"></i>	
+												&nbsp; <span style="font-size:20px;">재고금액 현황 리포트</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>	
 					</div>
-					
-					
 				</div>
 			</div>
 		</div>

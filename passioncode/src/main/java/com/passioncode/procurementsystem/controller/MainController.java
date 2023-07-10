@@ -20,13 +20,4 @@ public class MainController {
 		return "layout/procurementSystem";
 	}
 	
-	@GetMapping("passioncode/procurementSystem2")
-	public String mainTest2() {
-		return "layout/procurementSystem2";
-	}
-
-	@GetMapping("procurement4/chartTest")
-	public void ChartTest() {
-		
-	}
 }
