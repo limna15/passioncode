@@ -95,11 +95,7 @@
 						</div> 
 						<!-- 목록 내려보기 끝 -->
 						<!-- 발주서 발행 버튼 시작 -->
-						<div class="col-md-6" >	
-							<button style="float: right;" class="btn btn-primary myprint" id="idmyprint">
-								인쇄
-							</button>
-							
+						<div class="col-md-6" >
 							<button class="td-modal btn btn-primary mypublish" id="publishBtn" style="float:right; margin-right:10px">
 								발주서 발행
 							</button>
@@ -271,10 +267,15 @@
                         <h5 class="modal-title">이미 발주서가 발행되었습니다.</h5>
                     </div>
                     <div class="modal-body" >
-						<span>발주서는 한 번만 발행할 수 있습니다. <br></span><br>
+						<span>발주서는 한 번만 발행할 수 있습니다. <br>
+						인쇄하시려면 인쇄 버튼을 누르세요.
+						</span><br>
                     </div>
                     <div class="modal-footer">
-                    
+                       <!-- 인쇄버튼 만들기 -->
+                       <button style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;" class="btn btn-primary myprint" id="idmyprint2">
+								인쇄
+						</button>
                       <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        </button>
@@ -539,7 +540,7 @@
 			//console.log("큰 발주 코드",maxCode,"가장 마지막 발주서 번호: ",maxNo); 
 	});		
 	
-	$("#idmyprint").click(function(){
+	$("#idmyprint2").click(function(){
 		console.log("인쇄버튼 누름");
 		console.log("발주코드: ", dCode);
 		if(dCode==0){	//클릭 했는데, 발주서가 존재하지 않는 경우
