@@ -254,11 +254,11 @@
 									</tbody>
 								</table>
 								<div id="diliveryPercent3">
-										지난 검사의 납기 진도율은 <span id="diliveryPercent3">납기 진도율</span> 입니다.
+										<span id="diliveryPercent3"></span>
 										
 								</div>
 								<div id="diliveryEtc3">
-										여기에 기타 사항<span id="diliveryEtc3"> </span> 입니다.
+										<span id="diliveryEtc3"> </span>
 										
 								</div>
 									<!-- 동적 테이블 부분-->
@@ -363,16 +363,20 @@
 				
 			}else{
 			console.log(">> 이미 기록되어 있는 부분 누름");//리무브하면 아예 없어져서 안 보이는 것
+			console.log(">>길이가 나오나", tableTd01.length);
 				tableTd01 = '<tr>';
+			//for(let o=1;o<tableTd01.length;o++){
 							tableTd01 += '<td>' + 1 +'</td>';
+				
+			//}
 							tableTd01 += '<td>' + todaydate +'</td>';
 							tableTd01 += '<td>' + dPercent +'</td>';
 							tableTd01 += '<td>' + pEtc +'</td>';
 							tableTd01 += '</tr>';
 						$('#tbody01').append(tableTd01);//여기서 축척됨
 						$('#tbody01').show(tableTd01);
-				document.querySelector("#diliveryPercent3").innerHTML = `지난 검사의 납기진도율은 `+dPercent+` 입니다. `;				
-				document.querySelector("#diliveryEtc3").innerHTML = `지난 검사에서 기록한 기타사항은 " `+pEtc+`" 입니다. `;				
+				//document.querySelector("#diliveryPercent3").innerHTML = `지난 검사의 납기진도율은 `+dPercent+` 입니다. `;				
+				//document.querySelector("#diliveryEtc3").innerHTML = `지난 검사에서 기록한 기타사항은 " `+pEtc+`" 입니다. `;				
 			}
 			
 			//document.querySelector("#etc3").innerHTML = pEtc;
