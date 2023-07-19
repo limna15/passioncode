@@ -111,6 +111,7 @@
 									<th>납기 <br>진도율</th>
 									<th>검수 완료</th>
 									<th>발주서<br>마감<br> 상태</th>
+									<th>진척검수<br>코드<br></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -132,6 +133,7 @@
 									<td><input type="hidden" name="diliveryPercent" th:value="${dto.diliveryPercent}">[[${dto.diliveryPercent}]]</td>
 									<td><input type="hidden" name="etc6" th:value="${dto.etc}">[[${dto.inspectionComplete}]]</td>
 									<td>[[${dto.purchaseOrderDeadlineStatus}]]</td>
+									<td><input type="hidden" name="checkCode" th:value="${dto.detailCode}">[[${dto}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -363,13 +365,13 @@
 				
 			}else{
 			console.log(">> 이미 기록되어 있는 부분 누름");//리무브하면 아예 없어져서 안 보이는 것
-			console.log(">>길이가 나오나", tableTd01.length);
+			console.log(">>길이가 나오나", tableTd01.length);	//수식 가능함
 				tableTd01 = '<tr>';
 			//for(let o=1;o<tableTd01.length;o++){
 							tableTd01 += '<td>' + 1 +'</td>';
 				
 			//}
-							tableTd01 += '<td>' + todaydate +'</td>';
+							tableTd01 += '<td>' + todaydate +'</td>';	//오늘 날짜 고치기
 							tableTd01 += '<td>' + dPercent +'</td>';
 							tableTd01 += '<td>' + pEtc +'</td>';
 							tableTd01 += '</tr>';
