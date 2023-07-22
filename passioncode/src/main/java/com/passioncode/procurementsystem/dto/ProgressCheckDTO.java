@@ -24,7 +24,11 @@ public class ProgressCheckDTO {
 	
 	//외래키로 사용할 것들 추가하기
 	
-	//진척 검수 코드.. 생각 중
+	/**
+	 * 진척 검수 코드
+	 */
+	private Integer checkeCode;
+	
 	/**
 	 * 기타 사항
 	 */
