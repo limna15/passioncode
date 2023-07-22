@@ -27,7 +27,7 @@ public class ProgressCheckDTO {
 	/**
 	 * 진척 검수 코드
 	 */
-	private Integer checkeCode;
+	private Integer checkCode;
 	
 	/**
 	 * 기타 사항
