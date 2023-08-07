@@ -366,6 +366,14 @@
 			}else{
 			console.log(">> 이미 기록되어 있는 부분 누름");//리무브하면 아예 없어져서 안 보이는 것
 			console.log(">>길이가 나오나", tableTd01.length);	//수식 가능함
+			$('#tbody01').empty();//다른 진척 검수가 쌓여 나오기 때문에 빈칸으로 초기화 하기
+				tableTd01 = '<tr>';
+					tableTd01 += '<td>회차</td>';	//오늘 날짜 고치기
+							tableTd01 += '<td>검수일</td>';
+							tableTd01 += '<td>납기 진도율</td>';
+							tableTd01 += '<td>기타사항</td>';
+							tableTd01 += '</tr>';
+							$('#tbody01').append(tableTd01);
 				tableTd01 = '<tr>';
 			//for(let o=1;o<tableTd01.length;o++){
 							tableTd01 += '<td>' + 1 +'</td>';
