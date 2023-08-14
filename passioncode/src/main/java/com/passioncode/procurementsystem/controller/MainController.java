@@ -15,8 +15,7 @@ public class MainController {
 		return "layout/layoutTest";
 	}
 	
-	//메인 도메인 에서 추가로 passioncode/procurementSystem 입력해야지, 메인화면이 떴었지만, 도메인주소만으로 메인화면 나오게 바꿈!
-	@GetMapping(value="/")
+	@GetMapping(value={"passioncode/procurementSystem","/"})
 	public String mainTest() {
 		return "layout/procurementSystem";
 	}
