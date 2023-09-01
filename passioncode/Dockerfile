@@ -9,3 +9,6 @@ COPY ${JAR_FILE} app.jar
 
 # jar 파일 실행
 ENTRYPOINT [ "java","-jar","/app.jar" ]
+
+# 도커 시간 설정
+ENV TZ Asia/Seoul
