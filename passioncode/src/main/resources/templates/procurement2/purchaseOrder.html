@@ -210,7 +210,7 @@
 						<span>발행된 발주서가 없습니다. <br>발행 후 인쇄해 주세요.</span><br>
                     </div>
                     <div class="modal-footer">
-                      <button id="canclePrint" type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        </button>
                     </div>
@@ -276,7 +276,7 @@
                        <button style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;" class="btn btn-primary myprint" id="idmyprint2">
 								인쇄
 						</button>
-                      <button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+                      <button id="canclePrint" type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
                         	닫기
                        </button>
                     </div>
@@ -524,20 +524,11 @@
 				$(".existPurchaseOrderModal").modal("show");	
 			}
 			
-			//console.log("발주서 번호",dNo,"발주코드detailCode: ", dCode);//발주서 번호가 0이라면 발주서 발행 금지
+			$("#canclePrint").click(function(){
+				console.log("인쇄 취소 버튼 누름");
+				location.href="/procurement2/purchaseOrder";
+			});
 			
-			
-			//document.querySelector("#cName2").innerHTML = cName;
-			//document.querySelector("#dDate2").innerHTML = dDate;
-			//document.querySelector("#mCode2").innerHTML = mCode;
-			//document.querySelector("#mName2").innerHTML = mName;
-			//document.querySelector("#oAmount2").innerHTML = oAmount;
-			//document.querySelector("#uPrice2").innerHTML = uPrice;
-			//document.querySelector("#pPrice2").innerHTML = pPrice;//잘 나옴
-			//document.querySelector("#today2").innerHTML = todaydate;//오늘 날짜 만들어서 넣기
-			//document.querySelector("#maxNo2").innerHTML = maxNo;//가장 큰 발주
-			
-			//console.log("큰 발주 코드",maxCode,"가장 마지막 발주서 번호: ",maxNo); 
 	});		
 	
 	$("#idmyprint2").click(function(){
@@ -546,7 +537,6 @@
 		if(dCode==0){	//클릭 했는데, 발주서가 존재하지 않는 경우
 			console.log("인쇄할 수 없음");
 			$(".noPublishNoModal").modal("show");
-				//location.href="/procurement2/purchaseOrder";
 		}else if(dCode==null){
 			console.log("인쇄할 수 없음");
 			$(".noPrintModal").modal("show");
@@ -555,35 +545,7 @@
 		}
 		
 	});
-
-	/////////////////여기까지 체크박스
-
-//			발주서이미 존재하는지 확인 부분				
-// 				var needNum2=1;//여기에 원하는 자리수 숫자의 날짜 담기
-// 				for(let num6 = 0;num6<bb.length; num6++){
-// 					var check = bb[num6];
-// 					var ppNo = check.procurementPlan;
-// 					if(ppNo==num1){//내가 원하는 조달번호
-// 						if(check.purchaseOrderDate==null){
-// 							console.log("빈 날짜인 경우","숫자 확인: ",num1, "발주번호 확인: ", check.procurementPlan);
-// 							//$(".myPublish").modal("show");
-// 						}else{
-// 							console.log("이게 나와라 ..",check.purchaseOrderDate,"숫자 확인: ",num1);
-// 							$(".existPurchaseOrderModal").modal("show");//이미 발주서가 존재합니다. 
-// 						}
-					
-// 					}
-					
-// 					//needNum2 =num6;
-// 					//console.log("needNum2 >>> ",needNum2);
-// 					//console.log("orderDateList의 ", num6," 번째의 값: ",orderDateList[num6]);
-// 					//console.log("orderDateList의 +1 로 해서 숫자가 나오는 ", num3+1," 번째의 값: ",orderDateList[num3]);
-// 					//내가 원하는 발주서의 길이만큼 반복해서 마지막 날이 null이면 이미 발행가능, 존재하면 발행불가
-// 				}
-			
-		//}else{
-		//};
-		
+	
 		
 		$(".mypublish").click(function(){
 			console.log("여기에서 실행해서 정보 전달하는 구나");
@@ -604,10 +566,6 @@
 			
 		
 			console.log("번호 리스트 >>> ", cList);	//잘 나옴
-			
-			
-			
-			
 			
 			//동적인 테이블 시작
 			//배열 5개 만들어두고 5개의 회사만 구분할 수 있도록 하기
@@ -970,10 +928,6 @@
 			}
 			
 			});
-		$("#canclePrint").click(function(){
-			console.log("인쇄 취소 버튼 누름");
-			location.href="/procurement2/purchaseOrder";
-		});
 		////////////////////////////////////////////////////////////////////////////////////
 		//이벤트 발생한 요소의 상위의 TD 객체 찾기
 		function getObj(){
