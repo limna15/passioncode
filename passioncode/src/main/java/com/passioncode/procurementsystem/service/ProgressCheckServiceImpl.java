@@ -54,6 +54,32 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		
 	}
 	
+	//진척 검수일 가져오기
+	public Date forCheckDate(Integer num1) {//진척 검수일을 가져온다
+		Date checkDate = null;
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num1).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setPcectc((String) arr[2]);
+			pdDTO.setPcrate((Integer) arr[3]);
+			pdDTO.setPcdetail((Integer) arr[4]);
+			pdDTO.setTodaydate(LocalDateTime.now());// 나중에 오늘날짜만 검수할 수 있도록 넣어두기
+			pdDTO.setCountno(1); // 목록에서 열 번호를 위해
+			list.add(pdDTO);
+			checkDate = ((Date) arr[1]);
+		}
+
+		log.info("쿼리 발주번호를 통한 진척검수: " + list);
+		return checkDate;
+
+	}
+	
+	//기타사항 가져오기
 	public String forEtc(Integer num1) {
 		String etc = null;// 여러개 가져오기 가능
 		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num1).get();
@@ -96,7 +122,9 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		ProcurementPlan procurementPlan= procurementPlanRepository.findByDetailPurchaseOrder(detailPurchaseOrder);
 		
 		  ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder().etc(forEtc(procurementPlan.getDetailPurchaseOrder().getCode()))
+				  .thisCheckDate(forCheckDate(procurementPlan.getDetailPurchaseOrder().getCode()))
 				  .detailCode(procurementPlan.getDetailPurchaseOrder())
+				  .checkCode(procurementPlan.getDetailPurchaseOrder().getCode())
 		  .companyName(procurementPlan.getContract().getCompany().getName())
 		  .purchaseOrderCode(procurementPlan.getDetailPurchaseOrder().getCode())
 		  .orderAmount(procurementPlan.getDetailPurchaseOrder().getAmount())
@@ -112,6 +140,15 @@ public class ProgressCheckServiceImpl implements ProgressCheckService {
 		
 		
 		return progressCheckDTO;
+	}
+	
+	//진척 검수 코드 가져오기
+	public ProgressCheck checkCode2(DetailPurchaseOrder dp) {
+		ProgressCheck chCode=null;
+		ProgressCheck pg = progressCheckRepository.findByCode(dp.getCode());
+		chCode=pg;
+		return chCode;
+		
 	}
 	
 	public String extistMIn(DetailPurchaseOrder dp) {//발주서 마감 상태

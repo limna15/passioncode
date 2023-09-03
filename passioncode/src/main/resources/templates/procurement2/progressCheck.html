@@ -112,6 +112,7 @@
 									<th>검수 완료</th>
 									<th>발주서<br>마감<br> 상태</th>
 									<th>진척검수<br>코드<br></th>
+									<th style="display:none;">검수한 날짜</th><br></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -123,7 +124,6 @@
 									<td><input type="hidden" name="orderAmount" th:value="${dto.orderAmount}">[[${dto.orderAmount}]]</td>
 									<td><input type="hidden" name="unitPrice" th:value="${dto.unitPrice}">[[${dto.unitPrice}]]</td>
 									<td><input type="hidden" name="nextCheckDate" th:value="${dto.nextCheckDate}">[[${dto.nextCheckDate}]]</td>
-									<!-- 조달계획의 버튼 <button type="submit" id="data" class="btn btn-primary" style="float: right;" onclick="aaa()">데이터 보낼거야</button> -->
 									<td id="myadd">
 									<button name="checkBox" class="td-modal btn btn-primary addClass" id="addDateBtn" >일정 등록</button>
 									</td>
@@ -134,6 +134,7 @@
 									<td><input type="hidden" name="etc6" th:value="${dto.etc}">[[${dto.inspectionComplete}]]</td>
 									<td>[[${dto.purchaseOrderDeadlineStatus}]]</td>
 									<td><input type="hidden" name="checkCode" th:value="${dto.detailCode}">[[${dto}]]</td>
+									<td style="display:none;"><input type="hidden" name="thisCheckDate" th:value="${dto.thisCheckDate}">[[${dto.thisCheckDate}]]</td>
 								</tr>
 							</tbody>
 						</table>
@@ -323,6 +324,7 @@
 			console.log("다음 진척검수일: ",nDate);
 			console.log("납기 진도율: ",dPercent);
 			console.log("기타사항: ",pEtc);
+			console.log("오늘 날짜>>> ",today);
 			codeNo=getObjTR().querySelector("input[name=purchaseOrderCode]").value;//여기에서 값 넣어서 날짜등록으로 보내보기
 			console.log("등록할때 필요한 발주번호: ",codeNo);//잘나옴
 			document.querySelector("#companyName2").innerHTML = cName;
@@ -342,6 +344,7 @@
 			var oAmount= getObjTR().querySelector("input[name=orderAmount]").value;
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
 			nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
+			var tDate= getObjTR().querySelector("input[name=thisCheckDate]").value;
 			var dPercent= getObjTR().querySelector("input[name=diliveryPercent]").value;
 			var pEtc= getObjTR().querySelector("input[name=etc6]").value;
 			console.log("발주코드: ",pCode);//잘나옴
@@ -351,9 +354,10 @@
 			console.log("주문수량: ",oAmount);
 			console.log("단가: ",uPrice);
 			console.log("다음 진척검수일: ",nDate);
+			console.log("지난 진척검수일: ",tDate);
 			console.log("납기 진도율: ",dPercent);
 			console.log("기타사항: ",pEtc);
-			
+						
 			document.querySelector("#companyName3").innerHTML = cName;
 			var tableTd01 = ``;
 			if(dPercent=="미등록"){
@@ -368,20 +372,20 @@
 			console.log(">>길이가 나오나", tableTd01.length);	//수식 가능함
 			$('#tbody01').empty();//다른 진척 검수가 쌓여 나오기 때문에 빈칸으로 초기화 하기
 				tableTd01 = '<tr>';
-					tableTd01 += '<td>회차</td>';	//오늘 날짜 고치기
-							tableTd01 += '<td>검수일</td>';
+					tableTd01 += '<td>회차</td>';
+							tableTd01 += '<td>&nbsp검수일</td>';
 							tableTd01 += '<td>납기 진도율</td>';
 							tableTd01 += '<td>기타사항</td>';
 							tableTd01 += '</tr>';
 							$('#tbody01').append(tableTd01);
 				tableTd01 = '<tr>';
 			//for(let o=1;o<tableTd01.length;o++){
-							tableTd01 += '<td>' + 1 +'</td>';
+							tableTd01 += '<td>&nbsp&nbsp' + 1 +'</td>';
 				
 			//}
-							tableTd01 += '<td>' + todaydate +'</td>';	//오늘 날짜 고치기
-							tableTd01 += '<td>' + dPercent +'</td>';
-							tableTd01 += '<td>' + pEtc +'</td>';
+							tableTd01 += '<td>' + tDate +'</td>';	//오늘 날짜 고치기
+							tableTd01 += '<td>&nbsp&nbsp&nbsp' + dPercent +'</td>';
+							tableTd01 += '<td>&nbsp&nbsp' + pEtc +'</td>';
 							tableTd01 += '</tr>';
 							document.querySelector("#diliveryPercent3").innerHTML = ` `;//진척없다는 멘트 누적 금지
 						$('#tbody01').append(tableTd01);//여기서 축척됨
