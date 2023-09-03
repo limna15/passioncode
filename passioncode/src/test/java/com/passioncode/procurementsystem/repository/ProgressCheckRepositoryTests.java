@@ -47,6 +47,32 @@ public class ProgressCheckRepositoryTests {
 
 	@Transactional
 	@Test
+	public Date forCheckDate(Integer num1) {//진척 검수일을 가져온다
+		Date checkDate = null;
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num1).get();
+		// 아래 리스트에 더하기
+		List<DetailProgressCheckListDTO> list = new ArrayList<>();
+		List<Object[]> pcList = progressCheckRepository.findByDetailPurchaseOrderList(detailPO.getCode());
+		for (Object[] arr : pcList) {
+			DetailProgressCheckListDTO pdDTO = new DetailProgressCheckListDTO();
+			pdDTO.setPccode((Integer) arr[0]);
+			pdDTO.setPcdate((Date) arr[1]);
+			pdDTO.setPcectc((String) arr[2]);
+			pdDTO.setPcrate((Integer) arr[3]);
+			pdDTO.setPcdetail((Integer) arr[4]);
+			pdDTO.setTodaydate(LocalDateTime.now());// 나중에 오늘날짜만 검수할 수 있도록 넣어두기
+			pdDTO.setCountno(1); // 목록에서 열 번호를 위해
+			list.add(pdDTO);
+			checkDate = ((Date) arr[1]);
+		}
+
+		log.info("쿼리 발주번호를 통한 진척검수: " + list);
+		return checkDate;
+
+	}
+	
+	@Transactional
+	@Test
 	public Integer forCheckCode(Integer num1) {
 		Integer checkCode = null;
 		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(num1).get();
@@ -493,11 +519,12 @@ public class ProgressCheckRepositoryTests {
 		// 1번 세구부매 발주서로 테스트
 
 		// 세부구매발주서 -> 조달계획 -> ..
-		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(1).get();
+		DetailPurchaseOrder detailPO = detailPurchaseOrderRepository.findById(2).get();
 		ProcurementPlan procurementPlan = procurementPlanRepository.findByDetailPurchaseOrder(detailPO);
 
 		ProgressCheckDTO progressCheckDTO = ProgressCheckDTO.builder().etc(forEtc(procurementPlan.getDetailPurchaseOrder().getCode()))
 				.detailNo(detailPO)//이거 수정해야 함
+				.thisCheckDate(forCheckDate(procurementPlan.getDetailPurchaseOrder().getCode()))//진짜 검수일
 				.checkCode(forCheckCode(procurementPlan.getDetailPurchaseOrder().getCode()))//진척검수 코드
 				  .detailCode(procurementPlan.getDetailPurchaseOrder())
 		  .companyName(procurementPlan.getContract().getCompany().getName())
@@ -695,7 +722,7 @@ public class ProgressCheckRepositoryTests {
 	@Test
 	public String addBlank(Integer num1) {
 		String pNum = String.format("%05d", num1);
-		log.info("잘 찍어 보낼 문자" + pNum);
+		//log.info("잘 찍어 보낼 문자" + pNum);
 
 		return pNum;
 
