@@ -285,6 +285,59 @@
 		</div>
 		<!--진척 평가 모달창 끝-->
 		
+				<!--02진척 평가 모달창 시작-->
+		<div class="addAvg02 modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    	<h5 class="modal-title">진척 평가02</h5>
+                    </div>
+                    <div class="modal-body" >
+						<span id="companyName3">(여기에 회사 이름이 들어감)</span>  제작 진척도를 입력합니다.
+						<p class="card-title"><b></b></p>
+						
+						<!--거래명세서 품목 정보-->
+						<div class="table-responsive checkhistory">
+								<table id="poInfo" border="1">
+									<tbody id="tbody01" >
+										<tr>
+											<td>회차</td>
+											<td>검수일</td>
+											<td>납기 진도율</td>
+											<td>기타사항</td>											
+										</tr>
+										
+									</tbody>
+								</table>
+								<div id="diliveryPercent3">
+										<span id="diliveryPercent3"></span>
+										
+								</div>
+								<div id="diliveryEtc3">
+										<span id="diliveryEtc3"> </span>
+										
+								</div>
+									<!-- 동적 테이블 부분-->
+							<br><!--여기에 조건을 걸어서 다른 날이면 안 보여줌 -->
+								<div>납기 진도율: <input id="idpercent" type="number"></div>
+								<br> <div>기타 사항: <input id="idetc" type="text"></div>
+						</div>
+						<br>
+						<br>
+                    </div>
+                    <div class="modal-footer">
+						<button class="btn btn-primary sendAvg" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+							입력
+						</button>
+						<button type="button" class="btn btn-secondary AllResetSetting" data-dismiss="modal" style="padding-top:10px; padding-left:15px; padding-right:15px; width:60px; height:33px;">
+							닫기
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--02진척 평가 모달창 끝-->
+		
 		<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 		<script th:inline="javascript" type="text/javascript">
 		//일정 등록 버튼을 누르면
@@ -293,19 +346,21 @@
 		// 현재 날짜 객체 생성
 		var today = new Date();
 		var year = today.getFullYear();
-		var month = today.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줌
-		var day = today.getDate();
+		var month = ('0' + (today.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 1을 더해줌
+		var day = ('0' + today.getDate()).slice(-2);//한자리 숫자에 0이 올 수 있도록 함
 		todaydate = (year + '/' + month + '/' + day);//오늘 날짜 예쁘게 찍기
+		todaydate02 = (year + '-' + month + '-' + day);//오늘 날짜 문자타입으로 같은지 비교하기 위해서
 		//오늘이 아니면 오늘은 검수일이 아닙니다. 등록할 수 없습니다.
 		var nDate = null;
+		var tDate = null;
 		$(".addClass").click(function(){
 			$(".addDate").modal('show');
 			console.log("일정 추가 버튼을 누름");
 			//location.href="/procurement2/progressCheck?checkBox="+cList[0];
 			//var searchCompanyTR = new Object();
 			//console.log("tr 전역변수 만들고 난 값 : ",searchCompanyTR);
-			//순서: 발주번호, 회사이름, 납기일, 물품이름, 주문수량, 단가, 다음 진척검수일
-			//총 7개
+			//순서: 발주번호, 회사이름, 납기일, 물품이름, 주문수량, 단가, 다음 진척검수일, (검수기록)기타사항, 검수기록 날짜
+			//총 9개
 			var pCode= getObjTR().querySelector("input[name=purchaseOrderCode]").value;
 			var cName= getObjTR().querySelector("input[name=companyName]").value;
 			var dDate= getObjTR().querySelector("input[name=dueDate]").value;
@@ -313,6 +368,7 @@
 			var oAmount= getObjTR().querySelector("input[name=orderAmount]").value;
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
 			var nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
+			tDate= getObjTR().querySelector("input[name=thisCheckDate]").value;
 			var dPercent= getObjTR().querySelector("input[name=diliveryPercent]").value;
 			var pEtc= getObjTR().querySelector("input[name=etc6]").value;
 			console.log("발주코드: ",pCode);//잘나옴
@@ -324,7 +380,6 @@
 			console.log("다음 진척검수일: ",nDate);
 			console.log("납기 진도율: ",dPercent);
 			console.log("기타사항: ",pEtc);
-			console.log("오늘 날짜>>> ",today);
 			codeNo=getObjTR().querySelector("input[name=purchaseOrderCode]").value;//여기에서 값 넣어서 날짜등록으로 보내보기
 			console.log("등록할때 필요한 발주번호: ",codeNo);//잘나옴
 			document.querySelector("#companyName2").innerHTML = cName;
@@ -334,7 +389,17 @@
 		$(".avgClass").click(function(){
 			$(".addDate").modal('hide');
 			console.log("평가 버튼을 누름");
-			$(".addAvg").modal('show');
+			console.log("오늘 날짜>>> ",todaydate02, tDate);
+			if(tDate==todaydate02){
+				$(".addAvg").modal('hide');
+				$(".addAvg02").modal('show');
+				console.log(">> 날짜가 같은거 파악하나 확인");
+			}else{
+				console.log(">> 바르게 작동 하나??");
+				$(".addAvg02").modal('hide');
+				$(".addAvg").modal('show');
+				
+			}
 			//순서: 발주번호, 회사이름, 납기일, 물품이름, 주문수량, 단가, 다음 진척검수일
 			//총 7개
 			var pCode= getObjTR().querySelector("input[name=purchaseOrderCode]").value;
@@ -344,7 +409,7 @@
 			var oAmount= getObjTR().querySelector("input[name=orderAmount]").value;
 			var uPrice= getObjTR().querySelector("input[name=unitPrice]").value;
 			nDate= getObjTR().querySelector("input[name=nextCheckDate]").value;
-			var tDate= getObjTR().querySelector("input[name=thisCheckDate]").value;
+			tDate= getObjTR().querySelector("input[name=thisCheckDate]").value;
 			var dPercent= getObjTR().querySelector("input[name=diliveryPercent]").value;
 			var pEtc= getObjTR().querySelector("input[name=etc6]").value;
 			console.log("발주코드: ",pCode);//잘나옴
@@ -357,6 +422,8 @@
 			console.log("지난 진척검수일: ",tDate);
 			console.log("납기 진도율: ",dPercent);
 			console.log("기타사항: ",pEtc);
+			
+			
 						
 			document.querySelector("#companyName3").innerHTML = cName;
 			var tableTd01 = ``;
@@ -428,7 +495,6 @@
 				})
 				console.log("평가 등록~~ ");
 				location.href="/procurement2/progressCheck";
-				//}
 			})
 		});
 		
