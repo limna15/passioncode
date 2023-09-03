@@ -25,6 +25,11 @@ public class ProgressCheckDTO {
 	//외래키로 사용할 것들 추가하기
 	
 	/**
+	 * 진척 검수한 날짜
+	 */
+	private Date thisCheckDate;
+	
+	/**
 	 * 진척 검수 코드
 	 */
 	private Integer checkCode;
