@@ -17,7 +17,7 @@
 |임나영|팀원|- '자재입고' 프로세스 요구사항 분석, 설계, 구현 <br> - '자재출고' 프로세스의 '자재출고' 화면 구현 <br> - DB담당|
 |박원석|팀원|- '자재출고' 프로세스 요구사항 분석, 설계 <br> - 통합 테스트|
 ## 4. 웹 사이트 주소
-http://passioncode.iptime.org/
+http://soheestory.duckdns.org:8087/
 ## 5. 메인 화면
 ![메인화면](https://github.com/limna15/passioncode/blob/main/passioncode/src/main/resources/static/images/main.JPG)
 
